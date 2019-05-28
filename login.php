@@ -16,7 +16,7 @@ $row = mysqli_num_rows($result);
 //echo $row;
 if($row == 1){
 	$_SESSION['usuario'] = $_POST['usuario'];
-	header('Location: painel.php');
+	header('Location: home.php');
 	exit();
 }
 else{
