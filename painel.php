@@ -30,8 +30,8 @@ header('Content-Type: text/html; charset=UTF-8');
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="#" class="navbar-item is-active">Início</a>
-					<a href="processamento.php" class="navbar-item">Processamento</a>
-					<a href="#" class="navbar-item">Gerenciamento</a>
+					<a href="processamento.php" class="navbar-item">Desempenho</a>
+					<a href="#" class="navbar-item">Relatórios/a>
 					<a href="#" class="navbar-item">Configuraçoes</a>
 					<a href="logout.php" class="navbar-item">Sair</a>
 				</div>

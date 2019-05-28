@@ -21,7 +21,7 @@ session_start();
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
-                    <h3 class="title has-text-grey">Sistema Logístico</h3>
+                    <h3 class="title has-text-grey">Gestão de Desempenho</h3>
                      <?php
                     if(isset($_SESSION['nao_autenticado'])):
                     ?>
