@@ -3,6 +3,8 @@ session_start();
 include('verifica_login.php');
 header('Content-Type: text/html; charset=UTF-8');
 //print_r($_SESSION);exit();
+//$menuInicio="is-active";
+$menuRelatorio;
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,6 +19,7 @@ header('Content-Type: text/html; charset=UTF-8');
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body>
+	<header>
 	<nav class="navbar is-primary">
 		<div class="container">
 			<div class="navbar-brand">
@@ -29,17 +32,17 @@ header('Content-Type: text/html; charset=UTF-8');
 			</div>
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
-					<a href="#" class="navbar-item is-active">Início</a>
+					<a href="home.php" class="navbar-item">Início.<?php echo $menuInicio ?></a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">Desempenho</a>					
 						<div class="navbar-dropdown">
-							<a class="navbar-item">Consultar</a>
+							<a href="performance-one.php"class="navbar-item">Consultar</a>
 							<a class="navbar-item">Inserir</a>
 							<a class="navbar-item">Atualizar</a>
 							<a class="navbar-item">Remover</a>
 						</div>
 					</div>		
-					<a href="#" class="navbar-item">Relatórios</a>
+					<a href="report.php" class="navbar-item">Relatórios</a>
 				<div class="navbar-item has-dropdown is-hoverable">
 			     	<a class="navbar-link">Configurações</a>
 			        <div class="navbar-dropdown">
@@ -55,6 +58,7 @@ header('Content-Type: text/html; charset=UTF-8');
 			</div>
 		</div>
 	</nav>
+	</header>
 	<script type="text/javascript">
 		(function(){
 			var burger = document.querySelector('.burger');

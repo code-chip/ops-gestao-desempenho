@@ -1,6 +1,7 @@
 <?php 
 session_start();
 include('verifica_login.php');
+include('menu.php');
 header('Content-Type: text/html; charset=UTF-8');
 //print_r($_SESSION);exit();
 ?>
@@ -17,53 +18,5 @@ header('Content-Type: text/html; charset=UTF-8');
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body>
-	<nav class="navbar is-primary">
-		<div class="container">
-			<div class="navbar-brand">
-				<a class="navbar-item" href="#" style="font-weight:bold;">(evino)</a>
-				<span class="navbar-burger burger" data-target="navMenu">
-					<span></span>
-					<span></span>
-					<span></span>
-				</span>	
-			</div>
-			<div id="navMenu" class="navbar-menu">
-				<div class="navbar-end">
-					<a href="#" class="navbar-item is-active">Início</a>
-					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link">Desempenho</a>					
-						<div class="navbar-dropdown">
-							<a class="navbar-item">Consultar</a>
-							<a class="navbar-item">Inserir</a>
-							<a class="navbar-item">Atualizar</a>
-							<a class="navbar-item">Remover</a>
-						</div>
-					</div>		
-					<a href="#" class="navbar-item">Relatórios</a>
-				<div class="navbar-item has-dropdown is-hoverable">
-			     	<a class="navbar-link">Configurações</a>
-			        <div class="navbar-dropdown">
-				        <a class="navbar-item">Cadastrar</a>
-				        <a class="navbar-item">Permissões</a>
-				        <a class="navbar-item">Tema</a>
-				        <hr class="navbar-divider">
-				        <a class="navbar-item">Reportar bug</a>
-			        </div>
-			    </div>
-				<a href="logout.php" class="navbar-item">Sair</a>
-				</div>
-			</div>
-		</div>
-	</nav>
-	<script type="text/javascript">
-		(function(){
-			var burger = document.querySelector('.burger');
-			var nav = document.querySelector('#'+burger.dataset.target);
-
-			burger.addEventListener('click', function(){
-				burger.classList.toggle('is-active');
-				nav.classList.toggle('is-active');
-			});
-		})();
-	</script>
+	
 </body>	
