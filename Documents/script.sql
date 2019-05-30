@@ -2,11 +2,12 @@ CREATE TABLE desempenho (
   ID INTEGER   NOT NULL AUTO_INCREMENT ,
   NOME VARCHAR(60),
   ATIVIDADE VARCHAR(21),
-  PRESENCA VARCHAR(7),
+  PRESENCA VARCHAR(8),
   DESEMPENHO INTEGER(3),
   META INTEGER(3),
   ALCANCADO FLOAT(3.2),
   REGISTRO DATE,
+  OBSERVACAO VARCHAR(200),
 PRIMARY KEY(ID));
 
 insert into desempenho(nome, atividade, desempenho, meta, alcancado, registro) values('Lwcyano Will','PBL',170,160,106.25,STR_TO_DATE("28/12/18", "%d/%m/%Y"));
