@@ -1,6 +1,7 @@
 <?php 
 session_start();
 include('verifica_login.php');
+$menuInicio="is-active";
 include('menu.php');
 header('Content-Type: text/html; charset=UTF-8');
 //print_r($_SESSION);exit();

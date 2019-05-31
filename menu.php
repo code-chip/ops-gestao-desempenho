@@ -32,9 +32,9 @@ $menuRelatorio;
 			</div>
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
-					<a href="home.php" class="navbar-item">Início.<?php echo $menuInicio ?></a>
+					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link">Desempenho</a>					
+						<a class="navbar-link <?php echo $menuDesempenho?>">Desempenho</a>					
 						<div class="navbar-dropdown">
 							<a href="performance-one.php"class="navbar-item">Consultar</a>
 							<a class="navbar-item">Inserir</a>
@@ -42,9 +42,9 @@ $menuRelatorio;
 							<a class="navbar-item">Remover</a>
 						</div>
 					</div>		
-					<a href="report.php" class="navbar-item">Relatórios</a>
+					<a href="report.php" class="navbar-item <?php echo $menuRelatorio?>">Relatórios</a>
 				<div class="navbar-item has-dropdown is-hoverable">
-			     	<a class="navbar-link">Configurações</a>
+			     	<a class="navbar-link <?php echo $menuConfiguracoes?>">Configurações</a>
 			        <div class="navbar-dropdown">
 				        <a class="navbar-item">Cadastrar</a>
 				        <a class="navbar-item">Permissões</a>

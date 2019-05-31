@@ -10,6 +10,12 @@ CREATE TABLE desempenho (
   OBSERVACAO VARCHAR(200),
 PRIMARY KEY(ID));
 
+
+correção do erro Código de erro: 1055 incompatível com sql_mode = only_full_group_by
+#SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+#ou
+#set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+
 insert into desempenho(nome, atividade, desempenho, meta, alcancado, registro) values('Lwcyano Will','PBL',170,160,106.25,STR_TO_DATE("28/12/18", "%d/%m/%Y"));
 insert into desempenho(nome, atividade, desempenho, meta, alcancado, registro) values('Lwcyano Will','PBL',180,160,112.5,STR_TO_DATE("02/01/19", "%d/%m/%Y"));
 insert into desempenho(nome, atividade, desempenho, meta, alcancado, registro) values('Lwcyano Will','PBL',200,160,125,STR_TO_DATE("03/01/19", "%d/%m/%Y"));
