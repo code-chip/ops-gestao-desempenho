@@ -124,7 +124,6 @@ $totalAlcancado=0;
 <?php endif;?>
 </div>
 <?php
-echo $periodo;
 if( $periodo != ""){	
 	$presenca="(select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' and a.nome=nome)falta,(select count(presenca) from gestaodesempenho.desempenho where presenca='Folga' and a.nome=nome)folga ,";
 	if($periodo =="atual"){
@@ -212,21 +211,13 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 	echo $row;
 	$x=0;
 	$maior=0;
-	$menor=1000;
-	echo "teste";
+	$menor=1000;	
 	//OK.
-	/*$query="select a.nome,(select count(presenca) from evinops.desempenho where presenca='Ausente' and a.nome=nome)falta,
-(select count(presenca) from evinops.desempenho where presenca='Folga' and a.nome=nome)folga, 
-truncate(b.alcancado,2) alcancado, concat(concat(date_format(date_add(curdate(),interval -3 month),'%Y/%m'),'/21'), 
-concat(date_format(date_add(curdate(), interval -2 month),' - %Y/%m'),'/20')) 
-from evinops.desempenho as a, 
-(select nome, avg(alcancado) alcancado from evinops.desempenho group by nome) as b 
-where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and 
-registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20') group by nome order by nome;";
+	$query="select a.nome,(select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' and a.nome=nome)falta, (select count(presenca) from gestaodesempenho.desempenho where presenca='Folga' and a.nome=nome)folga, truncate(b.alcancado,2) alcancado, concat(concat(date_format(date_add(curdate(),interval -3 month),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval -2 month),' - %Y/%m'),'/20')) from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado from gestaodesempenho.desempenho group by nome) as b where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20') group by nome order by nome;";
 	$con = mysqli_query($phpmyadmin , $query);
+	echo $consulta;
 	//while($dado = $con->fetch_array()){
-	while($dado = $con->fetch_array()){
-		echo "teste2";			
+	while($dado = $con->fetch_array()){				
 		$vetorNome[$x] = $dado["nome"];
 		$vetorAlcancado[$x] = $dado["alcancado"];
 		$vetorAtividade[$x] = $dado["atividade"];
@@ -239,8 +230,7 @@ registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-
 		}
 		if($menor>$vetorAlcancado[$x] && $vetorAlcancado[$x]!=0){
 			$menor=$vetorAlcancado[$x];
-		}
-		echo $vetorNome[$x];		
+		}			
 		$contador++;
 		$x++;		
 	}
@@ -255,7 +245,6 @@ registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-
 		$vtMenor[$xg]=$graf1["menor"];
 		$xg++;
 	}
-	//OK*/
 }	
 ?>
 <script>
