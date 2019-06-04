@@ -193,7 +193,7 @@ else{
 <?php if($contador !=0) : ?>
 <hr/>
 	<table class='list_table_b'>
-		<tr>
+		<tr class="is-selected">
 			<td class='table_title'>
 				<span class='title_left'>Resultado:<?php echo sizeof($vetorNome);?></span>
 			</td>	
