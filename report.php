@@ -213,7 +213,9 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 	$maior=0;
 	$menor=1000;	
 	//OK.
+	echo "teste";
 	$query="select a.nome,(select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' and a.nome=nome)falta, (select count(presenca) from gestaodesempenho.desempenho where presenca='Folga' and a.nome=nome)folga, truncate(b.alcancado,2) alcancado, concat(concat(date_format(date_add(curdate(),interval -3 month),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval -2 month),' - %Y/%m'),'/20')) from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado from gestaodesempenho.desempenho group by nome) as b where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20') group by nome order by nome;";
+	echo $query;
 	$con = mysqli_query($phpmyadmin , $query);
 	echo $consulta;
 	//while($dado = $con->fetch_array()){
