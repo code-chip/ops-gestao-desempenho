@@ -23,9 +23,10 @@ $totalAlcancado=0;
 	<title>Gestão de Desempenho - Relatórios</title>
 </head>
 <body>
+	<span id="topo"></span>
 <div>
 	<br/>
-	<form id='form1' action='report.php' method='GET' >
+	<form id="form1" action="report.php" method="GET" >
 		<div class="field is-horizontal">
 			<!--SELEÇÃO PERÍODO-->
 			<div class="field-label is-normal">
@@ -250,8 +251,8 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 <!--FINAL DO FORMULÁRIO-->
 <?php if($contador !=0) : ?>
 <hr/>
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style=".table-hover tbody tr:hover td, .table-hover tbody tr:hover th { background-color: #7CFC00; } ">
-		<tr class="teste">
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+		<tr class="is-selected">
 			<td class='table_title'>
 				<span class='title_left'>Resultado:<?php echo sizeof($vetorNome);?></span>
 			</td>	
@@ -305,20 +306,13 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 		<?php if($vetorNome[$i]!=$vetorNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
 	</tr>
 <?php endfor; ?>
-	</table>	
+	</table>
+	<a href="#topo">
+		<div class="field is-grouped is-grouped-centered">
+			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
+		</div>
+	</a>			
 <?php endif; ?>
-<button class="button is-primary" id="go_top" onclick="$('body').scrollTop(0)" >Ir Ao Topo</button>
-<div style='clear:both' ></div>
-<div id='dialog_info' ></div>	
-<script>
-		$('#submitQuery').button().click(function(){
-				$('#form1').submit();
-			});
-			$('#cleanQuery').button().click(function(){
-				$('#form1 input[type=text]').val("");
-			});			
-			$('#go_top').button().css('width','100%');
-</script>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
