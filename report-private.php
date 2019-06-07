@@ -2,6 +2,7 @@
 session_start();
 include('conexao.php');
 include('verifica_login.php');
+$menuDesempenho="is-active";
 include('menu.php');
 $name = "Aldicione Fagundes De Oliveira";//getActiveUser($userid);
 $erro = '';
