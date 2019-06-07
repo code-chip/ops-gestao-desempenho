@@ -4,7 +4,11 @@ include('verifica_login.php');
 header('Content-Type: text/html; charset=UTF-8');
 //print_r($_SESSION);exit();
 //$menuInicio="is-active";
+$menuInicio;
+$menuDesempenho;
 $menuRelatorio;
+$menuConfiguracoes;
+
 ?>
 <!DOCTYPE html>
 <html>
