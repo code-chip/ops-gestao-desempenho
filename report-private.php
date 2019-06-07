@@ -3,10 +3,14 @@ session_start();
 include('conexao.php');
 include('verifica_login.php');
 include('menu.php');
-$name = "Lwcyano Will";//getActiveUser($userid);
+$name = "Aldicione Fagundes De Oliveira";//getActiveUser($userid);
 $erro = '';
 $contador = 0;
 $totalAlcancado=0;
+
+$periodo = trim($_REQUEST['periodo']);
+$atividade = trim($_REQUEST['atividade']);
+$meta = trim($_REQUEST['meta']);
 
 ?>
 <!DOCTYPE html>
@@ -28,12 +32,12 @@ $totalAlcancado=0;
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select">
-						<select name='periodo'>
-							<option selected='selected' value=''>Selecione</option>
-							<option value='proximo'><?php echo strftime('%h', strtotime("+1 months"))?></option>
-							<option value='atual'><?php echo strftime('%h')?></option>
-							<option value='penultimo'><?php echo strftime('%h', strtotime("-1 months"))?></option>
-							<option value='antipenultimo'><?php echo strftime('%h', strtotime("-2 months"))?></option>	
+						<select name="periodo">
+							<option selected="selected" value="">Selecione</option>
+							<option value="proximo"><?php echo strftime('%h', strtotime("+1 months"))?></option>
+							<option value="atual"><?php echo strftime('%h')?></option>
+							<option value="penultimo"><?php echo strftime('%h', strtotime("-1 months"))?></option>
+							<option value="antipenultimo"><?php echo strftime('%h', strtotime("-2 months"))?></option>	
 						</select>	
 					</div>
 				</div>
@@ -69,10 +73,10 @@ $totalAlcancado=0;
 					<div class="field is-grouped">							
 						<div class="control">
 							<div class="select">
-								<select name='meta'>
+								<select name="meta">
 									<option selected="selected"value="">Ambos</option>
 									<option value="and b.alcancado>=100">Atingida</option>
-									<option value="and b.alcancado<100">Não atingida ;/</option>
+									<option value="and b.alcancado<100">Não atingida</option>
 								</select>	
 							</div>
 						</div>
@@ -87,7 +91,7 @@ $totalAlcancado=0;
 </div>
 <!--FINAL DO FORMULÁRIO-->
 <?php
-if( $periodo != ""){
+if( $periodo != ""){	
 	if($periodo =="atual"){
 		if($atividade !="Todas"){
 			$consulta ="select * from gestaodesempenho.desempenho where nome='".$name."' and atividade='".$atividade."' and registro >= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-21') and registro <= concat(date_format(curdate(),'%Y-%m'),'-20')".$meta." order by registro;";
@@ -174,8 +178,7 @@ else{
 			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
 		</div>
 	</a>	
-<?php endif; ?>	
-
+<?php endif; ?>
 </body>
 </html>		
 
