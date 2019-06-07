@@ -50,7 +50,7 @@ $menuConfiguracoes;
 				<div class="navbar-item has-dropdown is-hoverable">
 			     	<a class="navbar-link <?php echo $menuConfiguracoes?>">Configurações</a>
 			        <div class="navbar-dropdown">
-				        <a class="navbar-item">Cadastrar</a>
+				        <a href="insert-user.php" class="navbar-item">Cadastrar</a>
 				        <a class="navbar-item">Permissões</a>
 				        <a class="navbar-item">Tema</a>
 				        <hr class="navbar-divider">
