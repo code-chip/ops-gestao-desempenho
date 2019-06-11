@@ -1,9 +1,3 @@
-<style type="text/css">
-	/*$table-cell-padding: .75rem !default; $table-sm-cell-padding: .3rem !default; $table-bg: transparent !default; $table-bg-accent: rgba(0,0,0,.05) !default; $table-bg-hover: rgba(0,0,0,.075) !default; $table-bg-active: $table-bg-hover !default; $table-border-width: $border-width !default; $table-border-color: $gray-lighter !default;*/
-	.coluna{
-		max-width:7em;
-	}
-</style>
 <?php
 session_start();
 include('conexao.php');
@@ -13,9 +7,9 @@ $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $turno = trim($_REQUEST['turno']);
-//$atividade = trim($_REQUEST['atividade']);
-//$ordenacao = trim($_REQUEST['ordenacao']);
-//$meta = trim($_REQUEST['meta']);
+$nome = trim($_REQUEST['nome']);
+$efetivacao = trim($_REQUEST['efetivacao']);
+$situacao = trim($_REQUEST['situacao']);
 $contador = 0;
 $totalAlcancado=0;
 
@@ -27,12 +21,68 @@ $totalAlcancado=0;
 </head>
 <body>
 <div>	
-	<?php if($turno ==""): ?>
-	<form id="form1" action="report-insert.php" method="GET" >
-		<div class="field has-addons has-addons-centered">			
+	<section class="section">
+		<div class="container">
+			<h3 class="title">Cadastro de Usuário</h3>
+		<hr>
+	<main>
+	<form id="form1" action="insert-user.php" method="GET">
+		<div class="field">
+			<label class="label" for="textInput">Nome completo</label>
+				<div class="control">
+					<input type="text" class="input" id="textInput" placeholder="Ana Clara">
+				</div>			
+		</div>
+		<div class="field">
+			<label class="label" for="numberInput">Login</label>
+				<div class="control">
+					<input type="text" class="input" id="textInput" placeholder="ana.clara">
+				</div>
+			<p class="help">Use de preferência texto caixa baixa, primeiro e último nome p/ manter a padronização de nome de login.</p>
+		</div>
+		<div class="field">
+			<label class="label" for="numberInput">Senha</label>
+				<div class="control">
+					<input type="password" class="input" id="textInput" placeholder="">
+				</div>			
+		</div>
+		<div class="field">
+			<label class="label" for="numberInput">E-mail</label>
+				<div class="control">
+					<input type="text" class="input" id="textInput" placeholder="anaclara@gmail.com">
+				</div>			
+		</div>
+		<!--DIVISÃO EM HORIZONTAL-->
+			<div class="field is-horizontal">
+			<!--SELEÇÃO CARGO-->
+			<div class="field-label is-normal">
+				<label class="label" for="periodo">Cargo:</label>
+			</div>
+			<div class="field-body">
+			<div class="field is-grouped">							
+				<div class="control">
+					<div class="select">
+						<select name='periodo'>
+							<option value="Operador de Logística 1">Operador de Logística 1</option>
+							<option value="Operador de Logística 1">Operador de Logística 2</option>
+							<option value="Operador de Logística 1">Operador de Logística 3</option>
+							<option value="Operador de Logística 1">Auxiliar Administrativo</option>
+							<option value="Operador de Logística 1">Assistente Administrativo</option>
+							<option value="Operador de Logística 1">Líder de Operação</option>
+							<option value="Operador de Logística 1">Assistente de Logística</option>
+							<option value="Operador de Logística 1">Analista Administrativo</option>
+							<option value="Operador de Logística 1">Analista de Logística</option>
+							<option value="Operador de Logística 1">Supervisor de Operação</option>	
+							<option value="Operador de Logística 1">RH</option>	
+							<option value="Operador de Logística 1">Gerente de CD</option>								
+						</select>	
+					</div>
+				</div>
+			</div>
+			</div>
 			<!--SELEÇÃO TURNO-->
 			<div class="field-label is-normal">
-				<label for="turno" class="label">Turno:</label>
+				<label class="label">Turno</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
@@ -45,20 +95,73 @@ $totalAlcancado=0;
 								<option value="comercial">Comercial</option>
 							</select>	
 						</div>
-					<!--<div class="control">-->
-						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Cadastrar"/>
-					</div>
+					</div>					
 				</div>						
 			</div>
+			<!--FINAL DIVISÃO EM HORIZONTAL-->
+			<div class="field-label is-normal">
+				<label class="label">Gestor</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="turno">
+								<option selected="selected" value="">Selecione</option>	
+								<option value="matutino">Raphael Souza</option>
+								<option value="vespetino">Marivalda</option>
+								<option value="comercial">Pedro Becali</option>
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+			<!--DIVISÃO SITUAÇÃO-->
+			<div class="field-label is-normal">
+				<label class="label">Situação</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="turno">
+								<option selected="selected" value="">Ativo</option>	
+								<option value="matutino">Férias</option>
+								<option value="vespetino">Licença</option>
+								<option value="comercial">Desligado</option>
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+			<!--FINAL DIVISÃO EM HORIZONTAL-->
+		</div>	
+		<!---->		
+		<div class="field">
+			<label class="label" for="numberInput">Observação</label>
+				<div class="control">
+					<input type="text" class="input" id="textInput" placeholder="Operador temporário...">
+				</div>			
 		</div>
-	</form>	
-	<?php endif; ?>		
+			<div class="field">
+				<div class="control">
+					<button type="submit" class="button is-primary" id="submitQuery">Cadastrar</button>
+				</div>
+			</div>				
+		</form>
+		<!--FINAL DO FORMULÁRIO-->
+	</main>	
+</div>
+</section>
 </div>
 
-<?php
-date('Y-m-d H:i');
-if( $turno != "" && $nome !="" && $data !=""){	
+
+</body>
+</html>
+
+
+<!--<?php
+/*if( $turno != "" && $nome !="" && $data !=""){	
 	$query="INSERT INTO desempenho (nome, turno, registro) VALUES('".$nome."','."$turno".',"$data")";	
 	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
@@ -70,60 +173,5 @@ if( $turno != "" && $nome !="" && $data !=""){
 		$x++;
 	}	
 }	
-?>
-<!--FINAL DO FORMULÁRIO-->
-<?php if($contador !=0) : ?>
-<hr/>	
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
-	<tr>
-		<th>Nome Completo</th>
-		<th>Turno</th>
-		<th>Data de entrada</th>		 			
-	</tr>
-	</a>
-	<br/>
-	<form id="form1" action="report-insert.php" method="GET" >
-		<div class="field is-grouped is-grouped-right">			
-			<!--SELEÇÃO TURNO-->
-			<td class="field" style="max-width:7em;">
-			<div class="field"><!--COLUNA META-->				
-				<div class="control">
-					<input style="max-width:6em;" type="text" class="input" id="Meta" placeholder="Obrigatório">
-				</div>				
-			</div>
-			</td>
-			<td>
-				<div class="field"><!--COLUNA ALCANÇADO-->					
-					<div class="control">
-						<input style="max-width:5em;" type="text" class="input" id="Alcancado" placeholder="Obrigatório">
-					</div>				
-				</div>
-			</td>
-			<div class="field-label is-normal">
-				<label for="turno" class="label">Inserção:</label>
-			</div>
-			<div class="field-body">
-				<div class="field is-grouped">
-
-					<!---->							
-					<div class="control">
-						<div class="select">
-							<select name="inserir">
-								<option selected="selected" value="todos">Todos</option>	
-								<option value="especifico">Específico</option>								
-							</select>	
-						</div>
-						<!--<div class="control">-->
-						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Atualizar" <?php $turno=$turno; ?>/>						
-					</div>
-					<input type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
-				</div>						
-			</div>
-		</div>
-	</form>			
-<?php endif; ?>
-</body>
-</html>
-
+?>*/
 
