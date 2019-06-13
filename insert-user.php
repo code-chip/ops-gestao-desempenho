@@ -196,7 +196,7 @@ $totalAlcancado=0;
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control" style="max-width:8em;">
 						<input type="text" class="input" id="textInput" placeholder="635">
 					</div>
 				</div>
@@ -207,24 +207,24 @@ $totalAlcancado=0;
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control" style="max-width:7em;">
 						<input type="text" class="input" id="textInput" placeholder="2019-05-29">
 					</div>
 				</div>
 			</div>
 			<!--CAMPO DATA E HORA DE CADASTRO-->
-			<fieldset disabled>
-				<div class="field-label is-normal">
-					<label class="label" for="periodo">Cadastro:</label>
-				</div>
-				<div class="field-body">
-					<div class="field is-grouped">							
-						<div class="control">
-							<input type="text" class="input" id="textInput" placeholder=""><?php echo date('Y-m-d H:i:s')?></input>
-						</div>
+			<div class="field-label is-normal">
+				<label class="label" for="periodo">Cadastrado:</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">
+					<fieldset disabled>								
+					<div class="control" style="max-width:11em;">
+						<input type="text" class="input" id="textInput" value="<?php echo date('Y-m-d H:i:s')?>">
 					</div>
+					</fieldset>
 				</div>
-			</fieldset>
+			</div>				
 			<!--DIVISÃO SITUAÇÃO-->
 			<div class="field-label is-normal">
 				<label class="label">Situação</label>
@@ -244,7 +244,8 @@ $totalAlcancado=0;
 				</div>						
 			</div>
 		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->	
-		<!---->		
+		<!---->
+					
 		<div class="field">
 			<label class="label" for="numberInput">Observação</label>
 				<div class="control">
