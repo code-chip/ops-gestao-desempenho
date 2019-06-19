@@ -45,8 +45,14 @@ $menuConfiguracoes;
 							<a class="navbar-item">Atualizar</a>
 							<a class="navbar-item">Remover</a>
 						</div>
-					</div>		
-					<a href="report.php" class="navbar-item <?php echo $menuRelatorio?>">Relatórios</a>
+					</div>
+					<div href="#" class="navbar-item has-dropdown is-hoverable">
+						<a href="report.php" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
+						<div class="navbar-dropdown">
+							<a href="report-private.php" class="navbar-item">Mensal</a>
+							<a href="report-insert.php" class="navbar-item">Específico</a>							
+						</div>
+					</div>
 				<div class="navbar-item has-dropdown is-hoverable">
 			     	<a class="navbar-link <?php echo $menuConfiguracoes?>">Configurações</a>
 			        <div class="navbar-dropdown">
