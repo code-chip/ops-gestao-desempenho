@@ -160,7 +160,9 @@ $totalAlcancado=0;
 							<select name="turno">
 								<option selected="selected" value="">Selecione</option>	
 								<option value="matutino">Raphael Souza</option>
-								<option value="vespetino">Marivalda</option>
+								<option value="vespetino">Marivalda Souza</option>
+								<option value="vespetino">Lucas Souza</option>
+								<option value="vespetino">Monara Marim</option>
 								<option value="comercial">Pedro Becali</option>
 							</select>	
 						</div>
@@ -249,7 +251,7 @@ $totalAlcancado=0;
 		<div class="field">
 			<label class="label" for="numberInput">Observação</label>
 				<div class="control">
-					<input type="text" class="input" id="textInput" placeholder="Operador temporário...">
+					<input type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
 				</div>			
 		</div>
 			<div class="field">
