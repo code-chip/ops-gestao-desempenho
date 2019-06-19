@@ -22,21 +22,32 @@ $totalAlcancado=0;
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
 </head>
 <body>
-<div>
+<div class="field has-addons has-addons-centered">
 	<section class="section">
-		<div class="container">
-			<h3 class="title">Cadastro de Usuário</h3>
-		<hr>
 	<main>
-		<a href="insert-user" class="button is-large is-primary is-inverted is-outlined">Cadastrar</a>
-		<a href="insert-user" class="button is-large is-primary is-inverted is-outlined">Consultar</a>
-		<a href="insert-user" class="button is-large is-primary is-inverted is-outlined">Atualizar</a>
-		<a href="insert-user" class="button is-large is-primary is-inverted is-outlined">Remover</a>		
+		<div class="field">
+			<div class="control">
+				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Inserir Usuário</a>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">
+				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Consultar Usuário</a>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">		
+				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Atualizar Usuário</a>
+			</div>
+		</div>
+		<div class="field">
+			<div class="control">		
+				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Remover Usuário</a>
+			</div>	
+		</div>			
 	</main>	
 </div>
 </section>
 </div>
-
-
 </body>
 </html>
