@@ -27,22 +27,22 @@ $totalAlcancado=0;
 	<main>
 		<div class="field">
 			<div class="control">
-				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Inserir Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Inserir Usuário</a>
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">
-				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Consultar Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Consultar Usuário</a>
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">		
-				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Atualizar Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Atualizar Usuário</a>
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">		
-				<a href="insert-user.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Remover Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Remover Usuário</a>
 			</div>	
 		</div>			
 	</main>	
