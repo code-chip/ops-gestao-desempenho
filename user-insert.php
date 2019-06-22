@@ -5,6 +5,7 @@ include('conexao.php');
 include('verifica_login.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
+header("Content-type: text/html; charset=utf-8");
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $turno = trim($_REQUEST['turno']);
 $nome = trim($_REQUEST['nome']);
@@ -17,6 +18,7 @@ $totalAlcancado=0;
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">	
 	<title>Gestão de Desempenho - Cadastrar Usuário</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -44,6 +46,20 @@ $totalAlcancado=0;
 	</script>
 </head>
 <body>
+<?php
+	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
+	$gdGestor="SELECT ID, NOME FROM gd.GESTOR WHERE SITUACAO='Ativo'";
+	$gdCargo="SELECT ID, NOME FROM gd.CARGO WHERE SITUACAO='Ativo'";
+	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
+	$con = mysqli_query($phpmyadmin , $gdCargo);
+		$x=0;
+		while($cargo = $con->fetch_array()){
+			$vtId[$x] = $cargo["ID"]; 
+			$vtNome[$x] = $cargo["NOME"];
+			echo $vtNome[$x];
+		$x++;
+		}		
+?>
 <div>	
 	<section class="section">
 		<div class="container">
@@ -70,19 +86,6 @@ $totalAlcancado=0;
 				</div>    
 			<p class="help">Use de preferência texto caixa baixa, primeiro e último nome p/ manter a padronização de nome de login.</p>
 		</div>
-		<!--<div class="field">
-		  	<label class="label">Username</label>
-		  		<div class="control has-icons-left has-icons-right">
-		    		<input class="input is-success" type="text" placeholder="Text input" value="bulma">
-		    		<span class="icon is-small is-left">
-		      			<i class="fas fa-user"></i>
-		    		</span>
-		    		<span class="icon is-small is-right">
-		      			<i class="fas fa-check"></i>
-		    		</span>
-		  		</div>
-		  	<p class="help is-success">This username is available</p>
-		</div>-->
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
 				<div class="control">
@@ -114,18 +117,11 @@ $totalAlcancado=0;
 				<div class="control">
 					<div class="select">
 						<select name='periodo'>
-							<option value="Operador de Logística 1">Operador de Logística 1</option>
-							<option value="Operador de Logística 1">Operador de Logística 2</option>
-							<option value="Operador de Logística 1">Operador de Logística 3</option>
-							<option value="Operador de Logística 1">Auxiliar Administrativo</option>
-							<option value="Operador de Logística 1">Assistente Administrativo</option>
-							<option value="Operador de Logística 1">Líder de Operação</option>
-							<option value="Operador de Logística 1">Assistente de Logística</option>
-							<option value="Operador de Logística 1">Analista Administrativo</option>
-							<option value="Operador de Logística 1">Analista de Logística</option>
-							<option value="Operador de Logística 1">Supervisor de Operação</option>	
-							<option value="Operador de Logística 1">RH</option>	
-							<option value="Operador de Logística 1">Gerente de CD</option>								
+							<?php $con = mysqli_query($phpmyadmin , $gdCargo);
+								$x=0; 
+								while($cargo = $con->fetch_array()):{?>
+									<option value="'<?php echo $vtId[$x] = $cargo["ID"]; ?>'"><?php echo $vtNome[$x] = $cargo["NOME"]; ?></option>
+								<?php $x;} endwhile;?>								
 						</select>	
 					</div>
 				</div>
@@ -159,11 +155,11 @@ $totalAlcancado=0;
 						<div class="select">
 							<select name="turno">
 								<option selected="selected" value="">Selecione</option>	
-								<option value="matutino">Raphael Souza</option>
-								<option value="vespetino">Marivalda Souza</option>
-								<option value="vespetino">Lucas Souza</option>
-								<option value="vespetino">Monara Marim</option>
-								<option value="comercial">Pedro Becali</option>
+								<?php $con = mysqli_query($phpmyadmin , $gdGestor);
+								$x=0; 
+								while($gestor = $con->fetch_array()):{?>
+									<option value="'<?php echo $vtId[$x] = $gestor["ID"]; ?>'"><?php echo $vtNome[$x] = $gestor["NOME"]; ?></option>
+								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
 					</div>					
