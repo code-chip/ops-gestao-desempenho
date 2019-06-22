@@ -29,6 +29,7 @@ INSERT INTO CARGO(NOME, SITUACAO) VALUES('Assistente Administrativo','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Líder de Operação','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Assistente de Logística','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Analista Administrativo','Ativo');
+INSERT INTO CARGO(NOME, SITUACAO) VALUES('Analista de Suporte','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Analista de Logística','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Supervisor de Operação','Ativo');
 INSERT INTO CARGO(NOME, SITUACAO) VALUES('Recursos Humanos','Ativo');
@@ -41,6 +42,6 @@ INSERT INTO GESTOR(NOME, SITUACAO) VALUES('Pedro Becali','Ativo');
 INSERT INTO GESTOR(NOME, SITUACAO) VALUES('Monara Marim','Ativo');
 INSERT INTO GESTOR(NOME, SITUACAO) VALUES('Marcos Freitas','Ativo');
 
-INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, EFETIVACAO, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA_ID, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('Lwcyano Will','lwcyano.will',MD5('814172050'),'lwcyano.will@evino.com.br','Analista de Suporte','Comercial','Marcos Freitas','Administrativo',635,'2018-01-22','2019-06-18 14:50:','Ativo');
+INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('Lwcyano Will','lwcyano.will',MD5('814172050'),'lwcyano.will@evino.com.br',9,3,6,8,635,'2018-01-22','2019-06-18 14:50:','Ativo');
 
 
