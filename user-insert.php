@@ -128,9 +128,9 @@ $totalAlcancado=0;
 						<div class="select">
 							<select name="turno">
 								<option selected="selected" value="">Selecione</option>	
-								<option value="matutino">Matutino</option>
-								<option value="vespetino">Vespetino</option>
-								<option value="comercial">Comercial</option>
+								<option value="Matutino">Matutino</option>
+								<option value="Vespetino">Vespetino</option>
+								<option value="Comercial">Comercial</option>
 							</select>	
 						</div>
 					</div>					
