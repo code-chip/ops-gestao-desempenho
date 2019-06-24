@@ -5,7 +5,6 @@ include('conexao.php');
 include('verifica_login.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
-header("Content-type: text/html; charset=utf-8");
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $turno = trim($_REQUEST['turno']);
 $nome = trim($_REQUEST['nome']);
@@ -17,8 +16,7 @@ $totalAlcancado=0;
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">	
+<head>	
 	<title>Gestão de Desempenho - Cadastrar Usuário</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -51,14 +49,7 @@ $totalAlcancado=0;
 	$gdGestor="SELECT ID, NOME FROM gd.GESTOR WHERE SITUACAO='Ativo'";
 	$gdCargo="SELECT ID, NOME FROM gd.CARGO WHERE SITUACAO='Ativo'";
 	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
-	$con = mysqli_query($phpmyadmin , $gdCargo);
-		$x=0;
-		while($cargo = $con->fetch_array()){
-			$vtId[$x] = $cargo["ID"]; 
-			$vtNome[$x] = $cargo["NOME"];
-			echo $vtNome[$x];
-		$x++;
-		}		
+	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";		
 ?>
 <div>	
 	<section class="section">
@@ -120,7 +111,7 @@ $totalAlcancado=0;
 							<?php $con = mysqli_query($phpmyadmin , $gdCargo);
 								$x=0; 
 								while($cargo = $con->fetch_array()):{?>
-									<option value="'<?php echo $vtId[$x] = $cargo["ID"]; ?>'"><?php echo $vtNome[$x] = $cargo["NOME"]; ?></option>
+									<option value="'<?php echo $vtId[$x] = $cargo["ID"]; ?>'"><?php echo $vtNome[$x] = utf8_encode($cargo["NOME"]); ?></option>
 								<?php $x;} endwhile;?>								
 						</select>	
 					</div>
@@ -158,7 +149,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdGestor);
 								$x=0; 
 								while($gestor = $con->fetch_array()):{?>
-									<option value="'<?php echo $vtId[$x] = $gestor["ID"]; ?>'"><?php echo $vtNome[$x] = $gestor["NOME"]; ?></option>
+									<option value="'<?php echo $vtId[$x] = $gestor["ID"]; ?>'"><?php echo $vtNome[$x] = utf8_encode($gestor["NOME"]); ?></option>
 								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
@@ -174,12 +165,12 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="setor">
-								<option selected="selected" value="">Operação</option>	
-								<option value="matutino">Administrativo</option>
-								<option value="vespetino">Recebimento</option>
-								<option value="comercial">Expedição</option>
-								<option value="comercial">Devolução</option>
-								<option value="comercial">Avarias</option>
+								<option selected="selected" value="">Selecione</option>	
+								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
+								$x2=0; 
+								while($setor = $con->fetch_array()):{?>
+									<option value="'<?php echo $vtId[$x2] = $setor["ID"]; ?>'"><?php echo $vtNome[$x2] = utf8_encode($setor["NOME"]); ?></option>
+								<?php $x;} endwhile;?>									
 							</select>	
 						</div>
 					</div>					
@@ -195,7 +186,7 @@ $totalAlcancado=0;
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input type="text" class="input" id="textInput" placeholder="635">
+						<input type="text" class="input" id="textInput" placeholder="629">
 					</div>
 				</div>
 			</div>
@@ -233,9 +224,9 @@ $totalAlcancado=0;
 						<div class="select">
 							<select name="turno">
 								<option selected="selected" value="">Ativo</option>	
-								<option value="matutino">Férias</option>
-								<option value="vespetino">Licença</option>
-								<option value="comercial">Desligado</option>
+								<option value="Férias">Férias</option>
+								<option value="Licença">Licença</option>
+								<option value="Desligado">Desligado</option>
 							</select>	
 						</div>
 					</div>					
