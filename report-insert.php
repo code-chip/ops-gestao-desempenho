@@ -13,9 +13,8 @@ $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $turno = trim($_REQUEST['turno']);
-//$atividade = trim($_REQUEST['atividade']);
-//$ordenacao = trim($_REQUEST['ordenacao']);
-//$meta = trim($_REQUEST['meta']);
+$setor= trim($_REQUEST['setor']);
+
 $contador = 0;
 $totalAlcancado=0;
 
@@ -24,10 +23,14 @@ $totalAlcancado=0;
 <html>
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
-	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 <body>
+	<?php
+	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
+	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
+	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
+			
+	?>
 	<br/>
 	<span id="topo"></span>
 <div>	
@@ -36,7 +39,7 @@ $totalAlcancado=0;
 		<div class="field has-addons has-addons-centered">			
 			<!--SELEÇÃO TURNO-->
 			<div class="field-label is-normal">
-				<label for="turno" class="label">Turno:</label>
+				<label for="turno" class="label">Turno/Setor:</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
@@ -44,18 +47,30 @@ $totalAlcancado=0;
 						<div class="select">
 							<select name="turno">
 								<option selected="selected" value="">Selecione</option>	
-								<option value="matutino">Matutino</option>
-								<option value="vespetino">Vespetino</option>
-								<option value="recebimento">Recebimento</option>	
-								<option value="devolucao">Devoluções/Avarias</option>
+								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
+								$x=0; 
+								while($turno = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
+						<div class="select">
+							<select name="setor">
+								<option selected="selected" value="">Selecione</option>	
+								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
+								$x=0; 
+								while($setor = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
+							</select>	
+						</div>									
+
 					<!--<div class="control">-->
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
 						<input type="submit" class="button is-primary" id="submitQuery" value="Filtrar"/>
 					</div>
-				</div>						
-			</div>
+				</div>										
+			</div>			
 		</div>
 	</form>	
 	<?php endif; ?>		
@@ -63,16 +78,16 @@ $totalAlcancado=0;
 
 <?php
 date('Y-m-d H:i');
-if( $turno != ""){	
-	$query="select nome from gestaodesempenho.desempenho limit 10";	
+if( $turno != "" && $setor != ""){	
+	$query="SELECT ID, NOME FROM gd.USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor."";	
 	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query); //or die($mysqli->error);
 	while($operadores= $cnx->fetch_array()){
-		$vtNome[$x]=$operadores["nome"];
-		$contador=$x;		
+		$vtNome[$x]=$operadores["NOME"];					
 		$x++;
+		$contador=$x;
 	}	
 }	
 ?>
@@ -82,7 +97,7 @@ if( $turno != ""){
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
 		<th>N°</th>
-		<th>Operador</th>
+		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
 		<th class="coluna">Meta</th>
@@ -212,6 +227,7 @@ if( $turno != ""){
 		</div>
 	</form>			
 <?php endif; ?>
+
 </body>
 </html>
 
