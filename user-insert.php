@@ -5,13 +5,11 @@ include('verifica_login.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$cargo = trim($_REQUEST['cargo']);
 $nome = trim($_REQUEST['nome']);
 $login = trim($_REQUEST['login']);
 $senha = trim($_REQUEST['senha']);
 $email = trim($_REQUEST['email']);
-//$cargo=$_GET['cargo'];
-//$cargo=$_POST['cargo'];
+$cargo = trim($_REQUEST['cargo']);
 $turno = trim($_REQUEST['turno']);
 $gestor = trim($_REQUEST['gestor']);
 $setor = trim($_REQUEST['setor']);
@@ -20,8 +18,6 @@ $efetivacao = trim($_REQUEST['efetivacao']);
 $cadastradoem = trim($_REQUEST['cadastradoem']);
 $situacao = trim($_REQUEST['situacao']);
 $observacao = trim($_REQUEST['observacao']);
-$contador = 0;
-$totalAlcancado=0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,16 +54,7 @@ $totalAlcancado=0;
 	$gdGestor="SELECT ID, NOME FROM gd.GESTOR WHERE SITUACAO='Ativo'";
 	$gdCargo="SELECT ID, NOME FROM gd.CARGO WHERE SITUACAO='Ativo'";
 	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
-
-	$con = mysqli_query($phpmyadmin , $gdCargo);
-	$xt=0; 
-	while($cargo = $con->fetch_array()){
-		$vtId[$xt] = $cargo["ID"]; 
-		$vtNome[$xt] = utf8_encode($cargo["NOME"]); 
-		$xt++;
-	}
-	echo $cargo;			
+	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";				
 ?>
 <div>	
 	<section class="section">
@@ -75,11 +62,11 @@ $totalAlcancado=0;
 			<h3 class="title">Cadastro de Usuário</h3>
 		<hr>
 	<main>
-	<form id="form1" action="user-insert.php" method="POST">
+	<form id="form1" action="user-insert.php" method="GET">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo "TESTE"; ?>">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara">
 				</div>			
 		</div>
 		<div class="field">
@@ -119,20 +106,25 @@ $totalAlcancado=0;
 		<div class="field is-horizontal">
 			<!--SELEÇÃO CARGO-->
 			<div class="field-label is-normal">
-				<label for="cargo" class="label">Cargo:</label>
+				<label for="cargo" class="label">Cargo</label>
 			</div>
 			<div class="field-body">
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select">
-						<select name="cargo">
-							<?php $con = mysqli_query($phpmyadmin , $gdCargo);
-								$xt=0; 
-								while($cargo = $con->fetch_array()){
-									echo '<option value="teste">'.$vtNome[$xt].'</option>';
-									$xt++;
-								} 
-							?>								
+						<select name="cargo">							
+							<option value="1">Operador de Logística 1</option>
+							<option value="2">Operador de Logística 2</option>
+							<option value="3">Operador de Logística 3</option>
+							<option value="4">Auxiliar Administrativo</option>
+							<option value="5">Assistente Administrativo</option>
+							<option value="6">Líder de Operação</option>
+							<option value="7">Assistente de Logística</option>
+							<option value="8">Analista Administrativo</option>
+							<option value="9">Analista de Suporte</option>
+							<option value="10">Analista de Logística</option>
+							<option value="11">Supervisor de Operação</option>	
+							<option value="12">Recursos Humanos</option>															
 						</select>	
 					</div>
 				</div>
@@ -147,12 +139,10 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="turno">
-								<option selected="selected" value="">Selecione</option>	
-								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
-								$x=0; 
-								while($turno = $con->fetch_array()):{?>
-									<option value="<?php $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
+								<option value="">Selecione</option>
+								<option value="1">Matutino</option>
+								<option value="2">Vespetino</option>
+								<option value="3">Comercial</option>
 							</select>	
 						</div>
 					</div>					
@@ -166,13 +156,14 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="gestor">
-								<option selected="selected" value="">Selecione</option>	
-								<?php $con = mysqli_query($phpmyadmin , $gdGestor);
-								$x=0; 
-								while($gestor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $gestor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($gestor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>								
+							<select name="gestor">								
+								<option value="">Selecione</option>
+								<option value="1">Marivalda Souza</option>
+								<option value="2">Raphael Souza</option>
+								<option value="3">Lucas Souza</option>
+								<option value="4">Pedro Becali</option>
+								<option value="5">Monara Marim</option>
+								<option value="6">Marcos Freitas</option>							
 							</select>	
 						</div>
 					</div>					
@@ -187,12 +178,13 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="setor">
-								<option selected="selected" value="">Selecione</option>	
-								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-								$x2=0; 
-								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x2] = $setor["ID"]; ?>"><?php echo $vtNome[$x2] = utf8_encode($setor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>									
+								<option value="">Selecione</option>
+								<option value="1">Operação</option>
+								<option value="2">Administrativo</option>
+								<option value="3">Recebimento</option>
+								<option value="4">Devolução</option>
+								<option value="5">Avarias</option>
+								<option value="6">SAC</option>										
 							</select>	
 						</div>
 					</div>					
@@ -203,7 +195,7 @@ $totalAlcancado=0;
 		<div class="field is-horizontal">			
 			<!--CAMPO MATRICULA-->
 			<div class="field-label is-normal">
-				<label class="label" for="matricula">Matricula:</label>
+				<label class="label" for="matricula">Matricula</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
@@ -214,7 +206,7 @@ $totalAlcancado=0;
 			</div>
 			<!--CAMPO EFETIVADO-->
 			<div class="field-label is-normal">
-				<label class="label" for="efetivacao">Admissão:</label>
+				<label class="label" for="efetivacao">Admissão</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
@@ -225,15 +217,15 @@ $totalAlcancado=0;
 			</div>
 			<!--CAMPO DATA E HORA DE CADASTRO-->
 			<div class="field-label is-normal">
-				<label class="label" for="Cadastrado">Cadastrado:</label>
+				<label class="label" for="cadastradoem">Cadastrado</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">
-					<fieldset disabled>								
+					<!--<fieldset disabled>-->								
 					<div class="control" style="max-width:11em;">
-						<input name="cadastradoem" type="text" class="input" id="textInput" value="<?php echo date('Y-m-d H:i:s')?>">
+						<input name="cadastradoem" type="text" class="input" id="textInput" value="<?php echo date('Y-m-d H:i:s');?>">
 					</div>
-					</fieldset>
+					<!--</fieldset>-->
 				</div>
 			</div>				
 			<!--DIVISÃO SITUAÇÃO-->
@@ -245,7 +237,7 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="situacao">
-								<option selected="selected" value="">Ativo</option>	
+								<option selected="selected" value="Ativo">Ativo</option>	
 								<option value="Férias">Férias</option>
 								<option value="Licença">Licença</option>
 								<option value="Desligado">Desligado</option>
@@ -264,7 +256,7 @@ $totalAlcancado=0;
 		</div>
 			<div class="field">
 				<div class="control">
-					<button type="submit" class="button is-primary" id="submitQuery">Cadastrar</button>
+					<button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Cadastrar</button>
 				</div>
 			</div>				
 		</form>
@@ -287,33 +279,54 @@ $totalAlcancado=0;
 	</main>	
 </div>
 </section>
-<?php 
-	echo "teste";
-	echo "0"+$cargo;
-?>
 </div>
 </body>
 </html>
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
-if( $nome != "" && $login !="" && $senha !=""){
-	echo $cargo;	
-	$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."');";
-	echo $inserirUsuario;
-	$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
-	header("Location: localhost/gestaodesempenho/register.php");	
-}	
+if(isset($_GET['cadastrar'])){
+	if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $cadastradoem!="" && $situacao!=""){
+		echo $cargo;	
+		$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
+		$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
+		?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
+		header("Location: localhost/gestaodesempenho/register.php");	
+	}
+	else if( $nome==""){ 
+		?><script language="Javascript"> alert('Preenchimento do Nome é obrigatório!');</script><?php
+	}
+	else if($login==""){
+		?><script language="Javascript"> alert('Preenchimento do Login é obrigatório!');</script><?php
+	} 
+	else if($senha==""){
+		?><script language="Javascript"> alert('Preenchimento da Senha é obrigatório!');</script><?php
+	} 
+	else if($email==""){
+		?><script language="Javascript"> alert('Preenchimento do E-mail é obrigatório!');</script><?php
+	}
+	else if($cargo==""){
+		?><script language="Javascript"> alert('Preenchimento do Cargo é obrigatório!');</script><?php
+	}
+	else if($turno==""){
+		?><script language="Javascript"> alert('Preenchimento do Turno é obrigatório!');</script><?php
+	}
+	else if($gestor==""){
+		?><script language="Javascript"> alert('Preenchimento do Gestor é obrigatório!');</script><?php
+	}
+	else if($setor==""){
+		?><script language="Javascript"> alert('Preenchimento do Setor é obrigatório!');</script><?php
+	}
+	else if($matricula==""){
+		?><script language="Javascript"> alert('Preenchimento da Matricula é obrigatório!');</script><?php
+	}
+	else if($efetivacao==""){
+		?><script language="Javascript"> alert('Preenchimento da Admissão é obrigatório!');</script><?php
+	}
+	else if($cadastradoem==""){
+		?><script language="Javascript"> alert('Preenchimento do Cadastro é obrigatório!');</script><?php
+	}
+	else{	
+		?><script language="Javascript"> alert('Preenchimento da Situação é obrigatório!');</script><?php
+	}	
+}//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
 ?>
-<!--$nome 
-$login 
-$senha 
-$email 
-$cargo 
-$turno 
-$gestor
-$setor 
-$matricula 
-$efetivacao
-$cadastradoem 
-$situacao 
-$observacao-->
