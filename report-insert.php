@@ -63,7 +63,7 @@ $totalAlcancado=0;
 									<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
 							</select>	
-						</div>									
+						</div>								
 
 					<!--<div class="control">-->
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
@@ -88,7 +88,7 @@ if( $turno != "" && $setor != ""){
 		$vtNome[$x]=$operadores["NOME"];					
 		$x++;
 		$contador=$x;
-	}	
+	} 		
 }	
 ?>
 <!--FINAL DO FORMULÁRIO-->
