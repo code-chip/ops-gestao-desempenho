@@ -285,48 +285,56 @@ $observacao = trim($_REQUEST['observacao']);
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
 if(isset($_GET['cadastrar'])){
-	if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $cadastradoem!="" && $situacao!=""){
-		echo $cargo;	
-		$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
-		$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
-		?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
-		header("Location: localhost/gestaodesempenho/register.php");	
+	$checkLogin="SELECT LOGIN FROM gd.USUARIO WHERE LOGIN='".$login."'";
+	$result = mysqli_query($phpmyadmin, $checkLogin);		 
+	$check = mysqli_num_rows($result);
+	//echo $row;
+	if($check >= 1){
+		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
-	else if( $nome==""){ 
-		?><script language="Javascript"> alert('Preenchimento do Nome é obrigatório!');</script><?php
-	}
-	else if($login==""){
-		?><script language="Javascript"> alert('Preenchimento do Login é obrigatório!');</script><?php
-	} 
-	else if($senha==""){
-		?><script language="Javascript"> alert('Preenchimento da Senha é obrigatório!');</script><?php
-	} 
-	else if($email==""){
-		?><script language="Javascript"> alert('Preenchimento do E-mail é obrigatório!');</script><?php
-	}
-	else if($cargo==""){
-		?><script language="Javascript"> alert('Preenchimento do Cargo é obrigatório!');</script><?php
-	}
-	else if($turno==""){
-		?><script language="Javascript"> alert('Preenchimento do Turno é obrigatório!');</script><?php
-	}
-	else if($gestor==""){
-		?><script language="Javascript"> alert('Preenchimento do Gestor é obrigatório!');</script><?php
-	}
-	else if($setor==""){
-		?><script language="Javascript"> alert('Preenchimento do Setor é obrigatório!');</script><?php
-	}
-	else if($matricula==""){
-		?><script language="Javascript"> alert('Preenchimento da Matricula é obrigatório!');</script><?php
-	}
-	else if($efetivacao==""){
-		?><script language="Javascript"> alert('Preenchimento da Admissão é obrigatório!');</script><?php
-	}
-	else if($cadastradoem==""){
-		?><script language="Javascript"> alert('Preenchimento do Cadastro é obrigatório!');</script><?php
-	}
-	else{	
-		?><script language="Javascript"> alert('Preenchimento da Situação é obrigatório!');</script><?php
+	else{
+		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $cadastradoem!="" && $situacao!=""){	
+			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
+			$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
+			?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
+			header("Location: localhost/gestaodesempenho/register.php");	
+		}
+		else if( $nome==""){ 
+			?><script language="Javascript"> alert('Preenchimento do Nome é obrigatório!');</script><?php
+		}
+		else if($login==""){
+			?><script language="Javascript"> alert('Preenchimento do Login é obrigatório!');</script><?php
+		} 
+		else if($senha==""){
+			?><script language="Javascript"> alert('Preenchimento da Senha é obrigatório!');</script><?php
+		} 
+		else if($email==""){
+			?><script language="Javascript"> alert('Preenchimento do E-mail é obrigatório!');</script><?php
+		}
+		else if($cargo==""){
+			?><script language="Javascript"> alert('Preenchimento do Cargo é obrigatório!');</script><?php
+		}
+		else if($turno==""){
+			?><script language="Javascript"> alert('Preenchimento do Turno é obrigatório!');</script><?php
+		}
+		else if($gestor==""){
+			?><script language="Javascript"> alert('Preenchimento do Gestor é obrigatório!');</script><?php
+		}
+		else if($setor==""){
+			?><script language="Javascript"> alert('Preenchimento do Setor é obrigatório!');</script><?php
+		}
+		else if($matricula==""){
+			?><script language="Javascript"> alert('Preenchimento da Matricula é obrigatório!');</script><?php
+		}
+		else if($efetivacao==""){
+			?><script language="Javascript"> alert('Preenchimento da Admissão é obrigatório!');</script><?php
+		}
+		else if($cadastradoem==""){
+			?><script language="Javascript"> alert('Preenchimento do Cadastro é obrigatório!');</script><?php
+		}
+		else{	
+			?><script language="Javascript"> alert('Preenchimento da Situação é obrigatório!');</script><?php
+		}
 	}	
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
 ?>
