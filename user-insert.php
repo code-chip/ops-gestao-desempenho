@@ -285,10 +285,10 @@ $observacao = trim($_REQUEST['observacao']);
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
 if(isset($_GET['cadastrar'])){
+	//VALIDAÇÃO SE LOGIN É ÚNICO.
 	$checkLogin="SELECT LOGIN FROM gd.USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
-	$check = mysqli_num_rows($result);
-	//echo $row;
+	$check = mysqli_num_rows($result);	
 	if($check >= 1){
 		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
