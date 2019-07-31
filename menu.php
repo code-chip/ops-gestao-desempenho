@@ -1,4 +1,4 @@
-<?php  
+<?php 
 session_start();
 include('verifica_login.php');
 header('Content-Type: text/html; charset=UTF-8');
