@@ -12,9 +12,10 @@ include('verifica_login.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$turno = trim($_REQUEST['turno']);
+$teste;
+$turno = trim($_POST['turno']);
+//$global= $_REQUEST['turno'];
 $setor= trim($_REQUEST['setor']);
-
 $contador = 0;
 $totalAlcancado=0;
 
@@ -23,6 +24,8 @@ $totalAlcancado=0;
 <html>
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
+	<script type="text/javascript" src="/js/lib/dummy.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
 </head>
 <body>
 	<?php
@@ -34,8 +37,8 @@ $totalAlcancado=0;
 	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if($turno ==""): ?>
-	<form id="form1" action="report-insert.php" method="GET" >
+	<?php if($turno =="" && isset($_POST['salvarDados'])==null ): ?>
+	<form id="form1" action="" method="POST">
 		<div class="field has-addons has-addons-centered">			
 			<!--SELEÇÃO TURNO-->
 			<div class="field-label is-normal">
@@ -63,8 +66,7 @@ $totalAlcancado=0;
 									<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
 							</select>	
-						</div>								
-
+						</div>
 					<!--<div class="control">-->
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
 						<input type="submit" class="button is-primary" id="submitQuery" value="Filtrar"/>
@@ -85,25 +87,32 @@ if( $turno != "" && $setor != ""){
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query); //or die($mysqli->error);
 	while($operadores= $cnx->fetch_array()){
+		$vtId[$x]=$operadores["ID"];
 		$vtNome[$x]=$operadores["NOME"];					
 		$x++;
 		$contador=$x;
-	} 		
-}	
+	}
+	$global=print_r($_REQUEST); 
+	echo $global;
+	print_r($_REQUEST); 		
+}
+$gdPresenca="SELECT ID, NOME FROM gd.PRESENCA WHERE SITUACAO='Ativo'";
+$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
+$gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";	
 ?>
-<!--FINAL DO FORMULÁRIO-->
+<!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if($contador !=0) : ?>
-<hr/>	
+<hr/>
+	<form id="form2" action="" method="POST">	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
 		<th>N°</th>
+		<th>ID</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
 		<th class="coluna">Meta</th>
-		<th >Alcançado</th>
-		<th>Desempenho</th>
-		<th>Inserir</th>
+		<th >Alcançado</th>		
 		<th>Data</th> 			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
@@ -116,85 +125,88 @@ if( $turno != "" && $setor != ""){
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo $vtNome[$i]?></td>			
-		<td>
-			<!--SELEÇÃO PRESENÇA-->			
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control">
-						<div class="select">
-							<select name="atividade">
-								<option selected="selected" value="Presente">Presente</option>	
-								<option value="checkout">Ausente</option>
-								<option value="separacao">Folga</option>										
-							</select>	
-						</div>
-					</div>					
-				</div>						
-			</div>
-		</td>
-		<td>
-			<!--SELEÇÃO ATIVIDADE-->			
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control">
-						<div class="select">
-							<select name="atividade">
-								<option selected="selected" value="">Selecione</option>	
-								<option value="checkout">Checkout</option>
-								<option value="separacao">Separação</option>	
-								<option value="pbl">PBL</option>	
-								<option value="recebimento">Recebimento</option>
-								<option value="devolucao">Devolução</option>		
-							</select>	
-						</div>
-					</div>					
-				</div>						
-			</div>
-		</td>
-		<td class="field" style="max-width:7em;">
-			<div class="field"><!--COLUNA META-->				
+		<td class="field"><!--COLUNA ID-->
+			<div class="field">				
 				<div class="control">
-					<input style="max-width:6em;" type="text" class="input" id="Meta" placeholder="Obrigatório">
+					<input name="id[]" style="max-width:3em;" type="text" class="input" value="<?php echo $vtId[$i]?>">
 				</div>				
 			</div>
 		</td>
-		<td>
-			<div class="field"><!--COLUNA ALCANÇADO-->					
+		<td class="field"><!--COLUNA NOME-->
+			<div class="field">				
 				<div class="control">
-					<input style="max-width:5em;" type="text" class="input" id="Alcancado" placeholder="Obrigatório">
-				</div>				
-			</div>
-		</td>			
-		<td>
-			<div class="field"><!--COLUNA DESEMPENHO-->					
-				<div class="control">
-					<!--<input type="text" class="input" id="t" placeholder="Obrigatório" onkeypress="this.style.width = ((this.value.length + 3) * 8) + 'px';">-->
-					<input style="max-width:5em;" type="text" class="input" id="t" placeholder="Obrigatório">
+					<input name="nome[]" type="text" class="input" value="<?php echo $vtNome[$i]?>">
 				</div>				
 			</div>
 		</td>		
-		<td>
-			<!--SELEÇÃO SALVAR-->			
+		<td><!--SELEÇÃO PRESENÇA-->						
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="atividade">
-								<option selected="selected" value="todos">Todos</option>	
-								<option value="sim">Sim</option>
-								<option value="nao">Não</option>										
+							<select name="presenca[]">
+								<option selected="selected" value="">Selecione</option>	
+								<?php $con = mysqli_query($phpmyadmin , $gdPresenca);
+								$x=0; 
+								while($presenca = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($presenca["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
+								<!--<option selected="selected" value="Presente">Presente</option>	
+								<option value="Ausente">Ausente</option>
+								<option value="Folga">Folga</option>-->										
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+		</td>		
+		<td><!--SELEÇÃO ATIVIDADE-->						
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="atividade[]">
+								<?php $con = mysqli_query($phpmyadmin , $gdAtividade);
+								$x=0; 
+								while($atividade = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
+								<!--<option selected="selected" value="">Selecione</option>	
+								<option value="Checkout">Checkout</option>
+								<option value="Separação">Separação</option>	
+								<option value="PBL">PBL</option>	
+								<option value="Recebimento">Recebimento</option>
+								<option value="Devolução">Devolução</option>-->		
 							</select>	
 						</div>
 					</div>					
 				</div>						
 			</div>
 		</td>
-		<td>
-			<?php echo date('d/m/Y');?>
-		</td>					
+		<td class="field" style="max-width:7em;"><!--COLUNA META-->
+			<div class="field">				
+				<div class="control">
+					<input name="meta[]" style="max-width:6em;" type="text" class="input" id="nota" placeholder="Obrigatório">
+				</div>				
+			</div>
+		</td>
+		<td><!--COLUNA ALCANÇADO-->	
+			<div class="field">				
+				<div class="control">
+					<input name="alcancado[]" style="max-width:5em;" type="text" class="input" id="nota2" placeholder="Obrigatório">
+				</div>				
+			</div>
+		</td>
+		<td class="field"><!--COLUNA DATA-->
+			<div class="field">				
+				<div class="control">
+					<input name="registro[]" type="text" class="input" value="<?php echo date('Y-m-d');?>">
+				</div>				
+			</div>
+		</td>						
 	</tr>
-<?php endfor; ?>
+<form>	
+<?php endfor;?>
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
@@ -202,7 +214,7 @@ if( $turno != "" && $setor != ""){
 		</div>
 	</a>
 	<br/>
-	<form id="form1" action="report-insert.php" method="GET" >
+	<form id="form1" action="" method="POST" >
 		<div class="field is-grouped is-grouped-right">			
 			<!--SELEÇÃO TURNO-->
 			<div class="field-label is-normal">
@@ -219,16 +231,46 @@ if( $turno != "" && $setor != ""){
 						</div>
 						<!--<div class="control">-->
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Atualizar" <?php $turno=$turno; ?>/>						
+						<input type="submit" class="button is-primary" id="submitQuery" value="Atualizar"/>						
 					</div>
-					<input type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
+					<div class="control">
+						<a href="report-insert.php" class="button">Voltar</a>
+					</div>
+					<div class="control">
+						<input name="Limpar" type="submit" class="button is-primary" onClick="history.go(0)" value="Limpar"/>
+					</div>
+					<input name="salvarDados" type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
 				</div>						
 			</div>
 		</div>
-	</form>			
+	</form>	
 <?php endif; ?>
-
 </body>
 </html>
-
+<?php
+if(isset($_POST['salvarDados'])){
+	//$global= $_REQUEST['turno'];
+	$turno = $_POST['turno'];
+	$ids= array_filter($_POST['id']);
+	$presencas = array_filter($_POST['presenca']);
+	$atividades = array_filter($_POST['atividade']);
+	$metas = array_filter($_POST['meta']);
+	$alcancados= array_filter($_POST['alcancado']);	
+	$registros = array_filter($_POST['registro']);	
+	echo sizeof($atividades);
+	echo sizeof($presencas);
+	echo sizeof($metas);
+	echo sizeof($ids);
+	echo "<br/>";	
+	echo "TUrno é ".$global;
+	echo $global;
+	echo "<br/>";	
+	for( $i = 0; $i < sizeof($presencas); $i++ ){
+		$desempenho=($alcancados[$i]/$metas[$i])*100;
+		//echo "Nome: ".$ids[$i]." Presença:".$presencas[$i]." Atividade:".$atividades[$i]." Meta: ".$metas[$i]." Alcançado:".$alcancados[$i].". ";
+		echo "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",".$registros[$i].")";
+		echo "<br/>";		 
+	}	
+}
+?>
 
