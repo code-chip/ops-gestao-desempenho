@@ -12,9 +12,7 @@ include('verifica_login.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$teste;
 $turno = trim($_POST['turno']);
-//$global= $_REQUEST['turno'];
 $setor= trim($_REQUEST['setor']);
 $contador = 0;
 $totalAlcancado=0;
@@ -85,16 +83,19 @@ if( $turno != "" && $setor != ""){
 	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
 	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query); //or die($mysqli->error);
+	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
 		$vtId[$x]=$operadores["ID"];
 		$vtNome[$x]=$operadores["NOME"];					
 		$x++;
 		$contador=$x;
 	}
-	$global=print_r($_REQUEST); 
-	echo $global;
-	print_r($_REQUEST); 		
+	if(mysqli_num_rows($cnx)==null){
+		?><script type="text/javascript">
+			alert('Nenhum usuário cadastrado no turno e setor selecionado!');
+			window.location.href=window.location.href;
+		</script> <?php		
+	}			
 }
 $gdPresenca="SELECT ID, NOME FROM gd.PRESENCA WHERE SITUACAO='Ativo'";
 $gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
@@ -150,10 +151,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 								$x=0; 
 								while($presenca = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($presenca["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
-								<!--<option selected="selected" value="Presente">Presente</option>	
-								<option value="Ausente">Ausente</option>
-								<option value="Folga">Folga</option>-->										
+								<?php $x;} endwhile;?>																		
 							</select>	
 						</div>
 					</div>					
@@ -170,13 +168,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 								$x=0; 
 								while($atividade = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
-								<!--<option selected="selected" value="">Selecione</option>	
-								<option value="Checkout">Checkout</option>
-								<option value="Separação">Separação</option>	
-								<option value="PBL">PBL</option>	
-								<option value="Recebimento">Recebimento</option>
-								<option value="Devolução">Devolução</option>-->		
+								<?php $x;} endwhile;?>
 							</select>	
 						</div>
 					</div>					
@@ -249,28 +241,37 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 </html>
 <?php
 if(isset($_POST['salvarDados'])){
-	//$global= $_REQUEST['turno'];
-	$turno = $_POST['turno'];
 	$ids= array_filter($_POST['id']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
 	$metas = array_filter($_POST['meta']);
 	$alcancados= array_filter($_POST['alcancado']);	
-	$registros = array_filter($_POST['registro']);	
-	echo sizeof($atividades);
-	echo sizeof($presencas);
-	echo sizeof($metas);
-	echo sizeof($ids);
-	echo "<br/>";	
-	echo "TUrno é ".$global;
-	echo $global;
-	echo "<br/>";	
-	for( $i = 0; $i < sizeof($presencas); $i++ ){
+	$registros = array_filter($_POST['registro']);
+
+	//CHECK TURNO
+	$checkTurno="SELECT TURNO_ID FROM gd.USUARIO WHERE ID=".$ids[0]."";
+	$cnx= mysqli_query($phpmyadmin, $checkTurno);
+	$turnoresult=$cnx->fetch_array();
+	$turno=$turnoresult["TURNO_ID"];
+	
+	for( $i = 0; $i < sizeof($atividades); $i++ ){
 		$desempenho=($alcancados[$i]/$metas[$i])*100;
-		//echo "Nome: ".$ids[$i]." Presença:".$presencas[$i]." Atividade:".$atividades[$i]." Meta: ".$metas[$i]." Alcançado:".$alcancados[$i].". ";
-		echo "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",".$registros[$i].")";
-		echo "<br/>";		 
+		$inserirDesempenho="INSERT INTO gd.DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."'); ";		
+		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
 	}	
+	if(mysqli_error($phpmyadmin)==null){	
+		?><script type="text/javascript">
+			alert('Desempenho cadastro com sucessos');
+			window.location.href=window.location.href;		
+		</script><?php
+	}
+	else{
+		?><script type="text/javascript">
+			alert('Erro ao cadastrar Desempenho, campos Meta e Alcançado não pode estar vazio!!');
+			window.location.href=window.location.href;
+		</script><?php
+	}
+	//header("Location: /gestaodesempenho/report-insert.php");	
 }
 ?>
 
