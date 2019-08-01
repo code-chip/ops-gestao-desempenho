@@ -294,7 +294,7 @@ if(isset($_GET['cadastrar'])){
 	}
 	else{
 		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $cadastradoem!="" && $situacao!=""){	
-			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
+			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
 			$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
 			?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
 			header("Location: localhost/gestaodesempenho/register.php");	
