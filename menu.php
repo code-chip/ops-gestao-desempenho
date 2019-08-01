@@ -47,10 +47,10 @@ $menuConfiguracoes;
 						</div>
 					</div>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a href="report.php" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
+						<a href="#" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
 						<div class="navbar-dropdown">
-							<a href="report-private.php" class="navbar-item">Gestão</a>
-							<a href="report-insert.php" class="navbar-item">Individual</a>							
+							<a href="report.php" class="navbar-item">Gestão</a>
+							<a href="report-private.php" class="navbar-item">Individual</a>							
 						</div>
 					</div>
 				<div class="navbar-item has-dropdown is-hoverable">
