@@ -136,7 +136,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
 				<div class="control">
-					<input name="nome[]" type="text" class="input" value="<?php echo $vtNome[$i]?>">
+					<input name="nome[]" type="text" class="input" value="<?php echo utf8_encode($vtNome[$i])?>">
 				</div>				
 			</div>
 		</td>		
