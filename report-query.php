@@ -1,11 +1,23 @@
 <style type="text/css">
-	/*$table-cell-padding: .75rem !default; $table-sm-cell-padding: .3rem !default; $table-bg: transparent !default; $table-bg-accent: rgba(0,0,0,.05) !default; $table-bg-hover: rgba(0,0,0,.075) !default; $table-bg-active: $table-bg-hover !default; $table-border-width: $border-width !default; $table-border-color: $gray-lighter !default;*/	
 	.table__wrapper {
   		overflow-x: auto;
 	}
 	.scrollWrapper {
-  		width: 100%;  		
+		display:table;
+  		width: 100%;
+  		overflow-x: auto;  		
 	}
+	a[href="#top"]{
+    padding:10px;
+    position:fixed;
+    top: 90%;
+    right:40px;
+    display:none;
+    font-size: 30px;
+}
+a[href="#top"]:hover{
+    text-decoration:none;
+}
 </style>
 <?php
 session_start();
@@ -27,7 +39,23 @@ $totalAlcancado=0;
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    $(window).scroll(function(){
+        if ($(this).scrollTop() > 100) {
+            $('a[href="#top"]').fadeIn();
+        } else {
+            $('a[href="#top"]').fadeOut();
+        }
+    });
+
+    $('a[href="#top"]').click(function(){
+        $('html, body').animate({scrollTop : 0},800);
+        return false;
+    });
+});
+    </script>   
 </head>
 <body>
 
@@ -181,10 +209,18 @@ if( $nome != ""){
 	</tr>
 <?php endfor;?>
 	</table>
-	<a href="#topo">
-		<div class="scrollWrapper">
-			<button class="button is-primary">Ir Ao Topo</button>		
+	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
+	<a href="#topo">		
+		<div class=".scrollWrapper">
+			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
+		</div>		
+		<!--
+<div class="scrollWrapper" style="overflow-x: hidden;">
+		<div class="field is-grouped is-grouped-right">
+			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
 		</div>
+		</div>
+		-->
 	</a>
 	<br/>
 	<div class="table__wrapper">			
