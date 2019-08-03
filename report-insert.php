@@ -29,8 +29,7 @@ $totalAlcancado=0;
 	<?php
 	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
 	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
-			
+	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";	
 	?>
 	<br/>
 	<span id="topo"></span>
@@ -114,7 +113,8 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 		<th>Atividade</th>		
 		<th class="coluna">Meta</th>
 		<th >Alcançado</th>		
-		<th>Data</th> 			
+		<th>Data</th>
+		<th>Observação</th>  			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
 	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
@@ -178,21 +178,28 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td class="field" style="max-width:7em;"><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:6em;" type="text" class="input" id="nota" placeholder="Obrigatório">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input" placeholder="Obrigatório">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA ALCANÇADO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="alcancado[]" style="max-width:5em;" type="text" class="input" id="nota2" placeholder="Obrigatório">
+					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input" placeholder="Obrigatório">
 				</div>				
 			</div>
 		</td>
 		<td class="field"><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" type="text" class="input" value="<?php echo date('Y-m-d');?>">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input" value="<?php echo date('Y-m-d');?>">
+				</div>				
+			</div>
+		</td>
+		<td><!--COLUNA OBSERVAÇÃO-->	
+			<div class="field">				
+				<div class="control">
+					<input name="observacao[]" type="text" class="input">
 				</div>				
 			</div>
 		</td>						
@@ -247,7 +254,7 @@ if(isset($_POST['salvarDados'])){
 	$metas = array_filter($_POST['meta']);
 	$alcancados= array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
-
+	$observacao = trim($_POST['observacao']);
 	//CHECK TURNO
 	$checkTurno="SELECT TURNO_ID FROM gd.USUARIO WHERE ID=".$ids[0]."";
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
@@ -256,7 +263,7 @@ if(isset($_POST['salvarDados'])){
 	
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
 		$desempenho=($alcancados[$i]/$metas[$i])*100;
-		$inserirDesempenho="INSERT INTO gd.DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."'); ";		
+		$inserirDesempenho="INSERT INTO gd.DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacao."',".$_SESSION["loggedInUser"]."); ";		
 		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
 	}	
 	if(mysqli_error($phpmyadmin)==null){	
@@ -274,4 +281,3 @@ if(isset($_POST['salvarDados'])){
 	//header("Location: /gestaodesempenho/report-insert.php");	
 }
 ?>
-
