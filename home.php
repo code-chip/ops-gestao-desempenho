@@ -18,6 +18,11 @@ header('Content-Type: text/html; charset=UTF-8');
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
+	<section>
+	<div class="container">
+		<div class="has-text-left is-size-4">Bem vindo <?php echo $_SESSION["nameUser"]; ?></div>
+	</div>		
+	</section>
 <body>
 	
 </body>	
