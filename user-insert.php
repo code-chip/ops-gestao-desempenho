@@ -1,10 +1,9 @@
 <?php
 session_start();
-include('conexao.php');
-include('verifica_login.php');
+include('connection.php');
+include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
-//include('');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $nome = trim($_REQUEST['nome']);
 $login = trim($_REQUEST['login']);
@@ -16,7 +15,7 @@ $gestor = trim($_REQUEST['gestor']);
 $setor = trim($_REQUEST['setor']);
 $matricula = trim($_REQUEST['matricula']);
 $efetivacao = trim($_REQUEST['efetivacao']);
-$cadastradoem = trim($_REQUEST['cadastradoem']);
+$permissao = trim($_REQUEST['permissao']);
 $situacao = trim($_REQUEST['situacao']);
 $observacao = trim($_REQUEST['observacao']);
 ?>
@@ -50,8 +49,7 @@ $observacao = trim($_REQUEST['observacao']);
 	</script>
 </head>
 <body>
-<?php
-	/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
+<?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
 	$gdGestor="SELECT ID, NOME FROM gd.GESTOR WHERE SITUACAO='Ativo'";
 	$gdCargo="SELECT ID, NOME FROM gd.CARGO WHERE SITUACAO='Ativo'";
 	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
@@ -104,8 +102,7 @@ $observacao = trim($_REQUEST['observacao']);
 		  	<p class="help is-danger">E-mail inválido</p>
 		</div>
 		<!--DIVISÃO EM HORIZONTAL-->
-		<div class="field is-horizontal">
-			<!--SELEÇÃO CARGO-->
+		<div class="field is-horizontal"><!--SELEÇÃO CARGO-->
 			<div class="field-label is-normal">
 				<label for="cargo" class="label">Cargo</label>
 			</div>
@@ -131,8 +128,7 @@ $observacao = trim($_REQUEST['observacao']);
 				</div>
 			</div>
 			</div>
-			<!--SELEÇÃO TURNO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
 				<label for="turno" class="label">Turno</label>
 			</div>
 			<div class="field-body">
@@ -149,8 +145,7 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>
-			<!--FINAL DIVISÃO EM HORIZONTAL-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--FINAL DIVISÃO EM HORIZONTAL-->
 				<label for="gestor" class="label">Gestor</label>
 			</div>
 			<div class="field-body">
@@ -170,8 +165,7 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>
-			<!--SELEÇÃO SETOR-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO SETOR-->
 				<label for="setor" class="label">Setor</label>
 			</div>
 			<div class="field-body">
@@ -193,8 +187,7 @@ $observacao = trim($_REQUEST['observacao']);
 			</div>		
 		</div><!--FINAL DIVISÃO EM HORIZONTAL-->	
 		<!--DIVISÃO EM HORIZONTAL 2-->
-		<div class="field is-horizontal">			
-			<!--CAMPO MATRICULA-->
+		<div class="field is-horizontal"><!--CAMPO MATRICULA-->		
 			<div class="field-label is-normal">
 				<label class="label" for="matricula">Matricula</label>
 			</div>
@@ -205,8 +198,7 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>
 				</div>
 			</div>
-			<!--CAMPO EFETIVADO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
 				<label class="label" for="efetivacao">Admissão</label>
 			</div>
 			<div class="field-body">
@@ -216,21 +208,24 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>
 				</div>
 			</div>
-			<!--CAMPO DATA E HORA DE CADASTRO-->
-			<div class="field-label is-normal">
-				<label class="label" for="cadastradoem">Cadastrado</label>
+			<div class="field-label is-normal"><!--SELEÇÃO PERMISSÃO-->
+				<label for="setor" class="label">Permissão</label>
 			</div>
 			<div class="field-body">
-				<div class="field is-grouped">
-					<!--<fieldset disabled>-->								
-					<div class="control" style="max-width:11em;">
-						<input name="cadastradoem" type="text" class="input" id="textInput" value="<?php echo date('Y-m-d H:i:s');?>">
-					</div>
-					<!--</fieldset>-->
-				</div>
-			</div>				
-			<!--DIVISÃO SITUAÇÃO-->
-			<div class="field-label is-normal">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="permissao">								
+								<option value="1">Usuário</option>
+								<option value="2">Líder</option>
+								<option value="3">Gestor</option>
+								<option value="4">Administrador</option>																		
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+			<div class="field-label is-normal"><!--DIVISÃO SITUAÇÃO-->
 				<label class="label">Situação</label>
 			</div>
 			<div class="field-body">
@@ -294,11 +289,16 @@ if(isset($_GET['cadastrar'])){
 		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
 	else{
-		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $cadastradoem!="" && $situacao!=""){	
-			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."','".$cadastradoem."','".$situacao."')";
-			$cnx=mysqli_query($phpmyadmin, $inserirUsuario); //or die($mysqli->error);
-			?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
-			header("Location: localhost/gestaodesempenho/register.php");	
+		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){	
+			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
+			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
+			if(mysqli_error($phpmyadmin)==null){
+				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
+				header("Location: localhost/gestaodesempenho/register.php");	
+			}
+			else{
+				echo mysqli_error($phpmyadmin);
+			}
 		}
 		else if( $nome==""){ 
 			?><script language="Javascript"> alert('Preenchimento do Nome é obrigatório!');</script><?php
