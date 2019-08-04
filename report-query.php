@@ -146,7 +146,7 @@ $totalAlcancado=0;
 <?php
 date('Y-m-d H:i');
 if( $nome != ""){	
-	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO FROM gd.DESEMPENHO D 
+	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM gd.DESEMPENHO D 
 	INNER JOIN gd.USUARIO U ON U.ID=D.USUARIO_ID
 	INNER JOIN gd.PRESENCA P ON P.ID=D.PRESENCA_ID
 	INNER JOIN gd.ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
@@ -160,7 +160,8 @@ if( $nome != ""){
 		$vtMeta[$x]=$operadores["META"];
 		$vtAlcancado[$x]=$operadores["ALCANCADO"];
 		$vtDesempenho[$x]=$operadores["DESEMPENHO"];
-		$vtRegistro[$x]=$operadores["REGISTRO"];					
+		$vtRegistro[$x]=$operadores["REGISTRO"];
+		$vtObservacao[$x]=$operadores["OBSERVACAO"];					
 		$x++;
 		$contador=$x;
 	}
@@ -187,7 +188,8 @@ if( $nome != ""){
 		<th class="coluna">Meta</th>
 		<th >Alcançado</th>
 		<th >Desempenho</th>			
-		<th>Data</th> 			
+		<th>Data</th>
+		<th>Observação</th> 			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
 	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
@@ -199,13 +201,14 @@ if( $nome != ""){
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo $vtNome[$i]?></td>
+		<td><?php echo utf8_encode($vtNome[$i])?></td>
 		<td><?php echo $vtPresenca[$i]?></td>
-		<td><?php echo $vtAtividade[$i]?></td>
+		<td><?php echo utf8_encode($vtAtividade[$i])?></td>
 		<td><?php echo $vtMeta[$i]?></td>
 		<td><?php echo $vtAlcancado[$i]?></td>
 		<td><?php echo round($vtDesempenho[$i],2)."%"?></td>			
 		<td><?php echo $vtRegistro[$i]?></td>
+		<td><?php echo $vtObservacao[$i]?></td>
 	</tr>
 <?php endfor;?>
 	</table>
