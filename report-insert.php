@@ -6,9 +6,9 @@
 </style>
 <?php
 session_start();
-include('conexao.php');
+include('connection.php');
 //require_once('js/loader.js');
-include('verifica_login.php');
+include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -254,7 +254,7 @@ if(isset($_POST['salvarDados'])){
 	$metas = array_filter($_POST['meta']);
 	$alcancados= array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
-	$observacao = trim($_POST['observacao']);
+	$observacao = $_POST['observacao'];
 	//CHECK TURNO
 	$checkTurno="SELECT TURNO_ID FROM gd.USUARIO WHERE ID=".$ids[0]."";
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);

@@ -21,9 +21,9 @@ a[href="#top"]:hover{
 </style>
 <?php
 session_start();
-include('conexao.php');
+include('connection.php');
 //require_once('js/loader.js');
-include('verifica_login.php');
+include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
