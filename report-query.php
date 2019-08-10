@@ -104,7 +104,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo 2 ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
 							</select>
 							</div>
@@ -120,7 +120,7 @@ $totalAlcancado=0;
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="nome" type="text" class="input" placeholder="Ana Clara" value="Lwcyano Will">
+							<input name="nome" type="text" class="input" placeholder="Ana Clara">
 						</div>
 						</div>
 					</div>
@@ -208,7 +208,7 @@ if( $nome != ""){
 		<td><?php echo $vtAlcancado[$i]?></td>
 		<td><?php echo round($vtDesempenho[$i],2)."%"?></td>			
 		<td><?php echo $vtRegistro[$i]?></td>
-		<td><?php echo $vtObservacao[$i]?></td>
+		<td><?php echo utf8_encode($vtObservacao[$i])?></td>
 	</tr>
 <?php endfor;?>
 	</table>
