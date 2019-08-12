@@ -23,13 +23,14 @@ $totalAlcancado=0;
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <meta charset="UTF-8">   
 </head>
 <body>
 	<?php
 	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
-	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";	
+	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
+	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";	
 	?>
 	<br/>
 	<span id="topo"></span>
@@ -78,7 +79,7 @@ $totalAlcancado=0;
 <?php
 date('Y-m-d H:i');
 if( $turno != "" && $setor != ""){	
-	$query="SELECT ID, NOME FROM gd.USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor."";	
+	$query="SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor."";	
 	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
 	$x=0;
@@ -96,9 +97,9 @@ if( $turno != "" && $setor != ""){
 		</script> <?php		
 	}			
 }
-$gdPresenca="SELECT ID, NOME FROM gd.PRESENCA WHERE SITUACAO='Ativo'";
-$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";
-$gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";	
+$gdPresenca="SELECT ID, NOME FROM PRESENCA WHERE SITUACAO='Ativo'";
+$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
+$gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if($contador !=0) : ?>
@@ -107,12 +108,12 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
 		<th>N°</th>
-		<th>ID</th>
+		<th style="margin-left: -25px; visibility: hidden; max-width:0em;">ID</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
 		<th class="coluna">Meta</th>
-		<th >Alcançado</th>		
+		<th>Alcançado</th>		
 		<th>Data</th>
 		<th>Observação</th>  			
 	</tr>
@@ -126,10 +127,10 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td class="field"><!--COLUNA ID-->
+		<td class="field" style="margin-left: -25px;visibility: hidden; max-width:0em;"><!--COLUNA ID-->
 			<div class="field">				
 				<div class="control">
-					<input name="id[]" style="max-width:3em;" type="text" class="input" value="<?php echo $vtId[$i]?>">
+					<input name="id[]" type="text" class="input" value="<?php echo $vtId[$i]?>">
 				</div>				
 			</div>
 		</td>
@@ -145,8 +146,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="presenca[]">
-								<option selected="selected" value="">Selecione</option>	
+							<select name="presenca[]">								
 								<?php $con = mysqli_query($phpmyadmin , $gdPresenca);
 								$x=0; 
 								while($presenca = $con->fetch_array()):{?>
@@ -175,7 +175,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 				</div>						
 			</div>
 		</td>
-		<td class="field" style="max-width:7em;"><!--COLUNA META-->
+		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
 					<input name="meta[]" style="max-width:5.5em;" type="text" class="input" placeholder="Obrigatório">
@@ -189,7 +189,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 				</div>				
 			</div>
 		</td>
-		<td class="field"><!--COLUNA DATA-->
+		<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
 					<input name="registro[]" style="max-width:6.5em;" type="text" class="input" value="<?php echo date('Y-m-d');?>">
@@ -199,7 +199,7 @@ $gdAtividade="SELECT ID, NOME FROM gd.ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA OBSERVAÇÃO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="observacao[]" type="text" class="input">
+					<input name="observacao[]" type="text" class="input" placeholder="Máximo 200 caracteres.">
 				</div>				
 			</div>
 		</td>						
@@ -254,22 +254,28 @@ if(isset($_POST['salvarDados'])){
 	$metas = array_filter($_POST['meta']);
 	$alcancados= array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
-	$observacao = $_POST['observacao'];
+	$observacoes= $_POST['observacao'];
 	//CHECK TURNO
-	$checkTurno="SELECT TURNO_ID FROM gd.USUARIO WHERE ID=".$ids[0]."";
+	$checkTurno="SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
 	$turnoresult=$cnx->fetch_array();
 	$turno=$turnoresult["TURNO_ID"];
-	
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
-		$desempenho=($alcancados[$i]/$metas[$i])*100;
-		$inserirDesempenho="INSERT INTO gd.DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacao."',".$_SESSION["loggedInUser"]."); ";		
-		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
+		if($alcancados[$i]==0 || $alcancados[$i]==null){
+			$desempenho=0;
+			$alcancados[$i]=0;
+		}
+		else{
+			$desempenho=($alcancados[$i]/$metas[$i])*100;
+		}	
+		$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["loggedInUser"]."); ";		
+		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
+		echo $inserirDesempenho;			 
 	}	
 	if(mysqli_error($phpmyadmin)==null){	
 		?><script type="text/javascript">
 			alert('Desempenho cadastro com sucessos');
-			window.location.href=window.location.href;		
+			//window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{

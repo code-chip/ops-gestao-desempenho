@@ -50,10 +50,10 @@ $observacao = trim($_REQUEST['observacao']);
 </head>
 <body>
 <?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
-	$gdGestor="SELECT ID, NOME FROM gd.GESTOR WHERE SITUACAO='Ativo'";
-	$gdCargo="SELECT ID, NOME FROM gd.CARGO WHERE SITUACAO='Ativo'";
-	$gdTurno="SELECT ID, NOME FROM gd.TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";				
+	$gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'";
+	$gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo'";
+	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
+	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";				
 ?>
 <div>	
 	<section class="section">
@@ -282,7 +282,7 @@ $observacao = trim($_REQUEST['observacao']);
 <?php
 if(isset($_GET['cadastrar'])){
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
-	$checkLogin="SELECT LOGIN FROM gd.USUARIO WHERE LOGIN='".$login."'";
+	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
 	if($check >= 1){
@@ -290,7 +290,7 @@ if(isset($_GET['cadastrar'])){
 	}
 	else{
 		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){	
-			$inserirUsuario="INSERT INTO gd.USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
+			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
 			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php

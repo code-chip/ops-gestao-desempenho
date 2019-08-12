@@ -1,14 +1,33 @@
 <?php 
 session_start();
 ?>
+<style> 
+.copyright{              
+    width: 100%;
+    padding: 10px 0;        
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+.copyright p{
+    color:#1E90FF;
+    margin:0;
+}
+.copyright a:hover {
+    text-decoration: underline;
+    color:#008B00;
+}           
+.copyright img{          
+    margin: -1px 1px;
+}       
+</style>
 <!DOCTYPE html>
 <html>
-    
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistema Logístico</title>
+    <title>Gestão de Desempenho</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/personal.css" />
@@ -17,7 +36,6 @@ session_start();
     <!---<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">-->
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>	 
 </head>
-
 <body>
     <section class="hero is-success is-fullheight">
         <div class="hero-body">
@@ -52,32 +70,11 @@ session_start();
                     </div>
                 </div>
             </div>
-        </div>
-		<style>	
-			.copyright {			  
-			  width: 100%;
-			  padding: 10px 0;		  
-			  font-size: 14px;
-			  font-weight: bold;
-			  text-align: center;
-			}
-			.copyright p{
-				color:#1E90FF;
-				margin:0;
-			}
-			.copyright a:hover {
-			  text-decoration: underline;
-			  color:#008B00;
-			}			
-			.copyright img{			 
-				margin: -1px 1px;
-			}		
-		</style>
+        </div>		
 		<div class="copyright">
         <div class="container">
             <p>&copy; Copyright 2019 - Desenvolvido por:<a href="https://codechip.com.br/" target="blank"> Code Chip <img src="img\favicon_codechip.ico"/></a></p>
         </div>
     </section>
 </body>
-
 </html>

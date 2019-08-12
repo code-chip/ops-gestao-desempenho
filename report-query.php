@@ -61,7 +61,7 @@ $totalAlcancado=0;
 
 	<?php
 	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
-	$gdSetor="SELECT ID, NOME FROM gd.SETOR WHERE SITUACAO='Ativo'";			
+	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
 	?>
 	<br/>
 	<span id="topo"></span>
@@ -146,11 +146,12 @@ $totalAlcancado=0;
 <?php
 date('Y-m-d H:i');
 if( $nome != ""){	
-	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM gd.DESEMPENHO D 
-	INNER JOIN gd.USUARIO U ON U.ID=D.USUARIO_ID
-	INNER JOIN gd.PRESENCA P ON P.ID=D.PRESENCA_ID
-	INNER JOIN gd.ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
-	WHERE SETOR_ID=".$setor." AND USUARIO_ID=(SELECT ID FROM gd.USUARIO WHERE NOME LIKE '%".$nome."%')";
+	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D 
+	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
+	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
+	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
+	WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
+	AND D.REGISTRO>DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO< CONCAT('".$periodo."', '20');";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
@@ -208,7 +209,7 @@ if( $nome != ""){
 		<td><?php echo $vtAlcancado[$i]?></td>
 		<td><?php echo round($vtDesempenho[$i],2)."%"?></td>			
 		<td><?php echo $vtRegistro[$i]?></td>
-		<td><?php echo utf8_encode($vtObservacao[$i])?></td>
+		<td><?php echo $vtObservacao[$i]//utf8_encode($vtObservacao[$i])?></td>
 	</tr>
 <?php endfor;?>
 	</table>
@@ -252,14 +253,14 @@ if(isset($_POST['salvarDados'])){
 	$registros = array_filter($_POST['registro']);
 
 	//CHECK TURNO
-	$checkTurno="SELECT TURNO_ID FROM gd.USUARIO WHERE ID=".$ids[0]."";
+	$checkTurno="SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
 	$turnoresult=$cnx->fetch_array();
 	$turno=$turnoresult["TURNO_ID"];
 	
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
 		$desempenho=($alcancados[$i]/$metas[$i])*100;
-		$inserirDesempenho="INSERT INTO gd.DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."'); ";		
+		$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."'); ";		
 		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
 	}	
 	if(mysqli_error($phpmyadmin)==null){	
