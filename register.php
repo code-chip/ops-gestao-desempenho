@@ -16,35 +16,30 @@ $totalAlcancado=0;
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Gestão de Desempenho - Cadastro</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
-</head>
 <body>
 <div class="field has-addons has-addons-centered">
 	<section class="section">
 	<main>
-		<div class="field">
+		<?php if($_SESSION["permissao"]!=1):?><div class="field">
 			<div class="control">
-				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Inserir Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Inserir Usuário</a>
 			</div>
-		</div>
+		</div><?php endif;?>
 		<div class="field">
 			<div class="control">
-				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Consultar Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Consultar Usuário</a>
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">		
-				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Atualizar Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
 			</div>
-		</div>
+		<?php if($_SESSION["permissao"]!=1):?></div>
 		<div class="field">
 			<div class="control">		
-				<a href="user-insert.php" class="button is-large is-primary is-inverted is-outlined is-fullwidth">Remover Usuário</a>
+				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Remover Usuário</a>
 			</div>	
-		</div>			
+		</div><?php endif;?>			
 	</main>	
 </div>
 </section>
