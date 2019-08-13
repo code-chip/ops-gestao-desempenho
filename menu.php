@@ -1,6 +1,6 @@
 <?php 
 session_start();
-include('verifica_login.php');
+include('login-check.php');
 header('Content-Type: text/html; charset=UTF-8');
 //print_r($_SESSION);exit();
 //$menuInicio="is-active";
@@ -8,7 +8,6 @@ $menuInicio;
 $menuDesempenho;
 $menuRelatorio;
 $menuConfiguracoes;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +36,7 @@ $menuConfiguracoes;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
-					<div href="#" class="navbar-item has-dropdown is-hoverable">
+					<?php if($_SESSION["permissao"]!=1):?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?>">Desempenho</a>					
 						<div class="navbar-dropdown">
 							<a href="report-query.php" class="navbar-item">Consultar</a>
@@ -45,11 +44,11 @@ $menuConfiguracoes;
 							<a href="report-update.php" class="navbar-item">Atualizar</a>
 							<a class="navbar-item">Remover</a>
 						</div>
-					</div>
+					</div><?php endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a href="#" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
 						<div class="navbar-dropdown">
-							<a href="report.php" class="navbar-item">Gestão</a>
+							<?php if($_SESSION["permissao"]!=1):?><a href="report.php" class="navbar-item">Gestão</a><?php endif;?>
 							<a href="report-private.php" class="navbar-item">Individual</a>							
 						</div>
 					</div>
@@ -57,7 +56,7 @@ $menuConfiguracoes;
 			     	<a class="navbar-link <?php echo $menuConfiguracoes?>">Configurações</a>
 			        <div class="navbar-dropdown">
 				        <a href="register.php" class="navbar-item">Cadastro</a>
-				        <a class="navbar-item">Permissões</a>
+				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item">Permissões</a><?php endif;?>
 				        <a class="navbar-item">Tema</a>
 				        <hr class="navbar-divider">
 				        <a class="navbar-item">Reportar bug</a>
@@ -73,7 +72,6 @@ $menuConfiguracoes;
 		(function(){
 			var burger = document.querySelector('.burger');
 			var nav = document.querySelector('#'+burger.dataset.target);
-
 			burger.addEventListener('click', function(){
 				burger.classList.toggle('is-active');
 				nav.classList.toggle('is-active');
