@@ -24,6 +24,10 @@ $totalAlcancado=0;
 </head>
 <body>
 	<span id="topo"></span>
+	<?php
+	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
+	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";			
+	?>
 <div>
 	<br/>
 	<form id="form1" action="report.php" method="GET" >
@@ -89,10 +93,12 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="turno">
-								<option selected="selected" value="agrupado">Todos</option>	
-								<option value="separado">Matutino</option>
-								<option value="separado">Vespetino</option>	
+							<select name="turno">								
+								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
+								$x=0; 
+								while($turno = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
 					</div>					
