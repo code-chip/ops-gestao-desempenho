@@ -129,7 +129,7 @@ $totalAlcancado=0;
 	</form>		
 </div>
 
-<?php if($periodo!=""):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<?php if($periodo!="" && $_SESSION["loggedInUser"]!=1):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="graficos" style="position: relative; width: 100%; height: 250px; /*border: 3px solid #73AD21;*/">
 <div id="chart_div" style="position: absolute; top:2%; left:0%; width: 25%; height: 250px; /*border: 3px solid #73AD26;*/"></div>
 <div id="chart_div2" style="position: absolute; top:2%; left:25%; width: 30%; height: 250px;/*border: 3px solid #73AD29;*/"></div>
