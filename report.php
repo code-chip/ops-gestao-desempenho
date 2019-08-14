@@ -142,26 +142,7 @@ if( $periodo != "" && $_SESSION["permissao"]!=1){
 	$consulta ="SELECT U.NOME, D.USUARIO_ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
-	$gafrico1="select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
-where registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-20')
-union all
-select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_sub(curdate(),interval 1 month),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
-where registro >= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_sub(curdate(),interval 1 month),'%Y-%m'),'-20')
-union all
-select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(date_sub(curdate(),interval 1 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(curdate(),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
-where registro >= concat(date_format(date_sub(curdate(),interval 1 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(curdate(),'%Y-%m'),'-20')
-union all
-select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(curdate(),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_add(curdate(),interval 1 month),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
-where registro >= concat(date_format(curdate(),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_add(curdate(),interval 1 month),'%Y-%m'),'-20')";
-
+	require("query.php");
 	$queryG3="select a.nome nome, max(b.alcancado) alcancado, b.menor
 from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, min(alcancado) menor from gestaodesempenho.desempenho where 
 registro >= concat(date_format(curdate(),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval +1 month),'%Y-%m'),'-20') and presenca <>'Folga' group by nome order by alcancado desc limit 1) as b
@@ -222,8 +203,8 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 	$xg=0;
 	$cnx2=mysqli_query($phpmyadmin, $gafrico1); //or die($mysqli->error);
 	while($graf1= $cnx2->fetch_array()){
-		$vtMedia[$xg]=$graf1["media"];
-		$vtMenor[$xg]=$graf1["menor"];
+		$vtMedia[$xg]=$graf1["MEDIA"];
+		$vtMenor[$xg]=$graf1["MENOR"];
 		$xg++;
 	}	
 }?>
