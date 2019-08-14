@@ -219,31 +219,18 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 		$vtMenor[$xg]=$graf1["menor"];
 		$xg++;
 	}	
-}	
-?>
+}?>
 <!--FINAL DO FORMULÁRIO-->
 <?php if($contador !=0) : ?>
 	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr class="is-selected">
-			<td>
-				<span class='title_left'>Resultado:<?php echo sizeof($vetorNome);?></span>
-			</td>	
-			<td>
-				<span class='title_left'>Falta's: <?php echo $totalFaltas;?></span>
-			</td>
-			<td>
-				<span class="title_left">Folga's: <?php echo $totalFolgas;?></span>
-			<td>
-				<span class='title_left'>Menor: <?php echo $menor."%"?></span>
-			</td>
-			<td>
-				<span class='title_left'>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?>
-				</span>
-			</td>
-			<td>
-				<span class='title_left'>Maior: <?php echo $maior."%"?></span>
-			</td>			
+			<td>Resultado:<?php echo sizeof($vetorNome);?></td>	
+			<td>Falta's: <?php echo $totalFaltas;?></td>
+			<td>Folga's: <?php echo $totalFolgas;?></td>
+			<td>Menor: <?php echo $menor."%"?></td>
+			<td>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?></td>
+			<td>Maior: <?php echo $maior."%"?></td>			
 		</tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
