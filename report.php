@@ -78,8 +78,8 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="ordenacao">
-								<option selected="selected" value="nome">Nome</option>	
-								<option value="alcancado desc, nome">Alcançado</option>	
+								<option selected="selected" value="NOME">Nome</option>	
+								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
 							</select>	
 						</div>
 					</div>					
@@ -140,7 +140,7 @@ $totalAlcancado=0;
 if( $periodo != ""){	
 	$consulta ="SELECT U.NOME, D.USUARIO_ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
-CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' GROUP BY D.USUARIO_ID;";
+CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
 	$gafrico1="select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
 and registro <= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
 where registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
@@ -247,7 +247,7 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 		<th>Falta's</th>
 		<th>Folga's</th>
 		<?php if($atividade=="separado") : ?><th>Atividade</th><?php endif; ?>
-		<th>Alcançado</th>				
+		<th>Desempenho</th>				
 		<th>Período</th>			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vetorNome); $i++ ) : ?>
