@@ -36,11 +36,14 @@ $totalAlcancado=0;
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select">
-						<select name='periodo'>
-							<option value='proximo'><?php echo strftime('%h', strtotime("+1 months"))?></option>
-							<option selected='selected' value='atual'><?php echo strftime('%h')?></option>
-							<option value='ultimo'><?php echo strftime('%h', strtotime("-1 months"))?></option>
-							<option value='penultimo'><?php echo strftime('%h', strtotime("-2 months"))?></option>
+						<select name="periodo">
+							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
+							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
 						</select>	
 					</div>
 				</div>
@@ -129,37 +132,9 @@ $totalAlcancado=0;
 </div>
 <?php
 if( $periodo != ""){	
-	$presenca="(select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' and a.nome=nome)falta,(select count(presenca) from gestaodesempenho.desempenho where presenca='Folga' and a.nome=nome)folga ,";
-	if($periodo =="atual"){
-		$data="and registro >= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-21') and registro <= concat(date_format(curdate(),'%Y-%m'),'-20')";
-		$registro="concat(concat(date_format(date_add(curdate(),interval -1 month),'%Y/%m'),'/21'), concat(date_format(curdate(),' - %Y/%m'),'/20')) registro";
-	}
-	else if($periodo =="proximo"){
-		$data="and registro >= concat(date_format(curdate(),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval +1 month),'%Y-%m'),'-20')";
-		$registro="concat(concat(date_format(curdate(),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval +1 month),' - %Y/%m'),'/20')) registro";
-	}
-	else if($periodo =="ultimo"){
-		$data="and registro >= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-20')";
-		$registro="concat(concat(date_format(date_add(curdate(),interval -2 month),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval -1 month),' - %Y/%m'),'/20')) registro";
-	}
-	else{
-		$data="and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20')";
-		$registro="concat(concat(date_format(date_add(curdate(),interval -3 month),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval -2 month),' - %Y/%m'),'/20')) ";
-	}
-	$filtroAdd= str_replace("and registro >=", "where registro >=", $data);
-	if($atividade!="agrupado"){
-		echo $filtroAdd;
-		$consulta="select a.nome,".$presenca." truncate(b.alcancado,2) alcancado, ".$registro.", a.atividade from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, atividade from gestaodesempenho.desempenho ".$filtroAdd." and presenca <>'Folga' group by nome, atividade) as b
-where a.nome=b.nome and a.atividade=b.atividade ".$data."".$meta."
-group by nome, atividade
-order by ".$ordenacao.";";
-	}
-	else{		
-		$consulta ="select a.nome,".$presenca." truncate(b.alcancado,2) alcancado, ".$registro." from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado from gestaodesempenho.desempenho ".$filtroAdd." and presenca <>'Folga' group by nome) as b
-where a.nome=b.nome ".$data."".$meta."
-group by nome
-order by ".$ordenacao.";";
-	}
+	$consulta ="SELECT U.NOME, D.USUARIO_ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
+(SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
+CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' GROUP BY D.USUARIO_ID;";
 	$gafrico1="select truncate(avg(ALCANCADO),2)media,truncate((select min(ALCANCADO) from gestaodesempenho.desempenho where ALCANCADO>0 and registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
 and registro <= concat(date_format(date_sub(curdate(),interval 2 month),'%Y-%m'),'-20')),2)menor from gestaodesempenho.desempenho 
 where registro >= concat(date_format(date_sub(curdate(),interval 3 month),'%Y-%m'),'-21') 
@@ -203,31 +178,31 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
 	$x3=0;
-	//$cnxG3= $mysqli->query($queryG3) or die($mysqli->error);
-	$cnxG3= mysqli_query($phpmyadmin, $queryG3);//or die(' Erro na query:' . $queryG3 . ' ' . mysql_error());	
+	$cnxG3= mysqli_query($phpmyadmin, $queryG3);
 	while($G3 = $cnxG3->fetch_array()){
 		$vtG3nome[$x3]= $G3["nome"];
 		$vtG3alcancado[$x3]= $G3["alcancado"];
 		$vtG3menor[$x3]= $G3["menor"];		
 		$x3++;				
-	}				
-	$con = mysqli_query($phpmyadmin, $consulta);// or die($mysqli->error);
+	}			
+	$con = mysqli_query($phpmyadmin, $consulta);
 	$row = mysqli_num_rows($con);
-	echo $row;
 	$x=0;
 	$maior=0;
-	$menor=1000;	
-	$query="select a.nome,(select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' and a.nome=nome)falta, (select count(presenca) from gestaodesempenho.desempenho where presenca='Folga' and a.nome=nome)folga, truncate(b.alcancado,2) alcancado, concat(concat(date_format(date_add(curdate(),interval -3 month),'%Y/%m'),'/21'), concat(date_format(date_add(curdate(), interval -2 month),' - %Y/%m'),'/20')) from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado from gestaodesempenho.desempenho group by nome) as b where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20') group by nome order by nome;";		
-	$con = mysqli_query($phpmyadmin , $query);	
-	//while($dado = $con->fetch_array()){	
+	$menor=1000;
+	$totalFaltas=0;
+	$totalFolgas=0;	
+	$con = mysqli_query($phpmyadmin , $consulta);
 	while($dado = $con->fetch_array()){				
-		$vetorNome[$x] = $dado["nome"];
-		$vetorAlcancado[$x] = $dado["alcancado"];
-		$vetorAtividade[$x] = $dado["atividade"];
-		$vetorFalta[$x] = $dado["falta"];
-		$vetorFolga[$x] = $dado["folga"];
-		$totalAlcancado=$totalAlcancado+$dado["alcancado"];
-		$vetorRegistro[$x] = $dado["registro"];		
+		$vetorNome[$x] = $dado["NOME"];
+		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
+		$vetorAtividade[$x] = $dado["ATIVIDADE"];
+		$vetorFalta[$x] = $dado["FALTA"];
+		$vetorFolga[$x] = $dado["FOLGA"];
+		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
+		$vetorRegistro[$x] = $dado["REGISTRO"];
+		$totalFaltas=$totalFaltas+$vetorFalta[$x];
+		$totalFolgas=$totalFolgas+$vetorFolga[$x];	
 		if($maior<$vetorAlcancado[$x]){
 			$maior=$vetorAlcancado[$x];
 		}
@@ -237,9 +212,6 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 		$contador++;
 		$x++;		
 	}	
-	$co2="select (select count(presenca) from gestaodesempenho.desempenho where presenca='Ausente' ".$data.")falta, count(presenca)folga from gestaodesempenho.desempenho where presenca='folga' ".$data."";
-	$cnx= mysqli_query($phpmyadmin, $co2); //or die($mysqli->error);
-	$presenca= $cnx->fetch_array();
 	$xg=0;
 	$cnx2=mysqli_query($phpmyadmin, $gafrico1); //or die($mysqli->error);
 	while($graf1= $cnx2->fetch_array()){
@@ -251,25 +223,25 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 ?>
 <!--FINAL DO FORMULÁRIO-->
 <?php if($contador !=0) : ?>
-<hr/>
+	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr class="is-selected">
-			<td class='table_title'>
+			<td>
 				<span class='title_left'>Resultado:<?php echo sizeof($vetorNome);?></span>
 			</td>	
-			<td class='table_title'>
-				<span class='title_left'>Falta's: <?php echo $presenca["falta"]?></span>
+			<td>
+				<span class='title_left'>Falta's: <?php echo $totalFaltas;?></span>
 			</td>
-			<td class='table_title'>
-				<span class="title_left">Folga's: <?php echo $presenca["folga"]?></span>
-			<td class='table_title'>
+			<td>
+				<span class="title_left">Folga's: <?php echo $totalFolgas;?></span>
+			<td>
 				<span class='title_left'>Menor: <?php echo $menor."%"?></span>
 			</td>
-			<td class='table_title'>
+			<td>
 				<span class='title_left'>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?>
 				</span>
 			</td>
-			<td class='table_title'>
+			<td>
 				<span class='title_left'>Maior: <?php echo $maior."%"?></span>
 			</td>			
 		</tr>
@@ -295,7 +267,7 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo $vetorNome[$i]?></td>
+		<td><?php echo utf8_encode($vetorNome[$i])?></td>
 		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="http://192.168.217.6/evino/acomp_individual.php?periodo=<?php echo $periodo ?>&atividade=Todas&name=<?php echo $vetorNome[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
 		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]): ?><td><a href="http://192.168.217.6/evino/acomp_individual.php?periodo=<?php echo $periodo ?>&atividade=Todas&name=<?php echo $vetorNome[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vetorFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vetorFolga[$i]?></td><?php endif;?>	
@@ -349,40 +321,14 @@ where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interv
      
       data.addColumn('number', 'X');
       data.addColumn('number', 'Alcançado'); 
-      data.addRows([
-        [0, parseFloat('<?php echo $vetorAlcancado[0]?>')],   [1, parseFloat('<?php echo $vetorAlcancado[1]?>')],  [2, parseFloat('<?php echo $vetorAlcancado[2]?>')],
-        [3, parseFloat('<?php echo $vetorAlcancado[3]?>')],  [4, parseFloat('<?php echo $vetorAlcancado[4]?>')],  [5, parseFloat('<?php echo $vetorAlcancado[5]?>')],
-        [6, parseFloat('<?php echo $vetorAlcancado[6]?>')],  [7, parseFloat('<?php echo $vetorAlcancado[7]?>')],  [8, parseFloat('<?php echo $vetorAlcancado[8]?>')],
-        [9, parseFloat('<?php echo $vetorAlcancado[9]?>')],  [10, parseFloat('<?php echo $vetorAlcancado[10]?>')], [11, parseFloat('<?php echo $vetorAlcancado[11]?>')],
-        [12, parseFloat('<?php echo $vetorAlcancado[12]?>')], [13, parseFloat('<?php echo $vetorAlcancado[13]?>')], [14, parseFloat('<?php echo $vetorAlcancado[14]?>')], 
-        [15, parseFloat('<?php echo $vetorAlcancado[15]?>')], [16, parseFloat('<?php echo $vetorAlcancado[16]?>')], [17, parseFloat('<?php echo $vetorAlcancado[17]?>')],
-        [18, parseFloat('<?php echo $vetorAlcancado[18]?>')], [19, parseFloat('<?php echo $vetorAlcancado[19]?>')], [20, parseFloat('<?php echo $vetorAlcancado[19]?>')], 
-        [21, parseFloat('<?php echo $vetorAlcancado[21]?>')], [22, parseFloat('<?php echo $vetorAlcancado[22]?>')], [23, parseFloat('<?php echo $vetorAlcancado[23]?>')],
-        [24, parseFloat('<?php echo $vetorAlcancado[24]?>')], [25, parseFloat('<?php echo $vetorAlcancado[25]?>')], [26, parseFloat('<?php echo $vetorAlcancado[26]?>')], 
-        [27, parseFloat('<?php echo $vetorAlcancado[27]?>')], [28, parseFloat('<?php echo $vetorAlcancado[28]?>')], [29, parseFloat('<?php echo $vetorAlcancado[29]?>')],
-        [30, parseFloat('<?php echo $vetorAlcancado[30]?>')], [31, parseFloat('<?php echo $vetorAlcancado[31]?>')], [32, parseFloat('<?php echo $vetorAlcancado[32]?>')], 
-        [33, parseFloat('<?php echo $vetorAlcancado[33]?>')], [34, parseFloat('<?php echo $vetorAlcancado[34]?>')], [35, parseFloat('<?php echo $vetorAlcancado[35]?>')],
-        [36, parseFloat('<?php echo $vetorAlcancado[36]?>')], [37, parseFloat('<?php echo $vetorAlcancado[37]?>')], [38, parseFloat('<?php echo $vetorAlcancado[38]?>')], 
-        [39, parseFloat('<?php echo $vetorAlcancado[39]?>')], [40, parseFloat('<?php echo $vetorAlcancado[40]?>')], [41, parseFloat('<?php echo $vetorAlcancado[41]?>')],
-        [42, parseFloat('<?php echo $vetorAlcancado[42]?>')], [43, parseFloat('<?php echo $vetorAlcancado[43]?>')], [44, parseFloat('<?php echo $vetorAlcancado[44]?>')], 
-        [45, parseFloat('<?php echo $vetorAlcancado[45]?>')], [46, parseFloat('<?php echo $vetorAlcancado[46]?>')], [47, parseFloat('<?php echo $vetorAlcancado[47]?>')],
-        [48, parseFloat('<?php echo $vetorAlcancado[48]?>')], [49, parseFloat('<?php echo $vetorAlcancado[49]?>')], [50, parseFloat('<?php echo $vetorAlcancado[50]?>')], 
-        [51, parseFloat('<?php echo $vetorAlcancado[51]?>')], [52, parseFloat('<?php echo $vetorAlcancado[52]?>')], [53, parseFloat('<?php echo $vetorAlcancado[53]?>')],
-        [54, parseFloat('<?php echo $vetorAlcancado[54]?>')], [55, parseFloat('<?php echo $vetorAlcancado[55]?>')], [56, parseFloat('<?php echo $vetorAlcancado[56]?>')], 
-        [57, parseFloat('<?php echo $vetorAlcancado[57]?>')], [58, parseFloat('<?php echo $vetorAlcancado[58]?>')], [59, parseFloat('<?php echo $vetorAlcancado[59]?>')],
-        [60, parseFloat('<?php echo $vetorAlcancado[60]?>')], [61, parseFloat('<?php echo $vetorAlcancado[61]?>')], [62, parseFloat('<?php echo $vetorAlcancado[62]?>')], 
-        [63, parseFloat('<?php echo $vetorAlcancado[63]?>')], [64, parseFloat('<?php echo $vetorAlcancado[64]?>')], [65, parseFloat('<?php echo $vetorAlcancado[65]?>')],
-        [66, parseFloat('<?php echo $vetorAlcancado[66]?>')], [67, parseFloat('<?php echo $vetorAlcancado[67]?>')], [68, parseFloat('<?php echo $vetorAlcancado[68]?>')], 
-        [69, parseFloat('<?php echo $vetorAlcancado[69]?>')], [70, parseFloat('<?php echo $vetorAlcancado[70]?>')], [71, parseFloat('<?php echo $vetorAlcancado[71]?>')],
-        [72, parseFloat('<?php echo $vetorAlcancado[72]?>')], [73, parseFloat('<?php echo $vetorAlcancado[73]?>')], [74, parseFloat('<?php echo $vetorAlcancado[74]?>')],
-        [75, parseFloat('<?php echo $vetorAlcancado[75]?>')], [76, parseFloat('<?php echo $vetorAlcancado[76]?>')], [77, parseFloat('<?php echo $vetorAlcancado[77]?>')], 
-        [78, parseFloat('<?php echo $vetorAlcancado[78]?>')], [79, parseFloat('<?php echo $vetorAlcancado[79]?>')], [80, parseFloat('<?php echo $vetorAlcancado[80]?>')],
-        [81, parseFloat('<?php echo $vetorAlcancado[81]?>')], [82, parseFloat('<?php echo $vetorAlcancado[82]?>')], [83, parseFloat('<?php echo $vetorAlcancado[83]?>')], 
-        [84, parseFloat('<?php echo $vetorAlcancado[84]?>')], [85, parseFloat('<?php echo $vetorAlcancado[85]?>')], [86, parseFloat('<?php echo $vetorAlcancado[86]?>')],
-        [87, parseFloat('<?php echo $vetorAlcancado[87]?>')], [88, parseFloat('<?php echo $vetorAlcancado[88]?>')], [89, parseFloat('<?php echo $vetorAlcancado[89]?>')], 
-        [90, parseFloat('<?php echo $vetorAlcancado[90]?>')], [91, parseFloat('<?php echo $vetorAlcancado[91]?>')], [92, parseFloat('<?php echo $vetorAlcancado[92]?>')]    
-      ]);
-
+	var i;
+	"<?php echo $count=0;?>";
+	for (i = 0; i < 90; i++) {			
+  		data.addRows([
+        [i, parseFloat("<?php echo $vetorAlcancado["<script>document.write(i)</script>"];?>")]
+        ]);
+        "<?php echo $count=$count+1;?>";
+	}
       var options = {
         hAxis: {
           title: 'Operadores'
