@@ -49,17 +49,17 @@ $observacao = trim($_REQUEST['observacao']);
 	</script>
 	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <SCRIPT language="javascript">
-     $(document).ready(function () {
-        $('#mascara-data').mask('9999-99-99');
-        return false;
-    });
+    <script language="javascript">
+	    $(document).ready(function () {
+	        $('.mascara-data').mask('9999-99-99');
+	        $('#mascara-numero').mask('9999');
+	        return false;
+	    });
     </script>
 </head>
 <body>
 <?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
 	$gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'";
-	$gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo'";
 	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
 	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";				
 ?>
@@ -132,7 +132,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input" id="textInput" placeholder="1992-12-29">
+						<input name="efetivacao" type="text" class="input mascara-data" placeholder="1992-12-31">
 					</div>
 				</div>
 			</div>
@@ -142,7 +142,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input" id="outra_data" placeholder="2019-05-29">
+						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31">
 					</div>
 				</div>
 			</div>
@@ -240,7 +240,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" id="textInput" placeholder="629">
+						<input name="matricula" type="text" class="input" id="mascara-numero" placeholder="629">
 					</div>
 				</div>
 			</div>
