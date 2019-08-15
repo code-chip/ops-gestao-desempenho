@@ -4,6 +4,7 @@ include('connection.php');
 include('login-check.php');
 $menuRelatorio="is-active";
 include('menu.php');
+include('query.php');
 $erro = '';
 $contador = 0;
 $totalDesempenho=0;
@@ -54,14 +55,14 @@ $meta = trim($_REQUEST['meta']);
 					<div class="control">
 						<div class="select">
 							<select name="atividade">
-								<option selected="selected" value="Todas">Todas</option>	
-								<option value="Checkout">Checkout</option>
-								<option value="Picking">Picking</option>
-								<option value="PBL">PBL</option>
-								<option value="Embalagem">Embalagem</option>
-								<option value="Recebimento">Recebimento</option>
-								<option value="Avarias e Devoluções">Avaria/Devolução</option>						
-								<option value="Expedição">Expedição</option>	
+								<option selected="selected" value="">Todas</option>	
+								<option value="AND A.ID=1">Checkout</option>
+								<option value="AND A.ID=2">Separação</option>
+								<option value="AND A.ID=3">Embalagem</option>
+								<option value="AND A.ID=4">PBL</option>
+								<option value="AND A.ID=5">Recebimento</option>
+								<option value="AND A.ID=6">Devolução</option>						
+								<option value="AND A.ID=7">Avarias</option>	
 							</select>
 						</div>
 					</div>					
@@ -76,9 +77,9 @@ $meta = trim($_REQUEST['meta']);
 						<div class="control">
 							<div class="select">
 								<select name="meta">
-									<option selected="selected"value=""><?php echo $_SESSION["userId"]?></option>
-									<option value="and b.alcancado>=100">Atingida</option>
-									<option value="and b.alcancado<100">Não atingida</option>
+									<option selected="selected"value="">Ambas</option>
+									<option value="AND D.DESEMPENHO>99">Atingida</option>
+									<option value="AND D.DESEMPENHO<100">Não atingida</option>
 								</select>	
 							</div>
 						</div>
@@ -98,7 +99,7 @@ if( $periodo != ""){
 	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
-	WHERE D.USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'
+	WHERE D.USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$atividade."".$meta."
 	ORDER BY REGISTRO;";	
 	$con = mysqli_query($phpmyadmin, $consulta);
 	$x=0;
@@ -131,12 +132,12 @@ else{
 			</td>
 		</tr>
 	<tr>
-		<th>Atividade</th>		
-		<th>Meta</th>
-		<th>Alacançado</th>
-		<th>Desempenho</th>
-		<th>Data</th>
-		<th style='width:250px;'>Observação</th>
+		<th style='width:55px;'>Atividade</th>		
+		<th style='width:55px;'>Meta</th>
+		<th style='width:55px;'>Alacançado</th>
+		<th style='width:55px;'>Desempenho</th>
+		<th style='width:55px;'>Data</th>
+		<th style='width:350px;'>Observação</th>
 	</tr>
 <?php for( $i = 0; $i < sizeof($vetorAtividade); $i++ ) : ?>
 	<tr>
