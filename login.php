@@ -13,7 +13,7 @@ $result = mysqli_query($phpmyadmin, $query);
 $row = mysqli_num_rows($result);
 if($row == 1){//ADICIONAR INFORMAÇÕES DE ACESSO NA TABELA.
 	$cnx= $result->fetch_array();
-	$_SESSION["loggedInUser"]=$cnx["ID"];
+	$_SESSION["userId"]=$cnx["ID"];
 	$_SESSION["nameUser"]=$cnx["NOME"];
 	$_SESSION["permissao"]=$cnx["PERMISSAO_ID"];
 	$countCheck="SELECT MAX(ACESSO_TOTAL) AS ACESSO_TOTAL FROM ACESSO WHERE USUARIO_ID=".$cnx["ID"].";";
