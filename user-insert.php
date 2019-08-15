@@ -47,6 +47,14 @@ $observacao = trim($_REQUEST['observacao']);
 		}
 		}
 	</script>
+	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <SCRIPT language="javascript">
+     $(document).ready(function () {
+        $('#mascara-data').mask('9999-99-99');
+        return false;
+    });
+    </script>
 </head>
 <body>
 <?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
@@ -101,6 +109,44 @@ $observacao = trim($_REQUEST['observacao']);
 		  	</div>
 		  	<p class="help is-danger">E-mail inválido</p>
 		</div>
+		<div class="field is-horizontal">
+			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
+				<label for="sexo" class="label">Sexo</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="sexo">
+								<option value="">Selecione</option>								
+								<option value="M">Masculino</option>
+								<option value="F">Feminino</option>																	
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
+				<label class="label" for="efetivacao">Nascimento</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control" style="max-width:7em;">
+						<input name="efetivacao" type="text" class="input" id="textInput" placeholder="1992-12-29">
+					</div>
+				</div>
+			</div>
+			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
+				<label class="label" for="efetivacao">Admissão</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control" style="max-width:7em;">
+						<input name="efetivacao" type="text" class="input" id="outra_data" placeholder="2019-05-29">
+					</div>
+				</div>
+			</div>
+		</div><!--FINAL DIVISÃO EM HORIZONTAL-->
 		<!--DIVISÃO EM HORIZONTAL-->
 		<div class="field is-horizontal"><!--SELEÇÃO CARGO-->
 			<div class="field-label is-normal">
@@ -145,7 +191,7 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>
-			<div class="field-label is-normal"><!--FINAL DIVISÃO EM HORIZONTAL-->
+			<div class="field-label is-normal">
 				<label for="gestor" class="label">Gestor</label>
 			</div>
 			<div class="field-body">
@@ -165,6 +211,9 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>
+		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->
+		<!--DIVISÃO EM HORIZONTAL 2-->			
+		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO SETOR-->
 				<label for="setor" class="label">Setor</label>
 			</div>
@@ -185,26 +234,13 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>		
-		</div><!--FINAL DIVISÃO EM HORIZONTAL-->	
-		<!--DIVISÃO EM HORIZONTAL 2-->
-		<div class="field is-horizontal"><!--CAMPO MATRICULA-->		
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--CAMPO MATRICULA-->
 				<label class="label" for="matricula">Matricula</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
 						<input name="matricula" type="text" class="input" id="textInput" placeholder="629">
-					</div>
-				</div>
-			</div>
-			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
-				<label class="label" for="efetivacao">Admissão</label>
-			</div>
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input" id="textInput" placeholder="2019-05-29">
 					</div>
 				</div>
 			</div>
