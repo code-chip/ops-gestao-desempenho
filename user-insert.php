@@ -9,6 +9,8 @@ $nome = trim($_REQUEST['nome']);
 $login = trim($_REQUEST['login']);
 $senha = trim($_REQUEST['senha']);
 $email = trim($_REQUEST['email']);
+$sexo = trim($_REQUEST['sexo']);
+$nascimento = trim($_REQUEST['nascimento']);
 $cargo = trim($_REQUEST['cargo']);
 $turno = trim($_REQUEST['turno']);
 $gestor = trim($_REQUEST['gestor']);
@@ -127,12 +129,12 @@ $observacao = trim($_REQUEST['observacao']);
 				</div>						
 			</div>
 			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
-				<label class="label" for="efetivacao">Nascimento</label>
+				<label class="label" for="nascimento">Nascimento</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input mascara-data" placeholder="1992-12-31">
+						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31">
 					</div>
 				</div>
 			</div>
@@ -240,7 +242,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" id="mascara-numero" placeholder="629">
+						<input name="matricula" type="text" class="input" placeholder="629">
 					</div>
 				</div>
 			</div>
@@ -324,16 +326,22 @@ if(isset($_GET['cadastrar'])){
 	if($check >= 1){
 		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
-	else{
-		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){	
-			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
+	else{		
+		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
+			if($nascimento=="" || $nascimento==null){
+				echo $nascimento;
+				$nascimento="1990-01-01";
+			}	
+			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, NASCIMENTO, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."','".$sexo."','".$nascimento."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
 			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
 				header("Location: localhost/gestaodesempenho/register.php");	
 			}
 			else{
+				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
 				echo mysqli_error($phpmyadmin);
+				echo $nascimento;
 			}
 		}
 		else if( $nome==""){ 
