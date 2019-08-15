@@ -4,7 +4,6 @@ include('connection.php');
 include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
-$name = "Aldicione Fagundes De Oliveira";//getActiveUser($userid);
 $erro = '';
 $contador = 0;
 $totalAlcancado=0;
@@ -34,12 +33,14 @@ $meta = trim($_REQUEST['meta']);
 				<div class="control">
 					<div class="select">
 						<select name="periodo">
-							<option selected="selected" value="">Selecione</option>
-							<option value="proximo"><?php echo strftime('%h', strtotime("+1 months"))?></option>
-							<option value="atual"><?php echo strftime('%h')?></option>
-							<option value="penultimo"><?php echo strftime('%h', strtotime("-1 months"))?></option>
-							<option value="antipenultimo"><?php echo strftime('%h', strtotime("-2 months"))?></option>	
-						</select>	
+							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
+							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
+						</select>		
 					</div>
 				</div>
 			</div>
@@ -126,7 +127,13 @@ if( $periodo != ""){
 			$consulta="select * from gestaodesempenho.desempenho where nome='".$name."' and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20')".$meta." order by registro;";
 		}
 		
-	}	
+	}
+	$consulta="SELECT U.NOME, A.NOME, P.NOME, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D
+	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
+	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
+	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
+	WHERE D.USUARIO_ID=1 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'
+	ORDER BY REGISTRO;";	
 	$con = mysqli_query($phpmyadmin, $consulta);
 	$x=0;
 	while($dado = $con->fetch_array()){		
