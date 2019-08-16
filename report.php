@@ -163,7 +163,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	$totalFolgas=0;	
 	$con = mysqli_query($phpmyadmin , $consulta);
 	while($dado = $con->fetch_array()){
-		$vetorIdUsuario=$dado["ID"];				
+		$vetorIdUsuario[$x]=$dado["ID"];				
 		$vetorNome[$x] = $dado["NOME"];
 		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
@@ -225,8 +225,8 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo utf8_encode($vetorNome[$i])?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="http://192.168.217.6/evino/acomp_individual.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vetorIdUsuario[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
-		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&name=<?php echo $vetorNome[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vetorIdUsuario[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
+		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vetorIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vetorFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vetorFolga[$i]?></td><?php endif;?>	
 		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]):?><td><?php echo $vetorFalta[$i]; $mescla=false;?>
 		<td><?php echo $vetorFolga[$i]?></td><?php endif;?>
