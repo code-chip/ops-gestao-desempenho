@@ -136,17 +136,24 @@ if( $periodo != "" && $_SESSION["permissao"]!=1){
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
 	require("query.php");
-			
-	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
+	$queryG3="SELECT U.NOME AS NOME, TRUNCATE(B.MAXIMO,2) AS MAXIMO, B.MINIMO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) MAXIMO, MIN(DESEMPENHO) MINIMO FROM DESEMPENHO WHERE REGISTRO>='2019-07-21' AND
+REGISTRO<='2019-08-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B
+INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID 
+WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>='2019-07-21' AND REGISTRO<='2019-08-20' AND B.MAXIMO>=100
+GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";			
+	//$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
+	//$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
+	$ajusteBD="USE id8414870_projetoalfa;";
 	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
 	$x3=0;
 	$cnxG3= mysqli_query($phpmyadmin, $queryG3);
+	echo mysqli_error($phpmyadmin);
 	while($G3 = $cnxG3->fetch_array()){
-		$vtG3nome[$x3]= $G3["nome"];
-		$vtG3alcancado[$x3]= $G3["alcancado"];
-		$vtG3menor[$x3]= $G3["menor"];		
+		$vtG3nome[$x3]= $G3["NOME"];
+		$vtG3desempenho[$x3]= $G3["MAXIMO"];
+		$vtG3menor[$x3]= $G3["MINIMO"];		
 		$x3++;				
-	}			
+	}		
 	$con = mysqli_query($phpmyadmin, $consulta);
 	$row = mysqli_num_rows($con);
 	$x=0;
@@ -318,16 +325,16 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	google.charts.setOnLoadCallback(drawTitleSubtitle);
 	function drawTitleSubtitle() {
     	var data = google.visualization.arrayToDataTable([
-        ['Operador', 'Alcançado', 'Menor do período'],
-        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3alcancado[0]?>'), parseFloat('<?php echo $vtG3menor[0]?>')],
-        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3alcancado[1]?>'), parseFloat('<?php echo $vtG3menor[1]?>')],
-        ['<?php echo $vtG3nome[2]?>', parseFloat('<?php echo $vtG3alcancado[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
-        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3alcancado[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
+        ['Operador', 'avg', 'min'],
+        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3desempenho[0]?>'), parseFloat('<?php echo $vtG3menor[0]?>')],
+        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3desempenho[1]?>'), parseFloat('<?php echo $vtG3menor[1]?>')],
+        ['<?php echo $vtG3nome[2]?>', parseFloat('<?php echo $vtG3desempenho[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
+        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3desempenho[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
       	]);
       	var materialOptions = {
         	chart: {
          		title: 'Ranking mensal dos operadores',
-          		subtitle: 'Melhor desempenho no mês atual e nos últimos 3 meses'
+          		subtitle: 'Top 4 desempenho do mês '
         	},
         	hAxis: {
           		title: 'Total Alcançado',
