@@ -32,8 +32,7 @@ $totalAlcancado=0;
 	<br/>
 	<form id="form1" action="report.php" method="GET" >
 		<div class="field is-horizontal">
-			<!--SELEÇÃO PERÍODO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
 				<label class="label" for="periodo">Período:</label>
 			</div>
 			<div class="field-body">
@@ -53,8 +52,7 @@ $totalAlcancado=0;
 				</div>
 			</div>
 			</div>
-			<!--SELEÇÃO ATIVIDADE-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO ATIVIDADE-->
 				<label class="label">Atividade:</label>
 			</div>
 			<div class="field-body">
@@ -69,8 +67,7 @@ $totalAlcancado=0;
 					</div>					
 				</div>						
 			</div>
-			<!--SELEÇÃO ORDENAÇÃO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO ORDENAÇÃO-->
 				<label for="ordenacao" class="label">Ordenação:</label>
 			</div>
 			<div class="field-body">
@@ -85,8 +82,7 @@ $totalAlcancado=0;
 					</div>					
 				</div>						
 			</div>
-			<!--SELEÇÃO TURNO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
 				<label for="turno" class="label">Turno:</label>
 			</div>
 			<div class="field-body">
@@ -104,8 +100,7 @@ $totalAlcancado=0;
 					</div>					
 				</div>						
 			</div>	
-			<!--SELEÇÃO META-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO META-->
 				<label class="label" for="meta">Meta:</label>
 			</div>
 				<div class="field-body">
@@ -127,8 +122,7 @@ $totalAlcancado=0;
 			</div>
 		</div>
 	</form>		
-</div>
-
+</div><!--FINAL DO FORMULÁRIO-->
 <?php if($periodo!=""):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="graficos" style="position: relative; width: 100%; height: 250px; /*border: 3px solid #73AD21;*/">
 <div id="chart_div" style="position: absolute; top:2%; left:0%; width: 25%; height: 250px; /*border: 3px solid #73AD26;*/"></div>
@@ -138,7 +132,6 @@ $totalAlcancado=0;
 </div>
 <?php
 if( $periodo != "" && $_SESSION["permissao"]!=1){
-
 	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
@@ -164,38 +157,37 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	$con = mysqli_query($phpmyadmin , $consulta);
 	while($dado = $con->fetch_array()){
 		$vetorIdUsuario[$x]=$dado["ID"];				
-		$vetorNome[$x] = $dado["NOME"];
-		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
-		$vetorAtividade[$x] = $dado["ATIVIDADE"];
-		$vetorFalta[$x] = $dado["FALTA"];
-		$vetorFolga[$x] = $dado["FOLGA"];
+		$vtNome[$x] = $dado["NOME"];
+		$vtDesempenho[$x] = $dado["DESEMPENHO"];
+		$vtAtividade[$x] = $dado["ATIVIDADE"];
+		$vtFalta[$x] = $dado["FALTA"];
+		$vtFolga[$x] = $dado["FOLGA"];
 		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
-		$vetorRegistro[$x] = $dado["REGISTRO"];
-		$totalFaltas=$totalFaltas+$vetorFalta[$x];
-		$totalFolgas=$totalFolgas+$vetorFolga[$x];	
-		if($maior<$vetorAlcancado[$x]){
-			$maior=$vetorAlcancado[$x];
+		$vtRegistro[$x] = $dado["REGISTRO"];
+		$totalFaltas=$totalFaltas+$vtFalta[$x];
+		$totalFolgas=$totalFolgas+$vtFolga[$x];	
+		if($maior<$vtDesempenho[$x]){
+			$maior=$vtDesempenho[$x];
 		}
-		if($menor>$vetorAlcancado[$x] && $vetorAlcancado[$x]!=0){
-			$menor=$vetorAlcancado[$x];
+		if($menor>$vtDesempenho[$x] && $vtDesempenho[$x]!=0){
+			$menor=$vtDesempenho[$x];
 		}			
 		$contador++;
 		$x++;		
 	}	
 	$xg=0;
-	$cnx2=mysqli_query($phpmyadmin, $gafrico1); //or die($mysqli->error);
+	$cnx2=mysqli_query($phpmyadmin, $gafrico1);
 	while($graf1= $cnx2->fetch_array()){
 		$vtMedia[$xg]=$graf1["MEDIA"];
 		$vtMenor[$xg]=$graf1["MENOR"];
 		$xg++;
 	}	
 }?>
-<!--FINAL DO FORMULÁRIO-->
 <?php if($contador !=0) : ?>
 	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr class="is-selected">
-			<td>Resultado:<?php echo sizeof($vetorNome);?></td>	
+			<td>Resultado:<?php echo sizeof($vtNome);?></td>	
 			<td>Falta's: <?php echo $totalFaltas;?></td>
 			<td>Folga's: <?php echo $totalFolgas;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
@@ -214,8 +206,8 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		<th>Desempenho</th>				
 		<th>Período</th>			
 	</tr>
-<?php for( $i = 0; $i < sizeof($vetorNome); $i++ ) : ?>
-	<?php $z=$i; $registro=1; while($vetorNome[$z]==$vetorNome[$z+1]){
+<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
+	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
 		$registro++;
 		$repeat=$registro;
 		$z++;
@@ -224,16 +216,16 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo utf8_encode($vetorNome[$i])?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vetorIdUsuario[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
-		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vetorIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
-		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vetorFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vetorFolga[$i]?></td><?php endif;?>	
-		<?php if($repeat==0 && $vetorNome[$i-1]!=$vetorNome[$i]):?><td><?php echo $vetorFalta[$i]; $mescla=false;?>
-		<td><?php echo $vetorFolga[$i]?></td><?php endif;?>
+		<td><?php echo utf8_encode($vtNome[$i])?></td>
+		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
+		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
+		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
+		<td><?php echo $vtFolga[$i]?></td><?php endif;?>
 		<?php if($atividade=="separado"):?><td><?php echo $vetorAtividade[$i]?></td><?php endif;?>		
-		<td><?php echo $vetorAlcancado[$i]."%"?></td>				
-		<td><?php echo $vetorRegistro[$i]?></td>
-		<?php if($vetorNome[$i]!=$vetorNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
+		<td><?php echo $vtDesempenho[$i]."%"?></td>				
+		<td><?php echo $vtRegistro[$i]?></td>
+		<?php if($vtNome[$i]!=$vtNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
 	</tr>
 <?php endfor; ?>
 	</table>
@@ -270,68 +262,85 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart', 'line']});
 	google.charts.setOnLoadCallback(drawBasic);
-
 	function drawBasic() {
-
-      var data = new google.visualization.DataTable();''
-      var o;
+      	var data = new google.visualization.DataTable();''
+     	var o;
      
-      data.addColumn('number', 'X');
-      data.addColumn('number', 'Alcançado'); 
-	var i;
-	"<?php echo $count=0;?>";
-	for (i = 0; i < 90; i++) {			
+      	data.addColumn('number', 'X');
+      	data.addColumn('number', 'Alcançado');
   		data.addRows([
-        [i, parseFloat("<?php echo $vetorAlcancado["<script>document.write(i)</script>"];?>")]
-        ]);
-        "<?php echo $count=$count+1;?>";
-	}
-      var options = {
-        hAxis: {
-          title: 'Operadores'
-        },
-        vAxis: {
-          title: 'Variação do desempenho'
-        }
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
-
-      chart.draw(data, options);
+	        [0, parseFloat('<?php echo $vtDesempenho[0]?>')],   [1, parseFloat('<?php echo $vtDesempenho[1]?>')],  [2, parseFloat('<?php echo $vtDesempenho[2]?>')],
+	        [3, parseFloat('<?php echo $vtDesempenho[3]?>')],  [4, parseFloat('<?php echo $vtDesempenho[4]?>')],  [5, parseFloat('<?php echo $vtDesempenho[5]?>')],
+	        [6, parseFloat('<?php echo $vtDesempenho[6]?>')],  [7, parseFloat('<?php echo $vtDesempenho[7]?>')],  [8, parseFloat('<?php echo $vtDesempenho[8]?>')],
+	        [9, parseFloat('<?php echo $vtDesempenho[9]?>')],  [10, parseFloat('<?php echo $vtDesempenho[10]?>')], [11, parseFloat('<?php echo $vtDesempenho[11]?>')],
+	        [12, parseFloat('<?php echo $vtDesempenho[12]?>')], [13, parseFloat('<?php echo $vtDesempenho[13]?>')], [14, parseFloat('<?php echo $vtDesempenho[14]?>')], 
+	        [15, parseFloat('<?php echo $vtDesempenho[15]?>')], [16, parseFloat('<?php echo $vtDesempenho[16]?>')], [17, parseFloat('<?php echo $vtDesempenho[17]?>')],
+	        [18, parseFloat('<?php echo $vtDesempenho[18]?>')], [19, parseFloat('<?php echo $vtDesempenho[19]?>')], [20, parseFloat('<?php echo $vtDesempenho[19]?>')], 
+	        [21, parseFloat('<?php echo $vtDesempenho[21]?>')], [22, parseFloat('<?php echo $vtDesempenho[22]?>')], [23, parseFloat('<?php echo $vtDesempenho[23]?>')],
+	        [24, parseFloat('<?php echo $vtDesempenho[24]?>')], [25, parseFloat('<?php echo $vtDesempenho[25]?>')], [26, parseFloat('<?php echo $vtDesempenho[26]?>')], 
+	        [27, parseFloat('<?php echo $vtDesempenho[27]?>')], [28, parseFloat('<?php echo $vtDesempenho[28]?>')], [29, parseFloat('<?php echo $vtDesempenho[29]?>')],
+	        [30, parseFloat('<?php echo $vtDesempenho[30]?>')], [31, parseFloat('<?php echo $vtDesempenho[31]?>')], [32, parseFloat('<?php echo $vtDesempenho[32]?>')], 
+	        [33, parseFloat('<?php echo $vtDesempenho[33]?>')], [34, parseFloat('<?php echo $vtDesempenho[34]?>')], [35, parseFloat('<?php echo $vtDesempenho[35]?>')],
+	        [36, parseFloat('<?php echo $vtDesempenho[36]?>')], [37, parseFloat('<?php echo $vtDesempenho[37]?>')], [38, parseFloat('<?php echo $vtDesempenho[38]?>')], 
+	        [39, parseFloat('<?php echo $vtDesempenho[39]?>')], [40, parseFloat('<?php echo $vtDesempenho[40]?>')], [41, parseFloat('<?php echo $vtDesempenho[41]?>')],
+	        [42, parseFloat('<?php echo $vtDesempenho[42]?>')], [43, parseFloat('<?php echo $vtDesempenho[43]?>')], [44, parseFloat('<?php echo $vtDesempenho[44]?>')], 
+	        [45, parseFloat('<?php echo $vtDesempenho[45]?>')], [46, parseFloat('<?php echo $vtDesempenho[46]?>')], [47, parseFloat('<?php echo $vtDesempenho[47]?>')],
+	        [48, parseFloat('<?php echo $vtDesempenho[48]?>')], [49, parseFloat('<?php echo $vtDesempenho[49]?>')], [50, parseFloat('<?php echo $vtDesempenho[50]?>')], 
+	        [51, parseFloat('<?php echo $vtDesempenho[51]?>')], [52, parseFloat('<?php echo $vtDesempenho[52]?>')], [53, parseFloat('<?php echo $vtDesempenho[53]?>')],
+	        [54, parseFloat('<?php echo $vtDesempenho[54]?>')], [55, parseFloat('<?php echo $vtDesempenho[55]?>')], [56, parseFloat('<?php echo $vtDesempenho[56]?>')], 
+	        [57, parseFloat('<?php echo $vtDesempenho[57]?>')], [58, parseFloat('<?php echo $vtDesempenho[58]?>')], [59, parseFloat('<?php echo $vtDesempenho[59]?>')],
+	        [60, parseFloat('<?php echo $vtDesempenho[60]?>')], [61, parseFloat('<?php echo $vtDesempenho[61]?>')], [62, parseFloat('<?php echo $vtDesempenho[62]?>')], 
+	        [63, parseFloat('<?php echo $vtDesempenho[63]?>')], [64, parseFloat('<?php echo $vtDesempenho[64]?>')], [65, parseFloat('<?php echo $vtDesempenho[65]?>')],
+	        [66, parseFloat('<?php echo $vtDesempenho[66]?>')], [67, parseFloat('<?php echo $vtDesempenho[67]?>')], [68, parseFloat('<?php echo $vtDesempenho[68]?>')], 
+	        [69, parseFloat('<?php echo $vtDesempenho[69]?>')], [70, parseFloat('<?php echo $vtDesempenho[70]?>')], [71, parseFloat('<?php echo $vtDesempenho[71]?>')],
+	        [72, parseFloat('<?php echo $vtDesempenho[72]?>')], [73, parseFloat('<?php echo $vtDesempenho[73]?>')], [74, parseFloat('<?php echo $vtDesempenho[74]?>')],
+	        [75, parseFloat('<?php echo $vtDesempenho[75]?>')], [76, parseFloat('<?php echo $vtDesempenho[76]?>')], [77, parseFloat('<?php echo $vtDesempenho[77]?>')], 
+	        [78, parseFloat('<?php echo $vtDesempenho[78]?>')], [79, parseFloat('<?php echo $vtDesempenho[79]?>')], [80, parseFloat('<?php echo $vtDesempenho[80]?>')],
+	        [81, parseFloat('<?php echo $vtDesempenho[81]?>')], [82, parseFloat('<?php echo $vtDesempenho[82]?>')], [83, parseFloat('<?php echo $vtDesempenho[83]?>')], 
+	        [84, parseFloat('<?php echo $vtDesempenho[84]?>')], [85, parseFloat('<?php echo $vtDesempenho[85]?>')], [86, parseFloat('<?php echo $vtDesempenho[86]?>')],
+	        [87, parseFloat('<?php echo $vtDesempenho[87]?>')], [88, parseFloat('<?php echo $vtDesempenho[88]?>')], [89, parseFloat('<?php echo $vtDesempenho[89]?>')], 
+	        [90, parseFloat('<?php echo $vtDesempenho[90]?>')], [91, parseFloat('<?php echo $vtDesempenho[91]?>')], [92, parseFloat('<?php echo $vtDesempenho[92]?>')]    
+	    ]);
+      	var options = {
+        	hAxis: {
+          		title: 'Operadores'
+        	},
+        	vAxis: {
+          		title: 'Variação do desempenho'
+        	}
+      	};
+      	var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+      	chart.draw(data, options);
     }
 </script>	
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart', 'bar']});
-google.charts.setOnLoadCallback(drawTitleSubtitle);
-
-function drawTitleSubtitle() {
-      var data = google.visualization.arrayToDataTable([
+	google.charts.setOnLoadCallback(drawTitleSubtitle);
+	function drawTitleSubtitle() {
+    	var data = google.visualization.arrayToDataTable([
         ['Operador', 'Alcançado', 'Menor do período'],
         ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3alcancado[0]?>'), parseFloat('<?php echo $vtG3menor[0]?>')],
         ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3alcancado[1]?>'), parseFloat('<?php echo $vtG3menor[1]?>')],
         ['<?php echo $vtG3nome[2]?>', parseFloat('<?php echo $vtG3alcancado[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
         ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3alcancado[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
-      ]);
-
-      var materialOptions = {
-        chart: {
-          title: 'Ranking mensal dos operadores',
-          subtitle: 'Melhor desempenho no mês atual e nos últimos 3 meses'
-        },
-        hAxis: {
-          title: 'Total Alcançado',
-          minValue: 0,
-        },
-        vAxis: {
-          title: 'Ranking'
-        },
-        bars: 'horizontal'
-      };
-      var materialChart = new google.charts.Bar(document.getElementById('chart_div3'));
-      materialChart.draw(data, materialOptions);
+      	]);
+      	var materialOptions = {
+        	chart: {
+         		title: 'Ranking mensal dos operadores',
+          		subtitle: 'Melhor desempenho no mês atual e nos últimos 3 meses'
+        	},
+        	hAxis: {
+          		title: 'Total Alcançado',
+          		minValue: 0,
+        	},
+        	vAxis: {
+          		title: 'Ranking'
+        	},
+        	bars: 'horizontal'
+      	};
+      	var materialChart = new google.charts.Bar(document.getElementById('chart_div3'));
+      	materialChart.draw(data, materialOptions);
     }
 </script>
 </body>
 </html>
-
-
