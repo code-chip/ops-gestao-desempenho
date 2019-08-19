@@ -21,9 +21,6 @@ a[href="#top"]:hover{
 </style>
 <?php
 session_start();
-include('connection.php');
-//require_once('js/loader.js');
-include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -32,7 +29,6 @@ $setor= trim($_REQUEST['setor']);
 $nome= trim($_REQUEST['nome']);
 $contador = 0;
 $totalAlcancado=0;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -106,7 +102,7 @@ $totalAlcancado=0;
 								while($setor = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
-							</select>
+								</select>
 							</div>
 						</div>
 					</div>
