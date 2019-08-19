@@ -162,7 +162,7 @@ if( $nome != ""){
 <hr/>
 	<section class="section">
 	<div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth">	
+	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
 		<th>Funcionário</th>
@@ -209,7 +209,7 @@ if( $nome != ""){
 					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 			<div class="control">
-				<input name="Limpar" type="submit" class="button is-primary" onClick="history.go(-1)" value="Nova consultar"/>
+				<a href="report-query.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consultar"/></a>
 			</div>					
 		</div>						
 	</div>
