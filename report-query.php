@@ -7,17 +7,6 @@
   		width: 100%;
   		overflow-x: auto;  		
 	}
-	a[href="#top"]{
-    padding:10px;
-    position:fixed;
-    top: 90%;
-    right:40px;
-    display:none;
-    font-size: 30px;
-}
-a[href="#top"]:hover{
-    text-decoration:none;
-}
 </style>
 <?php
 session_start();
@@ -38,23 +27,21 @@ $totalAlcancado=0;
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
     <script type="text/javascript">
     	$(document).ready(function(){
-    $(window).scroll(function(){
-        if ($(this).scrollTop() > 100) {
-            $('a[href="#top"]').fadeIn();
-        } else {
-            $('a[href="#top"]').fadeOut();
-        }
-    });
-
-    $('a[href="#top"]').click(function(){
-        $('html, body').animate({scrollTop : 0},800);
-        return false;
-    });
-});
+	    	$(window).scroll(function(){
+	        if ($(this).scrollTop() > 100) {
+	            $('a[href="#top"]').fadeIn();
+	        }else {
+	            $('a[href="#top"]').fadeOut();
+	        }
+	    });
+	    $('a[href="#top"]').click(function(){
+	        $('html, body').animate({scrollTop : 0},800);
+	        return false;
+	    });
+	});
     </script>   
 </head>
 <body>
-
 	<?php
 	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
 	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
@@ -67,9 +54,9 @@ $totalAlcancado=0;
 	<div class="container">	
 	<form id="form1" action="" method="POST">
 		<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Mês:</label>
-				</div>
+			<div class="field-label is-normal">
+				<label class="label">Mês:</label>
+			</div>
 				<div class="field-body">
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
@@ -123,22 +110,21 @@ $totalAlcancado=0;
 				</div>
 			</div>
 			<div class="field is-horizontal">
-				<div class="field-label">						
-					</div>
-					<div class="field-body">
-						<div class="field">
-							<div class="control">
-								<button name="consultar" type="submit" class="button is-primary">Consultar</button>
-							</div>
+				<div class="field-label"></div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<button name="consultar" type="submit" class="button is-primary">Consultar</button>
 						</div>
 					</div>
-				</div>	
+				</div>
+			</div>
+		</div>						
 	</form>
 	</div>
 	</section>	
 	<?php endif; ?>		
 </div>
-
 <?php
 date('Y-m-d H:i');
 if( $nome != ""){	
@@ -147,7 +133,7 @@ if( $nome != ""){
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
 	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 	WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
-	AND D.REGISTRO>DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO< CONCAT('".$periodo."', '20');";
+	AND D.REGISTRO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO<= CONCAT('".$periodo."', '-20');";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
@@ -164,12 +150,12 @@ if( $nome != ""){
 	}
 	if(mysqli_num_rows($cnx)==null){
 		?><script type="text/javascript">
+			mysqli_error($phpmyadmin);
 			alert('Nenhum registrado encontrado nesta consulta!');
 			window.location.href=window.location.href;
 		</script> <?php		
 	}			
-}
-	
+}	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if(isset($_POST['consultar'])) : ?>
@@ -213,24 +199,17 @@ if( $nome != ""){
 	<a href="#topo">		
 		<div class=".scrollWrapper">
 			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
-		</div>		
-		<!--
-<div class="scrollWrapper" style="overflow-x: hidden;">
-		<div class="field is-grouped is-grouped-right">
-			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
 		</div>
-		</div>
-		-->
 	</a>
 	<br/>
 	<div class="table__wrapper">			
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<input type="submit" class="button is-primary" id="submitQuery" value="Atualizar"/>						
+					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 			<div class="control">
-				<input name="Limpar" type="submit" class="button is-primary" onClick="history.go(0)" value="Nova consultar"/>
+				<input name="Limpar" type="submit" class="button is-primary" onClick="history.go(-1)" value="Nova consultar"/>
 			</div>					
 		</div>						
 	</div>
@@ -247,7 +226,6 @@ if(isset($_POST['salvarDados'])){
 	$metas = array_filter($_POST['meta']);
 	$alcancados= array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
-
 	//CHECK TURNO
 	$checkTurno="SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
@@ -271,7 +249,5 @@ if(isset($_POST['salvarDados'])){
 			window.location.href=window.location.href;
 		</script><?php
 	}
-	//header("Location: /gestaodesempenho/report-insert.php");	
 }
 ?>
-
