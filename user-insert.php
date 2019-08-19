@@ -48,16 +48,7 @@ $observacao = trim($_REQUEST['observacao']);
 		alert("E-mail invalido");
 		}
 		}
-	</script>
-	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <script language="javascript">
-	    $(document).ready(function () {
-	        $('.mascara-data').mask('9999-99-99');
-	        $('#mascara-numero').mask('9999');
-	        return false;
-	    });
-    </script>
+	</script>	
 </head>
 <body>
 <?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
