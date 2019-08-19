@@ -1,7 +1,10 @@
+<style type="text/css">
+	.table__wrapper {
+  		overflow-x: auto;
+	}
+</style>
 <?php
 session_start();
-include('connection.php');
-include('login-check.php');
 $menuRelatorio="is-active";
 include('menu.php');
 include('query.php');
@@ -20,9 +23,9 @@ $meta = trim($_REQUEST['meta']);
 	<title>Gestão de Desempenho - Relatório Individual</title>
 </head>
 <body>
-	<span id="topo"></span>
-<div>
-	<br/>
+<span id="topo"></span>
+<section class="section">
+<div class="container">
 	<form id="form1" action="report-private.php" method="GET" >
 		<div class="field is-horizontal">
 			<!--SELEÇÃO PERÍODO-->
@@ -92,6 +95,7 @@ $meta = trim($_REQUEST['meta']);
 		</div>
 	</form>		
 </div>
+</section>
 <!--FINAL DO FORMULÁRIO-->
 <?php
 if( $periodo != ""){
@@ -124,7 +128,9 @@ else{
 }?>
 <?php if( $periodo !="" && $contador !=0) : ?>
 <hr/>
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+<section class="section">
+	<div class="table__wrapper">
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth table__wrapper .scrollWrapper">
 		<tr>
 			<td colspan='10' class='table_title'>
 				<span class='title_left'><?php echo $ordersData[0]['increment_id'] ?>Colaborador: <?php echo $nome?> Media: <?php echo round($totalDesempenho/$contador, 2)."%" ?>
@@ -151,11 +157,13 @@ else{
 <?php endfor; ?>
 	</table>
 	<a href="#topo">
-		<div class="field is-grouped is-grouped-centered">
+		<div class=".scrollWrapper">
 			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
 		</div>
-	</a>	
+	</a>
+	</div>	
 <?php endif; ?>
+</section>
 </body>
 </html>		
 
