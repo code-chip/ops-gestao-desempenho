@@ -178,21 +178,21 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input" placeholder="Obrigatório" id="telefone" maxlength="4">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" id="telefone" maxlength="4">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA ALCANÇADO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input" placeholder="Obrigatório" maxlength="4">
+					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" maxlength="4">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" style="max-width:6.5em;" type="text" class="input" value="<?php echo date('Y-m-d');?>" maxlength="10">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro" value="<?php echo date('Y-m-d');?>" maxlength="10">
 				</div>				
 			</div>
 		</td>
