@@ -168,7 +168,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 	$totalFolgas=0;	
 	$con = mysqli_query($phpmyadmin , $consulta);
 	while($dado = $con->fetch_array()){
-		$vetorIdUsuario[$x]=$dado["ID"];				
+		$vtIdUsuario[$x]=$dado["ID"];				
 		$vtNome[$x] = $dado["NOME"];
 		$vtDesempenho[$x] = $dado["DESEMPENHO"];
 		$vtAtividade[$x] = $dado["ATIVIDADE"];
@@ -254,7 +254,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
       var p=parseFloat('<?php echo $fava?>');
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Mês', 'Media', 'Menor'],
+          ['Mês', 'avg', 'min'],
           ['<?php echo strftime('%h', strtotime("-2 months"))?>',  parseFloat('<?php echo $vtMedia[0]?>'), parseFloat('<?php echo $vtMenor[0]?>')],
           ['<?php echo strftime('%h', strtotime("-1 months"))?>',  parseFloat('<?php echo $vtMedia[1]?>'), parseFloat('<?php echo $vtMenor[1]?>')],
           ['<?php echo strftime('%h')?>',  parseFloat('<?php echo $vtMedia[2]?>'), parseFloat('<?php echo $vtMenor[2]?>')],
@@ -279,7 +279,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
      	var o;
      
       	data.addColumn('number', 'X');
-      	data.addColumn('number', 'Alcançado');
+      	data.addColumn('number', 'Desempenho');
   		data.addRows([
 	        [0, parseFloat('<?php echo $vtDesempenho[0]?>')],   [1, parseFloat('<?php echo $vtDesempenho[1]?>')],  [2, parseFloat('<?php echo $vtDesempenho[2]?>')],
 	        [3, parseFloat('<?php echo $vtDesempenho[3]?>')],  [4, parseFloat('<?php echo $vtDesempenho[4]?>')],  [5, parseFloat('<?php echo $vtDesempenho[5]?>')],
