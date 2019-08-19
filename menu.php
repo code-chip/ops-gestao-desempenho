@@ -23,6 +23,15 @@ $menuConfiguracoes;
 	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script language="javascript">
+	    $(document).ready(function () {
+	        $('.mascara-data').mask('9999-99-99');
+	        $('#mascara-numero').mask('9999');
+	        return false;
+	    });
+    </script>
 </head>
 <body>
 	<header>
