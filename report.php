@@ -3,9 +3,6 @@
 </style>
 <?php
 session_start();
-include('connection.php');
-//require_once('js/loader.js');
-include('login-check.php');
 $menuRelatorio="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -15,7 +12,6 @@ $ordenacao = trim($_REQUEST['ordenacao']);
 $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado=0;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -148,8 +144,7 @@ REGISTRO<='2019-08-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B
 INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID 
 WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>='2019-07-21' AND REGISTRO<='2019-08-20' AND B.MAXIMO>=100
 GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";			
-	//$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
-	//$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
+	
 	$x3=0;
 	$cnxG3= mysqli_query($phpmyadmin, $queryG3);
 	echo mysqli_error($phpmyadmin);
@@ -229,7 +224,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo utf8_encode($vtNome[$i])?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button>Consultar</button></a></td><?php $mesclaa=true;endif;?>
+		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=true;endif;?>
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&atividade=Todas&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
