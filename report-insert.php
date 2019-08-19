@@ -269,13 +269,12 @@ if(isset($_POST['salvarDados'])){
 			$desempenho=($alcancados[$i]/$metas[$i])*100;
 		}	
 		$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";		
-		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
-		echo $inserirDesempenho;			 
+		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
 	}	
 	if(mysqli_error($phpmyadmin)==null){	
 		?><script type="text/javascript">
 			alert('Desempenho cadastro com sucessos');
-			//window.location.href=window.location.href;		
+			window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
