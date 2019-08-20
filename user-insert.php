@@ -1,7 +1,5 @@
 <?php
 session_start();
-include('connection.php');
-include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -285,22 +283,6 @@ $observacao = trim($_REQUEST['observacao']);
 				</div>
 			</div>				
 		</form>
-		<!--FINAL DO FORMULÁRIO-->
-		<!--<form name="f1">
-			<h3> Validação de E-mail com JavaScript</h3>
-			<hr color='gray'>
-			<table>
-				<tr>
-				<td>E-mail:
-					<input type="text" name="email" onblur="validacaoEmail(f1.email)"  maxlength="60" size='65'>
-				</td>
-				<td>
-				<div id="msgemail"></div>
-				</td>
-				</tr>
-			</table>
-			<hr color='gray'>
-		</form>-->
 	</main>	
 </div>
 </section>
