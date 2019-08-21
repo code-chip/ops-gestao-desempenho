@@ -1,8 +1,5 @@
 <?php
 session_start();
-include('connection.php');
-//require_once('js/loader.js');
-include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -12,7 +9,6 @@ $efetivacao = trim($_REQUEST['efetivacao']);
 $situacao = trim($_REQUEST['situacao']);
 $contador = 0;
 $totalAlcancado=0;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +28,7 @@ $totalAlcancado=0;
 		</div>
 		<div class="field">
 			<div class="control">		
-				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
+				<a href="user-query.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
 			</div>
 		<?php if($_SESSION["permissao"]!=1):?></div>
 		<div class="field">
