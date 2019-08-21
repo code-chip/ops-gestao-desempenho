@@ -39,17 +39,17 @@ include('menu.php');
 			<h3 class="title">Cadastro de Usuário</h3>
 		<hr>
 	<main>
-	<form id="form1" action="user-insert.php" method="GET">
+	<form id="form1" action="user-insert.php" method="POST">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" maxlength="60">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" maxlength="60">				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -102,7 +102,7 @@ include('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31">
+						<input name="nascimento" type="text" class="input registro" placeholder="1992-12-31">
 					</div>
 				</div>
 			</div>
@@ -112,7 +112,7 @@ include('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31">
+						<input name="efetivacao" type="text" class="input registro" placeholder="2018-12-31">
 					</div>
 				</div>
 			</div>
@@ -200,7 +200,7 @@ include('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" placeholder="635">
+						<input name="matricula" type="text" class="input numero" placeholder="635" maxlength="4">
 					</div>
 				</div>
 			</div>
@@ -244,14 +244,22 @@ include('menu.php');
 		<div class="field">
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." maxlength="60">
 				</div>			
 		</div>
-			<div class="field">
+		<div class="field-body">
+			<div class="field is-grouped">											
 				<div class="control">
-					<button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Cadastrar</button>
+					<a href="register.php"><button class="button is-primary">Voltar</button></a>										
 				</div>
-			</div>				
+				<div class="control">
+					<a href="user-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"/></a>
+				</div>
+				<div class="control">
+					<input name="cadastrar" type="submit" class="button is-primary" value="Cadastrar"/>
+				</div>					
+			</div>
+		</div>							
 		</form>
 	</main>	
 </div>
@@ -261,24 +269,25 @@ include('menu.php');
 </html>
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
-if(isset($_GET['cadastrar'])){
+if(isset($_POST['cadastrar'])){
 	//<!--- DECLARAÇÃO DAS VARIAVEIS -->
-	$nome = trim($_REQUEST['nome']);
-	$login = trim($_REQUEST['login']);
-	$senha = trim($_REQUEST['senha']);
-	$email = trim($_REQUEST['email']);
-	$sexo = trim($_REQUEST['sexo']);
-	$nascimento = trim($_REQUEST['nascimento']);
-	$cargo = trim($_REQUEST['cargo']);
-	$turno = trim($_REQUEST['turno']);
-	$gestor = trim($_REQUEST['gestor']);
-	$setor = trim($_REQUEST['setor']);
-	$matricula = trim($_REQUEST['matricula']);
-	$efetivacao = trim($_REQUEST['efetivacao']);
-	$permissao = trim($_REQUEST['permissao']);
-	$situacao = trim($_REQUEST['situacao']);
-	$observacao = trim($_REQUEST['observacao']);
+	$nome = trim($_POST['nome']);
+	$login = trim($_POST['login']);
+	$senha = trim($_POST['senha']);
+	$email = trim($_POST['email']);
+	$sexo = trim($_POST['sexo']);
+	$nascimento = trim($_POST['nascimento']);
+	$cargo = trim($_POST['cargo']);
+	$turno = trim($_POST['turno']);
+	$gestor = trim($_POST['gestor']);
+	$setor = trim($_POST['setor']);
+	$matricula = trim($_POST['matricula']);
+	$efetivacao = trim($_POST['efetivacao']);
+	$permissao = trim($_POST['permissao']);
+	$situacao = trim($_POST['situacao']);
+	$observacao = trim($_POST['observacao']);
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
+	echo $cargo;
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
