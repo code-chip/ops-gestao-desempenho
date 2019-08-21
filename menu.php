@@ -30,6 +30,7 @@ $menuConfiguracoes;
 	    $(document).ready(function () {	    	
 	        $('.registro').mask('9999-99-99');
 	        $('.desempenho').mask('9999');
+	        $('.numero').mask('9999');
 	        return false;
 	    });
     </script>
