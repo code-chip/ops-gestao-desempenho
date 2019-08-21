@@ -1,21 +1,13 @@
-<style type="text/css">
-	.table__wrapper {
-  		overflow-x: auto;
-	}
-</style>
 <?php
 session_start();
 $menuRelatorio="is-active";
 include('menu.php');
 include('query.php');
-$erro = '';
 $contador = 0;
 $totalDesempenho=0;
-
 $periodo = trim($_REQUEST['periodo']);
 $atividade = trim($_REQUEST['atividade']);
 $meta = trim($_REQUEST['meta']);
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,29 +20,27 @@ $meta = trim($_REQUEST['meta']);
 <div class="container">
 	<form id="form1" action="report-private.php" method="GET" >
 		<div class="field is-horizontal">
-			<!--SELEÇÃO PERÍODO-->
-			<div class="field-label is-normal">
+			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
 				<label class="label" for="periodo">Período:</label>
 			</div>
 			<div class="field-body">
-			<div class="field is-grouped">							
-				<div class="control">
-					<div class="select">
-						<select name="periodo">
-							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						</select>		
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="periodo">
+								<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+								<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
+								<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
+								<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
+								<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
+								<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
+								<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
+							</select>		
+						</div>
 					</div>
 				</div>
-			</div>
-			</div>
-			<!--SELEÇÃO ATIVIDADE-->
-			<div class="field-label is-normal">
+			</div>			
+			<div class="field-label is-normal"><!--SELEÇÃO ATIVIDADE-->
 				<label class="label">Atividade:</label>
 			</div>
 			<div class="field-body">
@@ -58,14 +48,12 @@ $meta = trim($_REQUEST['meta']);
 					<div class="control">
 						<div class="select">
 							<select name="atividade">
-								<option selected="selected" value="">Todas</option>	
-								<option value="AND A.ID=1">Checkout</option>
-								<option value="AND A.ID=2">Separação</option>
-								<option value="AND A.ID=3">Embalagem</option>
-								<option value="AND A.ID=4">PBL</option>
-								<option value="AND A.ID=5">Recebimento</option>
-								<option value="AND A.ID=6">Devolução</option>						
-								<option value="AND A.ID=7">Avarias</option>	
+								<option selected="selected" value="">Todas</option>
+								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdAtividade);
+								$x=0; while($atividade = $con->fetch_array()):{?>
+									<option value="AND A.ID=<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+								<?php $x;} endwhile;?>	
 							</select>
 						</div>
 					</div>					
@@ -130,7 +118,7 @@ else{
 <hr/>
 <section class="section">
 	<div class="table__wrapper">
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth table__wrapper .scrollWrapper">
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">
 		<tr>
 			<td colspan='10' class='table_title'>
 				<span class='title_left'><?php echo $ordersData[0]['increment_id'] ?>Colaborador: <?php echo $nome?> Media: <?php echo round($totalDesempenho/$contador, 2)."%" ?>
