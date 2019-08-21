@@ -48,12 +48,14 @@ $meta = trim($_REQUEST['meta']);
 					<div class="control">
 						<div class="select">
 							<select name="atividade">
-								<option selected="selected" value="">Todas</option>
-								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"; 
-								$con = mysqli_query($phpmyadmin , $gdAtividade);
-								$x=0; while($atividade = $con->fetch_array()):{?>
-									<option value="AND A.ID=<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
+								<option selected="selected" value="">Todas</option>	
+								<option value="AND A.ID=1">Checkout</option>
+								<option value="AND A.ID=2">Separação</option>
+								<option value="AND A.ID=3">Embalagem</option>
+								<option value="AND A.ID=4">PBL</option>
+								<option value="AND A.ID=5">Recebimento</option>
+								<option value="AND A.ID=6">Devolução</option>						
+								<option value="AND A.ID=7">Avarias</option>								
 							</select>
 						</div>
 					</div>					
