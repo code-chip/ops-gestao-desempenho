@@ -1,5 +1,4 @@
 <style type="text/css">
-	/*$table-cell-padding: .75rem !default; $table-sm-cell-padding: .3rem !default; $table-bg: transparent !default; $table-bg-accent: rgba(0,0,0,.05) !default; $table-bg-hover: rgba(0,0,0,.075) !default; $table-bg-active: $table-bg-hover !default; $table-border-width: $border-width !default; $table-border-color: $gray-lighter !default;*/
 </style>
 <?php
 session_start();
@@ -20,12 +19,8 @@ $totalAlcancado=0;
 </head>
 <body>
 	<span id="topo"></span>
-	<?php
-	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
-	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";			
-	?>
-<div>
-	<br/>
+<div class="containner">
+	<section class="section">
 	<form id="form1" action="report.php" method="GET" >
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
@@ -86,9 +81,9 @@ $totalAlcancado=0;
 					<div class="control">
 						<div class="select">
 							<select name="turno">								
-								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
-								$x=0; 
-								while($turno = $con->fetch_array()):{?>
+								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdTurno);
+								$x=0; while($turno = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
 							</select>	
@@ -106,7 +101,7 @@ $totalAlcancado=0;
 								<select name='meta'>
 									<option selected="selected"value="">Ambos</option>
 									<option value="AND B.DESEMPENHO>=100">Atingida</option>
-									<option value="AND B.DESEMPENHO<100">Não atingida ;/</option>
+									<option value="AND B.DESEMPENHO<100">Não atingida</option>
 								</select>	
 							</div>
 						</div>
@@ -117,15 +112,16 @@ $totalAlcancado=0;
 				</div>						
 			</div>
 		</div>
-	</form>		
+	</form>
+	</section>		
 </div><!--FINAL DO FORMULÁRIO-->
 <?php if($periodo!=""):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div id="graficos" style="position: relative; width: 100%; height: 250px; /*border: 3px solid #73AD21;*/">
-<div id="chart_div" style="position: absolute; top:2%; left:0%; width: 25%; height: 250px; /*border: 3px solid #73AD26;*/"></div>
-<div id="chart_div2" style="position: absolute; top:2%; left:25%; width: 30%; height: 250px;/*border: 3px solid #73AD29;*/"></div>
-<div id="chart_div3" style="position: absolute; top:2%; left:55%; width: 30%; height: 250px;/*border: 3px solid #73AD29;*/"></div>
+	<div class="field is-horizontal" id="graficos">		
+		<div id="dash-desempenho"></div>
+		<div id="dash-variacao"></div>
+		<div id="dash-ranking"></div>
+	</div>	
 <?php endif;?>
-</div>
 <?php
 if( $periodo != "" && $_SESSION["permissao"]!=1){
 	if($atividade=="agrupado"){
@@ -192,7 +188,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 }?>
 <?php if($contador !=0) : ?>
 	<hr/>
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
 		<tr class="is-selected">
 			<td>Resultado:<?php echo sizeof($vtNome);?></td>	
 			<td>Falta's: <?php echo $totalFaltas;?></td>
@@ -202,10 +198,10 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 			<td>Maior: <?php echo $maior."%"?></td>			
 		</tr>
 	</table>	
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
 	<tr>
 		<th width="-20">N°</th>
-		<th width="20" class="">Operador</th>
+		<th width="20" class="">Funcionário</th>
 		<th>Detalhes</th>		
 		<th>Falta's</th>
 		<th>Folga's</th>
@@ -261,7 +257,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.AreaChart(document.getElementById('dash-desempenho'));
         chart.draw(data, options);
       }
 
@@ -271,8 +267,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 	google.charts.setOnLoadCallback(drawBasic);
 	function drawBasic() {
       	var data = new google.visualization.DataTable();''
-     	var o;
-     
+     	var o;     
       	data.addColumn('number', 'X');
       	data.addColumn('number', 'Desempenho');
   		data.addRows([
@@ -316,7 +311,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
           		title: 'Variação do desempenho'
         	}
       	};
-      	var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+      	var chart = new google.visualization.LineChart(document.getElementById('dash-variacao'));
       	chart.draw(data, options);
     }
 </script>	
@@ -345,7 +340,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
         	},
         	bars: 'horizontal'
       	};
-      	var materialChart = new google.charts.Bar(document.getElementById('chart_div3'));
+      	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking'));
       	materialChart.draw(data, materialOptions);
     }
 </script>
