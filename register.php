@@ -23,12 +23,12 @@ $totalAlcancado=0;
 		</div><?php endif;?>
 		<div class="field">
 			<div class="control">
-				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Consultar Usuário</a>
+				<a href="user-query.php" class="button is-large is-primary is-outlined is-fullwidth">Consultar Usuário</a>
 			</div>
 		</div>
 		<div class="field">
 			<div class="control">		
-				<a href="user-query.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
+				<a href="user-update.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
 			</div>
 		<?php if($_SESSION["permissao"]!=1):?></div>
 		<div class="field">
