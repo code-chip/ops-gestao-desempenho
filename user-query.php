@@ -79,21 +79,17 @@ WHERE ".$f;
 	$x=0;	
 	$cnx=mysqli_query($phpmyadmin, $query);
 	$dados= $cnx->fetch_array();
-	$row=mysqli_num_rows($cnx);		
-	if(mysqli_error($phpmyadmin)=="" || mysqli_num_rows($dados)==1){		
-
-	}
-	else{
+	$row=mysqli_num_rows($cnx);	
+	if($row==0){		
 		mysqli_error($phpmyadmin);		
 		?><script type="text/javascript">			
-			alert('Nenhum registrado encontrado nesta consulta!');
+			alert('Nenhum usuário encontrado com o filtro aplicado!');
 			window.location.href=window.location.href;
-		</script> <?php
-			
+		</script> <?php			
 	}
 }	
 ?>
-<?php if(isset($_POST['consultar']) && $busca!="") : ?>
+<?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
 	<main>	
 	<form id="form2" action="user-query.php" method="POST">		
