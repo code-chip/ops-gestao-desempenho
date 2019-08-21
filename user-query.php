@@ -3,110 +3,47 @@ session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$nome = trim($_REQUEST['nome']);
-$login = trim($_REQUEST['login']);
-$senha = trim($_REQUEST['senha']);
-$email = trim($_REQUEST['email']);
-$sexo = trim($_REQUEST['sexo']);
-$nascimento = trim($_REQUEST['nascimento']);
-$cargo = trim($_REQUEST['cargo']);
-$turno = trim($_REQUEST['turno']);
-$gestor = trim($_REQUEST['gestor']);
-$setor = trim($_REQUEST['setor']);
-$matricula = trim($_REQUEST['matricula']);
-$efetivacao = trim($_REQUEST['efetivacao']);
-$permissao = trim($_REQUEST['permissao']);
-$situacao = trim($_REQUEST['situacao']);
-$observacao = trim($_REQUEST['observacao']);
+$filtro = trim($_REQUEST['filtro']);
+$busca= trim($_REQUEST['busca']);
 ?>
 <!DOCTYPE html>
 <html>
 <head>	
-	<title>Gestão de Desempenho - Cadastrar Usuário</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script language="Javascript">
-		function validacaoEmail(field) {
-		usuario = field.value.substring(0, field.value.indexOf("@"));
-		dominio = field.value.substring(field.value.indexOf("@")+ 1, field.value.length);
-		if ((usuario.length >=1) &&
-		    (dominio.length >=3) && 
-		    (usuario.search("@")==-1) && 
-		    (dominio.search("@")==-1) &&
-		    (usuario.search(" ")==-1) && 
-		    (dominio.search(" ")==-1) &&
-		    (dominio.search(".")!=-1) &&      
-		    (dominio.indexOf(".") >=1)&& 
-		    (dominio.lastIndexOf(".") < dominio.length - 1)) {
-		document.getElementById("msgemail").innerHTML="E-mail válido";
-		//alert("email valido");
-		}
-		else{
-		document.getElementById("msgemail").innerHTML="<font color='red'>Email inválido </font>";
-		alert("E-mail invalido");
-		}
-		}
-	</script>	
+	<title>Gestão de Desempenho - Consultar Usuário</title>
 </head>
 <body>
-<?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
-	$gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'";
-	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";				
-?>
-<div>
+</br>
+<div>	
 	<form id="form1" action="" method="POST">
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				<label class="label">Mês:</label>
-			</div>
-				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
-						<div class="control">
-							<div class="select">
-								<select name="periodo">
-									<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-									<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-									<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-								</select>	
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="field is-horizontal section">			
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
-					<label class="label">Setor:</label>
+					<label class="label">Filtro:</label>
 				</div>
 				<div class="field-body">
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="setor">								
-								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; 
-								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
+								<select name="filtro">
+									<option value="MATRICULA=">Matricula</option>
+									<option value="LOGIN=">Login</option>
+									<option value="NOME LIKE">Nome</option>
+									<option value="EMAIL=">E-mail</option>
 								</select>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="field is-horizontal">
+			</div>			
+			<div class="field is-horizontal">&nbsp&nbsp&nbsp&nbsp
 				<div class="field-label is-normal">
-					<label class="label">Nome:</label>
+					<label class="label">Buscar:</label>
 				</div>
 				<div class="field-body">
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="nome" type="text" class="input" placeholder="Ana Clara">
+							<input name="busca" type="text" class="input" id="filtro" placeholder="635">
 						</div>
 						</div>
 					</div>
@@ -123,24 +60,53 @@ $observacao = trim($_REQUEST['observacao']);
 				</div>
 			</div>
 		</div>						
-	</form>
-<!--FINAL DO FORM FILTRAR CONSULTA-->	
+	</form><!--FINAL DO FORM FILTRAR CONSULTA-->
+<?php
+if( $busca != ""){
+	if($filtro=="MATRICULA="){
+		$f="USUARIO.".$filtro."".$busca." LIMIT 1;";
+	}
+	else{
+		$f="USUARIO.".$filtro."'".$busca."' LIMIT 1;";
+	}	
+	$query="SELECT *, USUARIO.NOME AS NOME, T.NOME AS TURNO, P.NOME AS PERMISSAO, G.NOME AS GESTOR, S.NOME AS SETOR, C.NOME AS CARGO FROM USUARIO
+INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
+INNER JOIN PERMISSAO P ON P.ID=USUARIO.PERMISSAO_ID
+INNER JOIN GESTOR G ON G.ID=USUARIO.GESTOR_ID
+INNER JOIN SETOR S ON S.ID=USUARIO.SETOR_ID
+INNER JOIN CARGO C ON C.ID=USUARIO.CARGO_ID
+WHERE ".$f;
+	$x=0;	
+	$cnx=mysqli_query($phpmyadmin, $query);
+	$dados= $cnx->fetch_array();
+	$row=mysqli_num_rows($cnx);		
+	if(mysqli_error($phpmyadmin)=="" || mysqli_num_rows($dados)==1){		
+
+	}
+	else{
+		mysqli_error($phpmyadmin);		
+		?><script type="text/javascript">			
+			alert('Nenhum registrado encontrado nesta consulta!');
+			window.location.href=window.location.href;
+		</script> <?php
+			
+	}
+}	
+?>
+<?php if(isset($_POST['consultar']) && $busca!="") : ?>
 	<section class="section">
-		<div class="container">
-			<h3 class="title">Cadastro de Usuário</h3>
-		<hr>
-	<main>
-	<form id="form2" action="user-query.php" method="GET">
+	<main>	
+	<form id="form2" action="user-query.php" method="GET">		
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>">				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -153,13 +119,13 @@ $observacao = trim($_REQUEST['observacao']);
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
 				<div class="control">
-					<input name="senha" type="password" class="input" id="textInput" placeholder="">
+					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>">
 				</div>			
 		</div>
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
+		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
 		    	</span>
@@ -179,9 +145,12 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="sexo">
-								<option value="">Selecione</option>								
-								<option value="M">Masculino</option>
-								<option value="F">Feminino</option>																	
+								<?php if($dados["SEXO"] =="M"):{?>							
+								<option selected="selected" value="M">Masculino</option>
+								<option value="F">Feminino</option><?php }endif?>
+								<?php if($dados["SEXO"] =="F"):{?>	
+								<option selected="selected" value="F">Feminino</option>
+								<option value="M">Masculino</option><?php }endif?>
 							</select>	
 						</div>
 					</div>					
@@ -193,7 +162,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31">
+						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31" value="<?php echo $dados["NASCIMENTO"];?>">
 					</div>
 				</div>
 			</div>
@@ -203,7 +172,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31">
+						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31" value="<?php echo $dados["EFETIVACAO"];?>">
 					</div>
 				</div>
 			</div>
@@ -217,19 +186,14 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select">
-						<select name="cargo">							
-							<option value="1">Operador de Logística 1</option>
-							<option value="2">Operador de Logística 2</option>
-							<option value="3">Operador de Logística 3</option>
-							<option value="4">Auxiliar Administrativo</option>
-							<option value="5">Assistente Administrativo</option>
-							<option value="6">Líder de Operação</option>
-							<option value="7">Assistente de Logística</option>
-							<option value="8">Analista Administrativo</option>
-							<option value="9">Analista de Suporte</option>
-							<option value="10">Analista de Logística</option>
-							<option value="11">Supervisor de Operação</option>	
-							<option value="12">Recursos Humanos</option>															
+						<select name="cargo">
+							<option selected="selected" value="<?php echo $dados["CARGO_ID"];?>"><?php echo $dados["CARGO"];?></option>	
+								<?php $gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo' AND ID<>".$dados["CARGO_ID"]; 
+								$con = mysqli_query($phpmyadmin , $gdCargo);
+								$x=0; 
+								while($cargo = $con->fetch_array()):{ $vtId[$x] = $cargo["ID"];?>
+									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($cargo["NOME"]); ?></option>
+							<?php $x;} endwhile;?>															
 						</select>	
 					</div>
 				</div>
@@ -243,10 +207,13 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="turno">
-								<option value="">Selecione</option>
-								<option value="1">Matutino</option>
-								<option value="2">Vespetino</option>
-								<option value="3">Comercial</option>
+								<option selected="selected" value="<?php echo $dados["TURNO_ID"];?>"><?php echo $dados["TURNO"];?></option>	
+								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo' AND ID<>".$dados["TURNO_ID"]; 
+								$con = mysqli_query($phpmyadmin , $gdTurno);
+								$x=0; 
+								while($turno = $con->fetch_array()):{ $vtId[$x] = $turno["ID"];?>
+									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+							<?php $x;} endwhile;?>	
 							</select>	
 						</div>
 					</div>					
@@ -260,21 +227,19 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="gestor">								
-								<option value="">Selecione</option>
-								<option value="1">Marivalda Souza</option>
-								<option value="2">Raphael Souza</option>
-								<option value="3">Lucas Souza</option>
-								<option value="4">Pedro Becali</option>
-								<option value="5">Monara Marim</option>
-								<option value="6">Marcos Freitas</option>							
+								<option selected="selected" value="<?php echo $dados["GESTOR_ID"];?>"><?php echo $dados["GESTOR"];?></option>	
+								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo' AND ID<>".$dados["GESTOR_ID"]; 
+								$con = mysqli_query($phpmyadmin , $gdGestor);
+								$x=0; while($gestor = $con->fetch_array()):{ ?>
+									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($gestor["NOME"]); ?></option>
+								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
 					</div>					
 				</div>						
 			</div>
-		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->
-		<!--DIVISÃO EM HORIZONTAL 2-->			
-		<div class="field is-horizontal">
+		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->				
+		<div class="field is-horizontal"><!--DIVISÃO EM HORIZONTAL 2-->	
 			<div class="field-label is-normal"><!--SELEÇÃO SETOR-->
 				<label for="setor" class="label">Setor</label>
 			</div>
@@ -283,13 +248,12 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="setor">
-								<option value="">Selecione</option>
-								<option value="1">Operação</option>
-								<option value="2">Administrativo</option>
-								<option value="3">Recebimento</option>
-								<option value="4">Devolução</option>
-								<option value="5">Avarias</option>
-								<option value="6">SAC</option>										
+								<option selected="selected" value="<?php echo $dados["SETOR_ID"];?>"><?php echo $dados["SETOR"];?></option>	
+								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID<>".$dados["SETOR_ID"]; 
+								$con = mysqli_query($phpmyadmin , $gdSetor);
+								$x=0; while($setor = $con->fetch_array()):{ ?>
+									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($setor["NOME"]); ?></option>
+								<?php $x;} endwhile;?>											
 							</select>	
 						</div>
 					</div>					
@@ -301,7 +265,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" placeholder="629">
+						<input name="matricula" type="text" class="input" placeholder="629" value="<?php echo $dados["MATRICULA"]?>">
 					</div>
 				</div>
 			</div>
@@ -312,11 +276,13 @@ $observacao = trim($_REQUEST['observacao']);
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="permissao">								
-								<option value="1">Usuário</option>
-								<option value="2">Líder</option>
-								<option value="3">Gestor</option>
-								<option value="4">Administrador</option>																		
+							<select name="permissao">							
+								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option>	
+								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo' AND ID<>".$dados["PERMISSAO_ID"]; 
+								$con = mysqli_query($phpmyadmin , $gdPermissao);
+								$x=0; while($permissao = $con->fetch_array()):{ ?>
+									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($permissao["NOME"]); ?></option>
+								<?php $x;} endwhile;?>																		
 							</select>	
 						</div>
 					</div>					
@@ -339,9 +305,8 @@ $observacao = trim($_REQUEST['observacao']);
 					</div>					
 				</div>						
 			</div>
-		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->	
-		<!---->					
-		<div class="field">
+		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->							
+		<div class="field"><!---->	
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
 					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
@@ -349,80 +314,13 @@ $observacao = trim($_REQUEST['observacao']);
 		</div>
 			<div class="field">
 				<div class="control">
-					<button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
+					<a href="user-query.php"><button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Limpar</button></a>
 				</div>
-			</div>				
+			</div>						
 		</form>
 	</main>	
-</div>
 </section>
+<?php endif;?>
 </div>
 </body>
 </html>
-<!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
-<?php
-if(isset($_GET['cadastrar'])){
-	//VALIDAÇÃO SE LOGIN É ÚNICO.
-	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
-	$result = mysqli_query($phpmyadmin, $checkLogin);		 
-	$check = mysqli_num_rows($result);	
-	if($check >= 1){
-		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
-	}
-	else{		
-		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
-			if($nascimento=="" || $nascimento==null){
-				echo $nascimento;
-				$nascimento="1990-01-01";
-			}	
-			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, NASCIMENTO, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."','".$sexo."','".$nascimento."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
-			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
-			if(mysqli_error($phpmyadmin)==null){
-				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
-				header("Location: localhost/gestaodesempenho/register.php");	
-			}
-			else{
-				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
-				echo mysqli_error($phpmyadmin);
-				echo $nascimento;
-			}
-		}
-		else if( $nome==""){ 
-			?><script language="Javascript"> alert('Preenchimento do Nome é obrigatório!');</script><?php
-		}
-		else if($login==""){
-			?><script language="Javascript"> alert('Preenchimento do Login é obrigatório!');</script><?php
-		} 
-		else if($senha==""){
-			?><script language="Javascript"> alert('Preenchimento da Senha é obrigatório!');</script><?php
-		} 
-		else if($email==""){
-			?><script language="Javascript"> alert('Preenchimento do E-mail é obrigatório!');</script><?php
-		}
-		else if($cargo==""){
-			?><script language="Javascript"> alert('Preenchimento do Cargo é obrigatório!');</script><?php
-		}
-		else if($turno==""){
-			?><script language="Javascript"> alert('Preenchimento do Turno é obrigatório!');</script><?php
-		}
-		else if($gestor==""){
-			?><script language="Javascript"> alert('Preenchimento do Gestor é obrigatório!');</script><?php
-		}
-		else if($setor==""){
-			?><script language="Javascript"> alert('Preenchimento do Setor é obrigatório!');</script><?php
-		}
-		else if($matricula==""){
-			?><script language="Javascript"> alert('Preenchimento da Matricula é obrigatório!');</script><?php
-		}
-		else if($efetivacao==""){
-			?><script language="Javascript"> alert('Preenchimento da Admissão é obrigatório!');</script><?php
-		}
-		else if($cadastradoem==""){
-			?><script language="Javascript"> alert('Preenchimento do Cadastro é obrigatório!');</script><?php
-		}
-		else{	
-			?><script language="Javascript"> alert('Preenchimento da Situação é obrigatório!');</script><?php
-		}
-	}	
-}//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
-?>
