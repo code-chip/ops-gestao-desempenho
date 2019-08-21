@@ -2,22 +2,6 @@
 session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$nome = trim($_REQUEST['nome']);
-$login = trim($_REQUEST['login']);
-$senha = trim($_REQUEST['senha']);
-$email = trim($_REQUEST['email']);
-$sexo = trim($_REQUEST['sexo']);
-$nascimento = trim($_REQUEST['nascimento']);
-$cargo = trim($_REQUEST['cargo']);
-$turno = trim($_REQUEST['turno']);
-$gestor = trim($_REQUEST['gestor']);
-$setor = trim($_REQUEST['setor']);
-$matricula = trim($_REQUEST['matricula']);
-$efetivacao = trim($_REQUEST['efetivacao']);
-$permissao = trim($_REQUEST['permissao']);
-$situacao = trim($_REQUEST['situacao']);
-$observacao = trim($_REQUEST['observacao']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,11 +33,6 @@ $observacao = trim($_REQUEST['observacao']);
 	</script>	
 </head>
 <body>
-<?php/*CONSULTAS PARA CARREGAR AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
-	$gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'";
-	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";				
-?>
 <div>	
 	<section class="section">
 		<div class="container">
@@ -144,26 +123,19 @@ $observacao = trim($_REQUEST['observacao']);
 				<label for="cargo" class="label">Cargo</label>
 			</div>
 			<div class="field-body">
-			<div class="field is-grouped">							
-				<div class="control">
-					<div class="select">
-						<select name="cargo">							
-							<option value="1">Operador de Logística 1</option>
-							<option value="2">Operador de Logística 2</option>
-							<option value="3">Operador de Logística 3</option>
-							<option value="4">Auxiliar Administrativo</option>
-							<option value="5">Assistente Administrativo</option>
-							<option value="6">Líder de Operação</option>
-							<option value="7">Assistente de Logística</option>
-							<option value="8">Analista Administrativo</option>
-							<option value="9">Analista de Suporte</option>
-							<option value="10">Analista de Logística</option>
-							<option value="11">Supervisor de Operação</option>	
-							<option value="12">Recursos Humanos</option>															
-						</select>	
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select">
+							<select name="cargo">							
+								<?php $gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdCargo); $x=0; 
+								while($cargo = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$cargo["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($cargo["NOME"]);?></option>
+								<?php $x;} endwhile;?>														
+							</select>	
+						</div>
 					</div>
 				</div>
-			</div>
 			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
 				<label for="turno" class="label">Turno</label>
@@ -173,10 +145,11 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="turno">
-								<option value="">Selecione</option>
-								<option value="1">Matutino</option>
-								<option value="2">Vespetino</option>
-								<option value="3">Comercial</option>
+								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdTurno); $x=0; 
+								while($turno = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$turno["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($turno["NOME"]);?></option>
+								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
 					</div>					
@@ -190,13 +163,11 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="gestor">								
-								<option value="">Selecione</option>
-								<option value="1">Marivalda Souza</option>
-								<option value="2">Raphael Souza</option>
-								<option value="3">Lucas Souza</option>
-								<option value="4">Pedro Becali</option>
-								<option value="5">Monara Marim</option>
-								<option value="6">Marcos Freitas</option>							
+								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdGestor); $x=0; 
+								while($gestor = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($gestor["NOME"]);?></option>
+								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
 					</div>					
@@ -213,13 +184,11 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="setor">
-								<option value="">Selecione</option>
-								<option value="1">Operação</option>
-								<option value="2">Administrativo</option>
-								<option value="3">Recebimento</option>
-								<option value="4">Devolução</option>
-								<option value="5">Avarias</option>
-								<option value="6">SAC</option>										
+								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdSetor); $x=0; 
+								while($setor = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($setor["NOME"]);?></option>
+								<?php $x;} endwhile;?>										
 							</select>	
 						</div>
 					</div>					
@@ -231,7 +200,7 @@ $observacao = trim($_REQUEST['observacao']);
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" placeholder="629">
+						<input name="matricula" type="text" class="input" placeholder="635">
 					</div>
 				</div>
 			</div>
@@ -243,10 +212,11 @@ $observacao = trim($_REQUEST['observacao']);
 					<div class="control">
 						<div class="select">
 							<select name="permissao">								
-								<option value="1">Usuário</option>
-								<option value="2">Líder</option>
-								<option value="3">Gestor</option>
-								<option value="4">Administrador</option>																		
+								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdPermissao); $x=0; 
+								while($permissao = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($permissao["NOME"]);?></option>
+								<?php $x;} endwhile;?>																			
 							</select>	
 						</div>
 					</div>					
@@ -292,6 +262,22 @@ $observacao = trim($_REQUEST['observacao']);
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
 if(isset($_GET['cadastrar'])){
+	//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+	$nome = trim($_REQUEST['nome']);
+	$login = trim($_REQUEST['login']);
+	$senha = trim($_REQUEST['senha']);
+	$email = trim($_REQUEST['email']);
+	$sexo = trim($_REQUEST['sexo']);
+	$nascimento = trim($_REQUEST['nascimento']);
+	$cargo = trim($_REQUEST['cargo']);
+	$turno = trim($_REQUEST['turno']);
+	$gestor = trim($_REQUEST['gestor']);
+	$setor = trim($_REQUEST['setor']);
+	$matricula = trim($_REQUEST['matricula']);
+	$efetivacao = trim($_REQUEST['efetivacao']);
+	$permissao = trim($_REQUEST['permissao']);
+	$situacao = trim($_REQUEST['situacao']);
+	$observacao = trim($_REQUEST['observacao']);
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
