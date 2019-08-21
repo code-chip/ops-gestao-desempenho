@@ -3,8 +3,8 @@ session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$filtro = trim($_REQUEST['filtro']);
-$busca= trim($_REQUEST['busca']);
+$filtro = trim($_POST['filtro']);
+$busca= trim($_POST['busca']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -96,7 +96,7 @@ WHERE ".$f;
 <?php if(isset($_POST['consultar']) && $busca!="") : ?>
 	<section class="section">
 	<main>	
-	<form id="form2" action="user-query.php" method="GET">		
+	<form id="form2" action="user-query.php" method="POST">		
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
@@ -147,10 +147,10 @@ WHERE ".$f;
 							<select name="sexo">
 								<?php if($dados["SEXO"] =="M"):{?>							
 								<option selected="selected" value="M">Masculino</option>
-								<option value="F">Feminino</option><?php }endif?>
+								<?php }endif?>
 								<?php if($dados["SEXO"] =="F"):{?>	
 								<option selected="selected" value="F">Feminino</option>
-								<option value="M">Masculino</option><?php }endif?>
+								<?php }endif?>
 							</select>	
 						</div>
 					</div>					
@@ -188,12 +188,6 @@ WHERE ".$f;
 					<div class="select">
 						<select name="cargo">
 							<option selected="selected" value="<?php echo $dados["CARGO_ID"];?>"><?php echo $dados["CARGO"];?></option>	
-								<?php $gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo' AND ID<>".$dados["CARGO_ID"]; 
-								$con = mysqli_query($phpmyadmin , $gdCargo);
-								$x=0; 
-								while($cargo = $con->fetch_array()):{ $vtId[$x] = $cargo["ID"];?>
-									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($cargo["NOME"]); ?></option>
-							<?php $x;} endwhile;?>															
 						</select>	
 					</div>
 				</div>
@@ -207,13 +201,7 @@ WHERE ".$f;
 					<div class="control">
 						<div class="select">
 							<select name="turno">
-								<option selected="selected" value="<?php echo $dados["TURNO_ID"];?>"><?php echo $dados["TURNO"];?></option>	
-								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo' AND ID<>".$dados["TURNO_ID"]; 
-								$con = mysqli_query($phpmyadmin , $gdTurno);
-								$x=0; 
-								while($turno = $con->fetch_array()):{ $vtId[$x] = $turno["ID"];?>
-									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
-							<?php $x;} endwhile;?>	
+								<option selected="selected" value="<?php echo $dados["TURNO_ID"];?>"><?php echo $dados["TURNO"];?></option>
 							</select>	
 						</div>
 					</div>					
@@ -228,11 +216,6 @@ WHERE ".$f;
 						<div class="select">
 							<select name="gestor">								
 								<option selected="selected" value="<?php echo $dados["GESTOR_ID"];?>"><?php echo $dados["GESTOR"];?></option>	
-								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo' AND ID<>".$dados["GESTOR_ID"]; 
-								$con = mysqli_query($phpmyadmin , $gdGestor);
-								$x=0; while($gestor = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($gestor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
 					</div>					
@@ -248,12 +231,7 @@ WHERE ".$f;
 					<div class="control">
 						<div class="select">
 							<select name="setor">
-								<option selected="selected" value="<?php echo $dados["SETOR_ID"];?>"><?php echo $dados["SETOR"];?></option>	
-								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID<>".$dados["SETOR_ID"]; 
-								$con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; while($setor = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($setor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>											
+								<option selected="selected" value="<?php echo $dados["SETOR_ID"];?>"><?php echo $dados["SETOR"];?></option>
 							</select>	
 						</div>
 					</div>					
@@ -277,12 +255,7 @@ WHERE ".$f;
 					<div class="control">
 						<div class="select">
 							<select name="permissao">							
-								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option>	
-								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo' AND ID<>".$dados["PERMISSAO_ID"]; 
-								$con = mysqli_query($phpmyadmin , $gdPermissao);
-								$x=0; while($permissao = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($permissao["NOME"]); ?></option>
-								<?php $x;} endwhile;?>																		
+								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option>
 							</select>	
 						</div>
 					</div>					
@@ -296,10 +269,7 @@ WHERE ".$f;
 					<div class="control">
 						<div class="select">
 							<select name="situacao">
-								<option selected="selected" value="Ativo">Ativo</option>	
-								<option value="Férias">Férias</option>
-								<option value="Licença">Licença</option>
-								<option value="Desligado">Desligado</option>
+								<option selected="selected" value="<?php echo $dados["SITUACAO"];?>"><?php echo $dados["SITUACAO"];?></option>
 							</select>	
 						</div>
 					</div>					
