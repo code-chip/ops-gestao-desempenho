@@ -5,9 +5,7 @@ include('menu.php');
 include('query.php');
 $contador = 0;
 $totalDesempenho=0;
-$periodo = trim($_REQUEST['periodo']);
-$atividade = trim($_REQUEST['atividade']);
-$meta = trim($_REQUEST['meta']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,13 +47,11 @@ $meta = trim($_REQUEST['meta']);
 						<div class="select">
 							<select name="atividade">
 								<option selected="selected" value="">Todas</option>	
-								<option value="AND A.ID=1">Checkout</option>
-								<option value="AND A.ID=2">Separação</option>
-								<option value="AND A.ID=3">Embalagem</option>
-								<option value="AND A.ID=4">PBL</option>
-								<option value="AND A.ID=5">Recebimento</option>
-								<option value="AND A.ID=6">Devolução</option>						
-								<option value="AND A.ID=7">Avarias</option>								
+								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"; 
+								$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
+								while($atividade = $con->fetch_array()):{ $vtId[$x] = $atividade["ID"];?>
+									<option value="AND A.ID=<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+								<?php $x;} endwhile;?>								
 							</select>
 						</div>
 					</div>					
@@ -88,6 +84,9 @@ $meta = trim($_REQUEST['meta']);
 </section>
 <!--FINAL DO FORMULÁRIO-->
 <?php
+$periodo = trim($_REQUEST['periodo']);
+$atividade = trim($_REQUEST['atividade']);
+$meta = trim($_REQUEST['meta']);
 if( $periodo != ""){
 	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D
 	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
