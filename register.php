@@ -30,10 +30,10 @@ $totalAlcancado=0;
 			<div class="control">		
 				<a href="user-update.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
 			</div>
-		<?php if($_SESSION["permissao"]!=1):?></div>
+		<?php if($_SESSION["permissao"]>2):?></div>
 		<div class="field">
 			<div class="control">		
-				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Remover Usuário</a>
+				<a href="user-remove.php" class="button is-large is-primary is-outlined is-fullwidth">Remover Usuário</a>
 			</div>	
 		</div><?php endif;?>			
 	</main>	
