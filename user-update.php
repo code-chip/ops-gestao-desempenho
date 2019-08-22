@@ -118,13 +118,13 @@ WHERE ".$f;
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>" maxlenght="60">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>" maxlenght="60">				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -137,7 +137,7 @@ WHERE ".$f;
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
 				<div class="control">
-					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>">
+					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>" maxlenght="32">
 				</div>			
 		</div>
 		<div class="field">
@@ -180,7 +180,7 @@ WHERE ".$f;
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31" value="<?php echo $dados["NASCIMENTO"];?>">
+						<input name="nascimento" type="text" class="input registro" placeholder="1992-12-31" value="<?php echo $dados["NASCIMENTO"];?>">
 					</div>
 				</div>
 			</div>
@@ -190,7 +190,7 @@ WHERE ".$f;
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31" value="<?php echo $dados["EFETIVACAO"];?>">
+						<input name="efetivacao" type="text" class="input registro" placeholder="2018-12-31" value="<?php echo $dados["EFETIVACAO"];?>">
 					</div>
 				</div>
 			</div>
@@ -284,7 +284,7 @@ WHERE ".$f;
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" placeholder="629" value="<?php echo $dados["MATRICULA"]?>">
+						<input name="matricula" type="text" class="input numero" placeholder="629" value="<?php echo $dados["MATRICULA"]?>">
 					</div>
 				</div>
 			</div>
@@ -329,7 +329,7 @@ WHERE ".$f;
 		<div class="field">
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." maxlenght="60">
 				</div>			
 		</div>
 		<div class="field-body">
