@@ -13,31 +13,58 @@ $totalAlcancado=0;
 <!DOCTYPE html>
 <html>
 <body>
+<section class="section">
 <div class="field has-addons has-addons-centered">
-	<section class="section">
-	<main>
-		<?php if($_SESSION["permissao"]!=1):?><div class="field">
-			<div class="control">
-				<a href="user-insert.php" class="button is-large is-primary is-outlined is-fullwidth">Inserir Usuário</a>
-			</div>
-		</div><?php endif;?>
-		<div class="field">
-			<div class="control">
-				<a href="user-query.php" class="button is-large is-primary is-outlined is-fullwidth">Consultar Usuário</a>
-			</div>
-		</div>
-		<div class="field">
-			<div class="control">		
-				<a href="user-update.php" class="button is-large is-primary is-outlined is-fullwidth">Atualizar Usuário</a>
-			</div>
-		<?php if($_SESSION["permissao"]>2):?></div>
-		<div class="field">
-			<div class="control">		
-				<a href="user-remove.php" class="button is-large is-primary is-outlined is-fullwidth">Remover Usuário</a>
-			</div>	
-		</div><?php endif;?>			
-	</main>	
+	<div class="buttons">
+		<?php if($_SESSION["permissao"]!=1):?><a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Usuário</span></a>&nbsp&nbsp&nbsp<?php endif;?>		
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Usuário</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Usuário</span></a>&nbsp&nbsp&nbsp			
+		<?php if($_SESSION["permissao"]>2):?><a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Usuário</span></a>&nbsp&nbsp&nbsp<?php endif;?>		
+	</div>	
 </div>
+<?php if($_SESSION["permissao"]!=1):?>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Cargo</span></a>&nbsp&nbsp&nbsp
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Cargo</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Cargo</span></a>&nbsp&nbsp&nbsp
+		<a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Cargo</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Turno</span></a>&nbsp&nbsp&nbsp
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Turno</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Turno</span></a>&nbsp&nbsp&nbsp
+		<a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Turno</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Gestor</a>&nbsp&nbsp&nbsp
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Gestor</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Gestor</span></a>&nbsp&nbsp&nbsp
+		<a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Gestor</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Setor</span></a>&nbsp&nbsp&nbsp
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Setor</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Setor</span></a>&nbsp&nbsp&nbsp
+		<a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Setor</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Permissão</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<?php endif;?>
+
 </section>
 </div>
 </body>
