@@ -12,6 +12,9 @@ $totalAlcancado=0;
 ?>
 <!DOCTYPE html>
 <html>
+<head>
+	<title>Gestão Desempenho - Cadastro</title>
+</head>
 <body>
 <section class="section">
 <div class="field has-addons has-addons-centered">
