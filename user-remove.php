@@ -25,7 +25,7 @@ $busca= trim($_REQUEST['busca']);
 <!DOCTYPE html>
 <html>
 <head>	
-	<title>Gestão de Desempenho - Atualizar Usuário</title>
+	<title>Gestão de Desempenho - Remover Usuário</title>
 </head>
 <body>
 </br>
