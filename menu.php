@@ -29,9 +29,12 @@ $menuConfiguracoes;
 	    $(document).ready(function () {	    	
 	        $('.registro').mask('9999-99-99');
 	        $('.desempenho').mask('9999');
-	        $('.numero').mask('9999');
+	        $('.numero').mask('9999');	       
 	        return false;
 	    });
+	    function msg(){
+	    	alert('Funcionalidade em desenvolvimento!!');
+	    }
     </script>
     <style type="text/css">
 	.table__wrapper {
@@ -62,6 +65,15 @@ $menuConfiguracoes;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
+					<div href="#" class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link <?php echo $menuMeta?>">Meta</a>					
+						<div class="navbar-dropdown">
+							<a href="#" class="navbar-item" onclick="msg();">Consultar</a>
+							<a href="#" class="navbar-item" onclick="msg();">Inserir</a>
+							<a href="#" class="navbar-item" onclick="msg();">Atualizar</a>
+							<a href="#" class="navbar-item" onclick="msg();">Remover</a>
+						</div>
+					</div>
 					<?php if($_SESSION["permissao"]!=1):?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?>">Desempenho</a>					
 						<div class="navbar-dropdown">
