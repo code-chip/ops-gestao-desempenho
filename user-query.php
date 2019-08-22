@@ -13,7 +13,8 @@ $busca= trim($_POST['busca']);
 </head>
 <body>
 </br>
-<div>	
+<div>
+	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>	
 	<form id="form1" action="" method="POST">
 		<div class="field is-horizontal section">			
 			<div class="field is-horizontal">
@@ -61,6 +62,7 @@ $busca= trim($_POST['busca']);
 			</div>
 		</div>						
 	</form><!--FINAL DO FORM FILTRAR CONSULTA-->
+	<?php endif;?>
 <?php
 if( $busca != ""){
 	if($filtro=="MATRICULA="){
@@ -280,7 +282,7 @@ WHERE ".$f;
 		</div>
 			<div class="field">
 				<div class="control">
-					<a href="user-query.php"><button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Limpar</button></a>
+					<a href="user-query.php"><button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Voltar</button></a>
 				</div>
 			</div>						
 		</form>
