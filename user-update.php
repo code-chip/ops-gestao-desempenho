@@ -5,6 +5,22 @@ include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $filtro = trim($_REQUEST['filtro']);
 $busca= trim($_REQUEST['busca']);
+//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+	$nome = trim($_POST['nome']);
+	$login = trim($_POST['login']);
+	$senha = trim($_POST['senha']);
+	$email = trim($_POST['email']);
+	$sexo = trim($_POST['sexo']);
+	$nascimento = trim($_POST['nascimento']);
+	$cargo = trim($_POST['cargo']);
+	$turno = trim($_POST['turno']);
+	$gestor = trim($_POST['gestor']);
+	$setor = trim($_POST['setor']);
+	$matricula = trim($_POST['matricula']);
+	$efetivacao = trim($_POST['efetivacao']);
+	$permissao = trim($_POST['permissao']);
+	$situacao = trim($_POST['situacao']);
+	$observacao = trim($_POST['observacao']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,10 +29,11 @@ $busca= trim($_REQUEST['busca']);
 </head>
 <body>
 </br>
-<div>	
-	<form id="form1" action="" method="POST">
+<div>
+	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+	<form id="form1" action="user-update.php" method="POST">
 		<div class="field is-horizontal section">			
-			<div class="field is-horizontal">
+			<div class="field is-horizontal">				
 				<div class="field-label is-normal">
 					<label class="label">Filtro:</label>
 				</div>
@@ -44,7 +61,7 @@ $busca= trim($_REQUEST['busca']);
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
 							<input name="busca" type="text" class="input" id="filtro" placeholder="635">
-						</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -61,6 +78,8 @@ $busca= trim($_REQUEST['busca']);
 			</div>
 		</div>						
 	</form>
+<?php endif;?>
+</div>	
 <?php
 if( $busca != ""){
 	if($filtro=="MATRICULA="){
@@ -69,7 +88,7 @@ if( $busca != ""){
 	else{
 		$f="USUARIO.".$filtro."'".$busca."' LIMIT 1;";
 	}	
-	$query="SELECT *, USUARIO.NOME AS NOME, T.NOME AS TURNO, P.NOME AS PERMISSAO, G.NOME AS GESTOR, S.NOME AS SETOR, C.NOME AS CARGO FROM USUARIO
+	$query="SELECT *,USUARIO.ID AS ID, USUARIO.NOME AS NOME, T.NOME AS TURNO, P.NOME AS PERMISSAO, G.NOME AS GESTOR, S.NOME AS SETOR, C.NOME AS CARGO FROM USUARIO
 INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
 INNER JOIN PERMISSAO P ON P.ID=USUARIO.PERMISSAO_ID
 INNER JOIN GESTOR G ON G.ID=USUARIO.GESTOR_ID
@@ -79,25 +98,23 @@ WHERE ".$f;
 	$x=0;	
 	$cnx=mysqli_query($phpmyadmin, $query);
 	$dados= $cnx->fetch_array();
-	$row=mysqli_num_rows($cnx);		
-	if(mysqli_error($phpmyadmin)=="" || mysqli_num_rows($dados)==1){		
-
-	}
-	else{
+	$row=mysqli_num_rows($cnx);
+	if($row==0){		
 		mysqli_error($phpmyadmin);		
 		?><script type="text/javascript">			
-			alert('Nenhum registrado encontrado nesta consulta!');
+			alert('Nenhum usuário encontrado com o filtro aplicado!');
 			window.location.href=window.location.href;
 		</script> <?php			
 	}
+	$_SESSION["upUser"]=$dados["ID"];
 }	
 ?>
 <!--FINAL DO FORM FILTRAR CONSULTA-->
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['consultar']) && $busca!="") : ?>
+<?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
 	<main>
-	<form id="form2" action="user-query.php" method="GET">
+	<form id="form2" action="user-update.php" method="POST">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
@@ -317,7 +334,7 @@ WHERE ".$f;
 		</div>
 			<div class="field">
 				<div class="control">
-					<button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
+					<button name="atualizar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
 				</div>
 			</div>				
 		</form>
@@ -329,24 +346,41 @@ WHERE ".$f;
 </html>
 <!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
 <?php
-if(isset($_GET['cadastrar'])){
+if(isset($_POST['atualizar'])){
+	//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+	$nome = trim($_POST['nome']);
+	$login = trim($_POST['login']);
+	$senha = trim($_POST['senha']);
+	$email = trim($_POST['email']);
+	$sexo = trim($_POST['sexo']);
+	$nascimento = trim($_POST['nascimento']);
+	$cargo = trim($_POST['cargo']);
+	$turno = trim($_POST['turno']);
+	$gestor = trim($_POST['gestor']);
+	$setor = trim($_POST['setor']);
+	$matricula = trim($_POST['matricula']);
+	$efetivacao = trim($_POST['efetivacao']);
+	$permissao = trim($_POST['permissao']);
+	$situacao = trim($_POST['situacao']);
+	$observacao = trim($_POST['observacao']);
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
-	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."' AND ID<>".$dados["ID"];
+	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."' AND ID<>".$_SESSION["upUser"]."";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
 	if($check >= 1){
 		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
 	else{		
-		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
+		if(isset($_POST['atualizar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
 			if($nascimento=="" || $nascimento==null){
 				echo $nascimento;
-				$nascimento="1990-01-01";
+				$nascimento="1900-01-01";
 			}	
-			$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."';";
-			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);					
+			$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";
+			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário atualizado com sucesso!!!');</script><?php
+				$newUp=true;
 				header("Location: localhost/gestaodesempenho/register.php");	
 			}
 			else{
