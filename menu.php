@@ -43,6 +43,9 @@ $menuConfiguracoes;
   		width: 100%;
   		overflow-x: auto;  		
 	}
+	.mw12{
+		min-width:12em;
+	}
 </style>
 </head>
 <body>
