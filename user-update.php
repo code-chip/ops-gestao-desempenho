@@ -332,11 +332,16 @@ WHERE ".$f;
 					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
 				</div>			
 		</div>
-			<div class="field">
+		<div class="field-body">
+			<div class="field is-grouped">											
+				<div class="control">
+					<a href="user-update.php"><button class="button is-primary">Voltar</button></a>										
+				</div>
 				<div class="control">
 					<button name="atualizar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
 				</div>
-			</div>				
+			</div>
+		</div>
 		</form>
 	</main>	
 </section>
