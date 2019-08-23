@@ -1,26 +1,6 @@
 <?php 
 session_start();
 ?>
-<style> 
-.copyright{              
-    width: 100%;
-    padding: 10px 0;        
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-}
-.copyright p{
-    color:#1E90FF;
-    margin:0;
-}
-.copyright a:hover {
-    text-decoration: underline;
-    color:#008B00;
-}           
-.copyright img{          
-    margin: -1px 1px;
-}       
-</style>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,14 +14,20 @@ session_start();
     <link rel="stylesheet" href="css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="css/login.css">
     <!---<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">-->
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>	 
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style type="text/css">
+    .hero-background.is-transparent{
+    opacity: 0.3;
+}
+    </style>	 
 </head>
 <body>
-    <section class="hero is-success is-fullheight">
+    <div class="hero is-fullheight is-primary has-background">
+        <img alt="Fill Murray" class="hero-background is-transparent" src="img/data-science9.jpg" />
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
-                    <h3 class="title has-text-grey">Gestão de Desempenho</h3>
+                    <h3 class="title has-text-blue">Gestão de Desempenho</h3>
                      <?php
                     if(isset($_SESSION['nao_autenticado'])):
                     ?>
@@ -75,6 +61,6 @@ session_start();
         <div class="container">
             <p>&copy; Copyright 2019 - Desenvolvido por:<a href="https://codechip.com.br/" target="blank"> Code Chip <img src="img\favicon_codechip.ico"/></a></p>
         </div>
-    </section>
+  </div>
 </body>
 </html>
