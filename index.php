@@ -23,7 +23,7 @@ session_start();
 </head>
 <body>
     <div class="hero is-fullheight is-primary has-background">
-        <img alt="Fill Murray" class="hero-background is-transparent" src="img/data-science9.jpg" />
+        <img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/data-science9-min.jpg" />
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
