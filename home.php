@@ -4,7 +4,7 @@ include('login-check.php');
 $menuInicio="is-active";
 include('menu.php');
 header('Content-Type: text/html; charset=UTF-8');
-$n=rand(1,24);
+$n=rand(1,25);
 $img="img/wallpaper/data-science".$n."-min.jpg";
 //print_r($_SESSION);exit();
 ?>
