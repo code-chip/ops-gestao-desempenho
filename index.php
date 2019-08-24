@@ -17,7 +17,7 @@ session_start();
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <style type="text/css">
     .hero-background.is-transparent{
-    opacity: 0.3;
+    opacity: 0.73;
 }
     </style>	 
 </head>
