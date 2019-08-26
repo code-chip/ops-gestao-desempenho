@@ -210,35 +210,3 @@ if( $nome != ""){
 </body>
 </html>
 <?php
-if(isset($_POST['salvarDados'])){
-	$ids= array_filter($_POST['id']);
-	$presencas = array_filter($_POST['presenca']);
-	$atividades = array_filter($_POST['atividade']);
-	$metas = array_filter($_POST['meta']);
-	$alcancados= array_filter($_POST['alcancado']);	
-	$registros = array_filter($_POST['registro']);
-	//CHECK TURNO
-	$checkTurno="SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
-	$cnx= mysqli_query($phpmyadmin, $checkTurno);
-	$turnoresult=$cnx->fetch_array();
-	$turno=$turnoresult["TURNO_ID"];
-	
-	for( $i = 0; $i < sizeof($atividades); $i++ ){
-		$desempenho=($alcancados[$i]/$metas[$i])*100;
-		$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."'); ";		
-		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
-	}	
-	if(mysqli_error($phpmyadmin)==null){	
-		?><script type="text/javascript">
-			alert('Desempenho cadastro com sucessos');
-			window.location.href=window.location.href;		
-		</script><?php
-	}
-	else{
-		?><script type="text/javascript">
-			alert('Erro ao cadastrar Desempenho, campos Meta e Alcançado não pode estar vazio!!');
-			window.location.href=window.location.href;
-		</script><?php
-	}
-}
-?>
