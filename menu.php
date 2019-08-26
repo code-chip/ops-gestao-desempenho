@@ -65,24 +65,27 @@ $menuConfiguracoes;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
+					<a href="dash.php" class="navbar-item <?php echo $menuDash?>">Dash</a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuMeta?>">Meta</a>					
 						<div class="navbar-dropdown">
 							<a href="#" class="navbar-item" onclick="msg();">Consultar</a>
+							<?php if($_SESSION["permissao"]!=1):{?>
 							<a href="#" class="navbar-item" onclick="msg();">Inserir</a>
 							<a href="#" class="navbar-item" onclick="msg();">Atualizar</a>
-							<a href="#" class="navbar-item" onclick="msg();">Remover</a>
+							<?php if($_SESSION["permissao"]>2):{?><a href="#" class="navbar-item" onclick="msg();">Remover</a><?php }endif;?>
+							<?php }endif;?>
 						</div>
 					</div>
-					<?php if($_SESSION["permissao"]!=1):?><div href="#" class="navbar-item has-dropdown is-hoverable">
+					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?>">Desempenho</a>					
 						<div class="navbar-dropdown">
 							<a href="report-query.php" class="navbar-item">Consultar</a>
 							<a href="report-insert.php" class="navbar-item">Inserir</a>
 							<a href="report-update.php" class="navbar-item">Atualizar</a>
-							<a href="report-remove.php" class="navbar-item">Remover</a>
+							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item">Remover</a><?php }endif;?>
 						</div>
-					</div><?php endif;?>
+					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a href="#" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
 						<div class="navbar-dropdown">
