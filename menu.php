@@ -65,7 +65,7 @@ $menuConfiguracoes;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
-					<a href="dash.php" class="navbar-item <?php echo $menuDash?>">Dash</a>
+					<a href="dashboard.php" class="navbar-item <?php echo $menuDash?>">Dashboard</a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuMeta?>">Meta</a>					
 						<div class="navbar-dropdown">
