@@ -80,7 +80,7 @@ $menuConfiguracoes;
 							<a href="report-query.php" class="navbar-item">Consultar</a>
 							<a href="report-insert.php" class="navbar-item">Inserir</a>
 							<a href="report-update.php" class="navbar-item">Atualizar</a>
-							<a class="navbar-item">Remover</a>
+							<a href="report-remove.php" class="navbar-item">Remover</a>
 						</div>
 					</div><?php endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
