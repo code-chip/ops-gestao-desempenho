@@ -148,17 +148,16 @@ if( $nome != ""){
 		$x++;
 		$contador=$x;
 	}
-	if(mysqli_num_rows($cnx)==null){
-		?><script type="text/javascript">
-			mysqli_error($phpmyadmin);
+	if(mysqli_num_rows($cnx)==0){
+		?><script type="text/javascript">			
 			alert('Nenhum registrado encontrado nesta consulta!');
 			window.location.href=window.location.href;
 		</script> <?php		
-	}			
+	}	
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['consultar'])) : ?>
+<?php if(isset($_POST['consultar']) && $contador!=0) : ?>
 <hr/>
 	<section class="section">
 	<div class="table__wrapper">
