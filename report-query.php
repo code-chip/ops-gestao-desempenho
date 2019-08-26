@@ -14,7 +14,7 @@ $totalAlcancado=0;
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Gestão de Desempenho - Inserir Desempenho</title>
+	<title>Gestão de Desempenho - Consultar Desempenho</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
     <script type="text/javascript">
