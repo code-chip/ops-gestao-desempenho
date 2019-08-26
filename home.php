@@ -7,6 +7,14 @@ header('Content-Type: text/html; charset=UTF-8');
 $n=rand(1,25);
 $img="img/wallpaper/data-science".$n."-min.jpg";
 //print_r($_SESSION);exit();
+$query="SELECT MAX(DATE_FORMAT(ULTIMO_LOGIN,'%Y-%m-%d')) ULTIMO_LOGIN, MAX(ACESSO_TOTAL) TOTAL FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"].";";
+$acesso=mysqli_query($phpmyadmin, $query);
+$cnx=$acesso->fetch_array();
+$acesso=$cnx["TOTAL"];
+$dataAtual=date_create();
+$ultimoLogin=date_create($cnx["ULTIMO_LOGIN"]);
+$resultado = date_diff($ultimoLogin, $dataAtual);
+$dias= date_interval_format($resultado, '%a');
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,8 +36,20 @@ $img="img/wallpaper/data-science".$n."-min.jpg";
 		     	<h1 class="title">
 		        	Bem vindo
 		      	</h1>
-		      	<h3 class="subtitle">
-		        	<?php echo $_SESSION["nameUser"]; ?>
+		      	<h3 class="subtitle"><?php
+		      		if($acesso==1){
+		      			echo $_SESSION["nameUser"].", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
+		      		}
+		      		else if($dias>2 && $dias <7){
+		        		echo "Seu último acesso foi há mais de 3 dias, sentimos sua falta ".$_SESSION["nameUser"]."!!";
+		        	}
+		        	else if($dias>6){ 
+		        		echo $_SESSION["nameUser"].", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
+		        	}
+		        	else{
+		        		echo $_SESSION["nameUser"];
+		        	}
+		        	?>
 		      	</h3>
 	    	</div>
 	  	</div>
