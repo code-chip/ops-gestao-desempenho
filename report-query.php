@@ -1,12 +1,4 @@
 <style type="text/css">
-	.table__wrapper {
-  		overflow-x: auto;
-	}
-	.scrollWrapper {
-		display:table;
-  		width: 100%;
-  		overflow-x: auto;  		
-	}
 </style>
 <?php
 session_start();
