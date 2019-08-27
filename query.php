@@ -1,7 +1,9 @@
 <?php
 session_start();
 include('connection.php');
-$gafrico1="SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
+//QUERY'S USADAS EM REPORT.PHP//
+/*DASHBOARD DESEMPENHO DA EMPRESA*/
+$g1="SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
 WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20')
@@ -20,27 +22,20 @@ SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM D
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
 WHERE REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20');";
+/*DASHABOARD RANKGING MENSAL OPERADORES*/
+$g3="SELECT U.NOME AS NOME, TRUNCATE(B.MAXIMO,2) AS MAXIMO, B.MINIMO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) MAXIMO, MIN(DESEMPENHO) MINIMO FROM DESEMPENHO WHERE REGISTRO>='2019-07-21' AND
+REGISTRO<='2019-08-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B
+INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID 
+WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>='2019-07-21' AND REGISTRO<='2019-08-20' AND B.MAXIMO>=100
+GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
+//QUERY'S USADAS EM DASHBOARD.PHP//
+/*DASHABOARD RANKGING MENSAL OPERADORES*/
+$g4="SELECT U.NOME AS NOME, TRUNCATE(B.MAXIMO,2) AS MAXIMO, B.MINIMO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) MAXIMO, MIN(DESEMPENHO) MINIMO FROM DESEMPENHO WHERE REGISTRO>='2019-07-21' AND
+REGISTRO<='2019-08-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B
+INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID 
+WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>='2019-07-21' AND REGISTRO<='2019-08-20' AND B.MAXIMO>=100
+GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 
-$queryG3="select a.nome nome, max(b.alcancado) alcancado, b.menor
-from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, min(alcancado) menor from gestaodesempenho.desempenho where 
-registro >= concat(date_format(curdate(),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval +1 month),'%Y-%m'),'-20') and presenca <>'Folga' group by nome order by alcancado desc limit 1) as b
-where a.nome=b.nome and registro >= concat(date_format(curdate(),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval +1 month),'%Y-%m'),'-20')
-union all
-select a.nome, max(b.alcancado) alcancado, b.menor
-from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, min(alcancado) menor from gestaodesempenho.desempenho where 
-registro >= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-21') and registro <= concat(date_format(curdate(),'%Y-%m'),'-20') and presenca <>'Folga' group by nome order by alcancado desc limit 1) as b
-where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-21') and registro <= concat(date_format(curdate(),'%Y-%m'),'-20')
-union all 
-select a.nome, max(b.alcancado) alcancado, b.menor
-from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, min(alcancado) menor from gestaodesempenho.desempenho where registro >= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-20') and presenca <>'Folga' group by nome order by alcancado desc limit 1) as b
-where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -1 month),'%Y-%m'),'-20')
-union all 
-select a.nome, max(b.alcancado) alcancado, b.menor
-from gestaodesempenho.desempenho as a, (select nome, avg(alcancado) alcancado, min(alcancado) menor from gestaodesempenho.desempenho where registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') 
-and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20') and presenca <>'Folga' group by nome order by alcancado desc limit 1) as b
-where a.nome=b.nome and registro >= concat(date_format(date_add(curdate(),interval -3 month),'%Y-%m'),'-21') and registro <= concat(date_format(date_add(curdate(),interval -2 month),'%Y-%m'),'-20')
-";
 $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'";
 $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
