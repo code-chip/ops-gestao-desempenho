@@ -295,8 +295,7 @@ if(isset($_POST['cadastrar'])){
 	}
 	else{		
 		if($nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
-			if($nascimento=="" || $nascimento==null){
-				echo $nascimento;
+			if($nascimento=="" || $nascimento==null){				
 				$nascimento="1900-01-01";
 			}	
 			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, NASCIMENTO, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."','".$sexo."','".$nascimento."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
@@ -307,8 +306,7 @@ if(isset($_POST['cadastrar'])){
 			}
 			else{
 				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
-				echo mysqli_error($phpmyadmin);
-				echo $nascimento;
+				echo mysqli_error($phpmyadmin);				
 			}
 		}
 		else if( $nome==""){ 
