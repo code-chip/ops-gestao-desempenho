@@ -287,7 +287,6 @@ if(isset($_POST['cadastrar'])){
 	$situacao = trim($_POST['situacao']);
 	$observacao = trim($_POST['observacao']);
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
-	echo $cargo;
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
@@ -295,12 +294,12 @@ if(isset($_POST['cadastrar'])){
 		?><script language="Javascript"> alert('Já existe usuário com o mesmo Login!');</script><?php
 	}
 	else{		
-		if(isset($_GET['cadastrar']) && $nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
+		if($nome!="" && $login!="" && $senha!="" && $email!="" && $cargo!="" && $turno!="" && $gestor!="" && $setor!="" && $matricula!="" && $efetivacao!="" && $situacao!=""){
 			if($nascimento=="" || $nascimento==null){
 				echo $nascimento;
-				$nascimento="1990-01-01";
+				$nascimento="1900-01-01";
 			}	
-			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, NASCIMENTO, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".utf8_encode($nome)."','".$login."',MD5('".$senha."'),'".$email."','".$sexo."','".$nascimento."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
+			$inserirUsuario="INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, NASCIMENTO, CARGO_ID, TURNO_ID,GESTOR_ID, SETOR_ID, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, SITUACAO) VALUES('".$nome."','".$login."',MD5('".$senha."'),'".$email."','".$sexo."','".$nascimento."',".$cargo.",".$turno.",".$gestor.",".$setor.",".$matricula.",'".$efetivacao."',".$permissao.",'".date('Y-m-d H:i:s')."','".$situacao."')";
 			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
