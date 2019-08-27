@@ -24,12 +24,12 @@ $totalAlcancado=0;
 	<form id="form1" action="report.php" method="GET" >
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
-				<label class="label" for="periodo">Período:</label>
+				<label class="label is-size-7-touch" for="periodo">Período:</label>
 			</div>
 			<div class="field-body">
 			<div class="field is-grouped">							
 				<div class="control">
-					<div class="select">
+					<div class="select is-size-7-touch">
 						<select name="periodo">
 							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
@@ -44,12 +44,12 @@ $totalAlcancado=0;
 			</div>
 			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO ATIVIDADE-->
-				<label class="label">Atividade:</label>
+				<label class="label is-size-7-touch">Atividade:</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<div class="select">
+						<div class="select is-size-7-touch">
 							<select name="atividade">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
@@ -59,12 +59,12 @@ $totalAlcancado=0;
 				</div>						
 			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO ORDENAÇÃO-->
-				<label for="ordenacao" class="label">Ordenação:</label>
+				<label for="ordenacao" class="label is-size-7-touch">Ordenação:</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<div class="select">
+						<div class="select is-size-7-touch">
 							<select name="ordenacao">
 								<option selected="selected" value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
@@ -74,12 +74,12 @@ $totalAlcancado=0;
 				</div>						
 			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
-				<label for="turno" class="label">Turno:</label>
+				<label for="turno" class="label is-size-7-touch">Turno:</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<div class="select">
+						<div class="select is-size-7-touch">
 							<select name="turno">								
 								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdTurno);
@@ -92,12 +92,12 @@ $totalAlcancado=0;
 				</div>						
 			</div>	
 			<div class="field-label is-normal"><!--SELEÇÃO META-->
-				<label class="label" for="meta">Meta:</label>
+				<label class="label is-size-7-touch" for="meta">Meta:</label>
 			</div>
 				<div class="field-body">
 					<div class="field is-grouped">							
 						<div class="control">
-							<div class="select">
+							<div class="select is-size-7-touch">
 								<select name='meta'>
 									<option selected="selected"value="">Ambos</option>
 									<option value="AND B.DESEMPENHO>=100">Atingida</option>
@@ -107,7 +107,7 @@ $totalAlcancado=0;
 						</div>
 					<div class="control">
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Filtrar"/>
+						<input type="submit" class="button is-primary is-size-7-touch" id="submitQuery" value="Filtrar"/>
 					</div>
 				</div>						
 			</div>
@@ -220,8 +220,8 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo utf8_encode($vtNome[$i])?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=true;endif;?>
-		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
+		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
 		<td><?php echo $vtFolga[$i]?></td><?php endif;?>
@@ -234,7 +234,7 @@ GROUP BY D.USUARIO_ID ORDER BY 2 DESC LIMIT 4;";
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-centered">
-			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
+			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
 		</div>
 	</a>			
 <?php endif; ?>
