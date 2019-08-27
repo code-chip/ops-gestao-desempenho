@@ -341,10 +341,7 @@ if(isset($_POST['cadastrar'])){
 		}
 		else if($efetivacao==""){
 			?><script language="Javascript"> alert('Preenchimento da Admissão é obrigatório!');</script><?php
-		}
-		else if($cadastradoem==""){
-			?><script language="Javascript"> alert('Preenchimento do Cadastro é obrigatório!');</script><?php
-		}
+		}		
 		else{	
 			?><script language="Javascript"> alert('Preenchimento da Situação é obrigatório!');</script><?php
 		}
