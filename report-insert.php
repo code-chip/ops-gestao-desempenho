@@ -279,7 +279,7 @@ if(isset($_POST['salvarDados'])){
 	}
 	else{
 		?><script type="text/javascript">
-			alert('Erro ao cadastrar Desempenho, campos Meta e Alcançado não pode estar vazio!!');
+			alert('Erro ao cadastrar Desempenho, campos Meta e/ou Alcançado não pode estar vazio!!');
 			window.location.href=window.location.href;
 		</script><?php
 	}
