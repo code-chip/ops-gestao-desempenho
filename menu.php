@@ -48,6 +48,12 @@ $menuConfiguracoes;
 	.mw12{
 		min-width:12em;
 	}
+	.ocultaColunaId{
+		position: absolute; 
+		visibility: hidden; 
+		margin-left: -25px;  
+		max-width:0em;
+	}
 </style>
 </head>
 <body>
