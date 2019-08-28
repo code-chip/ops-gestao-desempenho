@@ -108,7 +108,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
 		<th>N°</th>
-		<th style="margin-left: -25px; visibility: hidden; max-width:0em;">ID</th>
+		<th class="ocultaColunaId">ID</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
@@ -127,7 +127,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td class="field" style="margin-left: -25px;visibility: hidden; max-width:0em;"><!--COLUNA ID-->
+		<td class="field ocultaColunaId"><!--COLUNA ID-->
 			<div class="field">				
 				<div class="control">
 					<input name="id[]" type="text" class="input" value="<?php echo $vtId[$i]?>">
