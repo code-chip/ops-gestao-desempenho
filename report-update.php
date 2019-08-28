@@ -129,7 +129,7 @@ if( $nome != ""){
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
-		$_SESSION["vtId"][$x]=$operadores["ID"];
+		$vtId[$x]=$operadores["ID"];
 		$vtNome[$x]=$operadores["USUARIO"];
 		$vtIdPresenca[$x]=$operadores["PRESENCA_ID"];
 		$vtPresenca[$x]=$operadores["PRESENCA"];
@@ -160,7 +160,8 @@ if( $nome != ""){
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
-		<th>Funcionário</th>
+		<th class="ocultaColunaId">ID</th>
+		<th style="border-left: -25px;">Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
 		<th class="coluna">Meta</th>
@@ -178,6 +179,13 @@ if( $nome != ""){
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
+		<td class="field ocultaColunaId"><!--COLUNA ID-->
+			<div class="field">
+				<div class="control">
+					<input name="id[]" type="text" class="input is-size-7-touch" value="<?php echo $vtId[$i]?>" >
+				</div>
+			</div>
+		</td>
 		<td><!--COLUNA NOME-->
 			<div class="field">
 				<div class="control">
@@ -278,7 +286,7 @@ if( $nome != ""){
 </html>
 <?php
 if(isset($_POST['alterarDados'])){
-	//$ids= array_filter($_POST['id']);
+	$ids= array_filter($_POST['id']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
 	$metas = array_filter($_POST['meta']);
@@ -289,19 +297,19 @@ if(isset($_POST['alterarDados'])){
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
 		//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
 		if($observacoes[$i]=="" || $observacoes[$i]==null){
-			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$_SESSION["vtId"][$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."';";	
+			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."';";	
 		}
 		else{
-			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$_SESSION["vtId"][$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";	
+			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";	
 		}		
 		$cnx= mysqli_query($phpmyadmin, $checkUp);
 		$check=$cnx->fetch_array();
 		if(mysqli_num_rows($cnx)==0){
 			$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);
-			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"]." WHERE ID=".$_SESSION["vtId"][$i].";";		
+			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"]." WHERE ID=".$ids[$i].";";		
 			$cnx=mysqli_query($phpmyadmin, $upDesempenho);
 			$upCount=$upCount+1;
-		}			 
+		}
 	}	
 	if(mysqli_error($phpmyadmin)==null && $upCount>0){	
 		?><script type="text/javascript">
@@ -316,7 +324,7 @@ if(isset($_POST['alterarDados'])){
 	}
 	else{
 		?><script type="text/javascript">
-			alert('Erro ao atualizar Desempenho, campos Meta e Alcançado não pode estar vazio!!');
+			alert('Erro ao atualizar Desempenho, campos Meta e/ou Alcançado não pode estar vazio!!');
 			window.location.href=window.location.href;
 		</script><?php
 	}
