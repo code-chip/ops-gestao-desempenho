@@ -83,18 +83,16 @@ $busca= trim($_REQUEST['busca']);
 <?php
 if( $busca != ""){
 	if($filtro=="MATRICULA="){
-		$f="USUARIO.".$filtro."".$busca." LIMIT 1;";
+		$f="U.".$filtro."".$busca." LIMIT 1;";
 	}
 	else{
-		$f="USUARIO.".$filtro."'".$busca."' LIMIT 1;";
+		$f="U.".$filtro."'".$busca."' LIMIT 1;";
 	}	
-	$query="SELECT *,USUARIO.ID AS ID, USUARIO.NOME AS NOME, T.NOME AS TURNO, P.NOME AS PERMISSAO, G.NOME AS GESTOR, S.NOME AS SETOR, C.NOME AS CARGO FROM USUARIO
-INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
-INNER JOIN PERMISSAO P ON P.ID=USUARIO.PERMISSAO_ID
-INNER JOIN GESTOR G ON G.ID=USUARIO.GESTOR_ID
-INNER JOIN SETOR S ON S.ID=USUARIO.SETOR_ID
-INNER JOIN CARGO C ON C.ID=USUARIO.CARGO_ID
-WHERE ".$f;
+	$query="SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, 
+U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, G.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.SITUACAO  FROM USUARIO U
+INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID 
+INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID 
+INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 	$x=0;	
 	$cnx=mysqli_query($phpmyadmin, $query);
 	$dados= $cnx->fetch_array();
@@ -315,10 +313,24 @@ WHERE ".$f;
 					<div class="control">
 						<div class="select">
 							<select name="situacao">
-								<option selected="selected" value="Ativo">Ativo</option>	
+								<option selected="selected" value="<?php echo $dados["SITUACAO"]?>"><?php echo $dados["SITUACAO"]?></option>
+								<?php if($dados["SITUACAO"]=="Ativo"):{?>	
 								<option value="Férias">Férias</option>
 								<option value="Licença">Licença</option>
 								<option value="Desligado">Desligado</option>
+							<?php }endif; if($dados["SITUACAO"]=="Férias"):{?>
+								<option value="Ativo">Ativo</option>
+								<option value="Licença">Licença</option>
+								<option value="Desligado">Desligado</option>
+							<?php }endif; if($dados["SITUACAO"]=="Licença"):{?>
+								<option value="Ativo">Ativo</option>
+								<option value="Férias">Férias</option>
+								<option value="Desligado">Desligado</option>
+							<?php }endif; if($dados["SITUACAO"]=="Desligado"):{?>
+								<option value="Ativo">Ativo</option>
+								<option value="Férias">Férias</option>
+								<option value="Licença">Licença</option>
+							<?php }endif;	?>		
 							</select>	
 						</div>
 					</div>					
@@ -385,8 +397,7 @@ if(isset($_POST['atualizar'])){
 			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário atualizado com sucesso!!!');</script><?php
-				$newUp=true;
-				header("Location: localhost/gestaodesempenho/register.php");	
+				$newUp=true;					
 			}
 			else{
 				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
