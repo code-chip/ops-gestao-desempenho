@@ -266,6 +266,58 @@ GROUP BY ATIVIDADE_ID";
       chart.draw(view, options);
   }
   </script>
+  <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Desempenho', 'Funcionários'],
+          ['Acima de 160', 4], ['90 a 99', 30], ['120 a 130', 5],
+          ['100 a 119', 20], ['89 a 70', 5], ['131 a 159', 4],
+          ['Kannada', 38], ['Kashmiri', 5.5], ['Abaixo de 69', 3],          
+        ]);
+
+        var options = {
+          title: 'Divisão de funcionários por desempenho no mês',
+          legend: 'none',
+          pieSliceText: 'label',
+          slices: {  4: {offset: 0.2},
+                    12: {offset: 0.3},
+                    14: {offset: 0.4},
+                    15: {offset: 0.5},
+          },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('div-desempenho'));
+        chart.draw(data, options);
+      }
+    </script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Meta', 'Quantidade'],
+          ['Meta atiginda', 75],
+          ['Meta perdida', 25]
+        ]);
+
+        var options = {
+        	title: 'Meta atiginda/perdida',
+          legend: 'none',
+          pieSliceText: 'label',
+          pieStartAngle: 135,
+          tooltip: { trigger: 'none' },
+          slices: {
+            0: { color: 'yellow' },
+            1: { color: 'transparent' }
+          }
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('meta'));
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -282,7 +334,13 @@ GROUP BY ATIVIDADE_ID";
 				<div class="column bloco is-mobile" id="dash-comp-atividades"></div>
 				<div class="column bloco is-mobile" id="sexo"></div>
 				<div class="column bloco is-mobile" id="top8"></div>
-			</div>		
+			</div>
+			<div class="field is-horizontal columns" id="graficos">
+				<div class="column bloco is-mobile" id="div-desempenho"></div>
+				<div class="column bloco is-mobile" id="meta"></div>
+				<div class="column bloco is-mobile" id="sexo"></div>
+				<div class="column bloco is-mobile" id="top8"></div>
+			</div>			
 	  	</div>	  		  	
 	</div>	
 </body>
