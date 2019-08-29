@@ -393,14 +393,21 @@ if(isset($_POST['atualizar'])){
 				echo $nascimento;
 				$nascimento="1900-01-01";
 			}	
-			$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";
+			$checkPass="SELECT SENHA FROM USUARIO WHERE ID=".$_SESSION["upUser"]." AND SENHA='".$senha."';";//VERIFICAÇÃO SE SENHA FOI ALTERADA.
+			$cx= mysqli_query($phpmyadmin, $checkPass);
+			if(mysqli_num_rows($cx)==0 || mysqli_num_rows($cx)==""){
+				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";				
+			}
+			else{
+				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";
+			}
 			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário atualizado com sucesso!!!');</script><?php
 				$newUp=true;					
 			}
 			else{
-				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
+				?><script language="Javascript"> alert('Erro ao atualizar!!!');</script><?php
 				echo mysqli_error($phpmyadmin);
 				echo $nascimento;
 			}
