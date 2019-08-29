@@ -301,30 +301,24 @@ if(isset($_POST['alterarDados'])){
 		}
 		else{
 			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";	
-		}		
-		$cnx= mysqli_query($phpmyadmin, $checkUp);
-		$check=$cnx->fetch_array();
-		if(mysqli_num_rows($cnx)==0){
+		}
+		$tx= mysqli_query($phpmyadmin, $checkUp);
+		if(mysqli_num_rows($tx)==0){
 			$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);
 			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"]." WHERE ID=".$ids[$i].";";		
 			$cnx=mysqli_query($phpmyadmin, $upDesempenho);
-			$upCount=$upCount+1;
+			$upCount=$upCount+1;			
 		}
-	}	
-	if(mysqli_error($phpmyadmin)==null && $upCount>0){	
-		?><script type="text/javascript">
-			alert('<?php echo $upCount;?> registro(s) de desempenho atualizado(s)');
-			window.location.href=window.location.href;		
-		</script><?php
 	}
-	else if($upCount==0){
+	if($upCount==0){	
 		?><script type="text/javascript">
-			alert('Nenhuma Informação foi alterada p/ ser atualizada!!');
+			alert('Nenhum registro foi alterado p/ ser atualizado!!');
+			window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
 		?><script type="text/javascript">
-			alert('Erro ao atualizar Desempenho, campos Meta e/ou Alcançado não pode estar vazio!!');
+			alert('Foi atualizado <?php echo $upCount ?> registro(s)!!');
 			window.location.href=window.location.href;
 		</script><?php
 	}
