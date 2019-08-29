@@ -41,8 +41,8 @@ require("query.php");
 			</div>
 			<div class="field is-horizontal" id="graficos">	
 				<div class="bloco" id="dash-turnos"></div>
-				<div id="dash-comp-atividades">
-				<div class="bloco" id="dash-atividades"></div>
+				<div class="bloco" id="dash-comp-atividades">
+				<div class="bloco" id="sexo"></div>
 			</div>		
 	  	</div>
 	  	<?php
@@ -66,8 +66,6 @@ GROUP BY ATIVIDADE_ID";
 				$vtG4vezes[$x3]= $G4["VEZES"];
 				$x3++;				
 			}
-			echo $vtG4nome[0];
-			echo "teste";
 	  	?>
 	</div>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -214,6 +212,25 @@ GROUP BY ATIVIDADE_ID";
         };
 
         var chart = new google.visualization.ComboChart(document.getElementById('dash-comp-atividades'));
+        chart.draw(data, options);
+      }
+    </script>
+    <script type="text/javascript">
+      	google.charts.load("current", {packages:["corechart"]});
+      	google.charts.setOnLoadCallback(drawChart);
+      	function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Sexo', 'Quantidade'],
+          ['Feminino',     11],
+          ['Masculino',     2]          
+        ]);
+
+        var options = {
+          title: 'Porcentual de funcionários Homens/Mulheres',
+          pieHole: 0.4,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('sexo'));
         chart.draw(data, options);
       }
     </script>	
