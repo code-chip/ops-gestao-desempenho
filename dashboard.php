@@ -17,36 +17,8 @@ include('login-check.php');
 $menuConfiguracao="is-active";
 include('menu.php');
 require("query.php");
-?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">	
-	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Dashboard</title>
-	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
-	<link rel="stylesheet" href="css/login.css" />
-	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
-	<link rel="stylesheet" href="css/bulma.min.css"/>
-	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-</head>
-<body>
-	<div class="hero is-fullheight is-primary has-background">
-	  	<img alt="Fill Murray" class="hero-background is-transparent"src="img/wallpaper/data-science17-min.jpg" />
-	  	<div class="section transparencia" style="margin-left: 10px;">
-     		<div class="field is-horizontal" id="graficos">		
-				<div class="bloco" id="dash-atividades"></div>
-				<div class="bloco" id="dash-ranking"></div>
-				<div class="bloco" id="dash-faltas"></div>				
-			</div>
-			<div class="field is-horizontal" id="graficos">	
-				<div class="bloco" id="dash-turnos"></div>
-				<div class="bloco" id="dash-comp-atividades">
-				<div class="bloco" id="sexo"></div>
-			</div>		
-	  	</div>
-	  	<?php
-	  		$x3=0;
+
+$x3=0;
 			$cnxG3= mysqli_query($phpmyadmin, $g3);
 			echo mysqli_error($phpmyadmin);
 			while($G3 = $cnxG3->fetch_array()){
@@ -66,8 +38,18 @@ GROUP BY ATIVIDADE_ID";
 				$vtG4vezes[$x3]= $G4["VEZES"];
 				$x3++;				
 			}
-	  	?>
-	</div>
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<title>Gestão de Desempenho - Dashboard</title>
+	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
+	<link rel="stylesheet" href="css/login.css" />
+	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
+	<link rel="stylesheet" href="css/bulma.min.css"/>
+	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
@@ -167,12 +149,7 @@ GROUP BY ATIVIDADE_ID";
 		        [12, 92, 102], [13, 89, 92], [14, 95, 104], [15, 98, 109], [16, 104, 106], [17, 108, 100],
 		        [18, 92, 94], [19, 90, 86], [20, 98, 99], [21, 105, 99], [22, 106, 99], [23, 100, 120],
 		        [24, 100, 102], [25, 99, 103], [26, 99, 99], [27, 101, 103], [28, 100, 101], [29, 103, 105],
-		        [30, 105, 107], [31, 95, 92], [32, 98, 103], [33, 89, 101], [34, 99, 96], [35, 101, 107],
-		        [36, 108, 104], [37, 101, 100], [38, 94, 107], [39, 101, 103], [40, 100, 106], [41, 105, 99],
-		        [42, 103, 105], [43, 100, 101], [44, 102, 100], [45, 99, 98], [46, 99, 105], [47, 106, 102],
-		        [48, 72, 104], [49, 88, 100], [50, 96, 98], [51, 102, 100], [52, 97, 99], [53, 99, 102],
-		        [54, 101, 100], [55, 102, 101], [56, 103, 105], [57, 102, 97], [58, 89, 92], [59, 98, 90],
-		        [60, 64, 56]
+		        [30, 105, 107]
 		    ]);
 
 		    var options = {
@@ -215,24 +192,98 @@ GROUP BY ATIVIDADE_ID";
         chart.draw(data, options);
       }
     </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       	google.charts.load("current", {packages:["corechart"]});
       	google.charts.setOnLoadCallback(drawChart);
       	function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Sexo', 'Quantidade'],
-          ['Feminino',     11],
-          ['Masculino',     2]          
+          ['Masculino',     11],
+          ['Feminino',     2]          
         ]);
 
         var options = {
           title: 'Porcentual de funcionários Homens/Mulheres',
-          pieHole: 0.4,
+          pieHole: 0.8,
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('sexo'));
         chart.draw(data, options);
       }
-    </script>	
+    </script>
+    <script type="text/javascript">
+      	google.charts.load("current", {packages:["corechart"]});
+      	google.charts.setOnLoadCallback(drawChart);
+      	function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Sexo', 'Quantidade'],
+          ['Matutino F',     11],
+          ['Matutino M',     2],
+          ['Vespetino F',     2],
+          ['Vespetino F',     2]          
+        ]);
+
+        var options = {
+          title: 'Porcentual Masculino/Feminino por turno',
+          pieHole: 0.3,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('sexo-turno'));
+        chart.draw(data, options);
+      }
+    </script>
+    <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Density", { role: "style" } ],
+        ["Aline Nascimento", 110.99, "#b87333"],
+        ["Leo Geison", 111.04, "#b87333"],
+        ["Daniela Vieira", 115.90, "#b87333"],
+        ["Lwcyano Will", 120.54, "#b87333"],
+        ["Lorrayene Costa", 139.94, "#b87333"],
+        ["Adriana Marques", 140.49, "silver"],
+        ["Gabriel Assis", 157.30, "gold"],
+        ["Lucas Souza", 160.45, "color: #e5e4e2"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Top 8 melhores do mês",
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("top8"));
+      chart.draw(view, options);
+  }
+  </script>
+</head>
+<body>
+	<div class="hero is-fullheight is-primary has-background">
+	  	<img alt="Fill Murray" class="hero-background is-transparent"src="img/wallpaper/data-science17-min.jpg" />
+	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
+     		<div class="columns bloco" id="graficos">		
+				<div class="column is-mobile" id="dash-atividades"></div>
+				<div class="column is-mobile" id="dash-ranking"></div>
+				<div class="column is-mobile" id="dash-faltas"></div>
+				<div class="column is-mobile" id="sexo-turno"></div>				
+			</div>
+			<div class="field is-horizontal columns" id="graficos">	<!--<div class="field is-horizontal" id="graficos">-->
+				<div class="column bloco is-mobile" id="dash-turnos"></div>
+				<div class="column bloco is-mobile" id="dash-comp-atividades"></div>
+				<div class="column bloco is-mobile" id="sexo"></div>
+				<div class="column bloco is-mobile" id="top8"></div>
+			</div>		
+	  	</div>	  		  	
+	</div>	
 </body>
 </html>
