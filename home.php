@@ -3,7 +3,6 @@ session_start();
 include('login-check.php');
 $menuInicio="is-active";
 include('menu.php');
-header('Content-Type: text/html; charset=UTF-8');
 $n=rand(1,25);
 $img="img/wallpaper/data-science".$n."-min.jpg";
 //print_r($_SESSION);exit();
@@ -24,6 +23,7 @@ $dias= date_interval_format($resultado, '%a');
 	<title>Gestão de Desempenho</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
+	<link rel="stylesheet" href="css/animate.css" />	
 	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -33,10 +33,10 @@ $dias= date_interval_format($resultado, '%a');
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
-		     	<h1 class="title">
+		     	<h1 class="title animated bounceInDown">
 		        	Bem vindo
 		      	</h1>
-		      	<h3 class="subtitle"><?php
+		      	<h3 class="subtitle animated bounceInRight"><?php
 		      		if($acesso==1){
 		      			echo $_SESSION["nameUser"].", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 		      		}
