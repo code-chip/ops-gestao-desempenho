@@ -318,11 +318,109 @@ GROUP BY ATIVIDADE_ID";
         chart.draw(data, options);
       }
     </script>
+    <script type="text/javascript">
+    	google.charts.setOnLoadCallback(drawChart);
+		function drawChart() {
+		  var data = google.visualization.arrayToDataTable([
+		    ['Generation', 'Descendants'],
+		    [1980, 1], [1985, 3], [1990, 5], [1991, 13]
+		 ]);
+
+		  var options = {
+		    title: 'Descendants by Generation',
+		    hAxis: {title: 'Generation', minValue: 0, maxValue: 3},
+		    vAxis: {title: 'Descendants', minValue: 0, maxValue: 2010},
+		    trendlines: {
+		      0: {
+		        type: 'exponential',
+		        color: 'green',
+		        visibleInLegend: true,
+		      }
+		    }
+		  };
+
+		  var chart = new google.visualization.ScatterChart(document.getElementById('idade'));
+		  chart.draw(data, options);
+		}
+    </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Dia', 'Checkout', 'Separação','Caixas',],
+          ['<?php echo date('d',strtotime("-3 day"))?>',  140,      99,103],
+          ['<?php echo date('d',strtotime("-2 day"))?>',  110,      103,100],
+          ['<?php echo date('d',strtotime("-1 day"))?>',  98,       108,113],
+          ['<?php echo date('d')?>',  117,      120,99]
+        ]);
+
+          var options_stacked = {
+          	title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          isStacked: true,
+          legend: {position: 'top', maxLines: 3},
+          vAxis: {minValue: 0, ticks: [0, .3, .6, .9, 1]}
+        };
+    
+
+        var chart = new google.visualization.AreaChart(document.getElementById('atividades-15dias'));
+        chart.draw(data, options_stacked);
+      }
+    </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses','Perdas'],
+          ['2016',  1000,      400,100],
+          ['2017',  1170,      460,90],
+          ['2018',  660,       1120,49],
+          ['2019',  1030,      540,90]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('teste'));
+        chart.draw(data, options);
+      }
+    </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2013',  1000,      400],
+          ['2014',  1170,      460],
+          ['2015',  660,       1120],
+          ['2016',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('teste2'));
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
 	  	<img alt="Fill Murray" class="hero-background is-transparent"src="img/wallpaper/data-science17-min.jpg" />
 	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
+	  		<?php if($_SESSION["permissao"]>1):{?>
      		<div class="columns bloco" id="graficos">		
 				<div class="column is-mobile" id="dash-atividades"></div>
 				<div class="column is-mobile" id="dash-ranking"></div>
@@ -338,9 +436,16 @@ GROUP BY ATIVIDADE_ID";
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile" id="div-desempenho"></div>
 				<div class="column bloco is-mobile" id="meta"></div>
-				<div class="column bloco is-mobile" id="sexo"></div>
-				<div class="column bloco is-mobile" id="top8"></div>
-			</div>			
+				<div class="column bloco is-mobile" id="idade"></div>
+				<div class="column bloco is-mobile" id="atividades-15dias"></div>
+			</div>
+			<div class="field is-horizontal columns" id="graficos">
+				<div class="column bloco is-mobile" id="teste"></div>
+				<div class="column bloco is-mobile" id="teste2"></div>
+				<div class="column bloco is-mobile" id="idade"></div>
+				<div class="column bloco is-mobile" id="atividades-15dias"></div>
+			</div>	
+			<?php } endif;?>			
 	  	</div>	  		  	
 	</div>	
 </body>
