@@ -422,28 +422,28 @@ GROUP BY ATIVIDADE_ID";
 	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
 	  		<?php if($_SESSION["permissao"]>1):{?>
      		<div class="columns bloco" id="graficos">		
-				<div class="column is-mobile" id="dash-atividades"></div>
-				<div class="column is-mobile" id="dash-ranking"></div>
-				<div class="column is-mobile" id="dash-faltas"></div>
-				<div class="column is-mobile" id="sexo-turno"></div>				
+				<div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="dash-ranking"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="dash-faltas"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="sexo-turno"></div>				
 			</div>
 			<div class="field is-horizontal columns" id="graficos">	<!--<div class="field is-horizontal" id="graficos">-->
-				<div class="column bloco is-mobile" id="dash-turnos"></div>
-				<div class="column bloco is-mobile" id="dash-comp-atividades"></div>
-				<div class="column bloco is-mobile" id="sexo"></div>
-				<div class="column bloco is-mobile" id="top8"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="dash-turnos"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="dash-comp-atividades"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="sexo"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
-				<div class="column bloco is-mobile" id="div-desempenho"></div>
-				<div class="column bloco is-mobile" id="meta"></div>
-				<div class="column bloco is-mobile" id="idade"></div>
-				<div class="column bloco is-mobile" id="atividades-15dias"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="meta"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="idade"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="atividades-15dias"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
-				<div class="column bloco is-mobile" id="teste"></div>
-				<div class="column bloco is-mobile" id="teste2"></div>
-				<div class="column bloco is-mobile" id="idade"></div>
-				<div class="column bloco is-mobile" id="atividades-15dias"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="teste2"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="idade"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="atividades-15dias"></div>
 			</div>	
 			<?php } endif;?>			
 	  	</div>	  		  	
