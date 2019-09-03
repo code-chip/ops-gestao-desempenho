@@ -19,6 +19,7 @@ $menuConfiguracoes;
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/personal.css" />
+	<link rel="stylesheet" href="css/hover.css" />
 	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -61,7 +62,7 @@ $menuConfiguracoes;
 	<nav class="navbar is-primary">
 		<div class="container">
 			<div class="navbar-brand">
-				<a class="navbar-item" href="#" style="font-weight:bold;">(evino)</a>
+				<a class="navbar-item hvr-curl-top-right" href="https://evino.com.br" target="_blank" style="font-weight:bold;">(evino)</a>
 				<span class="navbar-burger burger" data-target="navMenu">
 					<span></span>
 					<span></span>
@@ -70,46 +71,46 @@ $menuConfiguracoes;
 			</div>
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
-					<a href="home.php" class="navbar-item <?php echo $menuInicio?>">Início</a>
-					<a href="dashboard.php" class="navbar-item <?php echo $menuDash?>">Dashboard</a>
+					<a href="home.php" class="navbar-item <?php echo $menuInicio?> hvr-grow">Início</a>
+					<a href="dashboard.php" class="navbar-item <?php echo $menuDash?> hvr-grow">Dashboard</a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link <?php echo $menuMeta?>">Meta</a>					
+						<a class="navbar-link <?php echo $menuMeta?> hvr-grow">Meta</a>					
 						<div class="navbar-dropdown">
-							<a href="#" class="navbar-item" onclick="msg();">Consultar</a>
+							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Consultar</a>
 							<?php if($_SESSION["permissao"]!=1):{?>
-							<a href="#" class="navbar-item" onclick="msg();">Inserir</a>
-							<a href="#" class="navbar-item" onclick="msg();">Atualizar</a>
-							<?php if($_SESSION["permissao"]>2):{?><a href="#" class="navbar-item" onclick="msg();">Remover</a><?php }endif;?>
+							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Inserir</a>
+							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Atualizar</a>
+							<?php if($_SESSION["permissao"]>2):{?><a href="#" class="navbar-item hvr-grow" onclick="msg();">Remover</a><?php }endif;?>
 							<?php }endif;?>
 						</div>
 					</div>
 					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link <?php echo $menuDesempenho?>">Desempenho</a>					
+						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
 						<div class="navbar-dropdown">
-							<a href="report-query.php" class="navbar-item">Consultar</a>
-							<a href="report-insert.php" class="navbar-item">Inserir</a>
-							<a href="report-update.php" class="navbar-item">Atualizar</a>
-							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item">Remover</a><?php }endif;?>
+							<a href="report-query.php" class="navbar-item hvr-grow">Consultar</a>
+							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
+							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>
+							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
 						</div>
 					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a href="#" class="navbar-link <?php echo $menuRelatorio?>">Relatórios</a>					
+						<a href="#" class="navbar-link <?php echo $menuRelatorio?> hvr-grow">Relatórios</a>					
 						<div class="navbar-dropdown">
-							<?php if($_SESSION["permissao"]!=1):?><a href="report.php" class="navbar-item">Gestão</a><?php endif;?>
-							<a href="report-private.php" class="navbar-item">Individual</a>							
+							<?php if($_SESSION["permissao"]!=1):?><a href="report.php" class="navbar-item hvr-grow">Gestão</a><?php endif;?>
+							<a href="report-private.php" class="navbar-item hvr-grow">Individual</a>							
 						</div>
 					</div>
 				<div class="navbar-item has-dropdown is-hoverable">
-			     	<a class="navbar-link <?php echo $menuConfiguracoes?>">Configurações</a>
+			     	<a class="navbar-link <?php echo $menuConfiguracoes?> hvr-grow">Configurações</a>
 			        <div class="navbar-dropdown">
-				        <a href="register.php" class="navbar-item">Cadastro</a>
-				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item">Permissões</a><?php endif;?>
-				        <a class="navbar-item">Tema</a>
-				        <hr class="navbar-divider">
-				        <a class="navbar-item">Reportar bug</a>
+				        <a href="register.php" class="navbar-item hvr-grow">Cadastro</a>
+				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item hvr-grow">Permissões</a><?php endif;?>
+				        <a class="navbar-item hvr-grow">Tema</a>
+				        <hr class="navbar-divider hvr-grow">
+				        <a class="navbar-item hvr-grow">Reportar bug</a>
 			        </div>
 			    </div>
-				<a href="logout.php" class="navbar-item">Sair</a>
+				<a href="logout.php" class="navbar-item hvr-grow">Sair</a>
 				</div>
 			</div>
 		</div>
