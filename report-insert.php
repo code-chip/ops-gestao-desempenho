@@ -36,43 +36,67 @@ $totalAlcancado=0;
 	<span id="topo"></span>
 <div>	
 	<?php if($turno =="" && isset($_POST['salvarDados'])==null ): ?>
+	<section class="section">
+	<div class="container">		
 	<form id="form1" action="" method="POST">
-		<div class="field has-addons has-addons-centered">			
-			<!--SELEÇÃO TURNO-->
-			<div class="field-label is-normal">
-				<label for="turno" class="label">Turno/Setor:</label>
-			</div>
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control">
-						<div class="select">
-							<select name="turno">
+		<div class="field is-horizontal">			
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Turno:</label>
+				</div>
+				<div class="field-body">
+					<div class="field" style="max-width:17em;">							
+						<div class="control">
+							<div class="select">
+								<select name="turno">
 								<option selected="selected" value="">Selecione</option>	
 								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; 
 								while($turno = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
 								<?php $x;} endwhile;?>	
-							</select>	
+							</select>
+							</div>&nbsp&nbsp&nbsp
 						</div>
-						<div class="select">
-							<select name="setor">
-								<option selected="selected" value="">Selecione</option>	
-								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; 
-								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
-								<?php $x;} endwhile;?>	
-							</select>	
-						</div>
-					<!--<div class="control">-->
-						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Filtrar"/>
 					</div>
-				</div>										
-			</div>			
+				</div>
+			</div>
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Setor:</label>
+				</div>
+				<div class="field-body">
+					<div class="field">							
+						<div class="control">
+							<div class="select">
+								<select name="setor">
+									<option selected="selected" value="">Selecione</option>	
+									<?php $con = mysqli_query($phpmyadmin , $gdSetor);
+									$x=0; 
+									while($setor = $con->fetch_array()):{?>
+										<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+									<?php $x;} endwhile;?>	
+								</select>	
+							</div>
+						</div>						
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal">
+				<div class="field-label"></div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<button name="consultar" type="submit" class="button is-primary" value="Filtrar">Filtrar</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</form>	
+		
+	</form>
+	</div>
+	</section>	
 	<?php endif; ?>		
 </div>
 
