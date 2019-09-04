@@ -15,7 +15,7 @@ $totalAlcancado=0;
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Gestão de Desempenho - Relatórios</title>
+	<title>Gestão de Desempenho - Relatório Gestão</title>
 </head>
 <body>
 	<span id="topo"></span>
@@ -115,14 +115,6 @@ $totalAlcancado=0;
 	</form>
 	</section>		
 </div><!--FINAL DO FORMULÁRIO-->
-<?php if($periodo!=""):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<div class="field is-horizontal" id="graficos">		
-		<div class="column is-mobile" id="dash-desempenho"></div>
-		<div class="column is-mobile" id="dash-variacao"></div>
-		<div class="column is-mobile" id="dash-ranking"></div>
-		<div class="column is-mobile" id="sexo"></div>
-	</div>	
-<?php endif;?>
 <?php
 if( $periodo != "" && $_SESSION["permissao"]!=1){
 	if($atividade=="agrupado"){
@@ -135,8 +127,8 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
-	require("query.php");			
-	$_SESSION["periodo"]=$periodo;	
+	$_SESSION["periodo"]=$periodo;
+	require("query.php");
 	$x=0;
 	$cnxG3= mysqli_query($phpmyadmin, $g3);
 	echo mysqli_error($phpmyadmin);
@@ -190,7 +182,14 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		$xg++;
 	}	
 }?>
-<?php if($contador !=0) : ?>
+<?php if($contador !=0): ?>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<div class="field is-horizontal" id="graficos">		
+		<div class="column is-mobile" id="dash-desempenho"></div>
+		<div class="column is-mobile" id="dash-variacao"></div>
+		<div class="column is-mobile" id="dash-ranking"></div>
+		<div class="column is-mobile" id="sexo"></div>
+	</div>	
 	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
 		<tr class="is-selected">
@@ -221,7 +220,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	}
 	if($repeat>0){ $repeat--;}	
 	?>
-	<tr >
+	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo utf8_encode($vtNome[$i])?></td>
 		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
@@ -240,8 +239,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		<div class="field is-grouped is-grouped-centered">
 			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
 		</div>
-	</a>			
-<?php endif; ?>
+	</a>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -260,11 +258,9 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
           hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
-
         var chart = new google.visualization.AreaChart(document.getElementById('dash-desempenho'));
         chart.draw(data, options);
       }
-
 </script>
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart', 'line']});
@@ -324,43 +320,14 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	google.charts.setOnLoadCallback(drawTitleSubtitle);
 	function drawTitleSubtitle() {
     	var data = google.visualization.arrayToDataTable([
-        ['Operador', 'avg', 'min'],
-        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3desempenho[0]?>'), parseFloat('<?php echo $vtG3menor[0]?>')],
-        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3desempenho[1]?>'), parseFloat('<?php echo $vtG3menor[1]?>')],
-        ['<?php echo $vtG3nome[2]?>', parseFloat('<?php echo $vtG3desempenho[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
-        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3desempenho[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
-      	]);
-      	var materialOptions = {
-        	chart: {
-         		title: 'Ranking mensal dos operadores',
-          		subtitle: 'Top 4 desempenho do mês '
-        	},
-        	hAxis: {
-          		title: 'Total Alcançado',
-          		minValue: 0,
-        	},
-        	vAxis: {
-          		title: 'Ranking'
-        	},
-        	bars: 'horizontal'
-      	};
-      	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking2'));
-      	materialChart.draw(data, materialOptions);
-    }
-</script>
-<script type="text/javascript">
-	google.charts.load('current', {packages: ['corechart', 'bar']});
-	google.charts.setOnLoadCallback(drawTitleSubtitle);
-	function drawTitleSubtitle() {
-    	var data = google.visualization.arrayToDataTable([
-        ['Operador', 'avg', 'min'],
+        ['Sexo', 'avg', 'min'],
         ['<?php echo $vtG3sexo[0]?>', parseFloat('<?php echo $vtG3media[0]?>'), parseFloat('<?php echo $vtG3minimo[0]?>')],
         ['<?php echo $vtG3sexo[1]?>', parseFloat('<?php echo $vtG3media[1]?>'), parseFloat('<?php echo $vtG3minimo[1]?>')]        
       	]);
       	var materialOptions = {
         	chart: {
-         		title: 'Desempenho por sexo',
-          		subtitle: 'Resultado conforme filtro'
+         		title: 'Diferença de desempenho',
+          		subtitle: 'Masculino/Feminino'
         	},
         	hAxis: {
           		title: 'Total Alcançado',
@@ -387,7 +354,6 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
         ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "#b87333"],
         ["Lucas Souza", 99.45, "color: #e5e4e2"]
       ]);
-
       var view = new google.visualization.DataView(data);
       view.setColumns([0, 1,
                        { calc: "stringify",
@@ -395,7 +361,6 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
                          type: "string",
                          role: "annotation" },
                        2]);
-
       var options = {
         title: "Top 5 melhores do mês",
         bar: {groupWidth: "95%"},
@@ -405,5 +370,11 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
       chart.draw(view, options);
   }
   </script>
+<?php endif;
+	if($contador==0){
+		?><script type="text/javascript">alert('Nenhum resultado encontrao com o filtro aplicado!')</script>
+		<?php
+	}
+  ?>
 </body>
 </html>
