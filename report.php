@@ -128,35 +128,15 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta."" .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
-	}
-	$_SESSION["periodo"]=$periodo;
-	require("query.php");
-	$x=0;
-	$cnxG3= mysqli_query($phpmyadmin, $g3);
-	echo mysqli_error($phpmyadmin);
-	while($G3 = $cnxG3->fetch_array()){
-		$vtG3sexo[$x]= $G3["SEXO"];
-		$vtG3media[$x]= $G3["MEDIA"];
-		$vtG3minimo[$x]= $G3["MINIMO"];		
-		$x++;				
-	}
-	$x=0;
-	$cnxG4= mysqli_query($phpmyadmin, $g4);
-	echo mysqli_error($phpmyadmin);
-	while($G4 = $cnxG4->fetch_array()){
-		$vtG4nome[$x]= $G4["NOME"];
-		$vtG4media[$x]= $G4["MEDIA"];
-		$x++;				
-	}
-	$con = mysqli_query($phpmyadmin, $consulta);
-	$row = mysqli_num_rows($con);
+	}	
+	$con = mysqli_query($phpmyadmin , $consulta);
+	if(mysqli_num_rows($con)!=0){
 	$x=0;
 	$maior=0;
 	$menor=1000;
 	$totalFaltas=0;
-	$totalFolgas=0;	
-	$con = mysqli_query($phpmyadmin , $consulta);
-	while(mysqli_num_rows($con)!=0 && $dado = $con->fetch_array()){
+	$totalFolgas=0;
+	while($dado = $con->fetch_array()){
 		$vtIdUsuario[$x]=$dado["ID"];				
 		$vtNome[$x] = $dado["NOME"];
 		$vtDesempenho[$x] = $dado["DESEMPENHO"];
@@ -175,6 +155,26 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		}			
 		$contador++;
 		$x++;		
+	}
+	$_SESSION["periodo"]=$periodo;
+	$_SESSION["report-turno"]=$turno;
+	require("query.php");
+	$x=0;
+	$cnxG3= mysqli_query($phpmyadmin, $g3);
+	echo mysqli_error($phpmyadmin);
+	while($G3 = $cnxG3->fetch_array()){
+		$vtG3sexo[$x]= $G3["SEXO"];
+		$vtG3media[$x]= $G3["MEDIA"];
+		$vtG3minimo[$x]= $G3["MINIMO"];		
+		$x++;				
+	}
+	$x=0;
+	$cnxG4= mysqli_query($phpmyadmin, $g4);
+	echo mysqli_error($phpmyadmin);
+	while($G4 = $cnxG4->fetch_array()){
+		$vtG4nome[$x]= $G4["NOME"];
+		$vtG4media[$x]= $G4["MEDIA"];
+		$x++;				
 	}	
 	$xg=0;
 	$cnx2=mysqli_query($phpmyadmin, $g1);
@@ -182,6 +182,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		$vtMedia[$xg]=$graf1["MEDIA"];
 		$vtMenor[$xg]=$graf1["MENOR"];
 		$xg++;
+	}
 	}	
 }?>
 <?php if($contador !=0): ?>
