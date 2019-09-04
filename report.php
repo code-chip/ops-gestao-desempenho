@@ -72,7 +72,7 @@ $totalAlcancado=0;
 						</div>
 					</div>					
 				</div>						
-			</div>
+			</div>&nbsp&nbsp&nbsp
 			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
 				<label for="turno" class="label is-size-7-touch">Turno:</label>
 			</div>
@@ -136,16 +136,24 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
 	require("query.php");			
-	
-	$x3=0;
+	$_SESSION["periodo"]=$periodo;	
+	$x=0;
 	$cnxG3= mysqli_query($phpmyadmin, $g3);
 	echo mysqli_error($phpmyadmin);
 	while($G3 = $cnxG3->fetch_array()){
-		$vtG3nome[$x3]= $G3["NOME"];
-		$vtG3desempenho[$x3]= $G3["MAXIMO"];
-		$vtG3menor[$x3]= $G3["MINIMO"];		
-		$x3++;				
-	}		
+		$vtG3sexo[$x]= $G3["SEXO"];
+		$vtG3media[$x]= $G3["MEDIA"];
+		$vtG3minimo[$x]= $G3["MINIMO"];		
+		$x++;				
+	}
+	$x=0;
+	$cnxG4= mysqli_query($phpmyadmin, $g4);
+	echo mysqli_error($phpmyadmin);
+	while($G4 = $cnxG4->fetch_array()){
+		$vtG4nome[$x]= $G4["NOME"];
+		$vtG4media[$x]= $G4["MEDIA"];
+		$x++;				
+	}
 	$con = mysqli_query($phpmyadmin, $consulta);
 	$row = mysqli_num_rows($con);
 	$x=0;
@@ -346,8 +354,8 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	function drawTitleSubtitle() {
     	var data = google.visualization.arrayToDataTable([
         ['Operador', 'avg', 'min'],
-        ['Masculino', parseFloat('<?php echo $vtG3desempenho[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
-        ['Feminino', parseFloat('<?php echo $vtG3desempenho[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
+        ['<?php echo $vtG3sexo[0]?>', parseFloat('<?php echo $vtG3media[0]?>'), parseFloat('<?php echo $vtG3minimo[0]?>')],
+        ['<?php echo $vtG3sexo[1]?>', parseFloat('<?php echo $vtG3media[1]?>'), parseFloat('<?php echo $vtG3minimo[1]?>')]        
       	]);
       	var materialOptions = {
         	chart: {
@@ -373,10 +381,10 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3desempenho[0]?>'), "gold"],
-        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3desempenho[1]?>'), "silver"],
-        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3desempenho[3]?>'), "#b87333"],
-        ['<?php echo $vtG3nome[4]?>', parseFloat('<?php echo $vtG3desempenho[4]?>'), "#b87333"],
+        ['<?php echo $vtG4nome[0]?>', parseFloat('<?php echo $vtG4media[0]?>'), "gold"],
+        ['<?php echo $vtG4nome[1]?>', parseFloat('<?php echo $vtG4media[1]?>'), "silver"],
+        ['<?php echo $vtG4nome[3]?>', parseFloat('<?php echo $vtG4media[3]?>'), "#b87333"],
+        ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "#b87333"],
         ["Lucas Souza", 99.45, "color: #e5e4e2"]
       ]);
 
