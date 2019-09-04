@@ -1,5 +1,4 @@
 <?php
-session_start();
 include('connection.php');
 //QUERY'S USADAS EM REPORT.PHP//
 /*DASHBOARD DESEMPENHO DA EMPRESA*/
