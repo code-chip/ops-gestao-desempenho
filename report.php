@@ -117,9 +117,10 @@ $totalAlcancado=0;
 </div><!--FINAL DO FORMULÁRIO-->
 <?php if($periodo!=""):?><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div class="field is-horizontal" id="graficos">		
-		<div id="dash-desempenho"></div>
-		<div id="dash-variacao"></div>
-		<div id="dash-ranking"></div>
+		<div class="column is-mobile" id="dash-desempenho"></div>
+		<div class="column is-mobile" id="dash-variacao"></div>
+		<div class="column is-mobile" id="dash-ranking"></div>
+		<div class="column is-mobile" id="sexo"></div>
 	</div>	
 <?php endif;?>
 <?php
@@ -212,7 +213,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	}
 	if($repeat>0){ $repeat--;}	
 	?>
-	<tr>
+	<tr >
 		<td><?php echo $i+1;?></td>
 		<td><?php echo utf8_encode($vtNome[$i])?></td>
 		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
@@ -335,9 +336,66 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
         	},
         	bars: 'horizontal'
       	};
+      	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking2'));
+      	materialChart.draw(data, materialOptions);
+    }
+</script>
+<script type="text/javascript">
+	google.charts.load('current', {packages: ['corechart', 'bar']});
+	google.charts.setOnLoadCallback(drawTitleSubtitle);
+	function drawTitleSubtitle() {
+    	var data = google.visualization.arrayToDataTable([
+        ['Operador', 'avg', 'min'],
+        ['Masculino', parseFloat('<?php echo $vtG3desempenho[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
+        ['Feminino', parseFloat('<?php echo $vtG3desempenho[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
+      	]);
+      	var materialOptions = {
+        	chart: {
+         		title: 'Desempenho por sexo',
+          		subtitle: 'Resultado conforme filtro'
+        	},
+        	hAxis: {
+          		title: 'Total Alcançado',
+          		minValue: 0,
+        	},
+        	vAxis: {
+          		title: 'Ranking'
+        	},
+        	bars: 'horizontal'
+      	};
       	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking'));
       	materialChart.draw(data, materialOptions);
     }
 </script>
+<script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Density", { role: "style" } ],
+        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3desempenho[0]?>'), "gold"],
+        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3desempenho[1]?>'), "silver"],
+        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3desempenho[3]?>'), "#b87333"],
+        ['<?php echo $vtG3nome[4]?>', parseFloat('<?php echo $vtG3desempenho[4]?>'), "#b87333"],
+        ["Lucas Souza", 99.45, "color: #e5e4e2"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Top 5 melhores do mês",
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("sexo"));
+      chart.draw(view, options);
+  }
+  </script>
 </body>
 </html>
