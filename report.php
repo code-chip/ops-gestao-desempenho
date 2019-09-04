@@ -8,6 +8,7 @@ include('menu.php');
 $periodo = trim($_REQUEST['periodo']);
 $atividade = trim($_REQUEST['atividade']);
 $ordenacao = trim($_REQUEST['ordenacao']);
+$turno = trim($_REQUEST['turno']);
 $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado=0;
@@ -107,7 +108,7 @@ $totalAlcancado=0;
 						</div>
 					<div class="control">
 						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary is-size-7-touch" id="submitQuery" value="Filtrar"/>
+						<input name="filtro" type="submit" class="button is-primary is-size-7-touch" id="submitQuery" value="Filtrar"/>
 					</div>
 				</div>						
 			</div>
@@ -371,7 +372,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
   }
   </script>
 <?php endif;
-	if($contador==0){
+	if($contador==0 && isset($_GET["filtro"])!=null){
 		?><script type="text/javascript">alert('Nenhum resultado encontrao com o filtro aplicado!')</script>
 		<?php
 	}
