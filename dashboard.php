@@ -179,17 +179,17 @@ GROUP BY ATIVIDADE_ID";
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Avarias', 'Separação', 'Caixas', 'Checkout', 'PBL', 'Recebimento'],
-          ['<?php echo strftime('%h', strtotime("-4 months"))?>',  165,      938,         522,             998,           450,      614.6],
-          ['<?php echo strftime('%h', strtotime("-3 months"))?>',  135,      1120,        599,             1268,          288,      682],
-          ['<?php echo strftime('%h', strtotime("-2 months"))?>',  157,      1167,        587,             807,           397,      623],
-          ['<?php echo strftime('%h', strtotime("-1 months"))?>',  139,      1110,        615,             968,           215,      609.4],
-          ['<?php echo strftime('%h')?>',  136,      691,         629,             1026,          366,      569.6]
+          ['<?php echo strftime('%h', strtotime("-4 months"))?>',  165,      138,         122,             99,           105,      114.6],
+          ['<?php echo strftime('%h', strtotime("-3 months"))?>',  135,      120,        99,             128,          88,      108],
+          ['<?php echo strftime('%h', strtotime("-2 months"))?>',  157,      167,        87,             107,           97,      123],
+          ['<?php echo strftime('%h', strtotime("-1 months"))?>',  139,      110,        115,             128,           115,      109.4],
+          ['<?php echo strftime('%h')?>',  136,      101,         114,             126,          106,      109.6]
         ]);
 
         var options = {
-          title : 'Desempenho por atividade',
-          vAxis: {title: 'Cups'},
-          hAxis: {title: 'Month'},
+          title : 'Média de desempenho por atividade',
+          vAxis: {title: 'Desempenho'},
+          hAxis: {title: 'Mês'},
           seriesType: 'bars',
           series: {5: {type: 'line'}}
         };
@@ -245,14 +245,14 @@ GROUP BY ATIVIDADE_ID";
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ["Aline Nascimento", 110.99, "#b87333"],
-        ["Leo Geison", 111.04, "#b87333"],
-        ["Daniela Vieira", 115.90, "#b87333"],
-        ["Lwcyano Will", 120.54, "#b87333"],
-        ["Lorrayene Costa", 139.94, "#b87333"],
-        ["Adriana Marques", 140.49, "silver"],
+        ["Lucas Souza", 160.45, "color: #e5e4e2"],
         ["Gabriel Assis", 157.30, "gold"],
-        ["Lucas Souza", 160.45, "color: #e5e4e2"]
+        ["Adriana Marques", 140.49, "silver"],
+        ["Lorrayene Costa", 139.94, "#b87333"],
+        ["Lwcyano Will", 120.54, "#b87333"],
+        ["Daniela Vieira", 115.90, "#b87333"],
+        ["Leo Geison", 111.04, "#b87333"],
+        ["Aline Nascimento", 110.99, "#b87333"]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -264,23 +264,23 @@ GROUP BY ATIVIDADE_ID";
                        2]);
 
       var options = {
-        title: "Top 8 melhores do mês",
+        title: "Ranking melhores do mês",
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("top8"));
       chart.draw(view, options);
-  }
-  </script>
-  <script type="text/javascript">
+	  }
+	  </script>
+  	<script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Desempenho', 'Funcionários'],
-          ['Acima de 160', 4], ['90 a 99', 30], ['120 a 130', 5],
+          ['Acima de 160', 4], ['95 a 99', 30], ['120 a 130', 5],
           ['100 a 119', 20], ['89 a 70', 5], ['131 a 159', 4],
-          ['Kannada', 38], ['Kashmiri', 5.5], ['Abaixo de 69', 3],          
+          ['90 a 94', 38], ['59 a 69', 5.5], ['Abaixo de 58', 3],          
         ]);
 
         var options = {
@@ -441,7 +441,7 @@ GROUP BY ATIVIDADE_ID";
 
         var options = {
           title: 'Acessos por mês',
-          hAxis: {title: 'Meses',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
@@ -449,6 +449,41 @@ GROUP BY ATIVIDADE_ID";
         chart.draw(data, options);
       }
     </script>
+    <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Element", "Density", { role: "style" } ],
+        ["Amanda Santos", 59.99, "#FF0000"],
+        ["Maycon Gonsales", 62.04, "#FF0000"],
+        ["Rayanne Oliveira", 65.90, "#FF6347"],
+        ["Vinicius Santos", 66.54, "#FF6347"],
+        ["Solange Vieira", 68.94, "#FF7F50"],
+        ["Daniel Santos", 69.49, "#FFA07A"],
+        ["Kaique Souza", 70.30, "#FF8C00"],
+        ["Adriana Alvarenga", 70.30, "#FF8C00"],
+        ["Camila Mendoça", 71.40, "#FFA500"],        
+        ["Cleverson Martins", 75.45, "color: #F0E68C"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Ranking baixo desempenho no mês",
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("top10-piores"));
+      chart.draw(view, options);
+	  }
+	  </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -477,7 +512,7 @@ GROUP BY ATIVIDADE_ID";
 				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="dash-acessos-no-mes"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="atividades-15dias"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
 			</div>	
 			<?php } endif;?>			
 	  	</div>	  		  	
