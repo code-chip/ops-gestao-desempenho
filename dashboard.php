@@ -17,27 +17,33 @@ include('login-check.php');
 $menuConfiguracao="is-active";
 include('menu.php');
 require("query.php");
-
-$x3=0;
-			$cnxG3= mysqli_query($phpmyadmin, $g3);
-			echo mysqli_error($phpmyadmin);
-			while($G3 = $cnxG3->fetch_array()){
-				$vtG3nome[$x3]= $G3["NOME"];
-				$vtG3desempenho[$x3]= $G3["MAXIMO"];
-				$vtG3menor[$x3]= $G3["MINIMO"];		
-				$x3++;				
-			}
-			$g4="SELECT A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D
+	$x3=0;
+	$cnxG3= mysqli_query($phpmyadmin, $g3);
+	echo mysqli_error($phpmyadmin);
+	while($G3 = $cnxG3->fetch_array()){
+		$vtG3nome[$x3]= $G3["NOME"];
+		$vtG3desempenho[$x3]= $G3["MAXIMO"];
+		$vtG3menor[$x3]= $G3["MINIMO"];		
+		$x3++;				
+	}
+	$g4="SELECT A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D
 INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 GROUP BY ATIVIDADE_ID";
-			$x3=0;
-			$cnx= mysqli_query($phpmyadmin, $g4);
-			echo mysqli_error($phpmyadmin);
-			while($G4 = $cnx->fetch_array()){
-				$vtG4nome[$x3]= $G4["NOME"];
-				$vtG4vezes[$x3]= $G4["VEZES"];
-				$x3++;				
-			}
+	$x3=0;
+	$cnx= mysqli_query($phpmyadmin, $g4);
+	echo mysqli_error($phpmyadmin);
+	while($G4 = $cnx->fetch_array()){
+		$vtG4nome[$x3]= $G4["NOME"];
+		$vtG4vezes[$x3]= $G4["VEZES"];
+		$x3++;				
+	}
+	$g6="SELECT SUM(ACESSO) AS ACESSOS FROM ACESSO GROUP BY ANO_MES;";
+	$cnx=mysqli_query($phpmyadmin, $g6);
+	$x=0;
+	while ($G6= $cnx->fetch_array()) {
+		$vtG6Acesso[$x]=$G6["ACESSOS"];
+		$x++;
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -393,25 +399,53 @@ GROUP BY ATIVIDADE_ID";
       }
     </script>
     <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Meses', '', ''],
+          ['3', 114, 2],
+          ['6', 125, 7],
+          ['9', 119, 9],
+          ['12', 103, 5],
+          ['15', 99, 20],
+          ['18', 105, 43],
+          ['21', 103, 30],
+          ['24', 98, 27]
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Desempenho por tempo de casa',
+            subtitle: 'Desempenho/Funcionários',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('dash-tempo-de-casa'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+    </script>
+    <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2013',  1000,      400],
-          ['2014',  1170,      460],
-          ['2015',  660,       1120],
-          ['2016',  1030,      540]
+          ['Mês', 'Acessos'],
+          ['<?php echo date('m',strtotime("-2 months"))?>',    <?php echo $vtG6Acesso[0]?>],
+          ['<?php echo date('m',strtotime("-1 months"))?>',     <?php echo $vtG6Acesso[1]?>],
+          ['<?php echo date('m')?>',  <?php echo $vtG6Acesso[2]?>]
         ]);
 
         var options = {
-          title: 'Company Performance',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          title: 'Acessos por mês',
+          hAxis: {title: 'Meses',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('teste2'));
+        var chart = new google.visualization.AreaChart(document.getElementById('dash-acessos-no-mes'));
         chart.draw(data, options);
       }
     </script>
@@ -441,8 +475,8 @@ GROUP BY ATIVIDADE_ID";
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="idade"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="dash-acessos-no-mes"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="atividades-15dias"></div>
 			</div>	
 			<?php } endif;?>			
