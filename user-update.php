@@ -395,11 +395,17 @@ if(isset($_POST['atualizar'])){
 			}	
 			$checkPass="SELECT SENHA FROM USUARIO WHERE ID=".$_SESSION["upUser"]." AND SENHA='".$senha."';";//VERIFICAÇÃO SE SENHA FOI ALTERADA.
 			$cx= mysqli_query($phpmyadmin, $checkPass);
-			if(mysqli_num_rows($cx)==0 || mysqli_num_rows($cx)==""){
-				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";				
+			if($situacao=="Desligado"){
+				$desligadoEm=", DESLIGADO_EM='".date('Y-m-d')."'";
 			}
 			else{
-				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."' WHERE ID=".$_SESSION["upUser"].";";
+				$desligadoEm=", DESLIGADO_EM=NULL";
+			}
+			if(mysqli_num_rows($cx)==0 || mysqli_num_rows($cx)==""){
+				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";				
+			}
+			else{
+				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";
 			}
 			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
