@@ -322,14 +322,14 @@ GROUP BY ATIVIDADE_ID";
     	google.charts.setOnLoadCallback(drawChart);
 		function drawChart() {
 		  var data = google.visualization.arrayToDataTable([
-		    ['Generation', 'Descendants'],
+		    ['Geração', 'Quantidade'],
 		    [1980, 1], [1985, 3], [1990, 5], [1991, 13]
 		 ]);
 
 		  var options = {
-		    title: 'Descendants by Generation',
-		    hAxis: {title: 'Generation', minValue: 0, maxValue: 3},
-		    vAxis: {title: 'Descendants', minValue: 0, maxValue: 2010},
+		    title: 'Intervale de idades dos funcionários',
+		    hAxis: {title: 'Geração', minValue: 0, maxValue: 3},
+		    vAxis: {title: 'Quantidade', minValue: 0, maxValue: 2010},
 		    trendlines: {
 		      0: {
 		        type: 'exponential',
@@ -350,15 +350,15 @@ GROUP BY ATIVIDADE_ID";
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Dia', 'Checkout', 'Separação','Caixas',],
-          ['<?php echo date('d',strtotime("-3 day"))?>',  140,      99,103],
-          ['<?php echo date('d',strtotime("-2 day"))?>',  110,      103,100],
-          ['<?php echo date('d',strtotime("-1 day"))?>',  98,       108,113],
-          ['<?php echo date('d')?>',  117,      120,99]
+          ['<?php echo date('d/m',strtotime("-3 day"))?>',  140,      99,103],
+          ['<?php echo date('d/m',strtotime("-2 day"))?>',  110,      103,100],
+          ['<?php echo date('d/m',strtotime("-1 day"))?>',  98,       108,113],
+          ['<?php echo date('d/m')?>',  117,      120,99]
         ]);
 
           var options_stacked = {
-          	title: 'Company Performance',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          	title: 'Média de desempenho das 3 principais atividades',
+          hAxis: {title: 'Dias',  titleTextStyle: {color: '#333'}},
           isStacked: true,
           legend: {position: 'top', maxLines: 3},
           vAxis: {minValue: 0, ticks: [0, .3, .6, .9, 1]}
@@ -375,15 +375,15 @@ GROUP BY ATIVIDADE_ID";
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses','Perdas'],
-          ['2016',  1000,      400,100],
-          ['2017',  1170,      460,90],
-          ['2018',  660,       1120,49],
-          ['2019',  1030,      540,90]
+          ['Mẽs', 'Registros', 'Atualizações'],
+          ['05',  1000,      20],
+          ['06',  1170,      60],
+          ['07',  660,       28],
+          ['08',  1030,      40]
         ]);
 
         var options = {
-          title: 'Company Performance',
+          title: 'Registros do período',
           hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
@@ -441,7 +441,7 @@ GROUP BY ATIVIDADE_ID";
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="teste2"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="idade"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="atividades-15dias"></div>
 			</div>	
