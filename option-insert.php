@@ -14,7 +14,6 @@ if(isset($_POST["inserirOpcao"])!=null){
 		if(mysqli_num_rows($cnx)==0){
 			$inserirOpcao="INSERT INTO ".$opcao."(NOME, SITUACAO) VALUES('".$nome."','".$situacao."');";
 			$cnx= mysqli_query($phpmyadmin, $inserirOpcao);
-			echo $inserirOpcao;
 			if(mysqli_error($phpmyadmin)==null){
 				echo "<script>alert('Opção cadastrada com sucesso!!')</script>";
 			}
