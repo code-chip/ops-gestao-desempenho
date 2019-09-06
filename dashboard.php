@@ -55,6 +55,7 @@ GROUP BY ATIVIDADE_ID";
 	<link rel="stylesheet" href="css/login.css" />
 	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
 	<link rel="stylesheet" href="css/bulma.min.css"/>
+	<link rel="stylesheet" href="css/animate.css" />
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -487,7 +488,7 @@ GROUP BY ATIVIDADE_ID";
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
-	  	<img alt="Fill Murray" class="hero-background is-transparent"src="img/wallpaper/data-science17-min.jpg" />
+	  	<img alt="Fill Murray" class="hero-background is-transparent animated bounceInDown" src="img/wallpaper/data-science17-min.jpg" />
 	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
 	  		<?php if($_SESSION["permissao"]>1):{?>
      		<div class="columns bloco" id="graficos">		
