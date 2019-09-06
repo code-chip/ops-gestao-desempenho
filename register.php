@@ -47,18 +47,18 @@ include('menu.php');
 <?php if($_SESSION["permissao"]!=1):?>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="profession-insert.php"><span class="button is-white is-primary is-outlined mw12">Inserir Cargo</span></a>&nbsp&nbsp&nbsp
-		<a href="profession-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Cargo</span></a>&nbsp&nbsp&nbsp
-		<a href="profession-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Cargo</span></a>&nbsp&nbsp&nbsp
-		<a href="profession-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Cargo</span></a>&nbsp&nbsp&nbsp		
+		<a href="option-insert.php"><span class="button is-white is-primary is-outlined mw12">Inserir Opção</span></a>&nbsp&nbsp&nbsp
+		<a href="option-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Opção</span></a>&nbsp&nbsp&nbsp
+		<a href="option-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Opção</span></a>&nbsp&nbsp&nbsp
+		<a href="option-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Opção</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="shift-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Turno</span></a>&nbsp&nbsp&nbsp
-		<a href="shift-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Turno</span></a>&nbsp&nbsp&nbsp
-		<a href="shift-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Turno</span></a>&nbsp&nbsp&nbsp
-		<a href="shift-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Turno</span></a>&nbsp&nbsp&nbsp		
+		<a href="shift-insert.php"><span class="button is-media is-primary is-outlined mw12">Listar Usuários</span></a>&nbsp&nbsp&nbsp
+		<a href="shift-query.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
+		<a href="shift-update.php"><span class="button is-media is-primary is-outlined mw12">Listar Metas</span></a>&nbsp&nbsp&nbsp
+		<a href="shift-remove.php"><span class="button is-media is-primary is-outlined mw12">Listar Desligados</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <div class="field has-addons has-addons-centered">
