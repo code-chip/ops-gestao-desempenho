@@ -55,7 +55,7 @@ include('menu.php');
 </div>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="shift-insert.php"><span class="button is-media is-primary is-outlined mw12">Listar Usuários</span></a>&nbsp&nbsp&nbsp
+		<a href="user-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Usuários</span></a>&nbsp&nbsp&nbsp
 		<a href="shift-query.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
 		<a href="shift-update.php"><span class="button is-media is-primary is-outlined mw12">Listar Metas</span></a>&nbsp&nbsp&nbsp
 		<a href="shift-remove.php"><span class="button is-media is-primary is-outlined mw12">Listar Desligados</span></a>&nbsp&nbsp&nbsp		
