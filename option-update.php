@@ -144,17 +144,19 @@ $nome=trim($_POST['nome']);
 	     	</form>
 			<?php			
 		}
-		else{
-			echo "<script>alert('Nenhum resultado encontrado!!')</script>";
-			$nome=null;
+		else{			
+			?><script>alert('Nenhum resultado encontrado!!')
+			window.location.href ="option-update.php"</script><?php
 		}	
 	}
 	else if($nome==""){
-		echo "<script>alert('Preencher o campo nome é obrigatório!!')</script>";
+		?><script>alert('Preencher o campo nome é obrigatório!!')
+			window.location.href ="option-update.php"</script><?php
 	}
 	else{
-		echo "<script>alert('Selecionar a opção é obrigatório!!')</script>";
-	}	
+		?><script>alert('Selecionar a opção é obrigatório!!')
+			window.location.href ="option-update.php"</script><?php
+	}		
 }
 ?>  	
 	   	</div>	
