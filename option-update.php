@@ -5,7 +5,6 @@ $menuConfiguracao="is-active";
 include('menu.php');
 $opcao=trim($_POST['opcao']);
 $nome=trim($_POST['nome']);
-$situacao=trim($_POST['situacao']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +20,7 @@ $situacao=trim($_POST['situacao']);
 	<section class="section">
 	  	<div class="container">
 	  		<?php if(isset($_POST["consultarOpcao"])==null):{?>
-	   		<form action="option-update.php" method="POST">
+	   		<form id="form1" action="option-update.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
@@ -61,6 +60,7 @@ $situacao=trim($_POST['situacao']);
 						<div class="field-body">
 							<div class="field">
 								<div class="control">
+									<button name="voltar" class="button is-primary" value="Voltar"><a href="register.php">Voltar</a></button>
 									<button name="consultarOpcao" type="submit" class="button is-primary" value="Filtrar">Consultar</button>
 								</div>
 							</div>
@@ -69,15 +69,15 @@ $situacao=trim($_POST['situacao']);
 				</div>		
 	     	</form>
 	     <?php }endif;?>
-<?php if(isset($_POST["consultarOpcao"])!=null):{
+<?php if(isset($_POST["consultarOpcao"])!=null){
 	if($opcao!="" && $nome!=""){
 		$consulta="SELECT * FROM ".$opcao." WHERE NOME LIKE '".$nome."%' LIMIT 1;";
 		$cnx= mysqli_query($phpmyadmin, $consulta);
 		if(mysqli_num_rows($cnx)==1){
 			$dado= $cnx->fetch_array();
-			echo $dado["SITUACAO"];	
+			$_SESSION["idUpOpcao"]=$dado["ID"];
 			?>
-			<form action="option-update.php" method="POST">
+			<form id="form2" action="option-update.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
@@ -85,7 +85,7 @@ $situacao=trim($_POST['situacao']);
 					<div class="field-body">
 						<div class="field" style="max-width:17em;">							
 							<div class="control">
-								<input type="text" class="input" name="nome" value="<?php echo $dado["NOME"]?>">
+								<input type="text" class="input" name="upNome" value="<?php echo $dado["NOME"]?>">
 							</div>
 						</div>
 					</div>
@@ -98,8 +98,8 @@ $situacao=trim($_POST['situacao']);
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select">
-									<select name="opcao">
-										<option selected="selected" value="<?php echo $opcao?>"><?php echo ucfirst($opcao)?></option>
+									<select name="upOpcao">
+										<option selected="selected" value="<?php echo $opcao?>"><?php echo mb_convert_case($opcao, MB_CASE_TITLE, 'UTF-8');?></option>
 									</select>	
 								</div>
 							</div>						
@@ -114,7 +114,7 @@ $situacao=trim($_POST['situacao']);
 						<div class="field" style="max-width:17em;">							
 							<div class="control">
 								<div class="select">
-									<select name="situacao">
+									<select name="upSituacao">
 										<option selected="selected" value="<?php echo $dado["SITUACAO"]?>"><?php echo $dado["SITUACAO"]?></option>
 										<?php if($dado["SITUACAO"]=="Ativo"):?>
 										<option value="Inativo">Inativo</option>
@@ -132,6 +132,7 @@ $situacao=trim($_POST['situacao']);
 						<div class="field-body">
 							<div class="field">
 								<div class="control">
+									<button name="voltar" class="button is-primary" value="Voltar">Voltar</button>
 									<button name="inserirOpcao" type="submit" class="button is-primary" value="Filtrar">Atualizar</button>
 								</div>
 							</div>
@@ -139,19 +140,7 @@ $situacao=trim($_POST['situacao']);
 					</div>
 				</div>		
 	     	</form>
-			<?php
-			$opcao=trim($_POST['opcao']);
-			$nome=trim($_POST['nome']);
-			$situacao=trim($_POST['situacao']);
-			$upOpcao="UPDATE ".$opcao." SET NOME='".$nome."', SITUACAO='".$situacao."' WHERE ID=".$dado["ID"];
-			echo $upOpcao;
-			$cnx=mysqli_query($phpmyadmin, $upOpcao);
-			if(mysqli_error($phpmyadmin)==null){
-				echo "<script>alert('Opção atualizada com sucesso!!')</script>";	
-			}
-			else{
-				echo mysqli_error($phpmyadmin);
-			}			
+			<?php			
 		}
 		else{
 			echo "<script>alert('Nenhum resultado encontrado!!')</script>";
@@ -164,10 +153,24 @@ $situacao=trim($_POST['situacao']);
 	else{
 		echo "<script>alert('Selecionar a opção é obrigatório!!')</script>";
 	}	
-?>     	
-	     	
-	   	</div>
-<?php }endif;?>   	
+}
+?>  	
+	   	</div>	
 	</section>	 	
 </body>
 </html>
+<?php 
+if(isset($_POST["inserirOpcao"])=="Filtrar"){	
+	$upOpcao=trim($_POST['upOpcao']);
+	$upNome=trim($_POST['upNome']);
+	$upSituacao=trim($_POST["upSituacao"]);
+	$updateOpcao="UPDATE ".$upOpcao." SET NOME='".$upNome."', SITUACAO='".$upSituacao."' WHERE ID=".$_SESSION["idUpOpcao"];
+	$cnx=mysqli_query($phpmyadmin, $updateOpcao);
+	if(mysqli_error($phpmyadmin)==null){
+		echo "<script>alert('Opção atualizada com sucesso!!')</script>";	
+	}
+	else{
+		echo mysqli_error($phpmyadmin);
+	}
+}
+?>			
