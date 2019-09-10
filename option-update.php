@@ -130,9 +130,11 @@ $nome=trim($_POST['nome']);
 				<div class="field is-horizontal">
 					<div class="field-label"></div>
 						<div class="field-body">
-							<div class="field">
+							<div class="field is-grouped">
 								<div class="control">
 									<button name="voltar" class="button is-primary" value="Voltar">Voltar</button>
+								</div>
+								<div class="control">	
 									<button name="inserirOpcao" type="submit" class="button is-primary" value="Filtrar">Atualizar</button>
 								</div>
 							</div>
