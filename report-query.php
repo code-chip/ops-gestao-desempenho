@@ -79,7 +79,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
 								<?php $x;} endwhile;?>	
 								</select>
 							</div>
@@ -174,14 +174,14 @@ if( $nome != ""){
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo utf8_encode($vtNome[$i])?></td>
+		<td><?php echo $vtNome[$i]?></td>
 		<td><?php echo $vtPresenca[$i]?></td>
-		<td><?php echo utf8_encode($vtAtividade[$i])?></td>
+		<td><?php echo $vtAtividade[$i]?></td>
 		<td><?php echo $vtMeta[$i]?></td>
 		<td><?php echo $vtAlcancado[$i]?></td>
 		<td><?php echo round($vtDesempenho[$i],2)."%"?></td>			
 		<td><?php echo $vtRegistro[$i]?></td>
-		<td><?php echo $vtObservacao[$i]//utf8_encode($vtObservacao[$i])?></td>
+		<td><?php echo $vtObservacao[$i]?></td>
 	</tr>
 <?php endfor;?>
 	</table>
