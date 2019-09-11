@@ -47,7 +47,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="activity-insert.php" method="POST">
+	   		<form action="option-insert.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
