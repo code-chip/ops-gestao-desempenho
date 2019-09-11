@@ -53,7 +53,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; 
 								while($turno = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = $turno["NOME"]; ?></option>
 								<?php $x;} endwhile;?>	
 							</select>
 							</div>&nbsp&nbsp&nbsp
@@ -74,7 +74,7 @@ $totalAlcancado=0;
 									<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 									$x=0; 
 									while($setor = $con->fetch_array()):{?>
-										<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+										<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
 									<?php $x;} endwhile;?>	
 								</select>	
 							</div>
@@ -160,7 +160,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
 				<div class="control">
-					<input name="nome[]" type="text" class="input" value="<?php echo utf8_encode($vtNome[$i])?>">
+					<input name="nome[]" type="text" class="input" value="<?php echo $vtNome[$i]?>">
 				</div>				
 			</div>
 		</td>		
@@ -173,7 +173,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 								<?php $con = mysqli_query($phpmyadmin , $gdPresenca);
 								$x=0; 
 								while($presenca = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($presenca["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = $presenca["NOME"]; ?></option>
 								<?php $x;} endwhile;?>																		
 							</select>	
 						</div>
@@ -190,7 +190,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 								<?php $con = mysqli_query($phpmyadmin , $gdAtividade);
 								$x=0; 
 								while($atividade = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
 								<?php $x;} endwhile;?>
 							</select>	
 						</div>
