@@ -79,7 +79,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
 								<?php $x;} endwhile;?>	
 								</select>
 							</div>
@@ -202,7 +202,7 @@ if( $nome != ""){
 								<?php $gdPresenca="SELECT ID, NOME FROM PRESENCA WHERE SITUACAO='Ativo' AND ID<>".$vtIdPresenca[$i].";";
 								$con = mysqli_query($phpmyadmin, $gdPresenca); $x=0;
 								while($presenca = $con->fetch_array()):{ ;?>
-									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($presenca["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = $presenca["NOME"]; ?></option>
 							<?php $x;} endwhile;?>															
 						</select>	
 					</div>
@@ -218,7 +218,7 @@ if( $nome != ""){
 								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID<>".$vtIdAtividade[$i].";";
 								$con = mysqli_query($phpmyadmin, $gdAtividade); $x=0;
 								while($atividade = $con->fetch_array()):{ ;?>
-									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
 							<?php $x;} endwhile;?>															
 						</select>	
 					</div>
