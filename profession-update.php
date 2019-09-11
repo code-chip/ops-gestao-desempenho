@@ -1,9 +1,8 @@
 <?php 
 session_start();
 include('login-check.php');
-$menuConfiguracao="is-active";
+$menuConfiguracoes="is-active";
 include('menu.php');
-header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html>
 <html>
