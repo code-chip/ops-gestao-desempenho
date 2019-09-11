@@ -130,7 +130,7 @@ include('menu.php');
 								<?php $gdCargo="SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdCargo); $x=0; 
 								while($cargo = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$cargo["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($cargo["NOME"]);?></option>
+									<option value="<?php echo $vtId[$x]=$cargo["ID"];?>"><?php echo $vtNome[$x]=$cargo["NOME"];?></option>
 								<?php $x;} endwhile;?>														
 							</select>	
 						</div>
@@ -148,7 +148,7 @@ include('menu.php');
 								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdTurno); $x=0; 
 								while($turno = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$turno["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($turno["NOME"]);?></option>
+									<option value="<?php echo $vtId[$x]=$turno["ID"];?>"><?php echo $vtNome[$x]=$turno["NOME"];?></option>
 								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
@@ -166,7 +166,7 @@ include('menu.php');
 								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdGestor); $x=0; 
 								while($gestor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($gestor["NOME"]);?></option>
+									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=$gestor["NOME"];?></option>
 								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
@@ -187,7 +187,7 @@ include('menu.php');
 								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdSetor); $x=0; 
 								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($setor["NOME"]);?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=$setor["NOME"];?></option>
 								<?php $x;} endwhile;?>										
 							</select>	
 						</div>
@@ -215,7 +215,7 @@ include('menu.php');
 								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdPermissao); $x=0; 
 								while($permissao = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($permissao["NOME"]);?></option>
+									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=$permissao["NOME"];?></option>
 								<?php $x;} endwhile;?>																			
 							</select>	
 						</div>
