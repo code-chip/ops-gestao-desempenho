@@ -250,7 +250,7 @@ include('menu.php');
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<a href="register.php"><button class="button is-primary">Voltar</button></a>										
+					<a href="register.php" class="button is-primary">Voltar</a>										
 				</div>
 				<div class="control">
 					<a href="user-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"/></a>
