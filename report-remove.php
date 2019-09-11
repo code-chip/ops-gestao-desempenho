@@ -79,7 +79,7 @@ $totalAlcancado=0;
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($setor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
 								<?php $x;} endwhile;?>	
 								</select>
 							</div>
