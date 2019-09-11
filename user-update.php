@@ -208,7 +208,7 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 								$con = mysqli_query($phpmyadmin , $gdCargo);
 								$x=0; 
 								while($cargo = $con->fetch_array()):{ $vtId[$x] = $cargo["ID"];?>
-									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($cargo["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = $cargo["NOME"]; ?></option>
 							<?php $x;} endwhile;?>															
 						</select>	
 					</div>
@@ -228,7 +228,7 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 								$con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; 
 								while($turno = $con->fetch_array()):{ $vtId[$x] = $turno["ID"];?>
-									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = $turno["NOME"]; ?></option>
 							<?php $x;} endwhile;?>	
 							</select>	
 						</div>
@@ -247,7 +247,7 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo' AND ID<>".$dados["GESTOR_ID"]; 
 								$con = mysqli_query($phpmyadmin , $gdGestor);
 								$x=0; while($gestor = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($gestor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=$gestor["NOME"]; ?></option>
 								<?php $x;} endwhile;?>								
 							</select>	
 						</div>
@@ -269,7 +269,7 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID<>".$dados["SETOR_ID"]; 
 								$con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; while($setor = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($setor["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$setor["ID"];?>"><?php echo $vtNome[$x]=$setor["NOME"]; ?></option>
 								<?php $x;} endwhile;?>											
 							</select>	
 						</div>
@@ -298,7 +298,7 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo' AND ID<>".$dados["PERMISSAO_ID"]; 
 								$con = mysqli_query($phpmyadmin , $gdPermissao);
 								$x=0; while($permissao = $con->fetch_array()):{ ?>
-									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=utf8_encode($permissao["NOME"]); ?></option>
+									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=$permissao["NOME"]; ?></option>
 								<?php $x;} endwhile;?>																		
 							</select>	
 						</div>
@@ -402,10 +402,10 @@ if(isset($_POST['atualizar'])){
 				$desligadoEm=", DESLIGADO_EM=NULL";
 			}
 			if(mysqli_num_rows($cx)==0 || mysqli_num_rows($cx)==""){
-				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";				
+				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";				
 			}
 			else{
-				$upUser="UPDATE USUARIO SET NOME='".utf8_encode($nome)."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";
+				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";
 			}
 			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
