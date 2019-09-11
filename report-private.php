@@ -50,7 +50,7 @@ $totalDesempenho=0;
 								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
 								while($atividade = $con->fetch_array()):{ $vtId[$x] = $atividade["ID"];?>
-									<option value="AND A.ID=<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = utf8_encode($atividade["NOME"]); ?></option>
+									<option value="AND A.ID=<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
 								<?php $x;} endwhile;?>								
 							</select>
 						</div>
