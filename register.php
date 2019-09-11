@@ -44,7 +44,8 @@ include('menu.php');
 		<?php if($_SESSION["permissao"]>2):?><a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Usuário</span></a>&nbsp&nbsp&nbsp<?php endif;?>		
 	</div>	
 </div>
-<?php if($_SESSION["permissao"]!=1):?>
+<br/>
+<?php if($_SESSION["permissao"]!=1):?>	
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="option-insert.php"><span class="button is-white is-primary is-outlined mw12">Inserir Opção</span></a>&nbsp&nbsp&nbsp
@@ -53,36 +54,31 @@ include('menu.php');
 		<a href="option-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Opção</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
+<br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="user-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Usuários</span></a>&nbsp&nbsp&nbsp
-		<a href="option-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
-		<a href="meta-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Metas</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Listar Metas</span></a>&nbsp&nbsp&nbsp
 		<a href="user-list-off.php"><span class="button is-media is-primary is-outlined mw12">Listar Desligados</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
+<br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="manager-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Gestor</a>&nbsp&nbsp&nbsp
-		<a href="manager-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Gestor</span></a>&nbsp&nbsp&nbsp
-		<a href="manager-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Gestor</span></a>&nbsp&nbsp&nbsp
-		<a href="manager-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Gestor</span></a>&nbsp&nbsp&nbsp		
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Gestor</a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Gestor</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Gestor</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Gestor</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
+<br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="sector-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Setor</span></a>&nbsp&nbsp&nbsp
-		<a href="sector-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Setor</span></a>&nbsp&nbsp&nbsp
-		<a href="sector-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Setor</span></a>&nbsp&nbsp&nbsp
-		<a href="sector-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Setor</span></a>&nbsp&nbsp&nbsp		
-	</div>	
-</div>
-<div class="field has-addons has-addons-centered">
-	<div class="buttons">								
-		<a href="permission-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="permission-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="permission-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="permission-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Permissão</span></a>&nbsp&nbsp&nbsp		
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Permissão</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Permissão</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <?php endif;?>
