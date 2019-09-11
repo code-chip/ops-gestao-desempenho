@@ -53,9 +53,12 @@ $busca= trim($_POST['busca']);
 			<div class="field is-horizontal">
 				<div class="field-label"></div>
 				<div class="field-body">
-					<div class="field">
+					<div class="field is-grouped">
 						<div class="control">
 							<button name="consultar" type="submit" class="button is-primary">Consultar</button>
+						</div>
+						<div class="control">
+							<a href="register.php" class="button is-primary">Voltar</a>	
 						</div>
 					</div>
 				</div>
