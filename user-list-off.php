@@ -69,7 +69,7 @@ ORDER BY U.SITUACAO, U.NOME";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo utf8_encode($vtNome[$i])?></td>
+		<td><?php echo $vtNome[$i]?></td>
 		<td><?php echo $vtMatricula[$i]?></td>
 		<td><?php echo $vtCargo[$i]?></td>
 		<td><?php echo $vtTurno[$i]?></td>
