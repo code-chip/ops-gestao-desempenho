@@ -85,7 +85,7 @@ $totalAlcancado=0;
 								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; while($turno = $con->fetch_array()):{?>
-									<option value="AND TURNO_ID=<?php echo $vtId[$x]=$turno["ID"]; ?>"><?php echo $vtNome[$x] = utf8_encode($turno["NOME"]); ?></option>
+									<option value="AND TURNO_ID=<?php echo $vtId[$x]=$turno["ID"]; ?>"><?php echo $vtNome[$x] = $turno["NOME"]; ?></option>
 								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
@@ -225,7 +225,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td><?php echo utf8_encode($vtNome[$i])?></td>
+		<td><?php echo $vtNome[$i]?></td>
 		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
