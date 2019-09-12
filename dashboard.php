@@ -44,6 +44,25 @@ GROUP BY ATIVIDADE_ID";
 		$vtG6Acesso[$x]=$G6["ACESSOS"];
 		$x++;
 	}
+  /*DASH SEXO*/
+  $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO GROUP BY SEXO ORDER BY SEXO DESC;";
+  $cnx= mysqli_query($phpmyadmin, $querySexo);
+  $x=0;
+  while ($sexo= $cnx->fetch_array()) {
+    $vtQtd[$x]=$sexo["QTD"];
+    $x++;
+  }
+  /*DASH SEXO POR TURNO*/
+  $querySexoTurno="SELECT T.NOME, SEXO, COUNT(*) AS QTD FROM USUARIO INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
+WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
+  $cnx= mysqli_query($phpmyadmin, $querySexoTurno);
+  $x=0;
+  while ($sexoTurno= $cnx->fetch_array()) {
+    $vtTurno[$x]=$sexoTurno["NOME"];
+    $vtTurno[$x]=$vtTurno[$x]." ".$sexoTurno["SEXO"];
+    $vtQtdTurno[$x]=$sexoTurno["QTD"];
+    $x++;
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -206,8 +225,8 @@ GROUP BY ATIVIDADE_ID";
       	function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Sexo', 'Quantidade'],
-          ['Masculino',     11],
-          ['Feminino',     2]          
+          ['Masculino',     parseFloat(<?php echo $vtQtd[0];?>)],
+          ['Feminino',     parseFloat(<?php echo $vtQtd[1];?>)]          
         ]);
 
         var options = {
@@ -225,10 +244,10 @@ GROUP BY ATIVIDADE_ID";
       	function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Sexo', 'Quantidade'],
-          ['Matutino F',     11],
-          ['Matutino M',     2],
-          ['Vespetino F',     2],
-          ['Vespetino F',     2]          
+          ['<?php echo $vtTurno[0]?>', parseFloat(<?php echo $vtQtdTurno[0]?>)],
+          ['<?php echo $vtTurno[1]?>', parseFloat(<?php echo $vtQtdTurno[1]?>)],
+          ['<?php echo $vtTurno[2]?>', parseFloat(<?php echo $vtQtdTurno[2]?>)],
+          ['<?php echo $vtTurno[3]?>', parseFloat(<?php echo $vtQtdTurno[3]?>)]          
         ]);
 
         var options = {
