@@ -180,7 +180,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 
 		    var options = {
 		    	hAxis: {
-		        	title: 'Variação entre turnos em 60 dias'
+		        	title: 'Variação entre turnos em 30 dias'
 		        },
 		        vAxis: {
 		        	title: 'Média de Desempenho'
