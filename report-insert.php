@@ -215,7 +215,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro" value="<?php echo date('Y-m-d');?>" maxlength="10">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>" maxlength="10">
 				</div>				
 			</div>
 		</td>
