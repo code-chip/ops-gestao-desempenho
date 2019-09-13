@@ -35,10 +35,10 @@ $totalAlcancado=0;
 	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if($turno =="" && isset($_POST['salvarDados'])==null ): ?>
+	<?php if($turno =="" && isset($_POST['salvarDados'])==null): ?>
 	<section class="section">
 	<div class="container">		
-	<form id="form1" action="" method="POST">
+	<form id="form1" action="" method="POST" onSubmit="(return(preencheCheckbox())">
 		<div class="field is-horizontal">			
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
@@ -87,7 +87,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary" value="Filtrar">Filtrar</button>
+							<button name="consultar" type="submit" class="button is-primary" onClick=""value="Filtrar">Filtrar</button>
 						</div>
 					</div>
 				</div>
@@ -131,7 +131,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
 		<th>N°</th>
-		<th class="ocultaColunaId">ID</th>
+		<th>+</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
@@ -150,12 +150,12 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td class="field ocultaColunaId"><!--COLUNA ID-->
+		<td class="field ocultaColunadId"><!--COLUNA ID-->
 			<div class="field">				
-				<div class="control">
-					<input name="id[]" type="text" class="input" value="<?php echo $vtId[$i]?>">
-				</div>				
-			</div>
+				<div class="control">					
+		  			<input name="id[]" id="teste3" type="checkbox" class="checkbox" checkbox="checked" value="<?php echo $vtId[$i]?>">
+		  		</div>
+		  	</div>
 		</td>
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
@@ -201,7 +201,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" id="telefone" maxlength="4">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" id="meta" onclick="limpaCampo()" maxlength="4">
 				</div>				
 			</div>
 		</td>
@@ -228,7 +228,11 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		</td>						
 	</tr>
 <form>	
-<?php endfor;?>
+<?php endfor; 
+echo "<script type='text/javascript'>
+		alert('Selecione o Checkbox da coluna + para salvar ou selecione a opção Todos em Inserção.');
+		</script>";
+?>
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
@@ -246,20 +250,17 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="inserir">
-								<option selected="selected" value="todos">Todos</option>	
-								<option value="especifico">Específico</option>								
+							<select name="inserir" id="selectBox" onchange="changeFunc();">									
+								<option selected="selected" value="2">Específico</option>
+								<option value="1">Todos</option>								
 							</select>	
-						</div>
-						<!--<div class="control">-->
-						<!--<button type="submit" class="button is-primary">Filtrar</button>-->
-						<input type="submit" class="button is-primary" id="submitQuery" value="Atualizar"/>						
+						</div>										
 					</div>
 					<div class="control">
 						<a href="report-insert.php" class="button">Voltar</a>
-					</div>
+					</div>					
 					<div class="control">
-						<input name="Limpar" type="submit" class="button is-primary" onClick="history.go(0)" value="Limpar"/>
+						<input name="Limpar" type="button" class="button is-primary" onClick="preencheCheckbox()" value="Limpar"/>
 					</div>
 					<input name="salvarDados" type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
 				</div>						
@@ -267,10 +268,29 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		</div>
 	</form>	
 <?php endif; ?>
+<script type="text/javascript">		
+		function changeFunc() {
+		    var selectBox = document.getElementById("selectBox");
+		    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		    if(selectedValue==1){
+		    	var inputs = $('input[type=checkbox]');
+		    	inputs.attr('checked', true);
+		  		inputs.prop('checked', true);		    		
+		    }
+		    else{
+		    	var inputs = $('input[type=checkbox]');
+		    	inputs.attr('checked', false);
+		  		inputs.prop('checked', false);		    		
+		    }		    
+	    }
+	    function limpaCampo(){
+	    	document.getElementById('meta').value=''; // Limpa o campo
+	    }
+    </script>
 </body>
 </html>
 <?php
-if(isset($_POST['salvarDados'])){
+if(isset($_POST['salvarDados']) && $ids!=null){
 	$ids= array_filter($_POST['id']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
@@ -283,7 +303,7 @@ if(isset($_POST['salvarDados'])){
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
 	$turnoresult=$cnx->fetch_array();
 	$turno=$turnoresult["TURNO_ID"];
-	for( $i = 0; $i < sizeof($atividades); $i++ ){
+	for( $i = 0; $i < sizeof($ids); $i++ ){
 		if($alcancados[$i]==0 || $alcancados[$i]==null){
 			$desempenho=0;
 			$alcancados[$i]=0;
@@ -307,5 +327,11 @@ if(isset($_POST['salvarDados'])){
 		</script><?php
 	}
 	//header("Location: /gestaodesempenho/report-insert.php");	
+}
+else if(isset($_POST['salvarDados'])!=null){
+	?><script type="text/javascript">
+			alert('Nenhum Checkbox foi selecionado p/ salvar!!');
+			window.location.href=window.location.href;
+		</script><?php
 }
 ?>
