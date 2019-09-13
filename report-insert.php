@@ -1,13 +1,8 @@
 <style type="text/css">
-	/*$table-cell-padding: .75rem !default; $table-sm-cell-padding: .3rem !default; $table-bg: transparent !default; $table-bg-accent: rgba(0,0,0,.05) !default; $table-bg-hover: rgba(0,0,0,.075) !default; $table-bg-active: $table-bg-hover !default; $table-border-width: $border-width !default; $table-border-color: $gray-lighter !default;*/
-	.coluna{
-		max-width:7em;
-	}
 </style>
 <?php
 session_start();
 include('connection.php');
-//require_once('js/loader.js');
 include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
@@ -92,14 +87,12 @@ $totalAlcancado=0;
 					</div>
 				</div>
 			</div>
-		</div>
-		
+		</div>		
 	</form>
 	</div>
 	</section>	
 	<?php endif; ?>		
 </div>
-
 <?php
 if( $turno != "" && $setor != ""){	
 	$query="SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo'";
@@ -128,14 +121,14 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 <?php if($contador !=0) : ?>
 <hr/>
 	<form id="form2" action="" method="POST">	
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
 		<th>+</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
-		<th class="coluna">Meta</th>
+		<th style="max-width:7em;">Meta</th>
 		<th>Alcançado</th>		
 		<th>Data</th>
 		<th>Observação</th>  			
@@ -150,17 +143,17 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td class="field ocultaColunadId"><!--COLUNA ID-->
+		<td class="field"><!--COLUNA ID-->
 			<div class="field">				
 				<div class="control">					
-		  			<input name="id[]" id="teste3" type="checkbox" class="checkbox" checkbox="checked" value="<?php echo $vtId[$i]?>">
+		  			<input name="id[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $vtId[$i]?>">
 		  		</div>
 		  	</div>
 		</td>
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
 				<div class="control">
-					<input name="nome[]" type="text" class="input" value="<?php echo $vtNome[$i]?>">
+					<input name="nome[]" type="text" class="input is-size-7-touch" value="<?php echo $vtNome[$i]?>">
 				</div>				
 			</div>
 		</td>		
@@ -168,7 +161,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<div class="select">
+						<div class="select is-size-7-touch">
 							<select name="presenca[]">								
 								<?php $con = mysqli_query($phpmyadmin , $gdPresenca);
 								$x=0; 
@@ -185,7 +178,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<div class="select">
+						<div class="select is-size-7-touch">
 							<select name="atividade[]">
 								<?php $con = mysqli_query($phpmyadmin , $gdAtividade);
 								$x=0; 
@@ -201,28 +194,28 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" id="meta" onclick="limpaCampo()" maxlength="4">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" id="meta" onclick="limpaCampo()" maxlength="4">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA ALCANÇADO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input desempenho" placeholder="Obrigatório" maxlength="4">
+					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>" maxlength="10">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>" maxlength="10">
 				</div>				
 			</div>
 		</td>
 		<td><!--COLUNA OBSERVAÇÃO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="observacao[]" type="text" class="input" placeholder="Máximo 200 caracteres." maxlength="200">
+					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200">
 				</div>				
 			</div>
 		</td>						
@@ -230,7 +223,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 <form>	
 <?php endfor; 
 echo "<script type='text/javascript'>
-		alert('Selecione o Checkbox da coluna + para salvar ou selecione a opção Todos em Inserção.');
+		alert('Clique no Checkbox da coluna + ou Selecione a opção Todos em Inserção p/ SALVAR.');
 		</script>";
 ?>
 	</table>
@@ -268,7 +261,7 @@ echo "<script type='text/javascript'>
 		</div>
 	</form>	
 <?php endif; ?>
-<script type="text/javascript">		
+	<script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
 		    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
@@ -326,12 +319,11 @@ if(isset($_POST['salvarDados']) && $ids!=null){
 			window.location.href=window.location.href;
 		</script><?php
 	}
-	//header("Location: /gestaodesempenho/report-insert.php");	
 }
 else if(isset($_POST['salvarDados'])!=null){
 	?><script type="text/javascript">
-			alert('Nenhum Checkbox foi selecionado p/ salvar!!');
-			window.location.href=window.location.href;
-		</script><?php
+		alert('Nenhum Checkbox foi selecionado p/ salvar!!');
+		window.location.href=window.location.href;
+	</script><?php
 }
 ?>
