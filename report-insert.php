@@ -1,8 +1,12 @@
 <style type="text/css">
+	.coluna{
+		max-width:7em;
+	}
 </style>
 <?php
 session_start();
 include('connection.php');
+//require_once('js/loader.js');
 include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
@@ -87,7 +91,8 @@ $totalAlcancado=0;
 					</div>
 				</div>
 			</div>
-		</div>		
+		</div>
+		
 	</form>
 	</div>
 	</section>	
@@ -124,11 +129,12 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
+		<th class="field ocultaColunaId">ID</th>
 		<th>+</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
-		<th style="max-width:7em;">Meta</th>
+		<th class="coluna">Meta</th>
 		<th>Alcançado</th>		
 		<th>Data</th>
 		<th>Observação</th>  			
@@ -143,13 +149,21 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
-		<td class="field"><!--COLUNA ID-->
+		<td class="field ocultaColunaId"><!--COLUNA ID-->
 			<div class="field">				
 				<div class="control">					
-		  			<input name="id[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $vtId[$i]?>">
+		  			<input name="id[]" id="teste3" type="text" class="is-size-7-touch" value="<?php echo $vtId[$i]?>">
 		  		</div>
 		  	</div>
 		</td>
+		<td class="field"><!--COLUNA VETOR-->
+			<div class="field">				
+				<div class="control">					
+		  			<input name="vetor[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $i?>">
+		  		</div>
+		  	</div>
+		</td>
+		
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
 				<div class="control">
@@ -194,7 +208,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" id="meta" onclick="limpaCampo()" maxlength="4">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4">
 				</div>				
 			</div>
 		</td>
@@ -233,7 +247,6 @@ echo "<script type='text/javascript'>
 		</div>
 	</a>
 	<br/>
-	<form id="form1" action="" method="POST" >
 		<div class="field is-grouped is-grouped-right">			
 			<!--SELEÇÃO TURNO-->
 			<div class="field-label is-normal">
@@ -261,7 +274,7 @@ echo "<script type='text/javascript'>
 		</div>
 	</form>	
 <?php endif; ?>
-	<script type="text/javascript">		
+<script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
 		    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
@@ -283,8 +296,9 @@ echo "<script type='text/javascript'>
 </body>
 </html>
 <?php
-if(isset($_POST['salvarDados']) && $ids!=null){
+if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 	$ids= array_filter($_POST['id']);
+	$pvt= array_filter($_POST['vetor']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
 	$metas = array_filter($_POST['meta']);
@@ -296,16 +310,21 @@ if(isset($_POST['salvarDados']) && $ids!=null){
 	$cnx= mysqli_query($phpmyadmin, $checkTurno);
 	$turnoresult=$cnx->fetch_array();
 	$turno=$turnoresult["TURNO_ID"];
-	for( $i = 0; $i < sizeof($ids); $i++ ){
-		if($alcancados[$i]==0 || $alcancados[$i]==null){
-			$desempenho=0;
-			$alcancados[$i]=0;
+	$v=0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
+	for( $i = 0; $i < sizeof($presencas); $i++ ){
+		if($pvt[$v]==$i){
+			if($alcancados[$i]==0 || $alcancados[$i]==null){
+				$desempenho=0;
+				$alcancados[$i]=0;
+			}
+			else{
+				$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);	
+			}				
+			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";
+			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
+			$v++;
 		}
-		else{
-			$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);	
-		}	
-		$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";		
-		$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);			 
+
 	}	
 	if(mysqli_error($phpmyadmin)==null){	
 		?><script type="text/javascript">
