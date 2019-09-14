@@ -355,7 +355,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
         ['<?php echo $vtG4nome[1]?>', parseFloat('<?php echo $vtG4media[1]?>'), "silver"],
         ['<?php echo $vtG4nome[3]?>', parseFloat('<?php echo $vtG4media[3]?>'), "#b87333"],
         ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "#b87333"],
-        ["Lucas Souza", 99.45, "color: #e5e4e2"]
+        ['<?php echo $vtG4nome[5]?>', parseFloat('<?php echo $vtG4media[5]?>'), "color: #e5e4e2"]
       ]);
       var view = new google.visualization.DataView(data);
       view.setColumns([0, 1,
