@@ -68,7 +68,10 @@ $busca= trim($_POST['busca']);
 	<?php endif;?>
 <?php
 if( $busca != ""){
-	if($filtro=="MATRICULA="){
+	if($_SESSION["permissao"]==1){
+		$f="USUARIO.MATRICULA=".$_SESSION["matriculaLogada"].";";
+	}
+	else if($filtro=="MATRICULA="){
 		$f="USUARIO.".$filtro."".$busca." LIMIT 1;";
 	}
 	else{
@@ -92,7 +95,13 @@ WHERE ".$f;
 			window.location.href=window.location.href;
 		</script> <?php			
 	}
-}	
+}
+else if(isset($_POST['consultar'])!=null){
+	?><script type="text/javascript">			
+		alert('O Preenchimento do campo busca é obrigatório.!');
+		window.location.href=window.location.href;
+	</script> <?php	
+}		
 ?>
 <?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
