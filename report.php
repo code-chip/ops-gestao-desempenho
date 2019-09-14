@@ -191,7 +191,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 		<div class="column is-mobile" id="dash-desempenho"></div>
 		<div class="column is-mobile" id="dash-variacao"></div>
 		<div class="column is-mobile" id="dash-ranking"></div>
-		<div class="column is-mobile" id="sexo"></div>
+		<div class="column is-mobile" id="dash-top5"></div>
 	</div>	
 	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
@@ -369,7 +369,7 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
-      var chart = new google.visualization.ColumnChart(document.getElementById("sexo"));
+      var chart = new google.visualization.ColumnChart(document.getElementById("dash-top5"));
       chart.draw(view, options);
   }
   </script>
