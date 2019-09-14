@@ -85,9 +85,13 @@ $busca= trim($_REQUEST['busca']);
 </div>	
 <?php
 if( $busca != ""){
-	if($filtro=="MATRICULA="){
-		$f="U.".$filtro."".$busca." LIMIT 1;";
+	if($_SESSION["permissao"]==1){
+		$f="U.MATRICULA=".$_SESSION["matriculaLogada"].";";
+		echo $f;
 	}
+	else if($filtro=="MATRICULA="){
+		$f="U.".$filtro."".$busca." LIMIT 1;";
+	}	
 	else{
 		$f="U.".$filtro."'".$busca."' LIMIT 1;";
 	}	
@@ -108,6 +112,12 @@ INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 		</script> <?php			
 	}
 	$_SESSION["upUser"]=$dados["ID"];
+}
+else if(isset($_POST['consultar'])!=null){
+	?><script type="text/javascript">			
+		alert('O Preenchimento do campo busca é obrigatório.!');
+		window.location.href=window.location.href;
+	</script> <?php	
 }	
 ?>
 <!--FINAL DO FORM FILTRAR CONSULTA-->
@@ -383,6 +393,10 @@ if(isset($_POST['atualizar'])){
 	$permissao = trim($_POST['permissao']);
 	$situacao = trim($_POST['situacao']);
 	$observacao = trim($_POST['observacao']);
+	//VERIFICA PERMISSÃO DO USUÁRIO, SE A PERMISSÃO FOR A MÍNIMA NÃO ALTERAR;
+	if($_SESSION["permissao"]==1){
+		$permissao=1;	
+	}
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."' AND ID<>".$_SESSION["upUser"]."";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
