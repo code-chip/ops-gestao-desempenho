@@ -15,15 +15,33 @@ $turno = trim($_POST['turno']);
 $setor= trim($_REQUEST['setor']);
 $contador = 0;
 $totalAlcancado=0;
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
+	<meta charset="UTF-8">
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
-    <meta charset="UTF-8">   
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">    
+    <script type="text/javascript">		
+		function changeFunc() {
+		    var selectBox = document.getElementById("selectBox");
+		    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		    if(selectedValue==1){
+		    	var inputs = $('input[type=checkbox]');
+		    	inputs.attr('checked', true);
+		  		inputs.prop('checked', true);		    		
+		    }
+		    else{
+		    	var inputs = $('input[type=checkbox]');
+		    	inputs.attr('checked', false);
+		  		inputs.prop('checked', false);		    		
+		    }		    
+	    }
+	    function limpaCampo(){
+	    	document.getElementById('meta').value=''; // Limpa o campo
+	    }
+    </script>   
 </head>
 <body>
 	<?php
@@ -91,8 +109,7 @@ $totalAlcancado=0;
 					</div>
 				</div>
 			</div>
-		</div>
-		
+		</div>		
 	</form>
 	</div>
 	</section>	
@@ -234,12 +251,11 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 			</div>
 		</td>						
 	</tr>
-<form>	
 <?php endfor; 
-echo "<script type='text/javascript'>
+	echo "<script type='text/javascript'>
 		alert('Clique no Checkbox da coluna + ou Selecione a opção Todos em Inserção p/ SALVAR.');
 		</script>";
-?>
+	?>
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
@@ -247,52 +263,33 @@ echo "<script type='text/javascript'>
 		</div>
 	</a>
 	<br/>
-		<div class="field is-grouped is-grouped-right">			
-			<!--SELEÇÃO TURNO-->
-			<div class="field-label is-normal">
-				<label for="turno" class="label">Inserção:</label>
-			</div>
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control">
-						<div class="select">
-							<select name="inserir" id="selectBox" onchange="changeFunc();">									
-								<option selected="selected" value="2">Específico</option>
-								<option value="1">Todos</option>								
-							</select>	
-						</div>										
-					</div>
-					<div class="control">
-						<a href="report-insert.php" class="button">Voltar</a>
-					</div>					
-					<div class="control">
-						<input name="Limpar" type="button" class="button is-primary" onClick="preencheCheckbox()" value="Limpar"/>
-					</div>
-					<input name="salvarDados" type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
-				</div>						
-			</div>
+	<div class="field is-grouped is-grouped-right">			
+		<div class="field-label is-normal">
+			<label for="turno" class="label">Inserção:</label>
 		</div>
+		<div class="field-body">
+			<div class="field is-grouped">							
+				<div class="control">
+					<div class="select">
+						<select name="inserir" id="selectBox" onchange="changeFunc();">									
+							<option selected="selected" value="2">Específico</option>
+							<option value="1">Todos</option>								
+						</select>	
+					</div>										
+				</div>
+			<div class="control">
+				<a href="report-insert.php" class="button">Voltar</a>
+			</div>					
+			<div class="control">
+				<input name="Limpar" type="button" class="button is-primary" onClick="preencheCheckbox()" value="Limpar"/>
+			</div>
+			<div class="control">
+				<input name="salvarDados" type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
+			</div>						
+		</div>
+	</div>
 	</form>	
 <?php endif; ?>
-<script type="text/javascript">		
-		function changeFunc() {
-		    var selectBox = document.getElementById("selectBox");
-		    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-		    if(selectedValue==1){
-		    	var inputs = $('input[type=checkbox]');
-		    	inputs.attr('checked', true);
-		  		inputs.prop('checked', true);		    		
-		    }
-		    else{
-		    	var inputs = $('input[type=checkbox]');
-		    	inputs.attr('checked', false);
-		  		inputs.prop('checked', false);		    		
-		    }		    
-	    }
-	    function limpaCampo(){
-	    	document.getElementById('meta').value=''; // Limpa o campo
-	    }
-    </script>
 </body>
 </html>
 <?php
