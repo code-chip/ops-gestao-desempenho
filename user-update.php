@@ -87,7 +87,6 @@ $busca= trim($_REQUEST['busca']);
 if( $busca != ""){
 	if($_SESSION["permissao"]==1){
 		$f="U.MATRICULA=".$_SESSION["matriculaLogada"].";";
-		echo $f;
 	}
 	else if($filtro=="MATRICULA="){
 		$f="U.".$filtro."".$busca." LIMIT 1;";
