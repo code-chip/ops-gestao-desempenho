@@ -72,7 +72,7 @@ $menuConfiguracoes;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?> hvr-grow">Início</a>
-					<a href="dashboard.php" class="navbar-item <?php echo $menuDash?> hvr-grow">Dashboard</a>
+					<a href="dashboard.php" class="navbar-item <?php echo $menuDashboard?> hvr-grow">Dashboard</a>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuMeta?> hvr-grow">Meta</a>					
 						<div class="navbar-dropdown">
