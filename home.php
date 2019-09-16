@@ -14,6 +14,7 @@ $dataAtual=date_create();
 $ultimoLogin=date_create($cnx["ULTIMO_LOGIN"]);
 $resultado = date_diff($ultimoLogin, $dataAtual);
 $dias= date_interval_format($resultado, '%a');
+list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,21 +34,44 @@ $dias= date_interval_format($resultado, '%a');
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
-		     	<h1 class="title animated bounceInDown">
-		        	Bem vindo
+		     	<h1 class="title animated bounceInDown"><?php		     		
+		        	if($_SESSION["$visualizou"]==0){
+		        		echo "Bem vindo";
+		        		$_SESSION["$visualizou"]=1;		        	
+		        	}
+		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="6" && date('H', time())<="11"){		        		
+		        		echo "Bom dia";
+		        		$_SESSION["$visualizou"]=2;
+		        	}
+		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="12" && date('H', time())<="17"){		        		
+		        		echo "Boa tarde";
+		        		$_SESSION["$visualizou"]=2;
+		        	}
+		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="18" && date('H', time())<="23"){		        		
+		        		echo "Boa tarde";
+		        		$_SESSION["$visualizou"]=2;
+		        	}
+		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="00" && date('H', time())<="05"){		        		
+		        		echo "Boa madrugada";
+		        		$_SESSION["$visualizou"]=2;
+		        	}
+		        	else{
+		        		echo "Olá";
+		        	}
+		        	?>
 		      	</h1>
 		      	<h3 class="subtitle animated bounceInRight"><?php
 		      		if($acesso==1){
-		      			echo $_SESSION["nameUser"].", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
+		      			echo $nome.", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 		      		}
 		      		else if($dias>2 && $dias <7){
-		        		echo "Seu último acesso foi há mais de 3 dias, sentimos sua falta ".$_SESSION["nameUser"]."!!";
+		        		echo "Seu último acesso foi há mais de 3 dias, sentimos sua falta ".$nome."!!";
 		        	}
 		        	else if($dias>6){ 
-		        		echo $_SESSION["nameUser"].", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
+		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
 		        	else{
-		        		echo $_SESSION["nameUser"];
+		        		echo $nome;
 		        	}
 		        	?>
 		      	</h3>
