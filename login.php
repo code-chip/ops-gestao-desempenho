@@ -23,14 +23,16 @@ if($row == 1){//ADICIONAR INFORMAÇÕES DE ACESSO NA TABELA.
 	$check2=mysqli_query($phpmyadmin, $monthCheck);
 	$cc=$check->fetch_array();
 	$cm=$check2->fetch_array();	
-	$acessoTotal=$cc["ACESSO_TOTAL"]+1;		
+	$acessoTotal=$cc["ACESSO_TOTAL"]+1;
+	// DEFINE O FUSO HORARIO COMO O HORARIO DE BRASILIA
+    date_default_timezone_set('America/Sao_Paulo');		
 	if(mysqli_num_rows($check2)!=0){//SE JÁ HOUVE REGISTRO DE ACESSO NO MÊS, O MESMO REGISTRO SERÁ ATUALIZADO.
 		$acesso=$cm["ACESSO"]+1;
-		$upAcesso="UPDATE ACESSO SET ULTIMO_LOGIN='".date('Y-m-d H:i:s')."', ACESSO=".$acesso.", ACESSO_TOTAL=".$acessoTotal." WHERE USUARIO_ID=".$cnx["ID"]." AND ANO_MES='".date('Y-m')."';";
+		$upAcesso="UPDATE ACESSO SET ULTIMO_LOGIN='".date('Y-m-d H:i:s', time())."', ACESSO=".$acesso.", ACESSO_TOTAL=".$acessoTotal." WHERE USUARIO_ID=".$cnx["ID"]." AND ANO_MES='".date('Y-m')."';";
 		$up=mysqli_query($phpmyadmin, $upAcesso);		
 	}
 	else{//CASO SEJA O PRIMEIRO ACESSO DO MÊS, INSERE UM NOVO REGISTRO NA TABELA.		
-		$addAcesso="INSERT INTO ACESSO(USUARIO_ID, ULTIMO_LOGIN, ANO_MES ,ACESSO, ACESSO_TOTAL) VALUES(".$cnx["ID"].", '".date('Y-m-d H:i:s')."','".date('Y-m')."',1,".$acessoTotal.")";
+		$addAcesso="INSERT INTO ACESSO(USUARIO_ID, ULTIMO_LOGIN, ANO_MES ,ACESSO, ACESSO_TOTAL) VALUES(".$cnx["ID"].", '".date('Y-m-d H:i:s',time())."','".date('Y-m')."',1,".$acessoTotal.")";
 		$up=mysqli_query($phpmyadmin, $addAcesso);
 	}
 	$_SESSION['usuario'] = $_POST['usuario'];
