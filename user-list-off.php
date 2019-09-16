@@ -45,7 +45,7 @@ ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME";
 	<tr>
 		<th>N°</th>
 		<th>Funcionário</th>
-		<th>Gestor</th>
+		<th>Matr.</th>
 		<th>Cargo</th>		
 		<th class="coluna">Turno</th>
 		<th >Gestor</th>
