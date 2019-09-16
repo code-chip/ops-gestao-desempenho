@@ -5,6 +5,7 @@ include('connection.php');
 header('Content-Type: text/html; charset=UTF-8');
 ini_set('display_errors', 1);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
+date_default_timezone_set('America/Sao_Paulo');
 //print_r($_SESSION);exit();
 //$menuInicio="is-active";
 $menuInicio;
