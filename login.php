@@ -35,6 +35,7 @@ if($row == 1){//ADICIONAR INFORMAÇÕES DE ACESSO NA TABELA.
 		$addAcesso="INSERT INTO ACESSO(USUARIO_ID, ULTIMO_LOGIN, ANO_MES ,ACESSO, ACESSO_TOTAL) VALUES(".$cnx["ID"].", '".date('Y-m-d H:i:s',time())."','".date('Y-m')."',1,".$acessoTotal.")";
 		$up=mysqli_query($phpmyadmin, $addAcesso);
 	}
+	$_SESSION["$visualizou"]=false;//VARIAVEL P/ PÁGINA HOME.
 	$_SESSION['usuario'] = $_POST['usuario'];
 	header('Location: home.php');
 	exit();
