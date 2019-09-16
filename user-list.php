@@ -11,7 +11,7 @@ INNER JOIN TURNO T ON T.ID=U.TURNO_ID
 INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID
 INNER JOIN CARGO C ON C.ID=U.CARGO_ID
 INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID WHERE U.SITUACAO<>'Desligado'
-ORDER BY U.SITUACAO, U.NOME";
+ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
@@ -48,7 +48,7 @@ ORDER BY U.SITUACAO, U.NOME";
 	<tr>
 		<th>N°</th>
 		<th>Funcionário</th>
-		<th>Gestor</th>
+		<th>Matr.</th>
 		<th>Cargo</th>		
 		<th class="coluna">Turno</th>
 		<th >Gestor</th>
