@@ -48,7 +48,7 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        		$_SESSION["$visualizou"]=2;
 		        	}
 		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="18" && date('H', time())<="23"){		        		
-		        		echo "Boa tarde";
+		        		echo "Boa noite";
 		        		$_SESSION["$visualizou"]=2;
 		        	}
 		        	else if($_SESSION["$visualizou"]==1 && date('H', time())>="00" && date('H', time())<="05"){		        		
