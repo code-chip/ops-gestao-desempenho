@@ -90,8 +90,9 @@ $menuConfiguracoes;
 						<div class="navbar-dropdown">
 							<a href="report-query.php" class="navbar-item hvr-grow">Consultar</a>
 							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
-							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>
+							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>							
 							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
+							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedentes</a>
 						</div>
 					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
