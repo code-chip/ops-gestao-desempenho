@@ -119,11 +119,18 @@ $totalAlcancado=0;
 </div>
 <?php
 if($data != "" && $setor!="" && $turno!=""){	
-	$query="SELECT U.ID, U.NOME FROM USUARIO U 
+	$query1="SELECT U.ID FROM USUARIO U 
 INNER JOIN DESEMPENHO D ON D.USUARIO_ID=U.ID
-WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND D.REGISTRO<>'".$data."' GROUP BY U.ID ORDER BY NOME";
+WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND D.REGISTRO<>'".$data."' GROUP BY U.ID";
 	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
+	$cnx=mysqli_query($phpmyadmin, $query1);
+	while($listaId= $cnx->fetch_array()){
+		$vtId[$x]=$listaId["ID"];				
+		$x++;
+	}
+	$query2="SELECT NOME FROM USUARIO WHERE ID NOT IN (".implode(",",$vtId).") AND TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME;";
+	$x=0;
+	$cnx=mysqli_query($phpmyadmin, $query2);
 	while($operadores= $cnx->fetch_array()){
 		$vtNome[$x]=$operadores["NOME"];				
 		$x++;
