@@ -23,7 +23,8 @@ if( $_SESSION["permissao"]!=1 ){
 		$vetorMeta[$x] = $dado["META"];
 		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
 		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
-		$vetorRegistro[$x] = $dado["REGISTRO"];		
+		$vetorRegistro[$x] = $dado["REGISTRO"];
+		$vetorObservacao[$x] = $dado["OBSERVACAO"];			
 		if($maior<$vetorAlcancado[$x]){
 			$maior=$vetorAlcancado[$x];
 		}
@@ -63,10 +64,11 @@ else{
 		<th>Data</th>
 		<th>Atividade</th>
 		<?php if($presenca["FOLGA"]>0 || $presenca["FALTA"]>0): ?><th>Presença</th><?php endif;?>
-		<th>Desempenho</th>
 		<th>Meta</th>
-		<th>Alacançado</th>
+		<th>Alcançado</th>
+		<th>Desempenho</th>
 		<th>Media</th>
+		<th>Observação</th>
 	</tr>
 	<?php for( $i = 0; $i < sizeof($vetorAtividade); $i++ ) : ?>
 		<tr <?php $registros=1; $t=$i;?> >
@@ -85,13 +87,14 @@ else{
 			<?php $mescla=true; endif;  if($repeat==0 && $vetorRegistro[$i-1]!=$vetorRegistro[$i]) :?>
 			<td><?php echo $vetorRegistro[$i];?></td><?php $mescla=false; endif;?>
 			<td><?php echo $vetorAtividade[$i]?></td>
-			<?php if($presenca["FOLGA"]>0 || $presenca["FALTA"]>0): ?><td><?php if($vetorPresenca[$i]=="") echo "Presente"; else echo $vetorPresenca[$i]?></td><?php endif;?>			
-			<td><?php echo $vetorDesempenho[$i]?></td>			
+			<?php if($presenca["FOLGA"]>0 || $presenca["FALTA"]>0): ?><td><?php if($vetorPresenca[$i]=="") echo "Presente"; else echo $vetorPresenca[$i]?></td><?php endif;?>
 			<td><?php echo $vetorMeta[$i]?></td>
+			<td><?php echo $vetorDesempenho[$i]?></td>
 			<td><?php  echo $vetorAlcancado[$i]."%"?></td>
 			<?php if($registros>1 && $repeat!=0 && $mesclaM==false) : ?><td rowspan='<?php echo $registros; ?>'><?php echo round($somaAlcancado,2)."%"; $mesclaM=true; endif;?></td><?php if($repeat==0 && $vetorRegistro[$i-1]!=$vetorRegistro[$i]) :?>
 				<td></td><?php $mesclaM=false; endif;?>
-			<?php if($vetorRegistro[$i]!=$vetorRegistro[$i+1] && $repeat==0){$mescla=false; $mesclaM=false;}?>						
+			<?php if($vetorRegistro[$i]!=$vetorRegistro[$i+1] && $repeat==0){$mescla=false; $mesclaM=false;}?>
+			<td><?php  echo $vetorObservacao[$i]?></td>	
 		</tr>
 	<?php endfor; ?>
 	</table>	
