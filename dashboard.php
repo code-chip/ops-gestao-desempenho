@@ -63,6 +63,14 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtQtdTurno[$x]=$sexoTurno["QTD"];
     $x++;
   }
+  //DASH COMPARATIVO ENTRE TURNOS - dash-turnos.
+  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO;";
+  $cnx= mysqli_query($phpmyadmin, $queryDifTurnos);
+  $x=0;
+  while ($compTurno= $cnx->fetch_array()) {
+    $vtcompTurnos[$x]=$compTurno["MEDIA"];
+    $x++;
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,7 +105,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         ]);
 
         var options = {
-          title: 'Minhas atividades',
+          title: 'Distribuição por atividades',
           is3D: true,
         };
 
@@ -170,7 +178,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 		    data.addColumn('number', 'Vespetino');
 
 		    data.addRows([
-		        [0, 95, 80],    [1, 90, 105],   [2, 123, 115],  [3, 107, 90],   [4, 108, 100],  [5, 90, 50],
+		        [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, 105],   [2, 123, 115],  [3, 107, 90],   [4, 108, 100],  [5, 90, 50],
 		        [6, 100, 103],   [7, 127, 109],  [8, 103, 125],  [9, 99, 92],  [10, 102, 104], [11, 105, 97],
 		        [12, 92, 102], [13, 89, 92], [14, 95, 104], [15, 98, 109], [16, 104, 106], [17, 108, 100],
 		        [18, 92, 94], [19, 90, 86], [20, 98, 99], [21, 105, 99], [22, 106, 99], [23, 100, 120],
@@ -180,7 +188,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 
 		    var options = {
 		    	hAxis: {
-		        	title: 'Variação entre turnos em 30 dias'
+		        	title: 'Comparativo entre turnos em 30 dias'
 		        },
 		        vAxis: {
 		        	title: 'Média de Desempenho'
