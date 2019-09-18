@@ -324,7 +324,7 @@ WHERE ".$f;
 <?php
 if(isset($_POST['excluir'])){	
 	$delUser="DELETE FROM USUARIO WHERE ID=".$_SESSION["upUser"]."";
-	$result = mysqli_query($phpmyadmin, $$delUser);		 				
+	$result = mysqli_query($phpmyadmin, $delUser);		 				
 	?><script language="Javascript"> alert('Funcionário removido com sucesso!!!');</script><?php
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
 ?>
