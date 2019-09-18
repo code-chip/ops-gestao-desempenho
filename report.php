@@ -101,8 +101,8 @@ $totalAlcancado=0;
 							<div class="select is-size-7-touch">
 								<select name='meta'>
 									<option selected="selected"value="">Ambos</option>
-									<option value="AND B.DESEMPENHO>=100">Atingida</option>
-									<option value="AND B.DESEMPENHO<100">Não atingida</option>
+									<option value="AND B.DESEMPENHO>=100">Atingida :D</option>
+									<option value="AND B.DESEMPENHO<100">Perdida ;(</option>
 								</select>	
 							</div>
 						</div>
