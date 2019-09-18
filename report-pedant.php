@@ -128,10 +128,11 @@ WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND
 		$vtId[$x]=$listaId["ID"];				
 		$x++;
 	}
-	$query2="SELECT NOME FROM USUARIO WHERE ID NOT IN (".implode(",",$vtId).") AND TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME;";
+	$query2="SELECT ID, NOME FROM USUARIO WHERE ID NOT IN (".implode(",",$vtId).") AND TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME;";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query2);
 	while($operadores= $cnx->fetch_array()){
+		$vtId[$x]=$operadores["ID"];
 		$vtNome[$x]=$operadores["NOME"];				
 		$x++;
 		$contador=$x;
@@ -158,7 +159,8 @@ else if(isset($_POST['consultar'])!=null){
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
-		<th>Funcionário</th>		
+		<th>Funcionário</th>
+		<th>Registros</th>		
 		<th>Sem registro em</th> 			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
@@ -172,6 +174,7 @@ else if(isset($_POST['consultar'])!=null){
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo $vtNome[$i]?></td>
+		<td><a href="report-detailed.php?periodo=<?php echo date($data,'Y-m') ?>&idUsuario=<?php echo $vtId[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a>
 		<td><?php echo $data?></td>
 	</tr>
 <?php endfor;?>
