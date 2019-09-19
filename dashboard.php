@@ -71,6 +71,19 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtcompTurnos[$x]=$compTurno["MEDIA"];
     $x++;
   }
+  //DASH RANKING MELHORES DO MÊS
+  $querytop8="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
+  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
+  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".date('Y-m')."-21', INTERVAL 1 MONTH) AND REGISTRO<='".date('Y-m')."-20'
+  GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
+  echo $querytop8;
+  $x=0;
+  $cnx= mysqli_query($phpmyadmin, $querytop8);
+  while ($top8= $cnx->fetch_array()) {
+    $vtNomeTop8[$x]=$top8["NOME"];
+    $vtMediaTop8[$x]=$top8["MEDIA"];
+    $x++;
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -273,14 +286,14 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ["Lucas Souza", 160.45, "color: #e5e4e2"],
-        ["Gabriel Assis", 157.30, "gold"],
-        ["Adriana Marques", 140.49, "silver"],
-        ["Lorrayene Costa", 139.94, "#b87333"],
-        ["Lwcyano Will", 120.54, "#b87333"],
-        ["Daniela Vieira", 115.90, "#b87333"],
-        ["Leo Geison", 111.04, "#b87333"],
-        ["Aline Nascimento", 110.99, "#b87333"]
+        ['<?php echo $vtNomeTop8[0]?>', <?php echo $vtMediaTop8[0]?>, "color: #e5e4e2"],
+        ['<?php echo $vtNomeTop8[1]?>', <?php echo $vtMediaTop8[1]?>, "gold"],
+        ['<?php echo $vtNomeTop8[2]?>', <?php echo $vtMediaTop8[2]?>, "silver"],
+        ['<?php echo $vtNomeTop8[3]?>', <?php echo $vtMediaTop8[3]?>, "#b87333"],
+        ['<?php echo $vtNomeTop8[4]?>', <?php echo $vtMediaTop8[4]?>, "#b87333"],
+        ['<?php echo $vtNomeTop8[5]?>', <?php echo $vtMediaTop8[5]?>, "#b87333"],
+        ['<?php echo $vtNomeTop8[6]?>', <?php echo $vtMediaTop8[6]?>, "#b87333"],
+        ['<?php echo $vtNomeTop8[7]?>', <?php echo $vtMediaTop8[7]?>, "#b87333"]
       ]);
 
       var view = new google.visualization.DataView(data);
