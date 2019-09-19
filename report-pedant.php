@@ -121,23 +121,31 @@ $totalAlcancado=0;
 if($data != "" && $setor!="" && $turno!=""){	
 	$query1="SELECT U.ID FROM USUARIO U 
 INNER JOIN DESEMPENHO D ON D.USUARIO_ID=U.ID
-WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND D.REGISTRO<>'".$data."' GROUP BY U.ID";
+WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND D.REGISTRO='".$data."' GROUP BY U.ID";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query1);
 	while($listaId= $cnx->fetch_array()){
 		$vtId[$x]=$listaId["ID"];				
 		$x++;
 	}
+	if(mysqli_num_rows($cnx)>0){//CASO ENCONTRAR ALGUM REGISTRO NAQUELA DATA, EXECUTA ESTA QUERY.
 	$query2="SELECT ID, NOME FROM USUARIO WHERE ID NOT IN (".implode(",",$vtId).") AND TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME;";
+	}
+	else{
+		$query2="SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME;";	
+	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query2);
+	if(mysqli_num_rows($cnx)>0){
 	while($operadores= $cnx->fetch_array()){
 		$vtId[$x]=$operadores["ID"];
 		$vtNome[$x]=$operadores["NOME"];				
 		$x++;
 		$contador=$x;
 	}
-	if(mysqli_num_rows($cnx)==0){
+	}
+	else{
+	//if(mysqli_num_rows($cnx)==0){
 		?><script type="text/javascript">			
 			alert('Nenhum registrado encontrado nesta consulta!');
 			window.location.href=window.location.href;
