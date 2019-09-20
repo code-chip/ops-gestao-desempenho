@@ -20,18 +20,37 @@ $totalAlcancado=0;
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
-	        if ($(this).scrollTop() > 100) {
-	            $('a[href="#top"]').fadeIn();
-	        }else {
-	            $('a[href="#top"]').fadeOut();
-	        }
-	    });
-	    $('a[href="#top"]').click(function(){
-	        $('html, body').animate({scrollTop : 0},800);
-	        return false;
-	    });
-	});
-    </script>   
+	        	if ($(this).scrollTop() > 100) {
+	            	$('a[href="#top"]').fadeIn();
+	        	}else {
+	            	$('a[href="#top"]').fadeOut();
+	        	}
+	    	});
+	    	$('a[href="#top"]').click(function(){
+	        	$('html, body').animate({scrollTop : 0},800);
+	        	return false;
+	    	});
+		});
+		//SALVAR OPÇÃO SELECIONADA;
+		$(window).on("load", onPageLoad);
+		function onPageLoad() {
+			initListeners();
+			restoreSavedValues();
+		}
+		function initListeners() {
+			$("#salvaTurno").on("change", function() {
+				var value = $(this).val();
+				localStorage.setItem("salvaTurno", value);
+			}); 
+		}
+		function restoreSavedValues() {
+			var storedValue = localStorage.getItem("salvaTurno");
+			$("#salvaTurno").val(storedValue);
+		}		
+		$('#submitQuery').button().click(function(){
+			$('#form1').submit();
+		});		    	
+    </script>
 </head>
 <body>
 	<?php
@@ -54,7 +73,7 @@ $totalAlcancado=0;
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="turno">
+								<select name="turno" id="salvaTurno">
 								<option selected="selected" value="">Selecione</option>	
 								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; 
@@ -75,7 +94,7 @@ $totalAlcancado=0;
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="setor">								
+								<select name="setor" id="salvaAtividade">								
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
