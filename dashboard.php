@@ -95,6 +95,15 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtMediaTop10[$x]=$top10["MEDIA"];
     $x++;
   }
+  //DASH META ATINGIDA PERDIDA - meta-pacman
+  $querypacman="SELECT COUNT(*) DESEMPENHO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL
+  SELECT COUNT(*) DESEMPENHO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);";
+  $x=0;
+  $cnx= mysqli_query($phpmyadmin, $querypacman);
+  while ($pacman= $cnx->fetch_array()) {
+    $vtPacMan[$x]=$pacman["DESEMPENHO"];    
+    $x++;
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -356,10 +365,9 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Meta', 'Quantidade'],
-          ['Meta atiginda', 75],
-          ['Meta perdida', 25]
+          ['Atiginda', <?php echo $vtPacMan[0]?>],
+          ['Perdida', <?php echo $vtPacMan[1]?>]
         ]);
-
         var options = {
         	title: 'Meta atiginda/perdida',
           legend: 'none',
@@ -371,8 +379,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
             1: { color: 'transparent' }
           }
         };
-
-        var chart = new google.visualization.PieChart(document.getElementById('meta'));
+        var chart = new google.visualization.PieChart(document.getElementById('meta-pacman'));
         chart.draw(data, options);
       }
     </script>
@@ -556,7 +563,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="meta"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="idade"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="atividades-15dias"></div>
 			</div>
