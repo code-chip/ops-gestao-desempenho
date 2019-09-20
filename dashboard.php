@@ -71,17 +71,28 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtcompTurnos[$x]=$compTurno["MEDIA"];
     $x++;
   }
-  //DASH RANKING MELHORES DO MÊS
+  //DASH RANKING MELHORES DO MÊS - top8
   $querytop8="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
   WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".date('Y-m')."-21', INTERVAL 1 MONTH) AND REGISTRO<='".date('Y-m')."-20'
   GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
-  echo $querytop8;
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop8);
   while ($top8= $cnx->fetch_array()) {
     $vtNomeTop8[$x]=$top8["NOME"];
     $vtMediaTop8[$x]=$top8["MEDIA"];
+    $x++;
+  }
+  //DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
+  $querytop10="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
+  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
+  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".date('Y-m')."-21', INTERVAL 1 MONTH) AND REGISTRO<='".date('Y-m')."-20'
+  GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 11;";
+  $x=0;
+  $cnx= mysqli_query($phpmyadmin, $querytop10);
+  while ($top10= $cnx->fetch_array()) {
+    $vtNomeTop10[$x]=$top10["NOME"];
+    $vtMediaTop10[$x]=$top10["MEDIA"];
     $x++;
   }
 ?>
@@ -496,16 +507,16 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ["Amanda Santos", 59.99, "#FF0000"],
-        ["Maycon Gonsales", 62.04, "#FF0000"],
-        ["Rayanne Oliveira", 65.90, "#FF6347"],
-        ["Vinicius Santos", 66.54, "#FF6347"],
-        ["Solange Vieira", 68.94, "#FF7F50"],
-        ["Daniel Santos", 69.49, "#FFA07A"],
-        ["Kaique Souza", 70.30, "#FF8C00"],
-        ["Adriana Alvarenga", 70.30, "#FF8C00"],
-        ["Camila Mendoça", 71.40, "#FFA500"],        
-        ["Cleverson Martins", 75.45, "color: #F0E68C"]
+        ['<?php echo $vtNomeTop10[0]?>', <?php echo $vtMediaTop10[0]?>, "#FF0000"],
+        ['<?php echo $vtNomeTop10[1]?>', <?php echo $vtMediaTop10[1]?>, "#FF0000"],
+        ['<?php echo $vtNomeTop10[2]?>', <?php echo $vtMediaTop10[2]?>, "#FF6347"],
+        ['<?php echo $vtNomeTop10[3]?>', <?php echo $vtMediaTop10[3]?>, "#FF6347"],
+        ['<?php echo $vtNomeTop10[4]?>', <?php echo $vtMediaTop10[4]?>, "#FF7F50"],
+        ['<?php echo $vtNomeTop10[5]?>', <?php echo $vtMediaTop10[5]?>, "#FFA07A"],
+        ['<?php echo $vtNomeTop10[6]?>', <?php echo $vtMediaTop10[6]?>, "#FF8C00"],
+        ['<?php echo $vtNomeTop10[7]?>', <?php echo $vtMediaTop10[7]?>, "#FF8C00"],
+        ['<?php echo $vtNomeTop10[8]?>', <?php echo $vtMediaTop10[8]?>, "#FFA500"],        
+        ['<?php echo $vtNomeTop10[9]?>', <?php echo $vtMediaTop10[9]?>, "color: #F0E68C"]
       ]);
 
       var view = new google.visualization.DataView(data);
