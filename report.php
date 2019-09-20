@@ -16,6 +16,30 @@ $totalAlcancado=0;
 <html>
 <head>
 	<title>Gestão de Desempenho - Relatório Gestão</title>
+	<script type="text/javascript">
+		$(window).on("load", onPageLoad);
+		function onPageLoad() {
+		initListeners();
+		restoreSavedValues();
+		}
+		function initListeners() {
+			$("#salvaAtividade").on("change", function() {
+				var value = $(this).val();
+				localStorage.setItem("salvaAtividade", value);
+				var valueOrdenacao = $(this).val();
+				localStorage.setItem("salvaOrdenacao", valueOrdenacao);
+			});			
+		}
+		function restoreSavedValues() {
+			var atividade = localStorage.getItem("salvaAtividade");
+			$("#salvaAtividade").val(atividade);
+			var ordenacao = localStorage.getItem("salvaOrdenacao");
+			$("#salvaAtividade").val(ordenaca);							
+		}
+		$('#submitQuery').button().click(function(){
+			$('#form1').submit();
+		});		
+	</script>
 </head>
 <body>
 	<span id="topo"></span>
@@ -30,7 +54,7 @@ $totalAlcancado=0;
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select is-size-7-touch">
-						<select name="periodo">
+						<select name="periodo" id="salvaPeriodo">
 							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -50,7 +74,7 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="atividade">
+							<select name="atividade" id="salvaAtividade">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
 							</select>	
@@ -65,8 +89,8 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="ordenacao">
-								<option selected="selected" value="NOME">Nome</option>	
+							<select name="ordenacao" id="salvaOrdenacao">
+								<option value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
 							</select>	
 						</div>
