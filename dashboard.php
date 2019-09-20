@@ -104,6 +104,19 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtPacMan[$x]=$pacman["DESEMPENHO"];    
     $x++;
   }
+  //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
+  for($i=0 ;$i <3;$i++){
+    $idAtividade=1;
+    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<='2019-09-20' GROUP BY REGISTRO DESC LIMIT 6;";
+    $x=0;
+    $cnx= mysqli_query($phpmyadmin, $querypriAtivi);
+    while ($priAtiv= $cnx->fetch_array()) {
+      $vtMedia3PrincAtiv[$i][$x]=$priAtiv["MEDIA"];
+      $vtData3PrincAtiv[$i][$x]=$priAtiv["REGISTRO"];  
+      $x++;
+    }
+    $idAtividade++;
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -240,11 +253,11 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Avarias', 'Separação', 'Caixas', 'Checkout', 'PBL', 'Recebimento'],
-          ['<?php echo strftime('%h', strtotime("-4 months"))?>',  165,      138,         122,             99,           105,      114.6],
-          ['<?php echo strftime('%h', strtotime("-3 months"))?>',  135,      120,        99,             128,          88,      108],
-          ['<?php echo strftime('%h', strtotime("-2 months"))?>',  157,      167,        87,             107,           97,      123],
-          ['<?php echo strftime('%h', strtotime("-1 months"))?>',  139,      110,        115,             128,           115,      109.4],
-          ['<?php echo strftime('%h')?>',  136,      101,         114,             126,          106,      109.6]
+          ['<?php echo $vtData3PrincAtiv[0][4]?>',  165,      138,         122,             99,           105,      114.6],
+          ['<?php echo $vtData3PrincAtiv[0][3]?>',  135,      120,        99,             128,          88,      108],
+          ['<?php echo $vtData3PrincAtiv[0][2]?>',  157,      167,        87,             107,           97,      123],
+          ['<?php echo $vtData3PrincAtiv[0][1]?>',  139,      110,        115,             128,           115,      109.4],
+          ['<?php echo $vtData3PrincAtiv[0][0]?>',  136,      101,         114,             126,          106,      109.6]
         ]);
 
         var options = {
@@ -259,7 +272,6 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         chart.draw(data, options);
       }
     </script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       	google.charts.load("current", {packages:["corechart"]});
       	google.charts.setOnLoadCallback(drawChart);
@@ -415,10 +427,12 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Dia', 'Checkout', 'Separação','Caixas',],
-          ['<?php echo date('d/m',strtotime("-3 day"))?>',  140,      99,103],
-          ['<?php echo date('d/m',strtotime("-2 day"))?>',  110,      103,100],
-          ['<?php echo date('d/m',strtotime("-1 day"))?>',  98,       108,113],
-          ['<?php echo date('d/m')?>',  117,      120,99]
+          ['<?php echo $vtData3PrincAtiv[0][5]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][5]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][5]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][5]?>')],
+          ['<?php echo $vtData3PrincAtiv[0][4]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][4]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][4]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][4]?>')],
+          ['<?php echo $vtData3PrincAtiv[0][3]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][3]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][3]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][3]?>')],
+          ['<?php echo $vtData3PrincAtiv[0][2]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][2]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][2]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][2]?>')],
+          ['<?php echo $vtData3PrincAtiv[0][1]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][1]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][1]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][1]?>')],
+          ['<?php echo $vtData3PrincAtiv[0][0]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][0]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][0]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[2][0]?>')]
         ]);
 
           var options_stacked = {
@@ -430,7 +444,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         };
     
 
-        var chart = new google.visualization.AreaChart(document.getElementById('atividades-15dias'));
+        var chart = new google.visualization.AreaChart(document.getElementById('3atividades-principais'));
         chart.draw(data, options_stacked);
       }
     </script>
@@ -565,7 +579,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="idade"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="atividades-15dias"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
