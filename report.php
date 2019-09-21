@@ -1,5 +1,3 @@
-<style type="text/css">
-</style>
 <?php
 session_start();
 $menuRelatorio="is-active";
@@ -23,18 +21,14 @@ $totalAlcancado=0;
 		restoreSavedValues();
 		}
 		function initListeners() {
-			$("#salvaAtividade").on("change", function() {
+			$("#salvaTurno").on("change", function() {
 				var value = $(this).val();
-				localStorage.setItem("salvaAtividade", value);
-				var valueOrdenacao = $(this).val();
-				localStorage.setItem("salvaOrdenacao", valueOrdenacao);
+				localStorage.setItem("salvaTurno", value);				
 			});			
 		}
 		function restoreSavedValues() {
-			var atividade = localStorage.getItem("salvaAtividade");
-			$("#salvaAtividade").val(atividade);
-			var ordenacao = localStorage.getItem("salvaOrdenacao");
-			$("#salvaAtividade").val(ordenaca);							
+			var atividade = localStorage.getItem("salvaTurno");
+			$("#salvaTurno").val(atividade);								
 		}
 		$('#submitQuery').button().click(function(){
 			$('#form1').submit();
@@ -54,7 +48,7 @@ $totalAlcancado=0;
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select is-size-7-touch">
-						<select name="periodo" id="salvaPeriodo">
+						<select name="periodo">
 							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -74,7 +68,7 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="atividade" id="salvaAtividade">
+							<select name="atividade">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
 							</select>	
@@ -89,7 +83,7 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="ordenacao" id="salvaOrdenacao">
+							<select name="ordenacao">
 								<option value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
 							</select>	
@@ -104,7 +98,7 @@ $totalAlcancado=0;
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="turno">
+							<select name="turno" id="salvaTurno">
 							<option selected="selected"value="">Todos</option>																
 								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdTurno);
@@ -146,13 +140,13 @@ if( $periodo != "" && $_SESSION["permissao"]!=1){
 	if($atividade=="agrupado"){
 	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
-CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." ".$turno." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
+CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20/".date('m',strtotime($periodo))."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." ".$turno." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
 	}
 	else{
 	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID) AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID) AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
-CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
-	}	
+CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20/".date('m',strtotime($periodo))."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID<>3 GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
+	}
 	$con = mysqli_query($phpmyadmin , $consulta);
 	if(mysqli_num_rows($con)!=0){
 	$x=0;
@@ -227,17 +221,17 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 			<td>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?></td>
 			<td>Maior: <?php echo $maior."%"?></td>			
 		</tr>
-	</table>	
+	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
 	<tr>
-		<th width="-20">N°</th>
-		<th width="20" class="">Funcionário</th>
-		<th>Detalhes</th>		
-		<th>Falta's</th>
-		<th>Folga's</th>
-		<?php if($atividade=="separado") : ?><th>Atividade</th><?php endif; ?>
-		<th>Desempenho</th>				
-		<th>Período</th>			
+		<th width="1">N°</th>
+		<th width="200">Funcionário</th>
+		<th width="4">Detalhes</th>		
+		<th width="4">Falta's</th>
+		<th width="4">Folga's</th>
+		<?php if($atividade=="separado") : ?><th width="14">Atividade</th><?php endif; ?>
+		<th width="14">Desempenho</th>				
+		<th width="40">Período</th>			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
 	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
@@ -250,14 +244,14 @@ CONCAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),' a ".$periodo."-20') AS RE
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo $vtNome[$i]?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
-		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
-		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
+		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td width="1"; rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
+		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td width="5";><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
-		<td><?php echo $vtFolga[$i]?></td><?php endif;?>
+		<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
 		<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>		
 		<td><?php echo $vtDesempenho[$i]."%"?></td>				
-		<td><?php echo $vtRegistro[$i]?></td>
+		<td style="max-width:800px;"><?php echo $vtRegistro[$i]?></td>
 		<?php if($vtNome[$i]!=$vtNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
 	</tr>
 <?php endfor; ?>
