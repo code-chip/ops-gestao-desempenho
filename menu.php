@@ -109,7 +109,7 @@ $menuConfiguracoes;
 				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item hvr-grow">Permissões</a><?php endif;?>
 				        <a class="navbar-item hvr-grow">Tema</a>
 				        <hr class="navbar-divider hvr-grow">
-				        <a class="navbar-item hvr-grow">Reportar bug</a>
+				        <a href="contact.php" class="navbar-item hvr-grow">Reportar bug</a>
 			        </div>
 			    </div>
 				<a href="logout.php" class="navbar-item hvr-grow">Sair</a>
