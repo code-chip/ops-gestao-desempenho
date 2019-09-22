@@ -4,10 +4,10 @@
 	}
 </style>
 <?php
-session_start();
-include('connection.php');
+//session_start();
+//include('connection.php');
 //require_once('js/loader.js');
-include('login-check.php');
+//include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->

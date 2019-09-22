@@ -1,6 +1,6 @@
 <?php 
-session_start();
-include('login-check.php');
+//session_start();
+//include('login-check.php');
 $menuConfiguracao="is-active";
 include('menu.php');
 $opcao=trim($_POST['opcao']);

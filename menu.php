@@ -1,5 +1,5 @@
 <?php 
-session_start();
+//session_start();
 include('login-check.php');
 include('connection.php');
 header('Content-Type: text/html; charset=UTF-8');

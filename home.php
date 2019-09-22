@@ -1,6 +1,5 @@
 <?php 
-session_start();
-include('login-check.php');
+//include('login-check.php');
 $menuInicio="is-active";
 include('menu.php');
 $n=rand(1,25);

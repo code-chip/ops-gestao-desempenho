@@ -12,8 +12,8 @@
 }
 </style>
 <?php 
-session_start();
-include('login-check.php');
+//session_start();
+//include('login-check.php');
 $menuDashboard="is-active";
 include('menu.php');
 require("query.php");

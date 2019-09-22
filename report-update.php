@@ -1,7 +1,5 @@
-<style type="text/css">
-</style>
 <?php
-session_start();
+//session_start();
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
