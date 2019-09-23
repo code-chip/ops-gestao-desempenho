@@ -90,7 +90,7 @@ $totalAlcancado=0;
 						</div>
 					</div>					
 				</div>						
-			</div>&nbsp&nbsp&nbsp
+			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
 				<label for="turno" class="label is-size-7-touch">Turno:</label>
 			</div>
@@ -109,7 +109,7 @@ $totalAlcancado=0;
 						</div>
 					</div>					
 				</div>						
-			</div>	
+			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO META-->
 				<label class="label is-size-7-touch" for="meta">Meta:</label>
 			</div>
