@@ -58,7 +58,7 @@ include('menu.php');
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="user-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Usuários</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
+		<a href="option-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Opções</span></a>&nbsp&nbsp&nbsp
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Listar Metas</span></a>&nbsp&nbsp&nbsp
 		<a href="user-list-off.php"><span class="button is-media is-primary is-outlined mw12">Listar Desligados</span></a>&nbsp&nbsp&nbsp		
 	</div>	
