@@ -23,68 +23,74 @@ include('menu.php');
 			<h3 class="title">Reportar Bug</h3>
 		<hr>
 	<main>
-	<form id="form1" action="user-insert.php" method="POST">
-		<div class="field is-grouped">
-		<div class="field">
-			<label class="label" for="textInput">Nome</label>
-				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" maxlength="60">
-				</div>			
-		</div>		
-		<div class="field">
-		  	<label class="label">Email</label>
-		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
-		    	<span class="icon is-small is-left">
-		      		<i class="fas fa-envelope"></i>
-		    	</span>
-		    	<span class="icon is-small is-right">
-		      		<i class="fas fa-exclamation-triangle"></i>
-		    	</span>		    	
-		    	<div id="msgemail"></div>
-		  	</div>
-		  	<p class="help is-danger">E-mail inválido</p>
-		</div>
-	</div>
-			<div class="field-label"><!--DIVISÃO SITUAÇÃO-->
-				<label class="label">Módulo</label>
-			</div>
-			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control">
-						<div class="select">
-							<select name="situacao">
+	<form id="form1" action="contact.php" method="POST">
+		<!-- Horizontal form -->
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Nome</label>
+					</div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<input type="text" class="input" id="textInput" placeholder="Ana Clara">
+							</div>
+						</div>
+					</div>
+					<div class="field-label is-normal">
+						<label class="label">Email</label>
+					</div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<input type="text" class="input" id="textInput" placeholder="anaclara@gmail.com">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Módulo</label>
+					</div>
+					<div class="field-body">
+						<div class="field">							
+							<div class="control">
+								<div class="select">
+									<select name="situacao">
 								<option selected="selected" value="Ativo">Dashboard</option>	
-								<option value="Férias">meta</option>
+								<option value="Férias">Meta</option>
 								<option value="Licença">Desempenho</option>
-								<option value="Desligado">Relatórios</option>
+								<option value="Desligado">Relatório</option>
 								<option value="Desligado">Configurações</option>
 							</select>	
+								</div>
+							</div>
 						</div>
-					</div>					
-				</div>						
-			</div>
-		</div><!--FINAL DIVISÃO EM HORIZONTAL 2-->	
-		<!---->					
-		<div class="field">
-			<label class="label" for="observacao">Observação</label>
-				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." maxlength="60">
-				</div>			
-		</div>
-		<div class="field-body">
-			<div class="field is-grouped">											
-				<div class="control">
-					<a href="register.php" class="button is-primary">Voltar</a>										
+					</div>
 				</div>
-				<div class="control">
-					<a href="user-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"/></a>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Mensagem</label>
+					</div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<textarea class="textarea" placeholder="Relate o problema apresentado..."></textarea>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="control">
-					<input name="cadastrar" type="submit" class="button is-primary" value="Cadastrar"/>
-				</div>					
-			</div>
-		</div>							
+				<div class="field is-horizontal">
+					<div class="field-label">						
+					</div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<button type="submit" class="button is-primary">Enviar</button>
+							</div>
+						</div>
+					</div>
+				</div>		
+		<!---->				
 		</form>
 	</main>	
 </div>
