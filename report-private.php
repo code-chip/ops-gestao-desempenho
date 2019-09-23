@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 $menuRelatorio="is-active";
 include('menu.php');
 include('query.php');

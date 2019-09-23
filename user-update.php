@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->

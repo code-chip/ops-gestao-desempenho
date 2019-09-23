@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 $menuRelatorio="is-active";
 include('menu.php');
 //error_reporting(E_ALL); // todas

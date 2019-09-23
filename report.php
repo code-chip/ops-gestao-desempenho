@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 $menuRelatorio="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -37,7 +37,6 @@ $totalAlcancado=0;
 </head>
 <body>
 	<span id="topo"></span>
-<div class="containner">
 	<section class="section">
 	<form id="form1" action="report.php" method="GET" >
 		<div class="field is-horizontal">
@@ -132,8 +131,8 @@ $totalAlcancado=0;
 			</div>
 		</div>
 	</form>
-	</section>		
-</div><!--FINAL DO FORMULÁRIO-->
+		
+<!--FINAL DO FORMULÁRIO-->
 <?php
 $turno = trim($_REQUEST['turno']);
 if( $periodo != "" && $_SESSION["permissao"]!=1){
@@ -222,7 +221,7 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 			<td>Maior: <?php echo $maior."%"?></td>			
 		</tr>
 	</table>
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
+	<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
 	<tr>
 		<th width="1">N°</th>
 		<th width="200">Funcionário</th>
@@ -261,6 +260,7 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
 		</div>
 	</a>
+	</section>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
