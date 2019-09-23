@@ -56,7 +56,7 @@ if(mysqli_num_rows($cnx)==0){
 <hr/>
 	<section class="section" id="topo">
 	<div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>Cargo</th>
 		<th>Situação</th>
@@ -81,21 +81,17 @@ if(mysqli_num_rows($cnx)==0){
 	</tr>	
 <?php endfor;?>	
 	</table>	
-	<a href="#topo">		
-		<div class=".scrollWrapper">
-			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
-		</div>
+	<a href="#topo">	
+		<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
 	</a>
-	<br/>
-	<div class="table__wrapper">			
-		<div class="field-body">
-			<div class="field">
-				<div class="control">
-					<a href="register.php"><input name="Voltar" type="submit" class="button is-primary" value="Voltar"/></a>
-				</div>					
-			</div>						
-		</div>
-	</div>
+	<br/>				
+	<div class="field-body">
+		<div class="field">
+			<div class="control">
+				<a href="register.php"><input name="Voltar" type="submit" class="button is-primary" value="Voltar"/></a>
+			</div>					
+		</div>						
+	</div>	
 </section>	
 </body>
 </html>
