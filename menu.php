@@ -38,25 +38,6 @@ $menuConfiguracoes;
 	    	alert('Funcionalidade em desenvolvimento!!');
 	    }
     </script>
-    <style type="text/css">
-	.table__wrapper {
-  		overflow-x: auto;
-	}
-	.scrollWrapper {
-		display:table;
-  		width: 100%;
-  		overflow-x: auto;  		
-	}
-	.mw12{
-		min-width:12em;
-	}
-	.ocultaColunaId{
-		position: absolute; 
-		visibility: hidden; 
-		margin-left: -25px;  
-		max-width:0em;
-	}
-</style>
 </head>
 <body>
 	<header>
@@ -92,7 +73,7 @@ $menuConfiguracoes;
 							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
 							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>							
 							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
-							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedentes</a>
+							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedente</a>
 						</div>
 					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
