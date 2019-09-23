@@ -14,26 +14,6 @@ $totalAlcancado=0;
 <html>
 <head>
 	<title>Gestão de Desempenho - Relatório Gestão</title>
-	<script type="text/javascript">
-		$(window).on("load", onPageLoad);
-		function onPageLoad() {
-		initListeners();
-		restoreSavedValues();
-		}
-		function initListeners() {
-			$("#salvaTurno").on("change", function() {
-				var value = $(this).val();
-				localStorage.setItem("salvaTurno", value);				
-			});			
-		}
-		function restoreSavedValues() {
-			var atividade = localStorage.getItem("salvaTurno");
-			$("#salvaTurno").val(atividade);								
-		}
-		$('#submitQuery').button().click(function(){
-			$('#form1').submit();
-		});		
-	</script>
 </head>
 <body>
 	<span id="topo"></span>
