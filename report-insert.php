@@ -1,7 +1,5 @@
 <style type="text/css">
-	.coluna{
-		max-width:7em;
-	}
+	
 </style>
 <?php
 //session_start();
@@ -21,8 +19,7 @@ $totalAlcancado=0;
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
 	<meta charset="UTF-8">
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">    
+	<script type="text/javascript" src="/js/lib/dummy.js"></script>   
     <script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
@@ -163,8 +160,8 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<th>+</th>
 		<th>Funcionário</th>
 		<th>Presença</th>
-		<th>Atividade</th>		
-		<th class="coluna">Meta</th>
+		<th class="coluna">Atividade</th>		
+		<th>Meta</th>
 		<th>Alcançado</th>		
 		<th>Data</th>
 		<th>Observação</th>  			
@@ -272,7 +269,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
-			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
+			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
 		</div>
 	</a>
 	<br/>
@@ -283,7 +280,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<div class="field-body">
 			<div class="field is-grouped">							
 				<div class="control">
-					<div class="select">
+					<div class="select is-size-7-touch">
 						<select name="inserir" id="selectBox" onchange="changeFunc();">									
 							<option selected="selected" value="2">Específico</option>
 							<option value="1">Todos</option>								
@@ -291,13 +288,13 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 					</div>										
 				</div>
 			<div class="control">
-				<a href="report-insert.php" class="button">Voltar</a>
+				<a href="report-insert.php" class="button is-size-7-touch">Voltar</a>
 			</div>					
 			<div class="control">
-				<input name="Limpar" type="button" class="button is-primary" onClick="preencheCheckbox()" value="Limpar"/>
+				<input name="Limpar" type="button" class="button is-primary is-size-7-touch" onClick="preencheCheckbox()" value="Limpar"/>
 			</div>
 			<div class="control">
-				<input name="salvarDados" type="submit" class="button is-primary" id="submitQuery" value="Salvar Dados"/>
+				<input name="salvarDados" type="submit" class="button is-primary is-size-7-touch" id="submitQuery" value="Salvar Dados"/>
 			</div>						
 		</div>
 	</div>
