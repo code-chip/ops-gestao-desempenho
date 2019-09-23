@@ -1,7 +1,6 @@
 <style type="text/css">
 </style>
 <?php
-//session_start();
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -209,7 +208,7 @@ if( $nome != ""){
 					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 				<div class="control">
-					<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consultar"/></a>
+					<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
 				<div class="control">
 					<input name="removerDados" type="submit" class="button is-primary" value="Deletar Dados"/>
