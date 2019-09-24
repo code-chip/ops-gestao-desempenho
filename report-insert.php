@@ -1,11 +1,4 @@
-<style type="text/css">
-	
-</style>
 <?php
-//session_start();
-//include('connection.php');
-//require_once('js/loader.js');
-//include('login-check.php');
 $menuDesempenho="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
@@ -320,7 +313,12 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 	$v=0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
 	for( $i = 0; $i < sizeof($presencas); $i++ ){
 		if($pvt[$v]==$i){
-			if($alcancados[$i]==0 || $alcancados[$i]==null){
+			if($presencas[$i]==3){
+				$desempenho=0;
+				$metas[$i]=0;
+				$alcancados[$i]=0;
+			}
+			else if($alcancados[$i]==0 || $alcancados[$i]==null){
 				$desempenho=0;
 				$alcancados[$i]=0;
 			}
