@@ -7,7 +7,7 @@ $situacao=trim($_POST['situacao']);
 
 if(isset($_POST["inserirMeta"])!=null){
 	if($opcao!="" && $nome!=""){
-		$checkOpcao="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
+		$checkMeta="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
 		$cnx= mysqli_query($phpmyadmin, $checkOpcao);
 		if(mysqli_num_rows($cnx)==0){
 			$inserirOpcao="INSERT INTO ".$opcao."(NOME, SITUACAO) VALUES('".$nome."','".$situacao."');";
@@ -95,7 +95,7 @@ if(isset($_POST["inserirMeta"])!=null){
 						<label class="label">Status:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
+						<div class="field is-grouped" style="max-width:17em;">							
 							<div class="control">
 								<div class="select">
 									<select name="situacao">
@@ -103,21 +103,13 @@ if(isset($_POST["inserirMeta"])!=null){
 										<option value="Inativo">Inativo</option>																			
 									</select>	
 								</div>
-							</div>						
-						</div>
-					</div>
-				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label"></div>
-						<div class="field-body">
-							<div class="field">
-								<div class="control">
-									<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
-								</div>
 							</div>
+							<div class="control">
+									<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								</div>						
 						</div>
-					</div>
-				</div>		
+					</div>					
+				</div>
 	     	</form>
 	   	</div>
 	</section>	 	
