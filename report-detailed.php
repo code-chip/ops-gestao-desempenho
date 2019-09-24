@@ -8,7 +8,7 @@ $idUsuario = trim($_REQUEST['idUsuario']);
 $contador=0;
 $totalAlcancado=0;
 if( $_SESSION["permissao"]!=1 ){
-	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO FROM DESEMPENHO D
+	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D
 	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
@@ -24,7 +24,7 @@ if( $_SESSION["permissao"]!=1 ){
 		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
 		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
-		$vetorObservacao[$x] = $dado["OBSERVACAO"];			
+		$vetorObservacao[$x] = $dado["OBSERVACAO"];					
 		if($maior<$vetorAlcancado[$x]){
 			$maior=$vetorAlcancado[$x];
 		}
@@ -37,7 +37,7 @@ if( $_SESSION["permissao"]!=1 ){
 	if($contador==0){
 		?><script type="text/javascript">alert('Nenhum resultado encontrado!');</script><?php
 	}
-	$consulta2="SELECT (SELECT COUNT(*) FROM DESEMPENHO WHERE USUARIO_ID=7 AND PRESENCA_ID=2 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20')AS FALTA, COUNT(*) AS FOLGA FROM DESEMPENHO WHERE USUARIO_ID=7 AND PRESENCA_ID=3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20';";
+	$consulta2="SELECT (SELECT COUNT(*) FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=2 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20')AS FALTA, COUNT(*) AS FOLGA FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20';";
 	$con2= mysqli_query($phpmyadmin,$consulta2);
 	$presenca= $con2->fetch_array();		
 }
