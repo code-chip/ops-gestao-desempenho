@@ -1,11 +1,8 @@
 <?php
-//session_start();
 $menuRelatorio="is-active";
 include('menu.php');
-include('query.php');
 $contador = 0;
 $totalDesempenho=0;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,51 +78,66 @@ $totalDesempenho=0;
 		</div>
 	</form>		
 </div>
-</section>
 <!--FINAL DO FORMULÁRIO-->
 <?php
 $periodo = trim($_REQUEST['periodo']);
 $atividade = trim($_REQUEST['atividade']);
 $meta = trim($_REQUEST['meta']);
 if( $periodo != ""){
-	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D
+	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D
 	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
 	WHERE D.USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$atividade."".$meta."
 	ORDER BY REGISTRO;";	
 	$con = mysqli_query($phpmyadmin, $consulta);
-	$x=0;
+	$x=0; $falta=0; $folga=0; $menor=1000; $maior=0;
 	while($dado = $con->fetch_array()){
 		$nome= $dado["NOME"];		
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
+		$vetorPresenca[$x] = $dado["PRESENCA_ID"];
 		$vetorMeta[$x] = $dado["META"];
 		$vetorAlcancado[$x] = $dado["ALCANCADO"];
 		$vetorDesempenho[$x] = $dado["DESEMPENHO"];
 		$totalDesempenho=$totalDesempenho+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
 		$vetorObservacao[$x] = $dado["OBSERVACAO"];
+		if($vetorPresenca[$x]==2){
+			$falta++;
+		}
+		else if($vetorPresenca[$x]==3){
+			$folga++;
+		}
+		if($maior<$vetorDesempenho[$x]){
+			$maior=$vetorDesempenho[$x];
+		}
+		if($menor>$vetorDesempenho[$x] && $vetorDesempenho[$x]>0){
+			$menor=$vetorDesempenho[$x];
+		}
 		$contador++;
 		$x++;		
 	}
 	if($contador==0){
 		?><script type="text/javascript">alert('Nenhum resultado encontrado!');</script><?php
-	}	
+	}
 }
 else{
 	
 }?>
 <?php if( $periodo !="" && $contador !=0) : ?>
 <hr/>
-<section class="section">
 	<div class="table__wrapper">
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">
 		<tr>
-			<td colspan='10' class='table_title'>
-				<span class='title_left'><?php echo $ordersData[0]['increment_id'] ?>Colaborador: <?php echo $nome?> Media: <?php echo round($totalDesempenho/$contador, 2)."%" ?>
-				</span>
-			</td>
+			<td>Colaborador: <?php echo $nome?></td>
+			<td>Falta's: <?php echo $falta;?></td>
+			<td>Folga's: <?php echo $folga;?></td>
+			<td>Menor: <?php echo $menor."%"?></td>
+			<td>Media: <?php echo round($totalDesempenho/($contador-$folga), 2)."%" ?></td>
+			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
+	</table>
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
 	<tr>
 		<th style='width:55px;'>Atividade</th>		
 		<th style='width:55px;'>Meta</th>
