@@ -1,11 +1,13 @@
 <?php 
 $menuConfiguracoes="is-active";
 include('menu.php');
+$query="SELECT NOME, EMAIL FROM USUARIO WHERE ID=".$_SESSION["userId"];
+$cnx= mysqli_query($phpmyadmin, $query);
+$usuario= $cnx->fetch_array();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Reportar Bug</title>
 </head>
@@ -24,7 +26,7 @@ include('menu.php');
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input type="text" class="input" id="textInput" placeholder="Ana Clara">
+						<input type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $usuario["NOME"]?>">
 					</div>
 				</div>
 			</div>
@@ -34,7 +36,7 @@ include('menu.php');
 			<div class="field-body">
 				<div class="field">
 					<div class="control">
-						<input type="text" class="input" id="textInput" placeholder="anaclara@gmail.com">
+						<input type="text" class="input" id="textInput" placeholder="anaclara@gmail.com" value="<?php echo $usuario["EMAIL"]?>">
 					</div>
 				</div>
 			</div>
@@ -47,12 +49,12 @@ include('menu.php');
 				<div class="field">							
 					<div class="control">
 						<div class="select">
-							<select name="situacao">
-								<option selected="selected" value="Ativo">Dashboard</option>	
-								<option value="Férias">Meta</option>
-								<option value="Licença">Desempenho</option>
-								<option value="Desligado">Relatório</option>
-								<option value="Desligado">Configurações</option>
+							<select name="modulo">
+								<option selected="selected" value="Dashboard">Dashboard</option>	
+								<option value="Meta">Meta</option>
+								<option value="Desempenho">Desempenho</option>
+								<option value="Relatório">Relatório</option>
+								<option value="Configurações">Configurações</option>
 							</select>	
 						</div>
 					</div>
@@ -65,11 +67,11 @@ include('menu.php');
 				<div class="field">							
 					<div class="control">
 						<div class="select">
-							<select name="situacao">
-								<option selected="selected" value="Ativo">Baixa</option>	
-								<option value="Férias">Normal</option>
-								<option value="Licença">Alta</option>
-								<option value="Desligado">Urgente</option>
+							<select name="prioridade">
+								<option selected="selected" value="Baixa">Baixa</option>	
+								<option value="Normal">Normal</option>
+								<option value="Alta">Alta</option>
+								<option value="Urgente">Urgente</option>
 							</select>	
 							</div>
 						</div>
@@ -83,7 +85,7 @@ include('menu.php');
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<textarea class="textarea" placeholder="Relate o problema apresentado..."></textarea>
+							<textarea name="mensagem" class="textarea" placeholder="Relate o problema apresentado..."></textarea>
 						</div>
 					</div>
 				</div>
@@ -94,7 +96,7 @@ include('menu.php');
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button type="submit" class="button is-primary">Enviar</button>
+							<button name="Enviar" type="submit" class="button is-primary">Enviar</button>
 						</div>
 					</div>
 				</div>
@@ -106,3 +108,13 @@ include('menu.php');
 </div>
 </body>
 </html>
+<?php
+$modulo= trim($_POST['modulo']);
+$prioridade= trim($_POST['prioridade']);
+$mensagem= trim($_POST['mensagem']);
+
+$registrar="INSERT INTO REPORTAR(USUARIO_ID, MODULO, PRIORIDADE, MENSAGEM, SITUACAO) VALUES(".$_SESSION["userId"].",'".$modulo."','".$prioridade."','".$mensagem."','Recebido');";
+$cnx=mysqli_query($phpmyadmin, $registrar);
+echo "<script>alert('Problema registrado, obrigado pela contribuição, em breve o desenvolvedor irá contato-lo com a solução.')</script>";
+
+?>
