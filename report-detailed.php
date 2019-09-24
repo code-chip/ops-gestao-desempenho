@@ -43,6 +43,13 @@ else{
 	echo "<script>alert('Usuário sem permissão para este acesso!!')</script>";
 }?>
 <?php if( $periodo !='' && $contador !=0) : ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<title>Gestão de Desempenho - Relatório Detalhado</title>
+</head>
+<body>
 <hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr>
@@ -96,3 +103,5 @@ else{
 	<?php endfor; ?>
 	</table>	
 <?php endif; ?>
+</body>
+</html>
