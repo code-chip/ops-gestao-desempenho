@@ -51,8 +51,8 @@ else{
 			</td>
 			<td>Falta's: <?php echo $presenca["FALTA"];?></td>
 			<td>Folga's: <?php echo $presenca["FOLGA"];?></td>
-			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalAlcancado/($contador-$presenca["FOLGA"]), 2)."%" ?></td>
+			<td>Menor: <?php if($totalAlcancado>0){echo $menor."%";}else{echo"0%";}?></td>
+			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$presenca["FOLGA"]), 2)."%";}else{echo"0%";} ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>	
