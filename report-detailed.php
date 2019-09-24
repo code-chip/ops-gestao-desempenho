@@ -1,8 +1,6 @@
 <?php
-//session_start();
 $menuRelatorio="is-active";
 include('menu.php');
-//error_reporting(E_ALL); // todas
 $periodo = trim($_REQUEST['periodo']);
 $idUsuario = trim($_REQUEST['idUsuario']);
 $contador=0;
@@ -42,21 +40,20 @@ if( $_SESSION["permissao"]!=1 ){
 	$presenca= $con2->fetch_array();		
 }
 else{
-	
+	echo "<script>alert('Usuário sem permissão para este acesso!!')</script>";
 }?>
 <?php if( $periodo !='' && $contador !=0) : ?>
 <hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr>
-			<td colspan='10' class='table_title'>
-				<span class='title_left'>Colaborador: <?php echo $vetorNome[0];?>
-				</span>
+			<td >
+				<span class='title_left'>Colaborador: <?php echo $vetorNome[0];?></span>
 			</td>
-			<td colspan='10' class='table_title'>Falta's: <?php echo $presenca["FALTA"];?></td>
-			<td colspan="10" class='table_title'>Folga's: <?php echo $presenca["FOLGA"];?></td>
-			<td colspan='10' class='table_title'>Menor: <?php echo $menor."%"?></td>
-			<td colspan='10' class='table_title'>Media: <?php echo round($totalAlcancado/($contador-$presenca["FOLGA"]), 2)."%" ?></td>
-			<td colspan='10' class='table_title'>Maior: <?php echo $maior."%"?></td>
+			<td>Falta's: <?php echo $presenca["FALTA"];?></td>
+			<td>Folga's: <?php echo $presenca["FOLGA"];?></td>
+			<td>Menor: <?php echo $menor."%"?></td>
+			<td>Media: <?php echo round($totalAlcancado/($contador-$presenca["FOLGA"]), 2)."%" ?></td>
+			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
