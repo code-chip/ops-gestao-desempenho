@@ -95,17 +95,18 @@ if( $periodo != ""){
 	while($dado = $con->fetch_array()){
 		$nome= $dado["NOME"];		
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
-		$vetorPresenca[$x] = $dado["PRESENCA_ID"];
+		$vetorIdPresenca[$x] = $dado["PRESENCA_ID"];
+		$vetorPresenca[$x] = $dado["PRESENCA"];
 		$vetorMeta[$x] = $dado["META"];
 		$vetorAlcancado[$x] = $dado["ALCANCADO"];
 		$vetorDesempenho[$x] = $dado["DESEMPENHO"];
 		$totalDesempenho=$totalDesempenho+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
 		$vetorObservacao[$x] = $dado["OBSERVACAO"];
-		if($vetorPresenca[$x]==2){
+		if($vetorIdPresenca[$x]==2){
 			$falta++;
 		}
-		else if($vetorPresenca[$x]==3){
+		else if($vetorIdPresenca[$x]==3){
 			$folga++;
 		}
 		if($maior<$vetorDesempenho[$x]){
@@ -139,16 +140,18 @@ else{
 	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
 	<tr>
-		<th style='width:55px;'>Atividade</th>		
-		<th style='width:55px;'>Meta</th>
-		<th style='width:55px;'>Alacançado</th>
-		<th style='width:55px;'>Desempenho</th>
-		<th style='width:55px;'>Data</th>
+		<th style='width:55px;'>Atividade</th>
+		<?php if($falta>0 || $folga>0): ?><th style='width:55px;'>Presença</th><?php endif;?>		
+		<th style='width:30px;'>Meta</th>
+		<th style='width:40px;'>Alacançado</th>
+		<th style='width:45px;'>Desempenho</th>
+		<th style='width:70px;'>Data</th>
 		<th style='width:350px;'>Observação</th>
 	</tr>
 <?php for( $i = 0; $i < sizeof($vetorAtividade); $i++ ) : ?>
 	<tr>
-		<td><?php echo $vetorAtividade[$i]?></td>			
+		<td><?php echo $vetorAtividade[$i]?></td>
+		<?php if($falta>0 || $folga>0): ?><td><?php echo $vetorPresenca[$i];?></td><?php endif;?>			
 		<td><?php echo $vetorMeta[$i]?></td>
 		<td><?php echo $vetorAlcancado[$i]?></td>
 		<td><?php echo $vetorDesempenho[$i]."%"?></td>
@@ -159,7 +162,7 @@ else{
 	</table>
 	<a href="#topo">
 		<div class=".scrollWrapper">
-			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
+			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
 		</div>
 	</a>
 	</div>	
