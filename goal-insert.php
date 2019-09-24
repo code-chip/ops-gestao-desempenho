@@ -1,13 +1,11 @@
 <?php 
-//session_start();
-//include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 $opcao=trim($_POST['opcao']);
 $nome=trim($_POST['nome']);
 $situacao=trim($_POST['situacao']);
 
-if(isset($_POST["inserirOpcao"])!=null){
+if(isset($_POST["inserirMeta"])!=null){
 	if($opcao!="" && $nome!=""){
 		$checkOpcao="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
 		$cnx= mysqli_query($phpmyadmin, $checkOpcao);
@@ -50,7 +48,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 	   		<form action="goal-insert.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
+						<label class="label">Meta:</label>
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:17em;">							
@@ -62,22 +60,32 @@ if(isset($_POST["inserirOpcao"])!=null){
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
+						<label class="label">Atividade:</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
-								<div class="select">
-									<select name="opcao">
-										<option selected="selected" value="">Selecione</option>
-										<option value="ATIVIDADE">Atividade</option>
-										<option value="CARGO">Cargo</option>										
-										<option value="GESTOR">Gestor</option>
-										<option value="PERMISSAO">Permissao</option>
-										<option value="SETOR">Setor</option>
-										<option value="TURNO">Turno</option>										
+								<div class="select is-size-7-touch">
+									<select name="atividade[]">
+									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
+									$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
+									while($atividade = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
+									<?php $x;} endwhile;?>
 									</select>	
 								</div>
+							</div>						
+						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Descrição:</label>
+					</div>
+					<div class="field-body">
+						<div class="field" style="max-width:17em;">							
+							<div class="control">
+								<textarea class="textarea"></textarea>
 							</div>						
 						</div>
 					</div>
@@ -104,7 +112,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 						<div class="field-body">
 							<div class="field">
 								<div class="control">
-									<button name="inserirOpcao" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+									<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 								</div>
 							</div>
 						</div>
