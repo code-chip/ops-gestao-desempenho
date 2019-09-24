@@ -112,9 +112,12 @@ $usuario= $cnx->fetch_array();
 $modulo= trim($_POST['modulo']);
 $prioridade= trim($_POST['prioridade']);
 $mensagem= trim($_POST['mensagem']);
-
-$registrar="INSERT INTO REPORTAR(USUARIO_ID, MODULO, PRIORIDADE, MENSAGEM, SITUACAO) VALUES(".$_SESSION["userId"].",'".$modulo."','".$prioridade."','".$mensagem."','Recebido');";
-$cnx=mysqli_query($phpmyadmin, $registrar);
-echo "<script>alert('Problema registrado, obrigado pela contribuição, em breve o desenvolvedor irá contato-lo com a solução.')</script>";
-
+if(isset($_POST["Enviar"])!=null && $mensagem!=null){
+	$registrar="INSERT INTO REPORTAR(USUARIO_ID, MODULO, PRIORIDADE, MENSAGEM, SITUACAO) VALUES(".$_SESSION["userId"].",'".$modulo."','".$prioridade."','".$mensagem."','Recebido');";
+	$cnx=mysqli_query($phpmyadmin, $registrar);
+	echo "<script>alert('Problema registrado, obrigado pela contribuição, em breve o desenvolvedor irá contato-lo com a solução.')</script>";
+}
+else if(isset($_POST["Enviar"])!=null){
+	echo "<script>alert('O campo mensagem não pode está vazio!!')</script>";
+}
 ?>
