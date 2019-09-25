@@ -91,7 +91,7 @@ if( $periodo != ""){
 	WHERE D.USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$atividade."".$meta."
 	ORDER BY REGISTRO;";	
 	$con = mysqli_query($phpmyadmin, $consulta);
-	$x=0; $falta=0; $folga=0; $menor=1000; $maior=0;
+	$x=0; $falta=0; $folga=0; $menor=1000; $maior=0; $atestado=0;
 	while($dado = $con->fetch_array()){
 		$nome= $dado["NOME"];		
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
@@ -108,6 +108,9 @@ if( $periodo != ""){
 		}
 		else if($vetorIdPresenca[$x]==3){
 			$folga++;
+		}
+		else if($vetorIdPresenca[$x]==4){
+			$atestado++;
 		}
 		if($maior<$vetorDesempenho[$x]){
 			$maior=$vetorDesempenho[$x];
@@ -134,14 +137,14 @@ else{
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalDesempenho/($contador-$folga), 2)."%" ?></td>
+			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$atestado), 2)."%" ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
 	<tr>
 		<th style='width:55px;'>Atividade</th>
-		<?php if($falta>0 || $folga>0): ?><th style='width:55px;'>Presença</th><?php endif;?>		
+		<?php if($falta>0 || $folga>0 || $atestado>0): ?><th style='width:55px;'>Presença</th><?php endif;?>		
 		<th style='width:30px;'>Meta</th>
 		<th style='width:40px;'>Alacançado</th>
 		<th style='width:45px;'>Desempenho</th>
@@ -151,7 +154,7 @@ else{
 <?php for( $i = 0; $i < sizeof($vetorAtividade); $i++ ) : ?>
 	<tr>
 		<td><?php echo $vetorAtividade[$i]?></td>
-		<?php if($falta>0 || $folga>0): ?><td><?php echo $vetorPresenca[$i];?></td><?php endif;?>			
+		<?php if($falta>0 || $folga>0 || $atestado>0): ?><td><?php echo $vetorPresenca[$i];?></td><?php endif;?>			
 		<td><?php echo $vetorMeta[$i]?></td>
 		<td><?php echo $vetorAlcancado[$i]?></td>
 		<td><?php echo $vetorDesempenho[$i]."%"?></td>

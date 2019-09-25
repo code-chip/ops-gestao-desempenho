@@ -12,17 +12,27 @@ if( $_SESSION["permissao"]!=1 ){
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
 	WHERE D.USUARIO_ID=".$idUsuario." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ORDER BY REGISTRO;";
 	$con = mysqli_query($phpmyadmin , $consulta);	
-	$x=0; $menor=1000; $maior=0;
+	$x=0; $menor=1000; $maior=0; $falta=0; $folga=0; $atestado=0;
 	while($dado = $con->fetch_array()){
 		$vetorNome[$x] = $dado["NOME"];	
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
+		$vetorIdPresenca[$x] = $dado["PRESENCA_ID"];
 		$vetorPresenca[$x] = $dado["PRESENCA"];
 		$vetorDesempenho[$x] = $dado["ALCANCADO"];
 		$vetorMeta[$x] = $dado["META"];
 		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
 		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
-		$vetorObservacao[$x] = $dado["OBSERVACAO"];					
+		$vetorObservacao[$x] = $dado["OBSERVACAO"];
+		if($vetorIdPresenca[$x]==2){
+			$falta++;
+		}
+		else if($vetorIdPresenca[$x]==3){
+			$folga++;
+		}
+		else if($vetorIdPresenca[$x]==4){
+			$atestado++;
+		}					
 		if($maior<$vetorAlcancado[$x]){
 			$maior=$vetorAlcancado[$x];
 		}
@@ -35,9 +45,9 @@ if( $_SESSION["permissao"]!=1 ){
 	if($contador==0){
 		?><script type="text/javascript">alert('Nenhum resultado encontrado!');</script><?php
 	}
-	$consulta2="SELECT (SELECT COUNT(*) FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=2 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20')AS FALTA, COUNT(*) AS FOLGA FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20';";
-	$con2= mysqli_query($phpmyadmin,$consulta2);
-	$presenca= $con2->fetch_array();		
+	//$consulta2="SELECT (SELECT COUNT(*) FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=2 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20')AS FALTA, COUNT(*) AS FOLGA FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20';";
+	//$con2= mysqli_query($phpmyadmin,$consulta2);
+	//$presenca= $con2->fetch_array();		
 }
 else{
 	echo "<script>alert('Usuário sem permissão para este acesso!!')</script>";
@@ -56,10 +66,10 @@ else{
 			<td >
 				<span class='title_left'>Colaborador: <?php echo $vetorNome[0];?></span>
 			</td>
-			<td>Falta's: <?php echo $presenca["FALTA"];?></td>
-			<td>Folga's: <?php echo $presenca["FOLGA"];?></td>
+			<td>Falta's: <?php echo $falta;?></td>
+			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php if($totalAlcancado>0){echo $menor."%";}else{echo"0%";}?></td>
-			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$presenca["FOLGA"]), 2)."%";}else{echo"0%";} ?></td>
+			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga-$falta-$atestado), 2)."%";}else{echo"0%";} ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>	
@@ -67,7 +77,7 @@ else{
 	<tr>
 		<th>Data</th>
 		<th>Atividade</th>
-		<?php if($presenca["FOLGA"]>0 || $presenca["FALTA"]>0): ?><th>Presença</th><?php endif;?>
+		<?php if($folga>0 || $falta>0 || $atestado>0): ?><th>Presença</th><?php endif;?>
 		<th>Meta</th>
 		<th>Alcançado</th>
 		<th>Desempenho</th>
@@ -91,7 +101,7 @@ else{
 			<?php $mescla=true; endif;  if($repeat==0 && $vetorRegistro[$i-1]!=$vetorRegistro[$i]) :?>
 			<td><?php echo $vetorRegistro[$i];?></td><?php $mescla=false; endif;?>
 			<td><?php echo $vetorAtividade[$i]?></td>
-			<?php if($presenca["FOLGA"]>0 || $presenca["FALTA"]>0): ?><td><?php if($vetorPresenca[$i]=="") echo "Presente"; else echo $vetorPresenca[$i]?></td><?php endif;?>
+			<?php if($folga>0 || $falta>0 || $atestado>0): ?><td><?php echo $vetorPresenca[$i]?></td><?php endif;?>
 			<td><?php echo $vetorMeta[$i]?></td>
 			<td><?php echo $vetorDesempenho[$i]?></td>
 			<td><?php  echo $vetorAlcancado[$i]."%"?></td>

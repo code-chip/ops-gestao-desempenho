@@ -313,7 +313,7 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 	$v=0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
 	for( $i = 0; $i < sizeof($presencas); $i++ ){
 		if($pvt[$v]==$i){
-			if($presencas[$i]==3){
+			if($presencas[$i]==3 || $presencas[$i]==4){
 				$desempenho=0;
 				$metas[$i]=0;
 				$alcancados[$i]=0;
@@ -327,6 +327,7 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			}				
 			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";
 			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
+			echo $inserirDesempenho;
 			$v++;
 		}
 
@@ -340,7 +341,7 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 	else{
 		?><script type="text/javascript">
 			alert('Erro ao cadastrar Desempenho, campos Meta e/ou Alcançado não pode estar vazio!!');
-			window.location.href=window.location.href;
+			//window.location.href=window.location.href;
 		</script><?php
 	}
 }
