@@ -1,6 +1,4 @@
 <?php 
-//session_start();
-//include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 $opcao=trim($_POST['opcao']);
@@ -44,11 +42,12 @@ $nome=trim($_POST['nome']);
 									<select name="opcao">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
-										<option value="CARGO">Cargo</option>										
+										<option value="CARGO">Cargo</option>
 										<option value="GESTOR">Gestor</option>
 										<option value="PERMISSAO">Permissao</option>
+										<option value="PRESENCA">Presença</option>
 										<option value="SETOR">Setor</option>
-										<option value="TURNO">Turno</option>										
+										<option value="TURNO">Turno</option>
 									</select>	
 								</div>
 							</div>						
