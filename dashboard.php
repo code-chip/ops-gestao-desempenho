@@ -12,8 +12,6 @@
 }
 </style>
 <?php 
-//session_start();
-//include('login-check.php');
 $menuDashboard="is-active";
 include('menu.php');
 require("query.php");
@@ -64,7 +62,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $x++;
   }
   //DASH COMPARATIVO ENTRE TURNOS - dash-turnos.
-  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO;";
+  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID<>3 GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO;";
   $cnx= mysqli_query($phpmyadmin, $queryDifTurnos);
   $x=0;
   while ($compTurno= $cnx->fetch_array()) {
@@ -106,8 +104,9 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
   for($i=0 ;$i <3;$i++){
-    $idAtividade=1;
-    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<='2019-09-20' GROUP BY REGISTRO DESC LIMIT 6;";
+    $idAtividade=1+$i;
+    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID NOT IN(3,4) GROUP BY REGISTRO DESC LIMIT 6;
+";
     $x=0;
     $cnx= mysqli_query($phpmyadmin, $querypriAtivi);
     while ($priAtiv= $cnx->fetch_array()) {
@@ -121,10 +120,8 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Dashboard</title>
-	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
 	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
 	<link rel="stylesheet" href="css/bulma.min.css"/>
@@ -224,17 +221,13 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 		    data.addColumn('number', 'Vespetino');
 
 		    data.addRows([
-		        [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, 105],   [2, 123, 115],  [3, 107, 90],   [4, 108, 100],  [5, 90, 50],
-		        [6, 100, 103],   [7, 127, 109],  [8, 103, 125],  [9, 99, 92],  [10, 102, 104], [11, 105, 97],
-		        [12, 92, 102], [13, 89, 92], [14, 95, 104], [15, 98, 109], [16, 104, 106], [17, 108, 100],
-		        [18, 92, 94], [19, 90, 86], [20, 98, 99], [21, 105, 99], [22, 106, 99], [23, 100, 120],
-		        [24, 100, 102], [25, 99, 103], [26, 99, 99], [27, 101, 103], [28, 100, 101], [29, 103, 105],
-		        [30, 105, 107]
+		        [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, <?php echo $vtcompTurnos[3]?>],   [2, <?php echo $vtcompTurnos[4]?>, <?php echo $vtcompTurnos[5]?>],  [3, <?php echo $vtcompTurnos[5]?>, <?php echo $vtcompTurnos[6]?>],   [4, <?php echo $vtcompTurnos[7]?>, <?php echo $vtcompTurnos[7]?>],  [5, <?php echo $vtcompTurnos[8]?>, <?php echo $vtcompTurnos[9]?>],
+		        [6, <?php echo $vtcompTurnos[10]?>, <?php echo $vtcompTurnos[11]?>],   [7, <?php echo $vtcompTurnos[12]?>, <?php echo $vtcompTurnos[13]?>],  [8, <?php echo $vtcompTurnos[14]?>, 100], [9 ,100, 92],  [10, 102, 104]
 		    ]);
 
 		    var options = {
 		    	hAxis: {
-		        	title: 'Comparativo entre turnos em 30 dias'
+		        	title: 'Comparativo entre turnos últimos 9 dias'
 		        },
 		        vAxis: {
 		        	title: 'Média de Desempenho'
