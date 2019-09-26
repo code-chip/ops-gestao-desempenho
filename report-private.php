@@ -134,10 +134,11 @@ else{
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">
 		<tr>
 			<td>Colaborador: <?php echo $nome?></td>
+			<td>Atestado's: <?php echo $atestado;?></td>
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$atestado), 2)."%" ?></td>
+			<td>Media: <?php echo round($totalDesempenho/($contador-$folga), 2)."%" ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>
