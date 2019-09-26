@@ -45,9 +45,6 @@ if( $_SESSION["permissao"]!=1 ){
 	if($contador==0){
 		?><script type="text/javascript">alert('Nenhum resultado encontrado!');</script><?php
 	}
-	//$consulta2="SELECT (SELECT COUNT(*) FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=2 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20')AS FALTA, COUNT(*) AS FOLGA FROM DESEMPENHO WHERE USUARIO_ID=".$idUsuario."  AND PRESENCA_ID=3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20';";
-	//$con2= mysqli_query($phpmyadmin,$consulta2);
-	//$presenca= $con2->fetch_array();		
 }
 else{
 	echo "<script>alert('Usuário sem permissão para este acesso!!')</script>";
@@ -63,13 +60,12 @@ else{
 <hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr>
-			<td >
-				<span class='title_left'>Colaborador: <?php echo $vetorNome[0];?></span>
-			</td>
+			<td>Colaborador: <?php echo $vetorNome[0];?></td>
+			<td>Atestado's: <?php echo $atestado;?></td>
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php if($totalAlcancado>0){echo $menor."%";}else{echo"0%";}?></td>
-			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga-$falta-$atestado), 2)."%";}else{echo"0%";} ?></td>
+			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga), 2)."%";}else{echo"0%";} ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>	
