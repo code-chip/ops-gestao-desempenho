@@ -292,16 +292,33 @@ if(isset($_POST['alterarDados'])){
 	$observacoes = array_filter($_POST['observacao']);
 	$upCount=0;
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
-		//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
-		if($observacoes[$i]=="" || $observacoes[$i]==null){
-			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."';";	
+		
+		if($alcancados[$i]==null){//A função array_filter setar null quando o dado é zero.
+			$alcancados[$i]=0;
+		}
+		if($metas[$i]==null){//A função array_filter setar null quando o dado é zero.
+			$metas[$i]=0;
+		}
+		if($observacoes[$i]=="" || $observacoes[$i]==null){//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
+			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."';";
 		}
 		else{
-			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";	
+			$checkUp="SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";
 		}
 		$tx= mysqli_query($phpmyadmin, $checkUp);
 		if(mysqli_num_rows($tx)==0){
-			$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);
+			if($presencas[$i]==3){//CASO SEJA FOLGA SETA 0.
+				$desempenho=0;
+				$metas[$i]=0;
+				$alcancados[$i]=0;
+			}
+			else if($alcancados[$i]==0 || $alcancados[$i]==null){
+				$desempenho=0;
+				$alcancados[$i]=0;
+			}
+			else{
+				$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);
+			}
 			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"]." WHERE ID=".$ids[$i].";";		
 			$cnx=mysqli_query($phpmyadmin, $upDesempenho);
 			$upCount=$upCount+1;			
