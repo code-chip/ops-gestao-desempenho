@@ -15,6 +15,12 @@
 $menuDashboard="is-active";
 include('menu.php');
 require("query.php");
+  if(date('d')>22){
+    $anoMes=date('Y-m', strtotime('+1 month'));
+  }
+  else{
+    $anoMes=date('Y-m');
+  }
 	$x3=0;
 	$cnxG3= mysqli_query($phpmyadmin, $g3);
 	echo mysqli_error($phpmyadmin);
@@ -72,7 +78,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   //DASH RANKING MELHORES DO MÊS - top8
   $querytop8="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".date('Y-m')."-21', INTERVAL 1 MONTH) AND REGISTRO<='".date('Y-m')."-20'
+  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
   GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop8);
@@ -84,7 +90,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   //DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
   $querytop10="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".date('Y-m')."-21', INTERVAL 1 MONTH) AND REGISTRO<='".date('Y-m')."-20'
+  WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
   GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 11;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop10);
@@ -105,7 +111,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
   for($i=0 ;$i <3;$i++){
     $idAtividade=1+$i;
-    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID NOT IN(3,4) GROUP BY REGISTRO DESC LIMIT 6;
+    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID<>3 GROUP BY REGISTRO DESC LIMIT 6;
 ";
     $x=0;
     $cnx= mysqli_query($phpmyadmin, $querypriAtivi);
