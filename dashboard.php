@@ -41,11 +41,12 @@ GROUP BY ATIVIDADE_ID";
 		$vtG4vezes[$x3]= $G4["VEZES"];
 		$x3++;				
 	}
-	$g6="SELECT SUM(ACESSO) AS ACESSOS FROM ACESSO GROUP BY ANO_MES;";
+	$g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
 	$cnx=mysqli_query($phpmyadmin, $g6);
 	$x=0;
 	while ($G6= $cnx->fetch_array()) {
 		$vtG6Acesso[$x]=$G6["ACESSOS"];
+    $vtG6Mes[$x]=$G6["MES"];
 		$x++;
 	}
   /*DASH SEXO*/
@@ -506,9 +507,10 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Acessos'],
-          ['<?php echo date('m',strtotime("-2 months"))?>',    <?php echo $vtG6Acesso[0]?>],
-          ['<?php echo date('m',strtotime("-1 months"))?>',     <?php echo $vtG6Acesso[1]?>],
-          ['<?php echo date('m')?>',  <?php echo $vtG6Acesso[2]?>]
+          ['<?php echo $vtG6Mes[3]?>',  <?php echo $vtG6Acesso[3]?>],
+          ['<?php echo $vtG6Mes[2]?>',  <?php echo $vtG6Acesso[2]?>],
+          ['<?php echo $vtG6Mes[1]?>',  <?php echo $vtG6Acesso[1]?>],
+          ['<?php echo $vtG6Mes[0]?>',  <?php echo $vtG6Acesso[0]?>]
         ]);
 
         var options = {
