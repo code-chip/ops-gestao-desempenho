@@ -224,7 +224,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 		    var data = new google.visualization.DataTable();
 		    data.addColumn('number', 'X');
 		    data.addColumn('number', 'Matutino');
-		    data.addColumn('number', 'Vespetino');
+		    data.addColumn('number', 'Vespertino');
 
 		    data.addRows([
 		        [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, <?php echo $vtcompTurnos[3]?>],   [2, <?php echo $vtcompTurnos[4]?>, <?php echo $vtcompTurnos[5]?>],  [3, <?php echo $vtcompTurnos[5]?>, <?php echo $vtcompTurnos[6]?>],   [4, <?php echo $vtcompTurnos[7]?>, <?php echo $vtcompTurnos[7]?>],  [5, <?php echo $vtcompTurnos[8]?>, <?php echo $vtcompTurnos[9]?>],
@@ -282,7 +282,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         ]);
 
         var options = {
-          title: 'Porcentual de funcionários Homens/Mulheres',
+          title: 'Percentual de funcionários Homens/Mulheres',
           pieHole: 0.8,
         };
 
@@ -303,7 +303,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         ]);
 
         var options = {
-          title: 'Porcentual Masculino/Feminino por turno',
+          title: 'Percentual Masculino/Feminino por turno',
           pieHole: 0.3,
         };
 
