@@ -91,7 +91,7 @@ if( $periodo != ""){
 	WHERE D.USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$atividade."".$meta."
 	ORDER BY REGISTRO;";	
 	$con = mysqli_query($phpmyadmin, $consulta);
-	$x=0; $falta=0; $folga=0; $menor=1000; $maior=0; $atestado=0;
+	$x=0; $falta=0; $folga=0; $menor=1000; $maior=0; $atestado=0; $treinamento=0;
 	while($dado = $con->fetch_array()){
 		$nome= $dado["NOME"];		
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
@@ -111,6 +111,9 @@ if( $periodo != ""){
 		}
 		else if($vetorIdPresenca[$x]==4){
 			$atestado++;
+		}
+		else if($vetorIdPresenca[$x]==5){
+			$treinamento++;
 		}
 		if($maior<$vetorDesempenho[$x]){
 			$maior=$vetorDesempenho[$x];
@@ -138,7 +141,7 @@ else{
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalDesempenho/($contador-$folga), 2)."%" ?></td>
+			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$treinamento), 2)."%" ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>
