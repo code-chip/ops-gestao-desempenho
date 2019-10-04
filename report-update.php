@@ -307,7 +307,7 @@ if(isset($_POST['alterarDados'])){
 		}
 		$tx= mysqli_query($phpmyadmin, $checkUp);
 		if(mysqli_num_rows($tx)==0){
-			if($presencas[$i]==3){//CASO SEJA FOLGA SETA 0.
+			if($presencas[$i]==3 || $presencas[$i]==5){//CASO SEJA FOLGA/TREINAMENTO SETA 0.
 				$desempenho=0;
 				$metas[$i]=0;
 				$alcancados[$i]=0;
