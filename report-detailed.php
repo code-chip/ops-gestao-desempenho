@@ -12,7 +12,7 @@ if( $_SESSION["permissao"]!=1 ){
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
 	WHERE D.USUARIO_ID=".$idUsuario." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ORDER BY REGISTRO;";
 	$con = mysqli_query($phpmyadmin , $consulta);	
-	$x=0; $menor=1000; $maior=0; $falta=0; $folga=0; $atestado=0;
+	$x=0; $menor=1000; $maior=0; $falta=0; $folga=0; $atestado=0; $treinamento=0;
 	while($dado = $con->fetch_array()){
 		$vetorNome[$x] = $dado["NOME"];	
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
@@ -32,7 +32,10 @@ if( $_SESSION["permissao"]!=1 ){
 		}
 		else if($vetorIdPresenca[$x]==4){
 			$atestado++;
-		}					
+		}
+		else if($vetorIdPresenca[$x]==5){
+			$treinamento++;
+		}						
 		if($maior<$vetorAlcancado[$x]){
 			$maior=$vetorAlcancado[$x];
 		}
@@ -65,7 +68,7 @@ else{
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php if($totalAlcancado>0){echo $menor."%";}else{echo"0%";}?></td>
-			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga), 2)."%";}else{echo"0%";} ?></td>
+			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga-$treinamento), 2)."%";}else{echo"0%";} ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
 		</tr>
 	</table>	
