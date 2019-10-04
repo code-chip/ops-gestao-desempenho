@@ -5,6 +5,32 @@ $opcao=trim($_POST['opcao']);
 $nome=trim($_POST['nome']);
 $situacao=trim($_POST['situacao']);
 
+
+$produtos = [
+    ['id' => 1, 'fabricante' => 1, 'nome' => 'mouse'],
+    ['id' => 2, 'fabricante' => 2, 'nome' => 'teclado'],
+    ['id' => 3, 'fabricante' => 2, 'nome' => 'monitor'],
+    ['id' => 4, 'fabricante' => 3, 'nome' => 'carregador'],
+    ['id' => 5, 'fabricante' => 1, 'nome' => 'webcam'],
+    ['id' => 6, 'fabricante' => 4, 'nome' => 'microfone'],
+];
+
+if(count($_POST) > 0) {
+
+    $_POST['fabricante'] = (int)$_POST['fabricante'];
+    $resultado = ['success' => true];
+
+
+    foreach ($produtos as $value)
+        if($value['fabricante'] == $_POST['fabricante'])
+            $resultado['produtos'][] = $value;
+
+    if(count($resultado) > 1)
+        die(json_encode($resultado));
+}
+
+die(json_encode('[message : "erro", success: false]'));
+
 if(isset($_POST["inserirMeta"])!=null){
 	if($opcao!="" && $nome!=""){
 		$checkMeta="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
@@ -45,6 +71,7 @@ if(isset($_POST["inserirMeta"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
+	  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	   		<form action="goal-insert.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
@@ -89,7 +116,58 @@ if(isset($_POST["inserirMeta"])!=null){
 							</div>						
 						</div>
 					</div>
-				</div>				
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Colaborador:</label>
+					</div>
+					<div class="field-body">
+						<div class="field is-grouped" style="max-width:17em;">							
+							<div class="control">
+								<div class="select">
+									<select name="situacao">
+										<option selected="selected" value="Ativo">Todos</option>
+										<option value="Inativo">Específico</option>																			
+									</select>	
+								</div>
+							</div>
+						</div>
+					</div>					
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Turno:</label>
+					</div>
+					<div class="field-body">
+						<div class="field is-grouped" style="max-width:17em;">							
+							<div class="control">
+								<div class="select">
+									<select name="situacao">
+										<option selected="selected" value="Ativo">Todos</option>
+										<option value="Inativo">Específico</option>																			
+									</select>	
+								</div>
+							</div>
+						</div>
+					</div>					
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Setor:</label>
+					</div>
+					<div class="field-body">
+						<div class="field is-grouped" style="max-width:17em;">							
+							<div class="control">
+								<div class="select">
+									<select name="situacao">
+										<option selected="selected" value="Ativo">Todos</option>
+										<option value="Inativo">Específico</option>																			
+									</select>	
+								</div>
+							</div>
+						</div>
+					</div>					
+				</div>						
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Status:</label>
