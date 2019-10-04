@@ -17,9 +17,11 @@ include('menu.php');
 require("query.php");
   if(date('d')>22){
     $anoMes=date('Y-m', strtotime('+1 month'));
+    $mes=date('m', strtotime('+1 month'));
   }
   else{
     $anoMes=date('Y-m');
+    $mes=date('m');
   }
 	$x3=0;
 	$cnxG3= mysqli_query($phpmyadmin, $g3);
@@ -49,6 +51,28 @@ GROUP BY ATIVIDADE_ID";
     $vtG6Mes[$x]=$G6["MES"];
 		$x++;
 	}
+  /*DASH RELAÇÃO FOLGAS E FALTAS*/
+  $queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' 
+UNION ALL
+SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' ";
+  $cnx= mysqli_query($phpmyadmin, $queryFolgasFaltas);
+  $x=0;
+  while($folgasFaltas= $cnx->fetch_array()) {
+    $vtFolgasFaltas[$x]=$folgasFaltas["COUNT(*)"];
+    $x++;
+  }
   /*DASH SEXO*/
   $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO GROUP BY SEXO ORDER BY SEXO DESC;";
   $cnx= mysqli_query($phpmyadmin, $querySexo);
@@ -199,16 +223,16 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Folgas', 'Faltas'],
-          ['<?php echo strftime('%h', strtotime("-2 months"))?>', 7, 5],
-          ['<?php echo strftime('%h', strtotime("-1 months"))?>', 2, 10],
-          ['<?php echo strftime('%h')?>', 7, 5],
-          ['<?php echo strftime('%h', strtotime("+1 months"))?>', 4, 5]
+          ['<?php echo strftime('%h', strtotime("-3 months"))?>', <?php echo $vtFolgasFaltas[0]?>, <?php echo $vtFolgasFaltas[1]?>],
+          ['<?php echo strftime('%h', strtotime("-2 months"))?>', <?php echo $vtFolgasFaltas[2]?>, <?php echo $vtFolgasFaltas[3]?>],
+          ['<?php echo strftime('%h', strtotime("-1 months"))?>', <?php echo $vtFolgasFaltas[4]?>, <?php echo $vtFolgasFaltas[5]?>],
+          ['<?php echo strftime('%h')?>', <?php echo $vtFolgasFaltas[6]?>, <?php echo $vtFolgasFaltas[7]?>]          
         ]);
 
         var options = {
           chart: {
             title: 'Relação ausência',
-            subtitle: 'Folgas e faltas do período <?php echo strftime('%h', strtotime("-2 months"))?> a <?php echo strftime('%h', strtotime("+1 months"))?>',
+            subtitle: 'Folgas e faltas do período <?php echo strftime('%h', strtotime("-3 months"))?> a <?php echo strftime('%h')?>',
           }
         };
 
