@@ -211,7 +211,7 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 	<div class="field is-horizontal" id="graficos">		
 		<div class="column is-mobile" id="dash-desempenho"></div>
 		<div class="column is-mobile" id="dash-variacao"></div>
-		<div class="column is-mobile" id="dash-ranking"></div>
+		<!--<div class="column is-mobile" id="dash-ranking"></div>-->
 		<div class="column is-mobile" id="dash-top5"></div>
 	</div>	
 	<hr/>
