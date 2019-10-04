@@ -23,14 +23,14 @@ require("query.php");
     $anoMes=date('Y-m');
     $mes=date('m');
   }
-	$x3=0;
-	$cnxG3= mysqli_query($phpmyadmin, $g3);
-	echo mysqli_error($phpmyadmin);
-	while($G3 = $cnxG3->fetch_array()){
-		$vtG3nome[$x3]= $G3["NOME"];
-		$vtG3desempenho[$x3]= $G3["MAXIMO"];
-		$vtG3menor[$x3]= $G3["MINIMO"];		
-		$x3++;				
+  //DASH MEDIA GERAL
+  $queryMediaGeral="SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO GROUP BY REGISTRO ORDER BY REGISTRO DESC;";
+	$x=0;
+	$cnx= mysqli_query($phpmyadmin, $queryMediaGeral);
+	//echo mysqli_error($phpmyadmin);
+	while($mediaGeral = $cnx->fetch_array()){
+		$vtmediaGeral[$x]= $mediaGeral["MEDIA"];
+		$x++;				
 	}
 	$g4="SELECT A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D
 INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
@@ -187,35 +187,37 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         chart.draw(data, options);
       }
     </script>
-	<script type="text/javascript">
-	google.charts.load('current', {packages: ['corechart', 'bar']});
-	google.charts.setOnLoadCallback(drawTitleSubtitle);
-	function drawTitleSubtitle() {
-    	var data = google.visualization.arrayToDataTable([
-        ['Operador', 'avg', 'min'],
-        ['<?php echo $vtG3nome[0]?>', parseFloat('<?php echo $vtG3desempenho[0]?>'), parseFloat('<?php echo $vtG3menor[0]?>')],
-        ['<?php echo $vtG3nome[1]?>', parseFloat('<?php echo $vtG3desempenho[1]?>'), parseFloat('<?php echo $vtG3menor[1]?>')],
-        ['<?php echo $vtG3nome[2]?>', parseFloat('<?php echo $vtG3desempenho[2]?>'), parseFloat('<?php echo $vtG3menor[2]?>')],
-        ['<?php echo $vtG3nome[3]?>', parseFloat('<?php echo $vtG3desempenho[3]?>'), parseFloat('<?php echo $vtG3menor[3]?>')]        
-      	]);
-      	var materialOptions = {
-        	chart: {
-         		title: 'Ranking mensal dos operadores',
-          		subtitle: 'Top 4 desempenho do mês '
-        	},
-        	hAxis: {
-          		title: 'Total Alcançado',
-          		minValue: 0,
-        	},
-        	vAxis: {
-          		title: 'Ranking'
-        	},
-        	bars: 'horizontal'
-      	};
-      	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking'));
-      	materialChart.draw(data, materialOptions);
+  <script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart', 'line']});
+  google.charts.setOnLoadCallback(drawBasic);
+  function drawBasic() {
+        var data = new google.visualization.DataTable();''
+      var o;     
+        data.addColumn('number', 'X');
+        data.addColumn('number', 'Avg');
+      data.addRows([
+          [0, parseFloat('<?php echo $vtmediaGeral[25]?>')],   [1, parseFloat('<?php echo $vtmediaGeral[24]?>')],  [2, parseFloat('<?php echo $vtmediaGeral[23]?>')],
+          [3, parseFloat('<?php echo $vtmediaGeral[22]?>')],  [4, parseFloat('<?php echo $vtmediaGeral[21]?>')],  [5, parseFloat('<?php echo $vtmediaGeral[20]?>')],
+          [6, parseFloat('<?php echo $vtmediaGeral[19]?>')],  [7, parseFloat('<?php echo $vtmediaGeral[18]?>')],  [8, parseFloat('<?php echo $vtmediaGeral[17]?>')],
+          [9, parseFloat('<?php echo $vtmediaGeral[16]?>')],  [10, parseFloat('<?php echo $vtmediaGeral[15]?>')], [11, parseFloat('<?php echo $vtmediaGeral[14]?>')],
+          [12, parseFloat('<?php echo $vtmediaGeral[13]?>')], [13, parseFloat('<?php echo $vtmediaGeral[12]?>')], [14, parseFloat('<?php echo $vtmediaGeral[11]?>')], 
+          [15, parseFloat('<?php echo $vtmediaGeral[10]?>')], [16, parseFloat('<?php echo $vtmediaGeral[9]?>')], [17, parseFloat('<?php echo $vtmediaGeral[8]?>')],
+          [18, parseFloat('<?php echo $vtmediaGeral[7]?>')], [19, parseFloat('<?php echo $vtmediaGeral[6]?>')], [20, parseFloat('<?php echo $vtmediaGeral[5]?>')], 
+          [21, parseFloat('<?php echo $vtmediaGeral[4]?>')], [22, parseFloat('<?php echo $vtmediaGeral[3]?>')], [23, parseFloat('<?php echo $vtmediaGeral[2]?>')],
+          [24, parseFloat('<?php echo $vtmediaGeral[1]?>')], [25, parseFloat('<?php echo $vtmediaGeral[0]?>')]
+      ]);
+        var options = {
+          hAxis: {
+              title: 'Últimos 26 dias'
+          },
+          vAxis: {
+              title: 'Desempenho da empresa'
+          }
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('dash-mediageral'));
+        chart.draw(data, options);
     }
-	</script>
+</script>
 	<script type="text/javascript">
       google.charts.load('current', {'packages':['bar']});
       google.charts.setOnLoadCallback(drawChart);
@@ -487,7 +489,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 
         var options = {
           title: 'Registros do período',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
@@ -590,7 +592,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 	  		<?php if($_SESSION["permissao"]>1):{?>
      		<div class="columns bloco" id="graficos">		
 				<div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
-				<div class="column is-mobile hvr-grow-shadow" id="dash-ranking"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="dash-mediageral"></div>
 				<div class="column is-mobile hvr-grow-shadow" id="dash-faltas"></div>
 				<div class="column is-mobile hvr-grow-shadow" id="sexo-turno"></div>				
 			</div>
