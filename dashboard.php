@@ -101,9 +101,9 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $x++;
   }
   //DASH RANKING MELHORES DO MÊS - top8
-  $querytop8="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
+  $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID<>2 AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
+  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
   GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop8);
@@ -113,9 +113,9 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $x++;
   }
   //DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
-  $querytop10="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
+  $querytop10="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
+  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
   GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 11;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop10);
@@ -196,7 +196,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         data.addColumn('number', 'X');
         data.addColumn('number', 'Avg');
       data.addRows([
-          [0, parseFloat('<?php echo $vtmediaGeral[25]?>')],   [1, parseFloat('<?php echo $vtmediaGeral[24]?>')],  [2, parseFloat('<?php echo $vtmediaGeral[23]?>')],
+          [parseFloat('<?php echo $vtmediaGeraDia[25]?>'), parseFloat('<?php echo $vtmediaGeral[25]?>')],   [1, parseFloat('<?php echo $vtmediaGeral[24]?>')],  [2, parseFloat('<?php echo $vtmediaGeral[23]?>')],
           [3, parseFloat('<?php echo $vtmediaGeral[22]?>')],  [4, parseFloat('<?php echo $vtmediaGeral[21]?>')],  [5, parseFloat('<?php echo $vtmediaGeral[20]?>')],
           [6, parseFloat('<?php echo $vtmediaGeral[19]?>')],  [7, parseFloat('<?php echo $vtmediaGeral[18]?>')],  [8, parseFloat('<?php echo $vtmediaGeral[17]?>')],
           [9, parseFloat('<?php echo $vtmediaGeral[16]?>')],  [10, parseFloat('<?php echo $vtmediaGeral[15]?>')], [11, parseFloat('<?php echo $vtmediaGeral[14]?>')],
