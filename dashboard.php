@@ -166,6 +166,29 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     }
     $idAtividade++;
   }
+  //DASH DESEMPENHO POR TEMPO DE CASA dash-tempo-de-casa
+  $queryTempoCasa="SELECT DATEDIFF(DATE_FORMAT(CURDATE(),'%Y-%m-%d'), U.EFETIVACAO)TEMPODECASA, U.NOME, IFNULL((SELECT AVG(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=U.ID),100) AS MEDIA FROM USUARIO U WHERE CARGO_ID IN(1,2,3,13,14,15) AND SITUACAO<>'Desligado' ORDER BY TEMPODECASA;";
+  $x=0; $diasInicio=0; $diasFim=90;
+  $cnx=mysqli_query($phpmyadmin, $queryTempoCasa);
+  while ($tempoCasa= $cnx->fetch_array()){
+    if($tempoCasa["TEMPODECASA"] >= $diasInicio && $tempoCasa["TEMPODECASA"]<=$diasFim){
+      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
+      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
+    }
+    else if($diasFim==720){
+      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
+      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
+    }
+    else{
+      $diasInicio=$diasInicio+90;
+      $diasFim=$diasFim+90;
+      $x++;
+      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
+      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
+    }
+  }
+  echo $vtMediaTempoCasa[0]/$vtQtdTempodeCasa[0];
+  echo sizeof($vtQtdTempodeCasa);
 ?>
 <!DOCTYPE html>
 <html>
