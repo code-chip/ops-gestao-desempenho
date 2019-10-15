@@ -55,17 +55,6 @@ $menuConfiguracoes;
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?> hvr-grow">Início</a>
 					<a href="dashboard.php" class="navbar-item <?php echo $menuDashboard?> hvr-grow">Dashboard</a>
-					<div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link <?php echo $menuMeta?> hvr-grow">Meta</a>					
-						<div class="navbar-dropdown">
-							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Consultar</a>
-							<?php if($_SESSION["permissao"]!=1):{?>
-							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Inserir</a>
-							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Atualizar</a>
-							<?php if($_SESSION["permissao"]>2):{?><a href="#" class="navbar-item hvr-grow" onclick="msg();">Remover</a><?php }endif;?>
-							<?php }endif;?>
-						</div>
-					</div>
 					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
 						<div class="navbar-dropdown">
