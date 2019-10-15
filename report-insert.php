@@ -4,6 +4,7 @@ include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $turno = trim($_POST['turno']);
 $setor= trim($_REQUEST['setor']);
+$dataSetada= trim($_REQUEST['dataSetada']);
 $contador = 0;
 $totalAlcancado=0;
 ?>
@@ -99,6 +100,16 @@ $totalAlcancado=0;
 								</select>	
 							</div>
 						</div>						
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal">
+				<div class="field-label"></div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input type="text" style="max-width:8.0em;" class="input registro" name="dataSetada" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -242,7 +253,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>" maxlength="10">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo $dataSetada;?>" maxlength="10">
 				</div>				
 			</div>
 		</td>
