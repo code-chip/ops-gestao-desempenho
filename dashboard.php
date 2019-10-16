@@ -187,8 +187,8 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
     }
   }
-  echo $vtMediaTempoCasa[0]/$vtQtdTempodeCasa[0];
-  echo sizeof($vtQtdTempodeCasa);
+  //echo $vtMediaTempoCasa[0]/$vtQtdTempodeCasa[0];
+  //echo sizeof($vtQtdTempodeCasa);
 ?>
 <!DOCTYPE html>
 <html>
