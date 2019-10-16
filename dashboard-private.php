@@ -178,8 +178,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
       $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
     }
   }
-  echo $vtMediaTempoCasa[0]/$vtQtdTempodeCasa[0];
-  echo sizeof($vtQtdTempodeCasa);
 ?>
 <!DOCTYPE html>
 <html>
@@ -405,57 +403,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     }
     </script>
     <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Desempenho', 'Funcionários'],
-          ['Acima de 160', 4], ['95 a 99', 30], ['120 a 130', 5],
-          ['100 a 119', 20], ['89 a 70', 5], ['131 a 159', 4],
-          ['90 a 94', 38], ['59 a 69', 5.5], ['Abaixo de 58', 3],          
-        ]);
-
-        var options = {
-          title: 'Divisão de funcionários por desempenho no mês',
-          legend: 'none',
-          pieSliceText: 'label',
-          slices: {  4: {offset: 0.2},
-                    12: {offset: 0.3},
-                    14: {offset: 0.4},
-                    15: {offset: 0.5},
-          },
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('div-desempenho'));
-        chart.draw(data, options);
-      }
-    </script>
-    <script type="text/javascript">
-      google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['Geração', 'Quantidade'],
-        [1980, 1], [1985, 3], [1990, 5], [1991, 13]
-     ]);
-
-      var options = {
-        title: 'Intervale de idades dos funcionários',
-        hAxis: {title: 'Geração', minValue: 0, maxValue: 3},
-        vAxis: {title: 'Quantidade', minValue: 0, maxValue: 2010},
-        trendlines: {
-          0: {
-            type: 'exponential',
-            color: 'green',
-            visibleInLegend: true,
-          }
-        }
-      };
-
-      var chart = new google.visualization.ScatterChart(document.getElementById('idade'));
-      chart.draw(data, options);
-    }
-    </script>
-    <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
@@ -489,58 +436,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Mẽs', 'Registros', 'Atualizações'],
-          ['05',  1000,      20],
-          ['06',  1170,      60],
-          ['07',  660,       28],
-          ['08',  1030,      40]
-        ]);
-
-        var options = {
-          title: 'Registros do período',
-          hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0}
-        };
-
-        var chart = new google.visualization.AreaChart(document.getElementById('teste'));
-        chart.draw(data, options);
-      }
-    </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Meses', '', ''],
-          ['3', 114, 2],
-          ['6', 125, 7],
-          ['9', 119, 9],
-          ['12', 103, 5],
-          ['15', 99, 20],
-          ['18', 105, 43],
-          ['21', 103, 30],
-          ['24', 98, 27]
-        ]);
-
-        var options = {
-          chart: {
-            title: 'Desempenho por tempo de casa',
-            subtitle: 'Desempenho/Funcionários',
-          }
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('dash-tempo-de-casa'));
-
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-      }
-    </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
           ['Mês', 'Acessos'],
           ['<?php echo $vtG6Mes[3]?>',  <?php echo $vtG6Acesso[3]?>],
           ['<?php echo $vtG6Mes[2]?>',  <?php echo $vtG6Acesso[2]?>],
@@ -557,41 +452,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
         var chart = new google.visualization.AreaChart(document.getElementById('dash-acessos-no-mes'));
         chart.draw(data, options);
       }
-    </script>
-    <script type="text/javascript">
-    google.charts.load("current", {packages:['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ["Element", "Density", { role: "style" } ],
-        ['<?php echo $vtNomeTop10[0]?>', <?php echo $vtMediaTop10[0]?>, "#FF0000"],
-        ['<?php echo $vtNomeTop10[1]?>', <?php echo $vtMediaTop10[1]?>, "#FF0000"],
-        ['<?php echo $vtNomeTop10[2]?>', <?php echo $vtMediaTop10[2]?>, "#FF6347"],
-        ['<?php echo $vtNomeTop10[3]?>', <?php echo $vtMediaTop10[3]?>, "#FF6347"],
-        ['<?php echo $vtNomeTop10[4]?>', <?php echo $vtMediaTop10[4]?>, "#FF7F50"],
-        ['<?php echo $vtNomeTop10[5]?>', <?php echo $vtMediaTop10[5]?>, "#FFA07A"],
-        ['<?php echo $vtNomeTop10[6]?>', <?php echo $vtMediaTop10[6]?>, "#FF8C00"],
-        ['<?php echo $vtNomeTop10[7]?>', <?php echo $vtMediaTop10[7]?>, "#FF8C00"],
-        ['<?php echo $vtNomeTop10[8]?>', <?php echo $vtMediaTop10[8]?>, "#FFA500"],        
-        ['<?php echo $vtNomeTop10[9]?>', <?php echo $vtMediaTop10[9]?>, "color: #F0E68C"]
-      ]);
-
-      var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
-
-      var options = {
-        title: "Ranking baixo desempenho no mês",
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-      };
-      var chart = new google.visualization.ColumnChart(document.getElementById("top10-piores"));
-      chart.draw(view, options);
-    }
     </script>
 </head>
 <body>
@@ -614,15 +474,9 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
       <div class="field is-horizontal columns" id="graficos">
         <div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
         <div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
-        <div class="column bloco is-mobile hvr-grow-shadow" id="idade"></div>
+        <div class="column bloco is-mobile hvr-grow-shadow" id="dash-acessos-no-mes"></div>
         <div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
-      </div>
-      <div class="field is-horizontal columns" id="graficos">
-        <div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="dash-acessos-no-mes"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
-      </div>  
+      </div>      
       <?php } endif;?>      
       </div>            
   </div>  
