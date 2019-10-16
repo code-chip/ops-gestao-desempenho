@@ -458,7 +458,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
   <div class="hero is-fullheight is-primary has-background">
       <img alt="Fill Murray" class="hero-background is-transparent animated bounceInDown" src="img/wallpaper/data-science17-min.jpg" />
       <div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
-        <?php if($_SESSION["permissao"]>1):{?>
         <div class="columns bloco" id="graficos">   
         <div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
         <div class="column is-mobile hvr-grow-shadow" id="dash-mediageral"></div>
@@ -477,8 +476,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
         <div class="column bloco is-mobile hvr-grow-shadow" id="dash-acessos-no-mes"></div>
         <div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
       </div>      
-      <?php } endif;?>      
-      </div>            
   </div>  
 </body>
 </html>
