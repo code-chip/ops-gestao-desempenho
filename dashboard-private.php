@@ -48,14 +48,13 @@ GROUP BY ATIVIDADE_ID";
     $x3++;        
   }
   //DASH DESEMPENHO NA EMPRESA -- dash-mediageral
-  $queryMediaGeral="SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY REGISTRO ORDER BY REGISTRO DESC;";
+  $queryMediaGeral="SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $queryMediaGeral);
   while($mediaGeral = $cnx->fetch_array()){
     $vtmediaGeral[$x]= $mediaGeral["MEDIA"];
     $x++;       
-  }
-  
+  }  
   $g41="SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");";
   $cnx= mysqli_query($phpmyadmin, $g41);
   while($G41 = $cnx->fetch_array()){
@@ -70,6 +69,11 @@ GROUP BY ATIVIDADE_ID";
   while ($G6= $cnx->fetch_array()) {
     $vtG6Acesso[$x]=$G6["ACESSOS"];
     $vtG6Mes[$x]=$G6["MES"];
+    $x++;
+  }
+  while($x<5){//PREENCHE OS MESES ANTERIORES COM ZERO P/ GERAR O GRÁFICO.
+    $vtG6Acesso[$x]=0;
+    $vtG6Mes[$x]=$vtG6Mes[$x-1]-1;
     $x++;
   }
   /*DASH RELAÇÃO FOLGAS E FALTAS*/
@@ -111,14 +115,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     $vtDistAusQtd[$x]=$DistAus["QTD"];
     $x++;
   }
-  //DASH COMPARATIVO ENTRE TURNOS - dash-turnos.
-  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID<>3 GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO;";
-  $cnx= mysqli_query($phpmyadmin, $queryDifTurnos);
-  $x=0;
-  while ($compTurno= $cnx->fetch_array()) {
-    $vtcompTurnos[$x]=$compTurno["MEDIA"];
-    $x++;
-  }
   //DASH RANKING MELHORES DO MÊS - top8
   $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
@@ -130,20 +126,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     $vtNomeTop8[$x]=$top8["NOME"];
     $vtMediaTop8[$x]=$top8["MEDIA"];
     $x++;
-  }
-  //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
-  for($i=0 ;$i <3;$i++){
-    $idAtividade=1+$i;
-    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID<>3 GROUP BY REGISTRO DESC LIMIT 6;
-";
-    $x=0;
-    $cnx= mysqli_query($phpmyadmin, $querypriAtivi);
-    while ($priAtiv= $cnx->fetch_array()) {
-      $vtMedia3PrincAtiv[$i][$x]=$priAtiv["MEDIA"];
-      $vtData3PrincAtiv[$i][$x]=$priAtiv["REGISTRO"];  
-      $x++;
-    }
-    $idAtividade++;
   }
   //DASH MEDIA POR ATIVIDADE
   $queryMedAtiv="SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout,  ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=1 GROUP BY 3 
@@ -271,34 +253,6 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
       }
     </script>
     <script type="text/javascript">
-      google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(drawLineColors);
-
-    function drawLineColors() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('number', 'X');
-        data.addColumn('number', 'Matutino');
-        data.addColumn('number', 'Vespertino');
-
-        data.addRows([
-            [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, <?php echo $vtcompTurnos[3]?>],   [2, <?php echo $vtcompTurnos[4]?>, <?php echo $vtcompTurnos[5]?>],  [3, <?php echo $vtcompTurnos[5]?>, <?php echo $vtcompTurnos[6]?>],   [4, <?php echo $vtcompTurnos[7]?>, <?php echo $vtcompTurnos[7]?>],  [5, <?php echo $vtcompTurnos[8]?>, <?php echo $vtcompTurnos[9]?>],
-            [6, <?php echo $vtcompTurnos[10]?>, <?php echo $vtcompTurnos[11]?>],   [7, <?php echo $vtcompTurnos[12]?>, <?php echo $vtcompTurnos[13]?>],  [8, <?php echo $vtcompTurnos[14]?>, 100], [9 ,100, 92],  [10, 102, 104]
-        ]);
-
-        var options = {
-          hAxis: {
-              title: 'Comparativo entre turnos últimos 9 dias'
-            },
-            vAxis: {
-              title: 'Média de Desempenho'
-            },
-            colors: ['#a52714', '#097138']
-        };
-          var chart = new google.visualization.LineChart(document.getElementById('dash-turnos'));
-            chart.draw(data, options);
-        }
-    </script>
-    <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawVisualization);
 
@@ -317,8 +271,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
           seriesType: 'bars',
           series: {6: {type: 'line'}}
         };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('dash-comp-atividades'));
+        var chart = new google.visualization.ComboChart(document.getElementById('dash-med-desem-ativ'));
         chart.draw(data, options);
       }
     </script>
@@ -368,8 +321,8 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ['<?php echo $vtNomeTop8[0]?>', <?php echo $vtMediaTop8[0]?>, "color: #e5e4e2"],
-        ['<?php echo $vtNomeTop8[1]?>', <?php echo $vtMediaTop8[1]?>, "gold"],
+        ['<?php echo $vtNomeTop8[0]?>', <?php echo $vtMediaTop8[0]?>, "gold"],
+        ['<?php echo $vtNomeTop8[1]?>', <?php echo $vtMediaTop8[1]?>, "beige"],
         ['<?php echo $vtNomeTop8[2]?>', <?php echo $vtMediaTop8[2]?>, "silver"],
         ['<?php echo $vtNomeTop8[3]?>', <?php echo $vtMediaTop8[3]?>, "#b87333"],
         ['<?php echo $vtNomeTop8[4]?>', <?php echo $vtMediaTop8[4]?>, "#b87333"],
@@ -387,41 +340,13 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
                        2]);
 
       var options = {
-        title: "Ranking melhores do mês",
+        title: "Melhor desempenho no mês",
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("top8"));
       chart.draw(view, options);
     }
-    </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Dia', 'Checkout', 'Separação','Caixas',],
-          ['<?php echo $vtData3PrincAtiv[0][5]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][5]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][5]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][5]?>')],
-          ['<?php echo $vtData3PrincAtiv[0][4]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][4]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][4]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][4]?>')],
-          ['<?php echo $vtData3PrincAtiv[0][3]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][3]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][3]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][3]?>')],
-          ['<?php echo $vtData3PrincAtiv[0][2]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][2]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][2]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][2]?>')],
-          ['<?php echo $vtData3PrincAtiv[0][1]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][1]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][1]?>'),parseFloat('<?php echo $vtMedia3PrincAtiv[2][1]?>')],
-          ['<?php echo $vtData3PrincAtiv[0][0]?>',  parseFloat('<?php echo $vtMedia3PrincAtiv[0][0]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[1][0]?>'), parseFloat('<?php echo $vtMedia3PrincAtiv[2][0]?>')]
-        ]);
-
-          var options_stacked = {
-            title: 'Média de desempenho das 3 principais atividades',
-          hAxis: {title: 'Dias',  titleTextStyle: {color: '#333'}},
-          isStacked: true,
-          legend: {position: 'top', maxLines: 3},
-          vAxis: {minValue: 0, ticks: [0, .3, .6, .9, 1]}
-        };
-    
-
-        var chart = new google.visualization.AreaChart(document.getElementById('3atividades-principais'));
-        chart.draw(data, options_stacked);
-      }
     </script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -457,17 +382,13 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
         <div class="column is-mobile hvr-grow-shadow" id="dash-faltas"></div>
         <div class="column is-mobile hvr-grow-shadow" id="distribuicao-ausencia"></div>        
       </div>
-      <div class="field is-horizontal columns" id="graficos"> <!--<div class="field is-horizontal" id="graficos">-->
-        <div class="column bloco is-mobile hvr-bounce-in" id="dash-turnos"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="dash-comp-atividades"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="meta-atingida-perdida-mes"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
+      <div class="field is-horizontal columns" id="graficos">
+        <div class="column bloco is-mobile" id="dash-med-desem-ativ"></div>  
       </div>
       <div class="field is-horizontal columns" id="graficos">
-        <div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
-        <div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
-        <div class="column bloco is-mobile hvr-grow-shadow" id="dash-acessos-no-mes"></div>
-        <div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
+        <div class="column bloco is-mobile hvr-bounce-in" id="meta-atingida-perdida-mes"></div>       
+        <div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
+        <div class="column bloco is-mobile hvr-grow-shadow" id="dash-acessos-no-mes"></div>        
       </div>      
   </div>  
 </body>
