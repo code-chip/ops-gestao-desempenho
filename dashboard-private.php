@@ -142,15 +142,6 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtMediaTop10[$x]=$top10["MEDIA"];
     $x++;
   }
-  //DASH META ATINGIDA PERDIDA - meta-pacman
-  $querypacman="SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querypacman);
-  while ($pacman= $cnx->fetch_array()) {
-    $vtPacMan[$x]=$pacman["DESEMPENHO"];
-    $vtPacManData[$x]=$pacman["REGISTRO"];     
-    $x++;
-  }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
   for($i=0 ;$i <3;$i++){
     $idAtividade=1+$i;
@@ -435,30 +426,6 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('div-desempenho'));
-        chart.draw(data, options);
-      }
-    </script>
-    <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Meta', 'Quantidade'],
-          ['Atiginda', <?php echo $vtPacMan[0]?>],
-          ['Perdida', <?php echo $vtPacMan[1]?>]
-        ]);
-        var options = {
-          title: 'Meta atiginda/perdida <?php echo $vtPacManData[0];?>',
-          legend: 'none',
-          pieSliceText: 'label',
-          pieStartAngle: 135,
-          tooltip: { trigger: 'none' },
-          slices: {
-            0: { color: 'yellow' },
-            1: { color: 'transparent' }
-          }
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('meta-pacman'));
         chart.draw(data, options);
       }
     </script>
