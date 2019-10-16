@@ -95,7 +95,7 @@ SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["
     $x++;
   }
   /*DASH META ATINGIDA PERDIDA NO MÊS meta-atingida-perdida-mes */
-  $queryAtingPerd="SELECT IFNULL(COUNT(*),0) AS ATINGIDA,(SELECT IFNULL(COUNT(*),0) FROM DESEMPENHO WHERE USUARIO_ID=6 AND DESEMPENHO<100) AS PERDIDA FROM DESEMPENHO WHERE USUARIO_ID=6 AND DESEMPENHO>=100;";
+  $queryAtingPerd="SELECT IFNULL(COUNT(*),0) AS ATINGIDA,(SELECT IFNULL(COUNT(*),0) FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO<100) AS PERDIDA FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO>=100;";
   $cnx= mysqli_query($phpmyadmin, $queryAtingPerd);
   $x=0;
   $atinPerd= $cnx->fetch_array(); 
@@ -131,18 +131,6 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     $vtMediaTop8[$x]=$top8["MEDIA"];
     $x++;
   }
-  //DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
-  $querytop10="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
-  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
-  GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 11;";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querytop10);
-  while ($top10= $cnx->fetch_array()) {
-    $vtNomeTop10[$x]=$top10["NOME"];
-    $vtMediaTop10[$x]=$top10["MEDIA"];
-    $x++;
-  }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
   for($i=0 ;$i <3;$i++){
     $idAtividade=1+$i;
@@ -157,27 +145,7 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     }
     $idAtividade++;
   }
-  //DASH DESEMPENHO POR TEMPO DE CASA dash-tempo-de-casa
-  $queryTempoCasa="SELECT DATEDIFF(DATE_FORMAT(CURDATE(),'%Y-%m-%d'), U.EFETIVACAO)TEMPODECASA, U.NOME, IFNULL((SELECT AVG(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=U.ID),100) AS MEDIA FROM USUARIO U WHERE CARGO_ID IN(1,2,3,13,14,15) AND SITUACAO<>'Desligado' ORDER BY TEMPODECASA;";
-  $x=0; $diasInicio=0; $diasFim=90;
-  $cnx=mysqli_query($phpmyadmin, $queryTempoCasa);
-  while ($tempoCasa= $cnx->fetch_array()){
-    if($tempoCasa["TEMPODECASA"] >= $diasInicio && $tempoCasa["TEMPODECASA"]<=$diasFim){
-      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
-      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
-    }
-    else if($diasFim==720){
-      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
-      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
-    }
-    else{
-      $diasInicio=$diasInicio+90;
-      $diasFim=$diasFim+90;
-      $x++;
-      $vtMediaTempoCasa[$x]=$vtMediaTempoCasa[$x]+$tempoCasa["TEMPODECASA"];
-      $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
-    }
-  }
+
 ?>
 <!DOCTYPE html>
 <html>
