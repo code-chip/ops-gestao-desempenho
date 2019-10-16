@@ -63,7 +63,8 @@ GROUP BY ATIVIDADE_ID";
     $vtG4vezes[$x3]= $G41["VEZES"];
     $x3++;        
   }
-  $g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
+  //DASH ACESSOS NO MÊS
+  $g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
   $cnx=mysqli_query($phpmyadmin, $g6);
   $x=0;
   while ($G6= $cnx->fetch_array()) {
@@ -93,14 +94,11 @@ SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["
     $vtFolgasFaltas[$x]=$folgasFaltas["COUNT(*)"];
     $x++;
   }
-  /*DASH SEXO*/
-  $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO GROUP BY SEXO ORDER BY SEXO DESC;";
-  $cnx= mysqli_query($phpmyadmin, $querySexo);
+  /*DASH META ATINGIDA PERDIDA NO MÊS meta-atingida-perdida-mes */
+  $queryAtingPerd="SELECT IFNULL(COUNT(*),0) AS ATINGIDA,(SELECT IFNULL(COUNT(*),0) FROM DESEMPENHO WHERE USUARIO_ID=6 AND DESEMPENHO<100) AS PERDIDA FROM DESEMPENHO WHERE USUARIO_ID=6 AND DESEMPENHO>=100;";
+  $cnx= mysqli_query($phpmyadmin, $queryAtingPerd);
   $x=0;
-  while ($sexo= $cnx->fetch_array()) {
-    $vtQtd[$x]=$sexo["QTD"];
-    $x++;
-  }
+  $atinPerd= $cnx->fetch_array(); 
   /*DASH SEXO POR TURNO*/
   $querySexoTurno="SELECT T.NOME, SEXO, COUNT(*) AS QTD FROM USUARIO INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
 WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
@@ -347,16 +345,16 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Sexo', 'Quantidade'],
-          ['Masculino',     parseFloat(<?php echo $vtQtd[0];?>)],
-          ['Feminino',     parseFloat(<?php echo $vtQtd[1];?>)]          
+          ['Atingida',     parseFloat(<?php echo $atinPerd["ATINGIDA"];?>)],
+          ['Perdida',     parseFloat(<?php echo $atinPerd["PERDIDA"];?>)]          
         ]);
 
         var options = {
-          title: 'Percentual de funcionários Homens/Mulheres',
-          pieHole: 0.8,
+          title: 'Meta atingida/perdida <?php $m=$mes-1; echo "21/".$m." a 20/".$mes;?>',
+          pieHole: 0.7,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('sexo'));
+        var chart = new google.visualization.PieChart(document.getElementById('meta-atingida-perdida-mes'));
         chart.draw(data, options);
       }
     </script>
@@ -642,7 +640,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       <div class="field is-horizontal columns" id="graficos"> <!--<div class="field is-horizontal" id="graficos">-->
         <div class="column bloco is-mobile hvr-bounce-in" id="dash-turnos"></div>
         <div class="column bloco is-mobile hvr-bounce-in" id="dash-comp-atividades"></div>
-        <div class="column bloco is-mobile hvr-bounce-in" id="sexo"></div>
+        <div class="column bloco is-mobile hvr-bounce-in" id="meta-atingida-perdida-mes"></div>
         <div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
       </div>
       <div class="field is-horizontal columns" id="graficos">
