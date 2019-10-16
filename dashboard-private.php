@@ -99,15 +99,16 @@ SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["
   $cnx= mysqli_query($phpmyadmin, $queryAtingPerd);
   $x=0;
   $atinPerd= $cnx->fetch_array(); 
-  /*DASH SEXO POR TURNO*/
-  $querySexoTurno="SELECT T.NOME, SEXO, COUNT(*) AS QTD FROM USUARIO INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
-WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
-  $cnx= mysqli_query($phpmyadmin, $querySexoTurno);
+  /*DASH DISTRIBUIÇÃO AUSÊNCIA distribuicao-ausencia */
+  $queryDistAus="SELECT IFNULL(COUNT(*),0) as QTD, 'Folga' FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]."
+UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Falta' FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]."
+UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Atestado' FROM DESEMPENHO WHERE PRESENCA_ID=4 AND USUARIO_ID=".$_SESSION["userId"]."
+UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRESENCA_ID=5 AND USUARIO_ID=".$_SESSION["userId"].";";
+  $cnx= mysqli_query($phpmyadmin, $queryDistAus);
   $x=0;
-  while ($sexoTurno= $cnx->fetch_array()) {
-    $vtTurno[$x]=$sexoTurno["NOME"];
-    $vtTurno[$x]=$vtTurno[$x]." ".$sexoTurno["SEXO"];
-    $vtQtdTurno[$x]=$sexoTurno["QTD"];
+  while ($DistAus= $cnx->fetch_array()) {
+    $vtDistAusNome[$x]=$DistAus["Folga"];
+    $vtDistAusQtd[$x]=$DistAus["QTD"];
     $x++;
   }
   //DASH COMPARATIVO ENTRE TURNOS - dash-turnos.
@@ -355,18 +356,18 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Sexo', 'Quantidade'],
-          ['<?php echo $vtTurno[0]?>', parseFloat(<?php echo $vtQtdTurno[0]?>)],
-          ['<?php echo $vtTurno[1]?>', parseFloat(<?php echo $vtQtdTurno[1]?>)],
-          ['<?php echo $vtTurno[2]?>', parseFloat(<?php echo $vtQtdTurno[2]?>)],
-          ['<?php echo $vtTurno[3]?>', parseFloat(<?php echo $vtQtdTurno[3]?>)]          
+          ['<?php echo $vtDistAusNome[0]?>', parseFloat(<?php echo $vtDistAusQtd[0]?>)],
+          ['<?php echo $vtDistAusNome[1]?>', parseFloat(<?php echo $vtDistAusQtd[1]?>)],
+          ['<?php echo $vtDistAusNome[2]?>', parseFloat(<?php echo $vtDistAusQtd[2]?>)],
+          ['<?php echo $vtDistAusNome[3]?>', parseFloat(<?php echo $vtDistAusQtd[3]?>)]          
         ]);
 
         var options = {
-          title: 'Percentual Masculino/Feminino por turno',
+          title: 'Distribuição da Ausência',
           pieHole: 0.3,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('sexo-turno'));
+        var chart = new google.visualization.PieChart(document.getElementById('distribuicao-ausencia'));
         chart.draw(data, options);
       }
     </script>
@@ -602,7 +603,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
         <div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
         <div class="column is-mobile hvr-grow-shadow" id="dash-mediageral"></div>
         <div class="column is-mobile hvr-grow-shadow" id="dash-faltas"></div>
-        <div class="column is-mobile hvr-grow-shadow" id="sexo-turno"></div>        
+        <div class="column is-mobile hvr-grow-shadow" id="distribuicao-ausencia"></div>        
       </div>
       <div class="field is-horizontal columns" id="graficos"> <!--<div class="field is-horizontal" id="graficos">-->
         <div class="column bloco is-mobile hvr-bounce-in" id="dash-turnos"></div>
