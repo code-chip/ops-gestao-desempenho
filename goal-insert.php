@@ -5,32 +5,6 @@ $opcao=trim($_POST['opcao']);
 $nome=trim($_POST['nome']);
 $situacao=trim($_POST['situacao']);
 
-
-$produtos = [
-    ['id' => 1, 'fabricante' => 1, 'nome' => 'mouse'],
-    ['id' => 2, 'fabricante' => 2, 'nome' => 'teclado'],
-    ['id' => 3, 'fabricante' => 2, 'nome' => 'monitor'],
-    ['id' => 4, 'fabricante' => 3, 'nome' => 'carregador'],
-    ['id' => 5, 'fabricante' => 1, 'nome' => 'webcam'],
-    ['id' => 6, 'fabricante' => 4, 'nome' => 'microfone'],
-];
-
-if(count($_POST) > 0) {
-
-    $_POST['fabricante'] = (int)$_POST['fabricante'];
-    $resultado = ['success' => true];
-
-
-    foreach ($produtos as $value)
-        if($value['fabricante'] == $_POST['fabricante'])
-            $resultado['produtos'][] = $value;
-
-    if(count($resultado) > 1)
-        die(json_encode($resultado));
-}
-
-die(json_encode('[message : "erro", success: false]'));
-
 if(isset($_POST["inserirMeta"])!=null){
 	if($opcao!="" && $nome!=""){
 		$checkMeta="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
