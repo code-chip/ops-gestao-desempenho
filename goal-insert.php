@@ -68,7 +68,7 @@ if(isset($_POST["inserirMeta"])!=null){
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
 									<select name="atividade[]">
-									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
+									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID NOT IN(1,2,3,4) ORDER BY NOME";
 									$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
 									while($atividade = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
@@ -101,7 +101,11 @@ if(isset($_POST["inserirMeta"])!=null){
 								<div class="select">
 									<select name="situacao">
 										<option selected="selected" value="Ativo">Todos</option>
-										<option value="Inativo">Específico</option>																			
+										<?php $gdAtividade="SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN(3,4,5,8) AND SITUACAO<>'Desligado' ORDER BY NOME;";
+									$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
+									while($atividade = $con->fetch_array()):{?>
+									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
+									<?php $x;} endwhile;?>																		
 									</select>	
 								</div>
 							</div>
@@ -110,51 +114,12 @@ if(isset($_POST["inserirMeta"])!=null){
 				</div>
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Turno:</label>
+						<label class="label">Expiração:</label>
 					</div>
 					<div class="field-body">
 						<div class="field is-grouped" style="max-width:17em;">							
 							<div class="control">
-								<div class="select">
-									<select name="situacao">
-										<option selected="selected" value="Ativo">Todos</option>
-										<option value="Inativo">Específico</option>																			
-									</select>	
-								</div>
-							</div>
-						</div>
-					</div>					
-				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Setor:</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							<div class="control">
-								<div class="select">
-									<select name="situacao">
-										<option selected="selected" value="Ativo">Todos</option>
-										<option value="Inativo">Específico</option>																			
-									</select>	
-								</div>
-							</div>
-						</div>
-					</div>					
-				</div>						
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Status:</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							<div class="control">
-								<div class="select">
-									<select name="situacao">
-										<option selected="selected" value="Ativo">Ativo</option>
-										<option value="Inativo">Inativo</option>																			
-									</select>	
-								</div>
+								<input style="max-width:12.5em;" class="input registro" type="text" name="expiracao" value="<?php echo date('Y-m-d',strtotime('-1 day'))?>">
 							</div>
 							<div class="control">
 									<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
