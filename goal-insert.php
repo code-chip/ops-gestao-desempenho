@@ -14,12 +14,12 @@ if(isset($_POST["inserirMeta"])!=null){
 			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.";";
 			$cnx= mysqli_query($phpmyadmin, $listIds);
 			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, DESCRICAO, USUARIO_ID, EXPIRACAO) VALUES(".$meta.",".$atividade.",'".$descricao."',".$idUsuario["ID"].",'".$expiracao."');";
+				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, DESCRICAO, USUARIO_ID, EXPIRACAO) VALUES(".$meta.",".$atividade.",'".$descricao."',".$idUsuario["ID"].",'".$expiracao."','".date('Y-m-d')."');";
 				$cx= mysqli_query($phpmyadmin, $inserirMeta);
 			}
 		}
 		else{
-			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, DESCRICAO, USUARIO_ID, EXPIRACAO) VALUES(".$meta.",".$atividade.",'".$descricao."',".$usuario.",'".$expiracao."');";			
+			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, DESCRICAO, USUARIO_ID, EXPIRACAO) VALUES(".$meta.",".$atividade.",'".$descricao."',".$usuario.",'".$expiracao."','".date('Y-m-d')."');";			
 			$cnx= mysqli_query($phpmyadmin, $inserirMeta);
 		}
 		if(mysqli_error($phpmyadmin)==null){
