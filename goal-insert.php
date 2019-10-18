@@ -6,20 +6,20 @@ $atividade=trim($_POST['atividade']);
 $setor=trim($_POST['setor']);
 $descricao=trim($_POST['descricao']);
 $usuario=trim($_POST['usuario']);
-$expiracao=trim($_POST['expiracao']);
+$execucao=trim($_POST['execucao']);
 
 if(isset($_POST["inserirMeta"])!=null){
-	if($meta!="" && $descricao!="" && $expiracao!=""){
+	if($meta!="" && $descricao!="" && $execucao!=""){
 		if($usuario=="Todos"){
 			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.";";
 			$cnx= mysqli_query($phpmyadmin, $listIds);
 			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$expiracao."','".date('Y-m-d')."',0);";
+				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$execucao."','".date('Y-m-d')."',0);";
 				$cx= mysqli_query($phpmyadmin, $inserirMeta);
 			}			
 		}
 		else{
-			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$expiracao."','".date('Y-m-d')."',0);";			
+			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$execucao."','".date('Y-m-d')."',0);";			
 			$cnx= mysqli_query($phpmyadmin, $inserirMeta);
 			echo "<script>alert('Meta's cadastrada com sucesso!!')</script>";
 		}
@@ -140,12 +140,12 @@ if(isset($_POST["inserirMeta"])!=null){
 				</div>
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Expiração:</label>
+						<label class="label">Execução:</label>
 					</div>
 					<div class="field-body">
 						<div class="field is-grouped" style="max-width:17em;">							
 							<div class="control">
-								<input style="max-width:12.5em;" class="input registro" type="text" name="expiracao" value="<?php echo date('Y-m-d',strtotime('+1 day'))?>">
+								<input style="max-width:12.5em;" class="input registro" type="text" name="execucao" value="<?php echo date('Y-m-d',strtotime('+1 day'))?>">
 							</div>
 							<div class="control">
 								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
