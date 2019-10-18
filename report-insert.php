@@ -8,6 +8,7 @@ $dataSetada= trim($_REQUEST['dataSetada']);
 $contador = 0;
 $totalAlcancado=0;
 $idAtividade=0;
+$idMeta=0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -202,8 +203,7 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 		  			<input name="vetor[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $i?>">
 		  		</div>
 		  	</div>
-		</td>
-		
+		</td>		
 		<td class="field"><!--COLUNA NOME-->
 			<div class="field">				
 				<div class="control">
@@ -348,10 +348,19 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			}				
 			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";
 			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
-			$v++;			
+			$v++;
+			//VERIFICA E DAR BAIXA NA META CADASTRADA.
+			$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
+			$cnx2= mysqli_query($phpmyadmin, $checkMeta);
+			$dowMeta=$cnx2->fetch_array();
+			if(mysqli_num_rows($cnx2)>0){
+				$query="UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
+				$cnx3= mysqli_query($phpmyadmin, $query);
+			}				
 		}
 	}	
-	if(mysqli_error($phpmyadmin)==null){	
+	if(mysqli_error($phpmyadmin)==null){
+
 		?><script type="text/javascript">
 			alert('Desempenho cadastro com sucessos');
 			window.location.href=window.location.href;		
