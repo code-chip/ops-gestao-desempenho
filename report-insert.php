@@ -7,6 +7,7 @@ $setor= trim($_REQUEST['setor']);
 $dataSetada= trim($_REQUEST['dataSetada']);
 $contador = 0;
 $totalAlcancado=0;
+$idAtividade=0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,8 +151,7 @@ if( $turno != "" && $setor != ""){
 	}			
 }
 $gdPresenca="SELECT ID, NOME FROM PRESENCA WHERE SITUACAO='Ativo'";
-$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
-$gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";	
+$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if($contador !=0) : ?>
@@ -170,7 +170,23 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<th>Data</th>
 		<th>Observação</th>  			
 	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
+<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :
+	$result=0; 
+	$_SESSION["idAtividade"]=0;
+	if($setor==3 || $setor==4 || $setor==5 || $setor==4 || 8){//VERIFICA SE É SETOR COM METAS VARIADAS.
+		$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
+		$cx= mysqli_query($phpmyadmin, $getMeta);
+		$defMeta= $cx->fetch_array();
+		$result=mysqli_num_rows($cx);
+		if($result>0){			
+			$idAtividade=$defMeta["ATIVIDADE_ID"];
+		}
+	}
+	else{
+		$result=0;
+		$idAtividade=0;
+	}
+	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
@@ -218,9 +234,10 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 					<div class="control">
 						<div class="select is-size-7-touch">
 							<select name="atividade[]">
-								<?php $con = mysqli_query($phpmyadmin , $gdAtividade);
-								$x=0; 
-								while($atividade = $con->fetch_array()):{?>
+								<?php if($result>0): ?><option selected="selected" value="<?php echo $_SESSION["idAtividade"];?>"><?php echo $defMeta["ATIVIDADE"];?></option><?php endif;?>
+								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID<>".$idAtividade; 
+								echo $gdAtividade; $con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
+								while($atividade = $con->fetch_array()):{?>									
 									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
 								<?php $x;} endwhile;?>
 							</select>	
@@ -232,7 +249,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA META-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php if($result==1){ echo $defMeta["META"];}?>">
 				</div>				
 			</div>
 		</td>
@@ -253,7 +270,7 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<td><!--COLUNA OBSERVAÇÃO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200">
+					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php if($result==1){ echo $defMeta["DESCRICAO"];}?>">
 				</div>				
 			</div>
 		</td>						
