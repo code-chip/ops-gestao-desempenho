@@ -171,13 +171,6 @@ $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'";
 		<th>Observação</th>  			
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
-	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
-		$registro++;
-		$repeat=$registro;
-		$z++;
-	}
-	if($repeat>0){ $repeat--;}	
-	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
