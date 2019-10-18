@@ -14,12 +14,12 @@ if(isset($_POST["inserirMeta"])!=null){
 			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.";";
 			$cnx= mysqli_query($phpmyadmin, $listIds);
 			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$expiracao."','".date('Y-m-d')."');";
+				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$expiracao."','".date('Y-m-d')."',0);";
 				$cx= mysqli_query($phpmyadmin, $inserirMeta);
 			}			
 		}
 		else{
-			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$expiracao."','".date('Y-m-d')."');";			
+			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXPIRACAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$expiracao."','".date('Y-m-d')."',0);";			
 			$cnx= mysqli_query($phpmyadmin, $inserirMeta);
 			echo "<script>alert('Meta's cadastrada com sucesso!!')</script>";
 		}
