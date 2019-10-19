@@ -151,6 +151,7 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
+		<th>Apagar</th>
 		<th>Funcionário</th>
 		<th>Atividade</th>	
 		<th>Meta</th>			
