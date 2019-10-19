@@ -116,27 +116,29 @@ $totalAlcancado=0;
 </div>
 <?php
 if( $nome != ""){	
-	$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXPIRACAO, M.CADASTRO_EM FROM META M
+	$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
 INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
 WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
-	AND M.CADASTRO_EM>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.CADASTRO_EM<= CONCAT('".$periodo."', '-20');";
+	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
-	while($meta= $cnx->fetch_array()){
-		$vtNome[$x]=$meta["NOME"];
-		$vtAtividade[$x]=$meta["ATIVIDADE"];
-		$vtMeta[$x]=$meta["META"];
-		$vtExpiracao[$x]=$meta["EXPIRACAO"];
-		$vtCadastro[$x]=$meta["CADASTRO_EM"];
-		$vtDescricao[$x]=$meta["DESCRICAO"];					
-		$x++;
-		$contador=$x;
+	if(mysqli_num_rows($cnx)>0){
+		while($meta= $cnx->fetch_array()){
+			$vtNome[$x]=$meta["NOME"];
+			$vtAtividade[$x]=$meta["ATIVIDADE"];
+			$vtMeta[$x]=$meta["META"];
+			$vtExecucao[$x]=$meta["EXECUCAO"];
+			$vtDesempenho[$x]=$meta["CADASTRO_EM"];
+			$vtDescricao[$x]=$meta["DESCRICAO"];					
+			$x++;
+			$contador=$x;
+		}
 	}
-	if(mysqli_num_rows($cnx)==0){
+	else{
 		?><script type="text/javascript">			
 			alert('Nenhum registrado encontrado nesta consulta!');
-			window.location.href=window.location.href;
+			//window.location.href=window.location.href;
 		</script> <?php		
 	}	
 }	
@@ -152,9 +154,9 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 		<th>Funcionário</th>
 		<th>Atividade</th>	
 		<th>Meta</th>			
-		<th >Descrição</th>
-		<th >Cadastro</th>			
-		<th>Expiração</th>
+		<th>Descrição</th>
+		<th>Execução</th>			
+		<th>Feita</th>
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :?>
 	<tr>
@@ -163,8 +165,8 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 		<td><?php echo $vtAtividade[$i]?></td>
 		<td><?php echo $vtMeta[$i]?></td>
 		<td><?php echo $vtDescricao[$i]?></td>
-		<td><?php echo $vtExpiracao[$i]?></td>
-		<td><?php echo $vtCadastro[$i]?></td>
+		<td><?php echo $vtExecucao[$i]?></td>
+		<td><?php if($vtDesempenho[$i]==0){ echo "Não";}else{ echo "Sim";}?></td>
 	</tr>
 <?php endfor;?>
 	</table>
