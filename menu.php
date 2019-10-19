@@ -61,8 +61,8 @@ $menuConfiguracoes;
 							<a href="goal-query.php" class="navbar-item hvr-grow">Consultar</a>
 							<?php if($_SESSION["permissao"]!=1):{?>
 							<a href="goal-insert.php" class="navbar-item hvr-grow">Inserir</a>
-							<a href="#" class="navbar-item hvr-grow" onclick="msg();">Atualizar</a>
-							<?php if($_SESSION["permissao"]>2):{?><a href="#" class="navbar-item hvr-grow" onclick="msg();">Remover</a><?php }endif;?>
+							<a href="goal-update.php" class="navbar-item hvr-grow" onclick="msg();">Atualizar</a>
+							<?php if($_SESSION["permissao"]>2):{?><a href="goal-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
 							<?php }endif;?>
 						</div>
 					</div>
