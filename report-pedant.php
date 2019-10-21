@@ -134,7 +134,8 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if($data != "" && $setor!="" && $turno!=""){	
+if($data != "" && $setor!="" && $turno!=""){
+	$dataAnoMes=date('Y-m',strtotime($data));	
 	$query1="SELECT U.ID FROM USUARIO U 
 INNER JOIN DESEMPENHO D ON D.USUARIO_ID=U.ID
 WHERE U.TURNO_ID=".$turno." AND U.SETOR_ID=".$setor." AND U.SITUACAO='Ativo' AND D.REGISTRO='".$data."' GROUP BY U.ID";
@@ -198,7 +199,7 @@ else if(isset($_POST['consultar'])!=null){
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo $vtNome[$i]?></td>
-		<td><a href="report-detailed.php?periodo=<?php echo date($data,'Y-m') ?>&idUsuario=<?php echo $vtId[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a>
+		<td><a href="report-detailed.php?periodo=<?php echo $dataAnoMes; ?>&idUsuario=<?php echo $vtId[$i]?>" target='blank'><button class="button is-primary is-size-7-touch">Consultar</button></a>
 		<td><?php echo $data?></td>
 	</tr>
 <?php endfor;?>
