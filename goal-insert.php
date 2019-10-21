@@ -48,6 +48,12 @@ if(isset($_POST["inserirMeta"])!=null){
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Inserir Meta</title>
+	<style type="text/css">
+		.carregando{
+		color:#ff0000;
+		display:none;
+		}
+	</style>
 </head>
 <body>
 	<section class="section">
@@ -93,12 +99,13 @@ if(isset($_POST["inserirMeta"])!=null){
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
-									<select name="setor">
-									<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID NOT IN(1,2,6,7) ORDER BY NOME";
-									$con = mysqli_query($phpmyadmin , $gdSetor); $x=0; 
-									while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
-									<?php $x;} endwhile;?>
+									<select name="setor" id="setor">
+									<option value="">Selecione</option>
+									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID NOT IN(1,2,6,7) ORDER BY NOME";
+										$cnx = mysqli_query($phpmyadmin, $query);
+										while($reSetor = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
+										}?>
 									</select>	
 								</div>
 							</div>						
@@ -125,13 +132,9 @@ if(isset($_POST["inserirMeta"])!=null){
 						<div class="field is-grouped" style="max-width:17em;">							
 							<div class="control">
 								<div class="select">
-									<select name="usuario">
-										<option selected="selected" value="Todos">Todos do Setor</option>
-										<?php $gdUsuario="SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN(3,4,5,8) AND SITUACAO<>'Desligado' ORDER BY NOME;";
-									$con = mysqli_query($phpmyadmin , $gdUsuario); $x=0; 
-									while($usuario = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $usuario["ID"]; ?>"><?php echo $vtNome[$x] = $usuario["NOME"]; ?></option>
-									<?php $x;} endwhile;?>																		
+									<span class="carregando">Aguarde, carregando...</span>
+									<select name="usuario" id="usuario">
+										<option selected="selected" value="Todos">Todos do Setor</option>																											
 									</select>	
 								</div>
 							</div>
@@ -154,6 +157,30 @@ if(isset($_POST["inserirMeta"])!=null){
 					</div>					
 				</div>
 	     	</form>
+	     	<script type="text/javascript" scr="https://www.google.com/jsapi"></script>
+	     	<script type="text/javascript">
+	     		google.loader("jquery", "1.4.2");
+	     	</script>
+	     	<script type="text/javascript">
+				$(function(){
+					$('#setor').change(function(){
+						if( $(this).val() ) {
+							$('#usuario').hide();
+							$('.carregando').show();
+							$.getJSON('loading-users.php?search=',{setor: $(this).val(), ajax: 'true'}, function(j){
+								var options = '<option value="">Todos do Setor</option>';	
+								for (var i = 0; i < j.length; i++) {
+									options += '<option value="' + j[i].id + '">' + j[i].nome_usuario + '</option>';
+								}	
+								$('#usuario').html(options).show();
+								$('.carregando').hide();
+							});
+						} else {
+							$('#usuario').html('<option value="">Todos do Setor</option>');
+						}
+					});
+				});
+			</script>
 	   	</div>
 	</section>	 	
 </body>
