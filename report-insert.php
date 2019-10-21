@@ -174,7 +174,7 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :
 	$result=0; 
 	$_SESSION["idAtividade"]=0;
-	if($setor==3 || $setor==4 || $setor==5 || $setor==4 || 8){//VERIFICA SE É SETOR COM METAS VARIADAS.
+	if($setor==3 || $setor==4 || $setor==5 || $setor==4 || $setor==8){//VERIFICA SE É SETOR COM METAS VARIADAS.
 		$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
 		$cx= mysqli_query($phpmyadmin, $getMeta);
 		$defMeta= $cx->fetch_array();
@@ -351,9 +351,9 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			$v++;
 			//VERIFICA E DAR BAIXA NA META CADASTRADA.
 			$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
-			$cnx2= mysqli_query($phpmyadmin, $checkMeta);
-			$dowMeta=$cnx2->fetch_array();
+			$cnx2= mysqli_query($phpmyadmin, $checkMeta);			
 			if(mysqli_num_rows($cnx2)>0){
+				$dowMeta=$cnx2->fetch_array();
 				$query="UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
 				$cnx3= mysqli_query($phpmyadmin, $query);
 			}				
