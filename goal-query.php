@@ -1,5 +1,5 @@
 <?php
-$menuDesempenho="is-active";
+$menuMeta="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $periodo= trim($_REQUEST['periodo']);
@@ -138,7 +138,7 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 	else{
 		?><script type="text/javascript">			
 			alert('Nenhum registrado encontrado nesta consulta!');
-			//window.location.href=window.location.href;
+			window.location.href=window.location.href;
 		</script> <?php		
 	}	
 }	
@@ -151,7 +151,6 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
-		<th>Apagar</th>
 		<th>Funcionário</th>
 		<th>Atividade</th>	
 		<th>Meta</th>			
