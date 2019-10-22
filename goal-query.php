@@ -129,7 +129,7 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 			$vtAtividade[$x]=$meta["ATIVIDADE"];
 			$vtMeta[$x]=$meta["META"];
 			$vtExecucao[$x]=$meta["EXECUCAO"];
-			$vtDesempenho[$x]=$meta["CADASTRO_EM"];
+			$vtDesempenho[$x]=$meta["DESEMPENHO"];
 			$vtDescricao[$x]=$meta["DESCRICAO"];					
 			$x++;
 			$contador=$x;
