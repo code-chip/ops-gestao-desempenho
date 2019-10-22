@@ -173,9 +173,8 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :
 	$result=0; 
-	$_SESSION["idAtividade"]=0;
 	if($setor==3 || $setor==4 || $setor==5 || $setor==4 || $setor==8){//VERIFICA SE É SETOR COM METAS VARIADAS.
-		$metaCadastrada=true;
+		$_SESSION["metaAdd"]=1;
 		$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
 		$cx= mysqli_query($phpmyadmin, $getMeta);
 		$defMeta= $cx->fetch_array();
@@ -183,6 +182,7 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 		if($result>0){			
 			$idAtividade=$defMeta["ATIVIDADE_ID"];
 		}
+		echo $_SESSION["metaAdd"];
 	}
 	else{
 		$result=0;
@@ -235,7 +235,7 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 					<div class="control">
 						<div class="select is-size-7-touch">
 							<select name="atividade[]">
-								<?php if($result>0): ?><option selected="selected" value="<?php echo $_SESSION["idAtividade"];?>"><?php echo $defMeta["ATIVIDADE"];?></option><?php endif;?>
+								<?php if($result>0): ?><option selected="selected" value="<?php echo $defMeta["ATIVIDADE_ID"];?>"><?php echo $defMeta["ATIVIDADE"];?></option><?php endif;?>
 								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID<>".$idAtividade; 
 								echo $gdAtividade; $con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
 								while($atividade = $con->fetch_array()):{?>									
@@ -276,11 +276,7 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 			</div>
 		</td>						
 	</tr>
-<?php endfor; 
-	echo "<script type='text/javascript'>
-		alert('Clique no Checkbox da coluna + ou Selecione a opção Todos em Inserção p/ SALVAR.');
-		</script>";
-	?>
+<?php endfor;?>
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
@@ -350,7 +346,8 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";
 			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
-			if($metaCadastrada==true){//VERIFICA E DAR BAIXA NA META CADASTRADA.
+			echo "Antes do IF ".$_SESSION["metaAdd"];
+			if($_SESSION["metaAdd"]==1){//VERIFICA E DAR BAIXA NA META CADASTRADA.
 				$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
 				$cnx2= mysqli_query($phpmyadmin, $checkMeta);			
 				if(mysqli_num_rows($cnx2)>0){
@@ -358,14 +355,14 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 					$query="UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
 					$cnx3= mysqli_query($phpmyadmin, $query);
 				}
-			}				
+			}
 		}
 	}	
 	if(mysqli_error($phpmyadmin)==null){
-
+		//$metaAdd=0;
 		?><script type="text/javascript">
 			alert('Desempenho cadastro com sucessos');
-			window.location.href=window.location.href;		
+			//window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
