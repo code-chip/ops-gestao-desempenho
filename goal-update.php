@@ -216,13 +216,13 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 				</div>
 			</div>
 		</td>		
-		<td class="field"><!--COLUNA ATIVIDADE-->
+		<td class="field"><!--COLUNA FEITA-->
 			<div class="field">
 				<div class="control">
 					<div class="select is-size-7-touch">
 						<select name="atividade3[]">
 							<?php if($vtDesempenho[$i]==0):{?>
-							<option selected="selected" value="0">Não</option>
+							<option selected="selected" value="<?php echo "0"?>">Não</option>
 							<option value="1">Sim</option>
 							<?php }endif; if($vtDesempenho[$i]==1):{?>
 							<option selected="selected" value="1">Sim</option>	
@@ -272,34 +272,34 @@ if(isset($_POST['alterarDados'])){
 	$execucoes = array_filter($_POST['execucao']);
 	$feitos = array_filter($_POST['atividade3']);
 	$upCount=0;
-	echo $feitos[0];
 	for( $i = 0; $i < sizeof($atividades); $i++ ){
+		if($feitos[$i]==null){
+			$feitos[$i]=0;
+		}
 		if($descricoes[$i]=="" || $descricoes[$i]==null){//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
 			$checkUp="SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$metas[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESEMPENHO=".$feitos[$i].";";
 		}
 		else{
 			$checkUp="SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$metas[$i]." AND DESEMPENHO=".$feitos[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESCRICAO='".$descricoes[$i]."';";
 		}
-		echo $checkUp;		
 		$tx= mysqli_query($phpmyadmin, $checkUp);		
-		if(mysqli_num_rows($tx)==0){			
+		if(mysqli_num_rows($tx)==0 && mysqli_error($phpmyadmin)==null){			
 			$upMeta="UPDATE META SET ATIVIDADE_ID=".$atividades[$i].", META=".$metas[$i].", EXECUCAO='".$execucoes[$i]."', DESEMPENHO=".$feitos[$i].", DESCRICAO='".$descricoes[$i]."' WHERE ID=".$ids[$i].";";		
 			$cnx=mysqli_query($phpmyadmin, $upMeta);
 			$upCount=$upCount+1;			
 		}
-		echo "</br>";
-		echo $upMeta;
+		echo $upMeta."</br>";
 	}
 	if($upCount==0){	
 		?><script type="text/javascript">
 			alert('Nenhum registro foi alterado p/ ser atualizado!!');
-			//window.location.href=window.location.href;		
+			window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
 		?><script type="text/javascript">
 			alert('Foi atualizado <?php echo $upCount ?> registro(s)!!');
-			//window.location.href=window.location.href;
+			window.location.href=window.location.href;
 		</script><?php
 	}
 }
