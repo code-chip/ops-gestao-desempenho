@@ -11,12 +11,12 @@ $execucao=trim($_POST['execucao']);
 if(isset($_POST["inserirMeta"])!=null){
 	if($meta!="" && $descricao!="" && $execucao!=""){
 		if($usuario=="Todos"){
-			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.";";
+			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor." AND SITUACAO<>'Desligado';";
 			$cnx= mysqli_query($phpmyadmin, $listIds);
 			while ($idUsuario= $cnx->fetch_array()) {
 				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$execucao."','".date('Y-m-d')."',0);";
 				$cx= mysqli_query($phpmyadmin, $inserirMeta);
-			}			
+			}
 		}
 		else{
 			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$execucao."','".date('Y-m-d')."',0);";			
@@ -134,7 +134,7 @@ if(isset($_POST["inserirMeta"])!=null){
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
 									<select name="usuario" id="usuario">
-										<option selected="selected" value="Todos">Todos do Setor</option>																											
+										<option selected="selected" value="Todos">Todos do Setor</option>
 									</select>	
 								</div>
 							</div>
@@ -168,7 +168,7 @@ if(isset($_POST["inserirMeta"])!=null){
 							$('#usuario').hide();
 							$('.carregando').show();
 							$.getJSON('loading-users.php?search=',{setor: $(this).val(), ajax: 'true'}, function(j){
-								var options = '<option value="">Todos do Setor</option>';	
+								var options = '<option value="Todos">Todos do Setor</option>';	
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i].id + '">' + j[i].nome_usuario + '</option>';
 								}	
