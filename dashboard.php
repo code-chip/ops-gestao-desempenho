@@ -72,20 +72,13 @@ GROUP BY ATIVIDADE_ID";
 	}
   /*DASH RELAÇÃO FOLGAS E FALTAS*/
   $queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' 
-UNION ALL
-SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' ";
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-1 month'))."' 
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' 
+UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' ";
   $cnx= mysqli_query($phpmyadmin, $queryFolgasFaltas);
   $x=0;
   while($folgasFaltas= $cnx->fetch_array()) {
@@ -150,6 +143,24 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   while ($pacman= $cnx->fetch_array()) {
     $vtPacMan[$x]=$pacman["DESEMPENHO"];
     $vtPacManData[$x]=$pacman["REGISTRO"];     
+    $x++;
+  }
+  //DASH EXPEDIÇÃO DE CAIXAS E VINHOS.
+  $queryCaixas="select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 3 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 2 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
+  $queryVinhos="select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)
+union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)
+union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
+  echo $queryVinhos;
+  $x=0;
+  $cnx= mysqli_query($phpmyadmin, $queryCaixas);
+  while ($caixasVinhos= $cnx->fetch_array()) {
+    $vtCaiVin[0][$x]=$caixasVinhos["CAIXAS"];
+    $x++;
+  }
+  $x=0;
+  $cnx= mysqli_query($phpmyadmin, $queryVinhos);
+  while ($caixasVinhos= $cnx->fetch_array()) {
+    $vtCaiVin[1][$x]=$caixasVinhos["GARRAFAS"];
     $x++;
   }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
@@ -464,29 +475,37 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       }
     </script>
     <script type="text/javascript">
-    	google.charts.setOnLoadCallback(drawChart);
-		function drawChart() {
-		  var data = google.visualization.arrayToDataTable([
-		    ['Geração', 'Quantidade'],
-		    [1980, 1], [1985, 3], [1990, 5], [1991, 13]
-		 ]);
-
-		  var options = {
-		    title: 'Intervale de idades dos funcionários',
-		    hAxis: {title: 'Geração', minValue: 0, maxValue: 3},
-		    vAxis: {title: 'Quantidade', minValue: 0, maxValue: 2010},
-		    trendlines: {
-		      0: {
-		        type: 'exponential',
-		        color: 'green',
-		        visibleInLegend: true,
-		      }
-		    }
-		  };
-
-		  var chart = new google.visualization.ScatterChart(document.getElementById('idade'));
-		  chart.draw(data, options);
-		}
+    	google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Mês', 'Caixas', 'Vinhos'],
+          ['<?php echo $mes-3;?>', <?php echo $vtCaiVin[0][3]?>, <?php echo $vtCaiVin[1][3]?>],
+          ['<?php echo $mes-2;?>', <?php echo $vtCaiVin[0][2]?>, <?php echo $vtCaiVin[1][2]?>],
+          ['<?php echo $mes-1;?>', <?php echo $vtCaiVin[0][1]?>, <?php echo $vtCaiVin[1][1]?>],
+          ['<?php echo $mes;?>', <?php echo $vtCaiVin[0][0]?>, <?php echo $vtCaiVin[1][0]?>]
+        ]);
+        var options = {
+          chart: {
+            title: 'Expedição Caixas/Garrafas',
+            //subtitle: 'Caixas, Garrafas: 09-11',
+          },
+          bars: 'vertical',
+          vAxis: {format: ''},
+          bar: {groupWidth: "85%"},
+          //height: 400,
+          colors: ['#FF0000', '#800000']
+        };
+        var chart = new google.charts.Bar(document.getElementById('caixas-vinhos'));
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+        var btns = document.getElementById('btn-group');
+        btns.onclick = function (e) {
+          if (e.target.tagName === 'BUTTON') {
+            options.vAxis.format = e.target.id === 'none' ? '' : e.target.id;
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+          }
+        }
+      }
     </script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -647,7 +666,7 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="idade"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="caixas-vinhos"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
