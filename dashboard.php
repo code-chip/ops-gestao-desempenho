@@ -150,7 +150,6 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   $queryVinhos="select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)
 union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)
 union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
-  echo $queryVinhos;
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $queryCaixas);
   while ($caixasVinhos= $cnx->fetch_array()) {
@@ -487,7 +486,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
         ]);
         var options = {
           chart: {
-            title: 'Expedição Caixas/Garrafas',
+            title: 'Estimativa de expedição Caixas/Vinhos',
             //subtitle: 'Caixas, Garrafas: 09-11',
           },
           bars: 'vertical',
