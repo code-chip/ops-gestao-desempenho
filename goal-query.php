@@ -92,7 +92,7 @@ $totalAlcancado=0;
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="nome" type="text" class="input" placeholder="Ana Clara">
+							<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
 						</div>
 						</div>
 					</div>
