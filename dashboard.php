@@ -557,7 +557,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
         ]);
         var options = {
           chart: {
-            title: 'Estimativa de expedição Caixas/Vinhos',
+            title: 'Estimativa de caixas e vinhos expedidas',
             //subtitle: 'Caixas, Garrafas: 09-11',
           },
           bars: 'vertical',
@@ -736,7 +736,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="caixas-vinhos"></div>
+				<div class="column bloco is-mobile hvr-float" id="caixas-vinhos"></div>
 				<div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
