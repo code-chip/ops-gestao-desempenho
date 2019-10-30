@@ -70,7 +70,7 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
 		        	else{
-		        		echo $nome;
+		        		echo $nome.", desenvolvimento do módulo Meta finalizado, em breve mais novidades!!";
 		        	}
 		        	?>
 		      	</h3>
