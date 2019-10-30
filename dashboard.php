@@ -360,7 +360,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 
 		    var options = {
 		    	hAxis: {
-		        	title: 'Comparativo entre turnos últimos 9 dias'
+		        	title: 'Comparativo entre turnos, últimos 11 registros no mesmo dia.'
 		        },
 		        vAxis: {
 		        	title: 'Média de Desempenho'
@@ -370,6 +370,29 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 		    	var chart = new google.visualization.LineChart(document.getElementById('dash-turnos'));
 		      	chart.draw(data, options);
 		    }
+    </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable([
+          ['Mês', 'Checkout', 'Separação', 'Caixas', 'PBL', 'Recebimento','Devolução'],
+          ['<?php echo $mdData[1][0]?>', <?php echo $md[1][0];?>, <?php echo $md[1][1];?>, <?php echo $md[1][2];?>, <?php echo $md[1][3];?>, <?php echo $md[1][4];?>, <?php echo $md[1][5];?>],
+          ['<?php echo $mdData[0][0]?>', <?php echo $md[0][0];?>, <?php echo $md[0][1];?>, <?php echo $md[0][2];?>, <?php echo $md[0][3];?>, <?php echo $md[0][4];?>, <?php echo $md[0][5];?>]          
+        ]);
+
+        var options = {
+          title : 'Média de desempenho por atividade',
+          vAxis: {title: 'Desempenho'},
+          hAxis: {title: 'Mês'},
+          seriesType: 'bars',
+          series: {6: {type: 'line'}}
+        };
+        var chart = new google.visualization.ComboChart(document.getElementById('dash-med-desem-ativ'));
+        chart.draw(data, options);
+      }
     </script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -692,29 +715,6 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
       chart.draw(view, options);
 	  }
 	  </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawVisualization);
-
-      function drawVisualization() {
-        // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable([
-          ['Mês', 'Checkout', 'Separação', 'Caixas', 'PBL', 'Recebimento','Devolução'],
-          ['<?php echo $mdData[1][0]?>', <?php echo $md[1][0];?>, <?php echo $md[1][1];?>, <?php echo $md[1][2];?>, <?php echo $md[1][3];?>, <?php echo $md[1][4];?>, <?php echo $md[1][5];?>],
-          ['<?php echo $mdData[0][0]?>', <?php echo $md[0][0];?>, <?php echo $md[0][1];?>, <?php echo $md[0][2];?>, <?php echo $md[0][3];?>, <?php echo $md[0][4];?>, <?php echo $md[0][5];?>]          
-        ]);
-
-        var options = {
-          title : 'Média de desempenho por atividade',
-          vAxis: {title: 'Desempenho'},
-          hAxis: {title: 'Mês'},
-          seriesType: 'bars',
-          series: {6: {type: 'line'}}
-        };
-        var chart = new google.visualization.ComboChart(document.getElementById('dash-med-desem-ativ'));
-        chart.draw(data, options);
-      }
-    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
