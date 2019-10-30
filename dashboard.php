@@ -70,7 +70,7 @@ GROUP BY ATIVIDADE_ID";
     $vtG6Mes[$x]=$G6["MES"];
 		$x++;
 	}
-  /*DASH RELAÇÃO FOLGAS E FALTAS*/
+  /*DASH RELAÇÃO FOLGAS E FALTAS P03*/
   $queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
 UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
 UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-2 month'))."' 
@@ -93,7 +93,7 @@ UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(RE
     $vtQtd[$x]=$sexo["QTD"];
     $x++;
   }
-  /*DASH SEXO POR TURNO*/
+  /*DASH SEXO POR TURNO P04*/
   $querySexoTurno="SELECT T.NOME, SEXO, COUNT(*) AS QTD FROM USUARIO INNER JOIN TURNO T ON T.ID=USUARIO.TURNO_ID
 WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
   $cnx= mysqli_query($phpmyadmin, $querySexoTurno);
@@ -104,13 +104,28 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
     $vtQtdTurno[$x]=$sexoTurno["QTD"];
     $x++;
   }
-  //DASH COMPARATIVO ENTRE TURNOS - dash-turnos.
-  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO;";
+  //DASH COMPARATIVO ENTRE TURNOS - dash-turnos. P05
+  $queryDifTurnos="SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d') AS DIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID;";
   $cnx= mysqli_query($phpmyadmin, $queryDifTurnos);
   $x=0;
   while ($compTurno= $cnx->fetch_array()) {
-    $vtcompTurnos[$x]=$compTurno["MEDIA"];
+    $vtcompTurMed[$x]=$compTurno["MEDIA"];
+    $vtcompTurReg[$x]=$compTurno["REGISTRO"];
+    $vtcompTurDia[$x]=$compTurno["DIA"];
     $x++;
+  }
+  $x=0;
+  $y=0;
+  while($x<sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS NO MESMO DIA P/ F.
+    if($vtcompTurReg[$x]==$vtcompTurReg[$x+1]){
+      $turMat[$y]=$vtcompTurMed[$x];
+      $turVes[$y]=$vtcompTurMed[$x+1];
+      $turDia[$y]=$vtcompTurDia[$x];
+      $x++; $y++;
+    }
+    else{
+      $x++;
+    }
   }
   //DASH RANKING MELHORES DO MÊS - top8
   $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
@@ -306,8 +321,12 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 		    data.addColumn('number', 'Vespertino');
 
 		    data.addRows([
-		        [0, <?php echo $vtcompTurnos[0]?>, <?php echo $vtcompTurnos[1]?>],    [1, <?php echo $vtcompTurnos[2]?>, <?php echo $vtcompTurnos[3]?>],   [2, <?php echo $vtcompTurnos[4]?>, <?php echo $vtcompTurnos[5]?>],  [3, <?php echo $vtcompTurnos[5]?>, <?php echo $vtcompTurnos[6]?>],   [4, <?php echo $vtcompTurnos[7]?>, <?php echo $vtcompTurnos[7]?>],  [5, <?php echo $vtcompTurnos[8]?>, <?php echo $vtcompTurnos[9]?>],
-		        [6, <?php echo $vtcompTurnos[10]?>, <?php echo $vtcompTurnos[11]?>],   [7, <?php echo $vtcompTurnos[12]?>, <?php echo $vtcompTurnos[13]?>],  [8, <?php echo $vtcompTurnos[14]?>, 100], [9 ,100, 92],  [10, 102, 104]
+          [<?php echo $turDia[10]?>, <?php echo $turMat[10]?>, <?php echo $turVes[10]?>],
+          [<?php echo $turDia[9]?>, <?php echo $turMat[9]?>, <?php echo $turVes[9]?>], [<?php echo $turDia[8]?> ,<?php echo $turMat[8]?>, <?php echo $turVes[8]?>],
+          [<?php echo $turDia[7]?>, <?php echo $turMat[7]?>, <?php echo $turVes[7]?>],   [<?php echo $turDia[6]?>, <?php echo $turMat[6]?>, <?php echo $turVes[6]?>],
+          [<?php echo $turDia[5]?>, <?php echo $turMat[5]?>, <?php echo $turVes[5]?>],  [<?php echo $turDia[4]?>, <?php echo $turMat[4]?>, <?php echo $turVes[4]?>],
+          [<?php echo $turDia[3]?>, <?php echo $turMat[3]?>, <?php echo $turVes[3]?>],  [<?php echo $turDia[2]?>, <?php echo $turMat[2]?>, <?php echo $turVes[2]?>],
+		      [<?php echo $turDia[1]?>, <?php echo $turMat[1]?>, <?php echo $turVes[1]?>], [<?php echo $turDia[0]?>, <?php echo $turMat[0]?>, <?php echo $turVes[0]?>]
 		    ]);
 
 		    var options = {
@@ -657,7 +676,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 				<div class="column is-mobile hvr-grow-shadow" id="sexo-turno"></div>				
 			</div>
 			<div class="field is-horizontal columns" id="graficos">	<!--<div class="field is-horizontal" id="graficos">-->
-				<div class="column bloco is-mobile hvr-bounce-in" id="dash-turnos"></div>
+				<div class="column bloco is-mobile hvr-wobble-skew" id="dash-turnos"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="dash-comp-atividades"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="sexo"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
