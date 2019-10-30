@@ -127,6 +127,35 @@ WHERE TURNO_ID IN(1,2) GROUP BY TURNO_ID, SEXO ORDER BY TURNO_ID, SEXO DESC;";
       $x++;
     }
   }
+  //DASH MEDIA POR ATIVIDADES NO MÊS P06//
+  $queryMedAtiv="SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout, ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=1 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Separação', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=2 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Embalagem', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=3 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'PBL', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=4 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Recebimento', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=5 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Devolução', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=6 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Avarias', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=7 GROUP BY 3 
+UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=8 GROUP BY 2) ATIVIDADES ORDER BY REGISTRO DESC, ID ";
+  $x=0;
+  $cnx=mysqli_query($phpmyadmin, $queryMedAtiv);
+  while ($medAtiv=$cnx->fetch_array()) {
+    $vtmedAtivMedia[$x]=$medAtiv["MEDIA"];
+    $vtmedAtivAtividade[$x]=$medAtiv["Chechout"];
+    $vtmedAtivId[$x]=$medAtiv["ID"];
+    $vtmedAtivData[$x]=$medAtiv["REGISTRO"];
+    $x++;
+  }
+  $yz=0;
+  for($y=0;$y< 2; $y++){//LAÇO P/ PREENCHER INFORMAÇÕES DE 2 MESES.
+    for($z=0;$z<8;$z++){//LAÇO P/ PREENCHER ATÉ 8 ATIVIDADES.
+      $md[$y][$z]=0;//INICIA MATRIZ COM ZERO.
+      if($vtmedAtivId[$z]==$z+1){//VERIFICA SE O ID DA ATIVIDADE É O MESMO DA POSIÇÃO A SER ARMAZENADA.
+        $md[$y][$z]=$vtmedAtivMedia[$yz];
+        $mdData[$y][$z]=$vtmedAtivData[$yz];
+        $yz++;  
+      }
+    }
+  }
   //DASH RANKING MELHORES DO MÊS - top8
   $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
   INNER JOIN USUARIO U ON U.ID=USUARIO_ID
@@ -663,6 +692,29 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
       chart.draw(view, options);
 	  }
 	  </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawVisualization);
+
+      function drawVisualization() {
+        // Some raw data (not necessarily accurate)
+        var data = google.visualization.arrayToDataTable([
+          ['Mês', 'Checkout', 'Separação', 'Caixas', 'PBL', 'Recebimento','Devolução'],
+          ['<?php echo $mdData[1][0]?>', <?php echo $md[1][0];?>, <?php echo $md[1][1];?>, <?php echo $md[1][2];?>, <?php echo $md[1][3];?>, <?php echo $md[1][4];?>, <?php echo $md[1][5];?>],
+          ['<?php echo $mdData[0][0]?>', <?php echo $md[0][0];?>, <?php echo $md[0][1];?>, <?php echo $md[0][2];?>, <?php echo $md[0][3];?>, <?php echo $md[0][4];?>, <?php echo $md[0][5];?>]          
+        ]);
+
+        var options = {
+          title : 'Média de desempenho por atividade',
+          vAxis: {title: 'Desempenho'},
+          hAxis: {title: 'Mês'},
+          seriesType: 'bars',
+          series: {6: {type: 'line'}}
+        };
+        var chart = new google.visualization.ComboChart(document.getElementById('dash-med-desem-ativ'));
+        chart.draw(data, options);
+      }
+    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -677,7 +729,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 			</div>
 			<div class="field is-horizontal columns" id="graficos">	<!--<div class="field is-horizontal" id="graficos">-->
 				<div class="column bloco is-mobile hvr-wobble-skew" id="dash-turnos"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="dash-comp-atividades"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="dash-med-desem-ativ"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="sexo"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
 			</div>
@@ -690,7 +742,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 			<div class="field is-horizontal columns" id="graficos">
 				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="dash-acessos-no-mes"></div>
+				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="dash-acessos-no-mes"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
 			</div>	
 			<?php } endif;?>			
