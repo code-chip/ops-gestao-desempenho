@@ -116,16 +116,41 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
     $x++;
   }
   //DASH RANKING MELHORES DO MÊS - top8
-  $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
-  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
-  GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
+  $querytop8="SELECT USUARIO_ID, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
+  GROUP BY USUARIO_ID ORDER BY 2 DESC;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop8);
   while ($top8= $cnx->fetch_array()) {
-    $vtNomeTop8[$x]=$top8["NOME"];
+    $vtIdTop8[$x]=$top8["USUARIO_ID"];
     $vtMediaTop8[$x]=$top8["MEDIA"];
     $x++;
+  }
+  $x=0;
+  $totalPosicoes= mysqli_num_rows($cnx);
+  while ($x<sizeof($vtIdTop8)) {
+    if($vtIdTop8[$x]==$_SESSION["userId"]){
+      $z=0;
+      while ($z <= 7) {
+        if($x> $totalPosicoes-8){
+          $vtPosTop8[0]=$_SESSION["nameUser"];
+          $vtPosTop8[$z]="Anônimo posição ".$x;
+          $vtMedTop8[$z]=$vtMediaTop8[$x];
+          $z++;
+          $x++;
+        }
+        else{
+          $vtPosTop8[0]=$_SESSION["nameUser"];
+          $vtPosTop8[$z]="Anônimo posição ".$x;
+          $vtMedTop8[$z]=$vtMediaTop8[$x];
+          $z++;
+          $x++;
+        }        
+      }
+      
+    }
+    else{
+      $x++;
+    }
   }
   //DASH MEDIA POR ATIVIDADE
   $queryMedAtiv="SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout,  ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=1 GROUP BY 3 
@@ -321,14 +346,14 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Element", "Density", { role: "style" } ],
-        ['<?php echo $vtNomeTop8[0]?>', <?php echo $vtMediaTop8[0]?>, "gold"],
-        ['<?php echo $vtNomeTop8[1]?>', <?php echo $vtMediaTop8[1]?>, "beige"],
-        ['<?php echo $vtNomeTop8[2]?>', <?php echo $vtMediaTop8[2]?>, "silver"],
-        ['<?php echo $vtNomeTop8[3]?>', <?php echo $vtMediaTop8[3]?>, "#b87333"],
-        ['<?php echo $vtNomeTop8[4]?>', <?php echo $vtMediaTop8[4]?>, "#b87333"],
-        ['<?php echo $vtNomeTop8[5]?>', <?php echo $vtMediaTop8[5]?>, "#b87333"],
-        ['<?php echo $vtNomeTop8[6]?>', <?php echo $vtMediaTop8[6]?>, "#b87333"],
-        ['<?php echo $vtNomeTop8[7]?>', <?php echo $vtMediaTop8[7]?>, "#b87333"]
+        ['<?php echo $vtPosTop8[0]?>', <?php echo $vtMedTop8[0]?>, "gold"],
+        ['<?php echo $vtPosTop8[1]?>', <?php echo $vtMedTop8[1]?>, "beige"],
+        ['<?php echo $vtPosTop8[2]?>', <?php echo $vtMedTop8[2]?>, "silver"],
+        ['<?php echo $vtPosTop8[3]?>', <?php echo $vtMedTop8[3]?>, "#b87333"],
+        ['<?php echo $vtPosTop8[4]?>', <?php echo $vtMedTop8[4]?>, "#b87333"],
+        ['<?php echo $vtPosTop8[5]?>', <?php echo $vtMedTop8[5]?>, "#b87333"],
+        ['<?php echo $vtPosTop8[6]?>', <?php echo $vtMedTop8[6]?>, "#b87333"],
+        ['<?php echo $vtPosTop8[7]?>', <?php echo $vtMedTop8[7]?>, "#b87333"]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -340,7 +365,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
                        2]);
 
       var options = {
-        title: "Melhor desempenho no mês",
+        title: "Sua posição com o desempenho atual neste mês",
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
