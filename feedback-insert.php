@@ -1,37 +1,30 @@
 <?php 
 $menuFeedback="is-active";
 include('menu.php');
-if(isset($_POST["inserirMeta"])!=null){
-	if($meta!="" && $descricao!="" && $execucao!=""){
-		if($usuario=="Todos"){
-			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor." AND SITUACAO<>'Desligado';";
-			$cnx= mysqli_query($phpmyadmin, $listIds);
-			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$execucao."','".date('Y-m-d')."',0);";
-				$cx= mysqli_query($phpmyadmin, $inserirMeta);
-			}
-		}
-		else{
-			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$execucao."','".date('Y-m-d')."',0);";			
-			$cnx= mysqli_query($phpmyadmin, $inserirMeta);
-			echo "<script>alert('Meta's cadastrada com sucesso!!')</script>";
-		}
+$colaborador=trim($_POST['colaborador']);
+$profissional=trim($_POST['profissional']);
+$comportamental=trim($_POST['comportamental']);
+$desempenho=trim($_POST['desempenho']);
+$tipo=trim($_POST['tipo']);
+$feedback=trim($_POST['feedback']);
+$exibicao=trim($_POST['exibicao']);
+if(isset($_POST["inserirFeedback"])!=null){
+	if($colaborador!="" && $feedback!=""){
+		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, SITUACAO, LIDO, EXIBICAO) VALUES(".$SESSION_["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'Enviado',0,".$exibicao.";";			
+			$cnx= mysqli_query($phpmyadmin, $inserirFeedback);
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
-			echo "<script>alert('Meta cadastrada com sucesso!!')</script>";	
+			echo "<script>alert('Feedback enviado com sucesso!!')</script>";	
 		}
 		else{
-			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
+			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
 		}
 	}
-	else if($meta==""){
-		echo "<script>alert('Preencher o campo Meta é obrigatório!!')</script>";
-	}
-	else if($descricao==""){
-		echo "<script>alert('Preencher o campo Descricao é obrigatório!!')</script>";
+	else if($colaborador==""){
+		echo "<script>alert('Selecionar o campo Colaborador é obrigatório!!')</script>";
 	}
 	else{
-		echo "<script>alert('Preencher o campo Expiração é obrigatório!!')</script>";
+		echo "<script>alert('Preencher do feedback é obrigatório!!')</script>";
 	}	
 }
 ?>
@@ -195,7 +188,7 @@ if(isset($_POST["inserirMeta"])!=null){
 								</div>
 							</div>
 							<div class="control">
-								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirFeedback" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 							</div>						
 						</div>
 					</div>					
@@ -212,7 +205,7 @@ if(isset($_POST["inserirMeta"])!=null){
 							$('#usuario').hide();
 							$('.carregando').show();
 							$.getJSON('loading-users.php?search=',{setor: $(this).val(), ajax: 'true'}, function(j){
-								var options = '<option value="Todos">Todos do Setor</option>';	
+								var options = '<option value="Todos">Selecione</option>';	
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i].id + '">' + j[i].nome_usuario + '</option>';
 								}	
