@@ -10,7 +10,7 @@ $feedback=trim($_POST['feedback']);
 $exibicao=trim($_POST['exibicao']);
 if(isset($_POST["inserirFeedback"])!=null){
 	if($colaborador!="" && $feedback!=""){
-		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, SITUACAO, LIDO, EXIBICAO) VALUES(".$SESSION_["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'Enviado',0,".$exibicao.";";			
+		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, LIDO, EXIBICAO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',0,".$exibicao.");";			
 			$cnx= mysqli_query($phpmyadmin, $inserirFeedback);
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
@@ -44,7 +44,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="goal-insert.php" method="POST">
+	   		<form action="feedback-insert.php" method="POST">
 	   			<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Setor:</label>
@@ -75,7 +75,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 							<div class="control">
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
-									<select name="usuario" id="usuario">
+									<select name="colaborador" id="usuario">
 										<option selected="selected" value="Todos">Selecione</option>
 									</select>	
 								</div>
@@ -112,11 +112,11 @@ if(isset($_POST["inserirFeedback"])!=null){
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
 									<select name="comportamental" id="comportamental">
-										<option value="">1</option>
-										<option value="">2</option>
-										<option value="">3</option>
-										<option value="">4</option>
-										<option value="">5</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
 									</select>	
 								</div>
 							</div>						
@@ -182,13 +182,13 @@ if(isset($_POST["inserirFeedback"])!=null){
 							<div class="control">
 								<div class="select is-size-7-touch">
 									<select name="exibicao">
-										<option value="">Rementente</option>
-										<option value="">Anônimo</option>
+										<option value="1">Rementente</option>
+										<option value="0">Anônimo</option>
 									</select>	
 								</div>
 							</div>
 							<div class="control">
-								<button name="inserirFeedback" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirFeedback" type="submit" class="button is-primary" value="Filtrar">Enviar</button>
 							</div>						
 						</div>
 					</div>					
