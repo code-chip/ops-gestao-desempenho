@@ -128,25 +128,33 @@ UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRES
   $x=0;
   $totalPosicoes= mysqli_num_rows($cnx);
   while ($x<sizeof($vtIdTop8)) {
-    if($vtIdTop8[$x]==$_SESSION["userId"]){
-      $z=0;
+    if($vtIdTop8[$x]==$_SESSION["userId"] && $x< $totalPosicoes-9){//COMPARA O ID DO USUÁRIO DO VETOR COM USUÁRIO DA SESSÃO.
+      $posTop8=$x+1; $z=0;//SALVA A POSIÇÃO DO USUÁRIO.
       while ($z <= 7) {
-        if($x> $totalPosicoes-8){
-          $vtPosTop8[0]=$_SESSION["nameUser"];
-          $vtPosTop8[$z]="Anônimo posição ".$x;
-          $vtMedTop8[$z]=$vtMediaTop8[$x];
-          $z++;
-          $x++;
-        }
-        else{
-          $vtPosTop8[0]=$_SESSION["nameUser"];
-          $vtPosTop8[$z]="Anônimo posição ".$x;
-          $vtMedTop8[$z]=$vtMediaTop8[$x];
-          $z++;
-          $x++;
-        }        
+        $pos=$x+1;
+        $vtPosTop8[0]=$_SESSION["nameUser"];
+        $vtPosTop8[$z]="Anônimo posição ".$pos;
+        $vtMedTop8[$z]=$vtMediaTop8[$x];
+        $z++; $x++;
       }
-      
+      break;
+    }
+    else if($x> $totalPosicoes-9){//VERIFICA SE A POSIÇÃO DO USUÁRIO ESTÁ EMTRE AS ÚLTIMAS.
+       $z=0;
+      while ($z <= 7) {
+        if($vtIdTop8[$x]==$_SESSION["userId"]){
+            $posTop8=$x+1;//SALVA A POSIÇÃO DO USUÁRIO.
+            $vtPosTop8[$z]=$_SESSION["nameUser"];
+            $vtMedTop8[$z]=$vtMediaTop8[$x];
+            $z++; $x++;
+          }
+          else{
+            $pos=$x+1;          
+            $vtPosTop8[$z]="Anônimo posição ".$pos;
+            $vtMedTop8[$z]=$vtMediaTop8[$x];
+            $z++; $x++;
+          }
+      }
     }
     else{
       $x++;
@@ -365,7 +373,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
                        2]);
 
       var options = {
-        title: "Sua posição com o desempenho atual neste mês",
+        title: "Sua posição é <?php echo $posTop8;?> com o desempenho atual",
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
@@ -413,7 +421,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
       <div class="field is-horizontal columns" id="graficos">
         <div class="column bloco is-mobile hvr-bounce-in" id="meta-atingida-perdida-mes"></div>       
         <div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
-        <div class="column bloco is-mobile hvr-grow-shadow" id="dash-acessos-no-mes"></div>        
+        <div class="column bloco is-mobile hvr-wobble-to-top-right" id="dash-acessos-no-mes"></div>        
       </div>      
   </div>  
 </body>
