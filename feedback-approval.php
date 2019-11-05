@@ -5,11 +5,12 @@ $menuFeedback="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $contador = 0;
-$query="SELECT U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
+$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
 INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($feed= $cnx->fetch_array()){
+		$vtId[$x]=$feed["ID"];
 		$vtRemetente[$x]=$feed["REMETENTE"];
 		$vtDestinatario[$x]=$feed["DESTINATARIO"];
 		$vtTipo[$x]=$feed["TIPO"];
@@ -52,7 +53,10 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 		<td><?php echo $vtDestinatario[$i]?></td>
 		<td><?php echo $vtTipo[$i]?></td>
 		<td><?php echo $vtFeedback[$i]?></td>
-		<td><?php ?></td>		
+		<td><label class="checkbox">
+  				<input name="id[]" type="checkbox" value="<?php echo $vtId[$i]?>">
+  				Sim
+  			</label>  </td>		
 	</tr>
 <?php endfor;?>
 	</table>	
@@ -64,12 +68,9 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 	<br/>
 	<div class="table__wrapper">			
 		<div class="field-body">
-			<div class="field">
+			<div class="field">				
 				<div class="control">
-					<a href="register.php"><input name="aprovar" type="submit" class="button is-primary" value="Aprovar"/></a>
-				</div>	
-				<div class="control">
-					<a href="register.php"><input name="Limpar" type="submit" class="button is-primary" value="Voltar"/></a>
+					<input name="aprovar" type="submit" class="button is-primary" value="Aprovar"/>
 				</div>					
 			</div>						
 		</div>
