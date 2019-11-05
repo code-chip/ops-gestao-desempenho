@@ -70,7 +70,10 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
 		        	else{
-		        		echo $nome;
+		        		if($_SESSION["PERMISSAO"]==1){
+		        			echo "<script>alert('Atenção! foi lançado uma nova atualização, detalhes abaixo.')</script>";
+		        		}	
+		        		echo $nome.", já está disponível alguns gráficos no meu menu Dashboard";
 		        	}
 		        	?>
 		      	</h3>
