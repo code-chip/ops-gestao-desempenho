@@ -5,11 +5,15 @@ $menuFeedback="is-active";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $contador = 0;
-$query="SELECT * FROM FEEDBACK";
+$query="SELECT U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
+INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($feed= $cnx->fetch_array()){
-		$vt[$x]=$feed["NOME"];				
+		$vtRemetente[$x]=$feed["REMETENTE"];
+		$vtDestinatario[$x]=$feed["DESTINATARIO"];
+		$vtTipo[$x]=$feed["TIPO"];
+		$vtFeedback[$x]=$feed["FEEDBACK"];				
 		$x++;
 		$contador=$x;
 	}
@@ -37,23 +41,18 @@ $query="SELECT * FROM FEEDBACK";
 		<th>Remetente</th>
 		<th>Destinatário</th>
 		<th>Tipo</th>
-		<th>Feedback</th> 			
+		<th>Feedback</th>
+		<th>Aprovar</th> 			
 	</tr>
 	<?php
- 	for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
-	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
-		$registro++;
-		$repeat=$registro;
-		$z++;
-	}
-	if($repeat>0){ $repeat--;}	
-	?>
+ 	for( $i = 0; $i < sizeof($vtRemetente); $i++ ) : ?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td><?php echo $vtRemetente[$i]?></td>
 		<td><?php echo $vtDestinatario[$i]?></td>
 		<td><?php echo $vtTipo[$i]?></td>
-		<td><?php echo $vtFeedback[$i]?></td>		
+		<td><?php echo $vtFeedback[$i]?></td>
+		<td><?php ?></td>		
 	</tr>
 <?php endfor;?>
 	</table>	
