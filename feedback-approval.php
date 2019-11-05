@@ -66,6 +66,9 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 		<div class="field-body">
 			<div class="field">
 				<div class="control">
+					<a href="register.php"><input name="aprovar" type="submit" class="button is-primary" value="Aprovar"/></a>
+				</div>	
+				<div class="control">
 					<a href="register.php"><input name="Limpar" type="submit" class="button is-primary" value="Voltar"/></a>
 				</div>					
 			</div>						
@@ -74,3 +77,8 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 </section>	
 </body>
 </html>
+<?php 
+if(isset($_POST["aprovar"])!=null){
+
+}
+?>
