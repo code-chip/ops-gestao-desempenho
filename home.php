@@ -73,7 +73,7 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        		if($_SESSION["PERMISSAO"]==1){
 		        			echo "<script>alert('Atenção! foi lançado uma nova atualização, detalhes abaixo.')</script>";
 		        		}	
-		        		echo $nome.", já está disponível alguns gráficos no meu menu Dashboard";
+		        		echo $nome.", já está disponível alguns gráficos no menu Dashboard";
 		        	}
 		        	?>
 		      	</h3>
