@@ -55,6 +55,7 @@ $menuConfiguracoes;
 				<div class="navbar-end">
 					<a href="home.php" class="navbar-item <?php echo $menuInicio?> hvr-grow">Início</a>
 					<?php if($_SESSION["permissao"]!=1):{?><a href="dashboard.php" class="navbar-item <?php echo $menuDashboard?> hvr-grow">Dashboard</a><?php }endif;?>
+					<?php if($_SESSION["permissao"]==1):{?><a href="dashboard-private.php" class="navbar-item <?php echo $menuDashboard?> hvr-grow">Dashboard</a><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuMeta?> hvr-grow">Meta</a>					
 						<div class="navbar-dropdown">
