@@ -182,7 +182,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 							<div class="control">
 								<div class="select is-size-7-touch">
 									<select name="exibicao">
-										<option value="1">Rementente</option>
+										<option value="1">Remetente</option>
 										<option value="0">Anônimo</option>
 									</select>	
 								</div>

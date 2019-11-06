@@ -67,6 +67,17 @@ $menuConfiguracoes;
 							<?php }endif;?>
 						</div>
 					</div>
+					<div href="#" class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link <?php echo $menuFeedback?> hvr-grow">Feedback</a>					
+						<div class="navbar-dropdown">
+							<?php if($_SESSION["permissao"]!=1):{?>
+							<a href="feedback-approval.php" class="navbar-item hvr-grow">Aprovar</a>
+							<?php }endif;?>
+							<a href="feedback-insert.php" class="navbar-item hvr-grow">Enviar</a>
+							<a href="feedback-request.php" class="navbar-item hvr-grow">Solicitar</a>							
+							<a href="feedback-query.php" class="navbar-item hvr-grow">Consultar</a>
+						</div>
+					</div>
 					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
 						<div class="navbar-dropdown">
