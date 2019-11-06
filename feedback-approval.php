@@ -18,12 +18,6 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 		$x++;
 		$contador=$x;
 	}
-	if(mysqli_num_rows($cnx)==0){
-		?><script type="text/javascript">			
-			alert('Nenhum feedback aguardando aprovação no momento!');
-			window.location.href=window.location.href;
-		</script> <?php		
-	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,6 +28,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 </head>
 <body>	
 <hr/>
+<form method="POST" action="feedback-approval.php" id="form1">
 	<section class="section" id="topo">
 	<div class="table__wrapper">
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
@@ -53,10 +48,14 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 		<td><?php echo $vtDestinatario[$i]?></td>
 		<td><?php echo $vtTipo[$i]?></td>
 		<td><?php echo $vtFeedback[$i]?></td>
-		<td><label class="checkbox">
-  				<input name="id[]" type="checkbox" value="<?php echo $vtId[$i]?>">
-  				Sim
-  			</label>  </td>		
+		<td>
+  			<div class="select">
+  				<select name="id[]">
+  					<option value="1">Sim</option>
+  					<option value="2">Não</option>
+  				</select>					
+			</div>	
+  		</td>		
 	</tr>
 <?php endfor;?>
 	</table>	
@@ -75,11 +74,31 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE APROVADO_POR IS NULL;";
 			</div>						
 		</div>
 	</div>
-</section>	
+</section>
+</form>	
 </body>
 </html>
 <?php 
-if(isset($_POST["aprovar"])!=null){
-
+if(isset($_POST["aprovar"])){
+	$ids=array_filter($_POST["id"]);
+	$x=0;
+	while ($x< sizeof($ids)) {
+		$upFeedback="UPDATE FEEDBACK SET APROVADO_POR=".$_SESSION["userId"].", SITUACAO='Aprovado' WHERE ID=".$ids[$x];
+		$cnx= mysqli_query($phpmyadmin, $upFeedback);
+		$x++;
+	}
+	if($x>0){
+		$x=$x+1;
+		?><script type="text/javascript">			
+			alert('Foi atualizado(s) '<?php echo $x;?>' feedback(s)!');
+			window.location.href=window.location.href;
+		</script> <?php		
+	}
+	else{
+		?><script type="text/javascript">			
+			alert('Nenhum feedback foi atualizado!');
+			window.location.href=window.location.href;
+		</script> <?php	
+	}
 }
 ?>
