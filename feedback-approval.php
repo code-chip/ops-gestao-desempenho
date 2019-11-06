@@ -36,12 +36,12 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 <body>	
 <hr/>
 <section class="section" id="topo">
-<?php if($setor =="" && isset($_POST['consultar'])==null ): ?>	
+<?php if($situacao =="" && isset($_POST['consultar'])==null ): ?>	
 	<form id="form1" action="feedback-approval.php" method="POST">
 		<div class="field is-horizontal">
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
-					<label class="label">Setor:</label>
+					<label class="label">Situação:</label>
 				</div>
 				<div class="field-body">
 					<div class="field" style="max-width:17em;">							
@@ -95,6 +95,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		<?php if($situacao=="APROVADO_POR IS NULL"):?><td>
   			<div class="select">
   				<select name="id[]">
+  					<option value="">...</option>
   					<option value="1">Sim</option>
   					<option value="2">Não</option>
   				</select>					
