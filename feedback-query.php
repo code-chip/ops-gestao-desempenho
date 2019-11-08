@@ -4,7 +4,7 @@ include('menu.php');
 $feedback= trim($_POST["feedback"]);
 $contador = 0;
 if(isset($_POST['consultar'])){
-	$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK, F.EXIBICAO, F.PROFISSIONAL, F.COMPORTAMENTAL, F.DESEMPENHO, F.SITUACAO FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
+	$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK, F.EXIBICAO, F.PROFISSIONAL, F.COMPORTAMENTAL, F.DESEMPENHO, F.SITUACAO FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." AND F.SITUACAO='Aprovado' ORDER BY F.REGISTRO DESC";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($feed= $cnx->fetch_array()){
@@ -90,7 +90,7 @@ if(isset($_POST['consultar'])){
 	<tr>
 		<td><?php echo $i+1;?></td>		
 		<?php if($feedback=="DESTINATARIO_ID"):?><td><?php if($vtExibicao[$i]==1){echo $vtRemetente[$i];} else{echo "Anônimo";}?></td><?php endif;?>
-		<td><?php echo $vtDestinatario[$i]?></td>
+		<?php if($feedback=="REMETENTE_ID"):?><td><?php echo $vtDestinatario[$i]?></td><?php endif;?>
 		<td><?php echo $vtTipo[$i]?></td>
 		<td><?php echo $vtProfissional[$i]?></td> 
 		<td><?php echo $vtComportamental[$i]?></td> 
