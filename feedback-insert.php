@@ -10,7 +10,7 @@ $feedback=trim($_POST['feedback']);
 $exibicao=trim($_POST['exibicao']);
 if(isset($_POST["inserirFeedback"])!=null){
 	if($colaborador!="" && $feedback!=""){
-		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, LIDO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',0,".$exibicao.",'".date('Y-m-d')."');";			
+		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',".$exibicao.",'".date('Y-m-d')."');";			
 			$cnx= mysqli_query($phpmyadmin, $inserirFeedback);
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
