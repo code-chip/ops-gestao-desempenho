@@ -38,7 +38,7 @@ if(isset($_POST['consultar'])){
 <body>	
 <hr/>
 <section class="section" id="topo">
-<?php if($situacao =="" && isset($_POST['consultar'])==null ): ?>	
+<?php if(isset($_POST['consultar'])==null ): ?>	
 	<form id="form1" action="feedback-query.php" method="POST">
 		<div class="field is-horizontal">
 			<div class="field is-horizontal">
@@ -120,3 +120,12 @@ if(isset($_POST['consultar'])){
 </body>
 </html>
 <?php
+if(isset($_POST['consultar'])){
+	$x=0;
+	while ( $x< sizeof($vtId)) {
+		$upFeedback="UPDATE FEEDBACK SET SITUACAO='Lido' WHERE ID=".$vtId[$x];	
+		$cnx=mysqli_query($phpmyadmin, $upFeedback);
+		$x++;
+	}
+}
+?>
