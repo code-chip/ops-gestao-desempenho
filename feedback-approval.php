@@ -4,8 +4,8 @@ include('menu.php');
 $situacao= trim($_POST["situacao"]);
 $contador = 0;
 if(isset($_POST['consultar'])){
-$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK, U3.NOME AS APROVADO_POR FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
-INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.APROVADO_POR WHERE ".$situacao;
+$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK, U3.NOME AS ATUALIZADO_POR FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
+INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.ATUALIZADO_POR WHERE ".$situacao;
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($feed= $cnx->fetch_array()){
@@ -14,7 +14,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		$vtDestinatario[$x]=$feed["DESTINATARIO"];
 		$vtTipo[$x]=$feed["TIPO"];
 		$vtFeedback[$x]=$feed["FEEDBACK"];
-		$vtAprovadoPor[$x]=$feed["APROVADO_POR"];				
+		$vtAprovadoPor[$x]=$feed["ATUALIZADO_POR"];				
 		$x++;
 		$contador=$x;
 	}
@@ -48,9 +48,9 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 						<div class="control">
 							<div class="select">
 								<select name="situacao">								
-									<option value="APROVADO_POR IS NULL">Aguardando</option>
-									<option value="APROVADO_POR=2">Reprovado</option>
-									<option value="APROVADO_POR=1">Aprovado</option>
+									<option value="ATUALIZADO_POR IS NULL">Aguardando</option>
+									<option value="ATUALIZADO_POR=2">Reprovado</option>
+									<option value="ATUALIZADO_POR=1">Aprovado</option>
 								</select>
 							</div>
 						</div>
@@ -80,9 +80,9 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		<th>Destinatário</th>
 		<th>Tipo</th>
 		<th>Feedback</th>
-		<?php if($situacao=="APROVADO_POR IS NULL"):?><th>Aprovar</th><?php endif;?>
-		<?php if($situacao=="APROVADO_POR=1"):?><th>Aprovado por</th><?php endif;?>
-		<?php if($situacao=="APROVADO_POR=2"):?><th>Reprovado por</th><?php endif;?>    			
+		<?php if($situacao=="ATUALIZADO_POR IS NULL"):?><th>Aprovar</th><?php endif;?>
+		<?php if($situacao=="ATUALIZADO_POR=1"):?><th>Aprovado por</th><?php endif;?>
+		<?php if($situacao=="ATUALIZADO_POR=2"):?><th>Reprovado por</th><?php endif;?>    			
 	</tr>
 	<?php
  	for( $i = 0; $i < sizeof($vtRemetente); $i++ ) : ?>
@@ -92,7 +92,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		<td><?php echo $vtDestinatario[$i]?></td>
 		<td><?php echo $vtTipo[$i]?></td>
 		<td><?php echo $vtFeedback[$i]?></td>
-		<?php if($situacao=="APROVADO_POR IS NULL"):?><td>
+		<?php if($situacao=="ATUALIZADO_POR IS NULL"):?><td>
   			<div class="select">
   				<select name="id[]">
   					<option value="">...</option>
@@ -101,7 +101,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
   				</select>					
 			</div>	
   		</td><?php endif;?>
-  		<?php if($situacao!="APROVADO_POR IS NULL"):?><td><?php echo $vtAprovadoPor[$i]?></td><?php endif;?>
+  		<?php if($situacao!="ATUALIZADO_POR IS NULL"):?><td><?php echo $vtAprovadoPor[$i]?></td><?php endif;?>
 	</tr>
 <?php endfor;?>
 	</table>	
@@ -133,7 +133,7 @@ if(isset($_POST["aprovar"])){
 	$ids=array_filter($_POST["id"]);
 	$x=0;
 	while ($x< sizeof($ids)) {
-		$upFeedback="UPDATE FEEDBACK SET APROVADO_POR=".$_SESSION["userId"].", SITUACAO='Aprovado' WHERE ID=".$ids[$x];
+		$upFeedback="UPDATE FEEDBACK SET ATUALIZADO_POR=".$_SESSION["userId"].", SITUACAO='Aprovado' WHERE ID=".$ids[$x];
 		$cnx= mysqli_query($phpmyadmin, $upFeedback);
 		$x++;
 	}
