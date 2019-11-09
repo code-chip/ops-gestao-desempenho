@@ -44,7 +44,7 @@ $menuConfiguracoes;
 	<nav class="navbar is-primary">
 		<div class="container">
 			<div class="navbar-brand">
-				<a class="navbar-item hvr-curl-top-right" href="https://evino.com.br" target="_blank" style="font-weight:bold;">(evino)</a>
+				<a class="navbar-item hvr-curl-top-right" href="https://evino.com.br" target="_blank" style="font-weight:bold;">( evino )</a>
 				<span class="navbar-burger burger" data-target="navMenu">
 					<span></span>
 					<span></span>
