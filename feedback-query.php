@@ -125,7 +125,7 @@ if(isset($_POST['consultar'])){
 </body>
 </html>
 <?php
-if(isset($_POST['consultar'])){
+if(isset($_POST['consultar']) && $feedback!="DESTINATARIO_ID"){
 	$x=0;
 	while ( $x< sizeof($vtId)) {
 		$upFeedback="UPDATE FEEDBACK SET SITUACAO='Lido' WHERE ID=".$vtId[$x];	
