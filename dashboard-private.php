@@ -57,10 +57,16 @@ GROUP BY ATIVIDADE_ID";
   }  
   $g41="SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");";
   $cnx= mysqli_query($phpmyadmin, $g41);
-  while($G41 = $cnx->fetch_array()){
-    $vtG4nome[$x3]= $G41["NOME"];
-    $vtG4vezes[$x3]= $G41["VEZES"];
-    $x3++;        
+  if(mysqli_error($phpmyadmin)==null){
+    while($G41 = $cnx->fetch_array()){
+      $vtG4nome[$x3]= $G41["NOME"];
+      $vtG4vezes[$x3]= $G41["VEZES"];
+      $x3++;        
+    }
+  }
+  else{
+    $vtG4nome[0]= "Nenhuma";
+    $vtG4vezes[0]= 20;
   }
   //DASH ACESSOS NO MÊS
   $g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
