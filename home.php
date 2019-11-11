@@ -14,6 +14,11 @@ $ultimoLogin=date_create($cnx["ULTIMO_LOGIN"]);
 $resultado = date_diff($ultimoLogin, $dataAtual);
 $dias= date_interval_format($resultado, '%a');
 list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
+
+$checkFeedback="SELECT ID FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado';";
+$cnx2=mysqli_query($phpmyadmin, $checkFeedback);
+$feedReceived=mysqli_num_rows($cnx2);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,6 +65,12 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        	?>
 		      	</h1>
 		      	<h3 class="subtitle animated bounceInRight"><?php
+		      		if($feedReceived>0){?>
+						<script>
+							var feedReceived=<?php echo $feedReceived ?>;
+							alert('Atenção! '+feedReceived+' feedback(s) recebido(s).');
+						</script><?php
+					}
 		      		if($acesso==1){
 		      			echo $nome.", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 		      		}
@@ -69,12 +80,8 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 		        	else if($dias>6){ 
 		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
-		        	else{
-		        		if($_SESSION["permissao"]==1){
-		        			echo "<script>alert('Atenção! foi lançado uma nova atualização, detalhes abaixo.')</script>";
-		        			
-		        		}	
-		        		echo $nome.", já está disponível alguns gráficos no menu Dashboard";
+		        	else{		        			
+		        		echo $nome.", já está disponível o módulo Feedback";
 		        	}
 		        	?>
 		      	</h3>
