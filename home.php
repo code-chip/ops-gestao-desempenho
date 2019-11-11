@@ -18,6 +18,9 @@ list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 $checkFeedback="SELECT ID FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado';";
 $cnx2=mysqli_query($phpmyadmin, $checkFeedback);
 $feedReceived=mysqli_num_rows($cnx2);
+$checkRequest="SELECT ID FROM SOLICITACAO WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND LIDO IS NULL;";
+$cnx3=mysqli_query($phpmyadmin, $checkFeedback);
+$feedRequest=mysqli_num_rows($cnx3);
 
 ?>
 <!DOCTYPE html>
@@ -70,7 +73,19 @@ $feedReceived=mysqli_num_rows($cnx2);
 							var feedReceived=<?php echo $feedReceived ?>;
 							alert('Atenção! '+feedReceived+' feedback(s) recebido(s).');
 						</script><?php
+						if($feedRequest>0){?>
+						<script>
+							var feedRequest=<?php echo $feedRequest ?>;
+							alert('Atenção! '+feedRequest+' solicitaçõe(s) recebido(s).');
+						</script><?php
+						}
 					}
+					if($feedRequest>0){?>
+						<script>
+							var feedRequest=<?php echo $feedRequest ?>;
+							alert('Atenção! '+feedRequest+' solicitaçõe(s) recebido(s).');
+						</script><?php
+						}
 		      		if($acesso==1){
 		      			echo $nome.", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 		      		}
