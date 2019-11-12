@@ -33,27 +33,26 @@ if(isset($_POST['consultar']) && $tipo=="feedback"){
 		</script> <?php		
 	}	
 }
-else{
+else if(isset($_POST['consultar']) && $tipo=="solicitacao"){
 	if($feedback=="REMETENTE_ID"){
-		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=F.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
 	}
 	else{
-		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
-	}	
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.REMETENTE_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
+	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($feed= $cnx->fetch_array()){
 		$vtId[$x]=$feed["ID"];
-		$vtRemetente[$x]=$feed["REMETENTE"];
-		$vtDestinatario[$x]=$feed["DESTINATARIO"];
-		$vtTipo[$x]=$feed["TIPO"];
-		$vtFeedback[$x]=$feed["FEEDBACK"];
+		$vtDestinatario[$x]=$feed["NOME"];		
+		$vtFeedback[$x]=$feed["MENSAGEM"];
+		$vtSituacao[$x]=$feed["LIDO"];
 		$x++;
 		$contador=$x;
 	}
 	if(mysqli_num_rows($cnx)==0){
 		?><script type="text/javascript">			
-			alert('Nenhum feedback encontrado nesta consulta!');
+			alert('Nenhuma Solicitação encontrada nesta consulta!');
 			window.location.href=window.location.href;
 		</script> <?php		
 	}
@@ -88,7 +87,7 @@ else{
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> &nbsp;&nbsp;&nbsp;
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Feedback:</label>
@@ -126,12 +125,17 @@ else{
 		<th>N°</th>
 		<?php if($feedback=="DESTINATARIO_ID"):?><th>Remetente</th><?php endif;?>
 		<?php if($feedback=="REMETENTE_ID"):?><th>Destinatário</th><?php endif;?>
+		<?php if($tipo=="feedback"): ?>
 		<th>Tipo</th>
 		<th>Pro</th>
 		<th>Com</th>
 		<th>Des</th>
 		<th>Feedback</th>
-		<th>Situação</th>					
+		<?php endif;?>
+		<?php if($tipo=="solicitacao"): ?>
+		<th>Mensagem</th>		
+		<?php endif;?>
+		<th>Situação</th>
 	</tr>
 	<?php
  	for( $i = 0; $i < sizeof($vtId); $i++ ) : ?>
@@ -139,10 +143,12 @@ else{
 		<td><?php echo $i+1;?></td>		
 		<?php if($feedback=="DESTINATARIO_ID"):?><td><?php if($vtExibicao[$i]==1){echo $vtRemetente[$i];} else{echo "Anônimo";}?></td><?php endif;?>
 		<?php if($feedback=="REMETENTE_ID"):?><td><?php echo $vtDestinatario[$i]?></td><?php endif;?>
+		<?php if($tipo=="feedback"): ?>
 		<td><?php echo $vtTipo[$i]?></td>
 		<td><?php echo $vtProfissional[$i]?></td> 
 		<td><?php echo $vtComportamental[$i]?></td> 
 		<td><?php echo $vtDesempenho[$i]?></td> 
+		<?php endif;?>
 		<td><?php echo $vtFeedback[$i]?></td>
   		<td><?php echo $vtSituacao[$i]?></td>  		
 	</tr>
