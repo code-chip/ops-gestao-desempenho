@@ -1,9 +1,10 @@
 <?php
 $menuFeedback="is-active";
 include('menu.php');
+$tipo= trim($_POST["tipo"]);
 $feedback= trim($_POST["feedback"]);
 $contador = 0;
-if(isset($_POST['consultar'])){
+if(isset($_POST['consultar']) && $tipo=="feedback"){
 	if($feedback=="REMETENTE_ID"){
 		$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK, F.EXIBICAO, F.PROFISSIONAL, F.COMPORTAMENTAL, F.DESEMPENHO, F.SITUACAO FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
 	}
@@ -31,6 +32,31 @@ if(isset($_POST['consultar'])){
 			window.location.href=window.location.href;
 		</script> <?php		
 	}	
+}
+else{
+	if($feedback=="REMETENTE_ID"){
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=F.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
+	}
+	else{
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY F.REGISTRO DESC";
+	}	
+	$x=0;
+	$cnx=mysqli_query($phpmyadmin, $query);
+	while($feed= $cnx->fetch_array()){
+		$vtId[$x]=$feed["ID"];
+		$vtRemetente[$x]=$feed["REMETENTE"];
+		$vtDestinatario[$x]=$feed["DESTINATARIO"];
+		$vtTipo[$x]=$feed["TIPO"];
+		$vtFeedback[$x]=$feed["FEEDBACK"];
+		$x++;
+		$contador=$x;
+	}
+	if(mysqli_num_rows($cnx)==0){
+		?><script type="text/javascript">			
+			alert('Nenhum feedback encontrado nesta consulta!');
+			window.location.href=window.location.href;
+		</script> <?php		
+	}
 }	
 ?>
 <!DOCTYPE html>
@@ -46,6 +72,23 @@ if(isset($_POST['consultar'])){
 <?php if(isset($_POST['consultar'])==null ): ?>	
 	<form id="form1" action="feedback-query.php" method="POST">
 		<div class="field is-horizontal">
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Tipo:</label>
+				</div>
+				<div class="field-body">
+					<div class="field" style="max-width:17em;">							
+						<div class="control">
+							<div class="select">
+								<select name="tipo">								
+									<option value="feedback">Feedback</option>
+									<option value="solicitacao">Solicitação</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Feedback:</label>
