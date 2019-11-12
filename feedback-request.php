@@ -3,13 +3,14 @@ $menuFeedback="is-active";
 include('menu.php');
 $colaborador=trim($_POST['colaborador']);
 $mensagem=trim($_POST['mensagem']);
-if(isset($_POST["inserirFeedback"])!=null){
-	if($colaborador!="" && $feedback!=""){
-		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',".$exibicao.",'".date('Y-m-d')."');";			
-			$cnx= mysqli_query($phpmyadmin, $inserirFeedback);
+if(isset($_POST["inserirSolicitacao"])!=null){
+	if($colaborador!="" && $mensagem!=""){
+		$inserirSoli="INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$mensagem."','".date('Y-m-d')."');";			
+			$cnx= mysqli_query($phpmyadmin, $inserirSoli);
+		echo $inserirSoli;
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
-			echo "<script>alert('Feedback enviado com sucesso!!')</script>";	
+			echo "<script>alert('Solicitação enviada com sucesso!!')</script>";	
 		}
 		else{
 			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
@@ -19,7 +20,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 		echo "<script>alert('Selecionar o campo Colaborador é obrigatório!!')</script>";
 	}
 	else{
-		echo "<script>alert('Preencher da mensagem é obrigatório!!')</script>";
+		echo "<script>alert('Preencher a mensagem é obrigatório!!')</script>";
 	}	
 }
 ?>
@@ -39,7 +40,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="feedback-insert.php" method="POST">
+	   		<form action="feedback-request.php" method="POST">
 	   			<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Setor:</label>
@@ -88,7 +89,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 								<textarea name="mensagem" class="textarea" maxlenght="200"></textarea>
 							</div>
 							<div class="control">
-								<button name="inserirFeedback" type="submit" class="button is-primary" value="Filtrar">Enviar solicitação</button>
+								<button name="inserirSolicitacao" type="submit" class="button is-primary" value="Filtrar">Enviar solicitação</button>
 							</div>							
 						</div>
 					</div>
