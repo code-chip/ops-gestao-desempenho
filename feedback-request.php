@@ -7,7 +7,6 @@ if(isset($_POST["inserirSolicitacao"])!=null){
 	if($colaborador!="" && $mensagem!=""){
 		$inserirSoli="INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$mensagem."','".date('Y-m-d')."');";			
 			$cnx= mysqli_query($phpmyadmin, $inserirSoli);
-		echo $inserirSoli;
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
 			echo "<script>alert('Solicitação enviada com sucesso!!')</script>";	
