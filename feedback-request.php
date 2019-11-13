@@ -5,7 +5,7 @@ $colaborador=trim($_POST['colaborador']);
 $mensagem=trim($_POST['mensagem']);
 if(isset($_POST["inserirSolicitacao"])!=null){
 	if($colaborador!="" && $mensagem!=""){
-		$inserirSoli="INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$mensagem."','".date('Y-m-d')."');";			
+		$inserirSoli="INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, REGISTRO, SITUACAO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$mensagem."','".date('Y-m-d')."','Enviado');";			
 			$cnx= mysqli_query($phpmyadmin, $inserirSoli);
 		$erro=mysqli_error($phpmyadmin);
 		if($erro==null){
