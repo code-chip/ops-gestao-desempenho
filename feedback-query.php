@@ -35,10 +35,10 @@ if(isset($_POST['consultar']) && $tipo=="feedback"){
 }
 else if(isset($_POST['consultar']) && $tipo=="solicitacao"){
 	if($feedback=="REMETENTE_ID"){
-		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.SITUACAO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.DESTINATARIO_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
 	}
 	else{
-		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.LIDO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.REMETENTE_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
+		$query="SELECT S.ID, U.NOME, S.MENSAGEM, S.SITUACAO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.REMETENTE_ID WHERE ".$feedback."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
 	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
@@ -46,7 +46,7 @@ else if(isset($_POST['consultar']) && $tipo=="solicitacao"){
 		$vtId[$x]=$feed["ID"];
 		$vtDestinatario[$x]=$feed["NOME"];		
 		$vtFeedback[$x]=$feed["MENSAGEM"];
-		$vtSituacao[$x]=$feed["LIDO"];
+		$vtSituacao[$x]=$feed["SITUACAO"];
 		$x++;
 		$contador=$x;
 	}
@@ -141,7 +141,7 @@ else if(isset($_POST['consultar']) && $tipo=="solicitacao"){
  	for( $i = 0; $i < sizeof($vtId); $i++ ) : ?>
 	<tr>
 		<td><?php echo $i+1;?></td>		
-		<?php if($feedback=="DESTINATARIO_ID"):?><td><?php if($vtExibicao[$i]==1){echo $vtRemetente[$i];} else{echo "Anônimo";}?></td><?php endif;?>
+		<?php if($feedback=="DESTINATARIO_ID"):?><td><?php if($vtExibicao[$i]==1){echo $vtRemetente[$i];} else if($tipo=="solicitacao"){echo $vtDestinatario[$i];} else{echo "Anônimo";}?></td><?php endif;?>
 		<?php if($feedback=="REMETENTE_ID"):?><td><?php echo $vtDestinatario[$i]?></td><?php endif;?>
 		<?php if($tipo=="feedback"): ?>
 		<td><?php echo $vtTipo[$i]?></td>
@@ -174,10 +174,16 @@ else if(isset($_POST['consultar']) && $tipo=="solicitacao"){
 </body>
 </html>
 <?php
-if(isset($_POST['consultar']) && $feedback=="DESTINATARIO_ID"){
+if(isset($_POST['consultar']) && $feedback=="DESTINATARIO_ID" && $contador>0){
 	$x=0;
-	while ( $x< sizeof($vtId)) {
-		$upFeedback="UPDATE FEEDBACK SET SITUACAO='Lido' WHERE ID=".$vtId[$x];	
+	if($tipo=="feedback"){
+		$tabela="FEEDBACK";
+	}
+	else{
+		$tabela="SOLICITACAO";
+	}
+	while( $x< sizeof($vtId)) {
+		$upFeedback="UPDATE ".$tabela." SET SITUACAO='Lido' WHERE ID=".$vtId[$x];	
 		$cnx=mysqli_query($phpmyadmin, $upFeedback);
 		$x++;
 	}
