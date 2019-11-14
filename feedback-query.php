@@ -21,6 +21,7 @@ if(isset($_POST['consultar']) && $tipo=="feedback"){
 		$vtProfissional[$x]=$feed["PROFISSIONAL"];
 		$vtComportamental[$x]=$feed["COMPORTAMENTAL"];
 		$vtDesempenho[$x]=$feed["DESEMPENHO"];
+		$vtExibicao[$x]=$feed["EXIBICAO"];
 		$vtSituacao[$x]=$feed["SITUACAO"];
 		$vtFeedback[$x]=$feed["FEEDBACK"];
 		$x++;
