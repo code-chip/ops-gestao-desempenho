@@ -15,7 +15,10 @@
 $menuDashboard="is-active";
 include('menu.php');
 require("query.php");
-  if(date('d')>22){
+  $queryReg="SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"];
+  $cnx=mysqli_query($phpmyadmin, $queryReg);
+  $ultimoRegistro=$cnx->fetch_array();
+  if(date('d')>22 && $ultimoRegistro["REGISTRO"]>22){
     $anoMes=date('Y-m', strtotime('+1 month'));
     $mes=date('m', strtotime('+1 month'));
     $inicioAnoMesDia=date('Y-m-21');
