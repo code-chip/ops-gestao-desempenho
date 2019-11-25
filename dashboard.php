@@ -16,7 +16,10 @@ $menuDashboard="is-active";
 include('menu.php');
 require("query.php");
 //SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
-  if(date('d')>22){
+  $queryReg="SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO;";
+  $cnx=mysqli_query($phpmyadmin, $queryReg);
+  $ultimoRegistro=$cnx->fetch_array();
+  if(date('d')>22 && $ultimoRegistro["REGISTRO"]>22){
     $anoMes=date('Y-m', strtotime('+1 month'));
     $mes=date('m', strtotime('+1 month'));
     $inicioAnoMesDia=date('Y-m-21');
@@ -58,10 +61,12 @@ GROUP BY ATIVIDADE_ID";
 	}
   $g41="SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");";
   $cnx= mysqli_query($phpmyadmin, $g41);
-  while($G41 = $cnx->fetch_array()){
-    $vtG4nome[$x3]= $G41["NOME"];
-    $vtG4vezes[$x3]= $G41["VEZES"];
-    $x3++;        
+  if(mysqli_error($phpmyadmin)==null){
+    while($G41 = $cnx->fetch_array()){
+      $vtG4nome[$x3]= $G41["NOME"];
+      $vtG4vezes[$x3]= $G41["VEZES"];
+      $x3++;        
+    }
   }
 	$g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
 	$cnx=mysqli_query($phpmyadmin, $g6);
@@ -185,10 +190,12 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
   $querypacman="SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querypacman);
-  while ($pacman= $cnx->fetch_array()) {
-    $vtPacMan[$x]=$pacman["DESEMPENHO"];
-    $vtPacManData[$x]=$pacman["REGISTRO"];     
-    $x++;
+  if(mysqli_error($phpmyadmin)==null){
+    while ($pacman= $cnx->fetch_array()) {
+      $vtPacMan[$x]=$pacman["DESEMPENHO"];
+      $vtPacManData[$x]=$pacman["REGISTRO"];     
+      $x++;
+    }
   }
   //DASH EXPEDIÇÃO DE CAIXAS E VINHOS.
   $queryCaixas="select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 3 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 2 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
