@@ -228,6 +228,16 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
     }
     $idAtividade++;
   }
+  //DASH NÚMERO DE REGISTROS
+  $queryNumRegi="SELECT COUNT(DESEMPENHO) AS OCORRENCIAS, DATE_FORMAT(REGISTRO,'%d-%m')AS DIA, COUNT(DISTINCT USUARIO_ID) AS USUARIOS FROM DESEMPENHO GROUP BY REGISTRO DESC LIMIT 5;";
+  $cnx=mysqli_query($phpmyadmin, $queryNumRegi);
+  $x=0;
+  while($numRegi= $cnx->fetch_array()){
+    $vtNumRegi[$x]=$numRegi["OCORRENCIAS"];
+    $vtNumUsuarios[$x]=$numRegi["USUARIOS"];
+    $vtNumData[$x]=$numRegi["DIA"];
+    $x++;
+  }
   //DASH DESEMPENHO POR TEMPO DE CASA dash-tempo-de-casa
   $queryTempoCasa="SELECT DATEDIFF(DATE_FORMAT(CURDATE(),'%Y-%m-%d'), U.EFETIVACAO)TEMPODECASA, U.NOME, IFNULL((SELECT AVG(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=U.ID),100) AS MEDIA FROM USUARIO U WHERE CARGO_ID IN(1,2,3,13,14,15) AND SITUACAO<>'Desligado' ORDER BY TEMPODECASA;";
   $x=0; $diasInicio=0; $diasFim=90;
@@ -619,20 +629,21 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Mẽs', 'Registros', 'Atualizações'],
-          ['05',  1000,      20],
-          ['06',  1170,      60],
-          ['07',  660,       28],
-          ['08',  1030,      40]
+          ['Dia', 'Registros', 'Usuários'],
+          ['<?php echo $vtNumData[4]?>', <?php echo $vtNumRegi[4]?>, <?php echo $vtNumUsuarios[4]?>],
+          ['<?php echo $vtNumData[3]?>', <?php echo $vtNumRegi[3]?>, <?php echo $vtNumUsuarios[3]?>],
+          ['<?php echo $vtNumData[2]?>', <?php echo $vtNumRegi[2]?>, <?php echo $vtNumUsuarios[2]?>],
+          ['<?php echo $vtNumData[1]?>', <?php echo $vtNumRegi[1]?>, <?php echo $vtNumUsuarios[1]?>],
+          ['<?php echo $vtNumData[0]?>', <?php echo $vtNumRegi[0]?>, <?php echo $vtNumUsuarios[0]?>]
         ]);
 
         var options = {
-          title: 'Registros do período',
-          hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
+          title: 'Número de registros no dia',
+          hAxis: {title: 'Dia e mês',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('teste'));
+        var chart = new google.visualization.AreaChart(document.getElementById('numero-registros'));
         chart.draw(data, options);
       }
     </script>
@@ -748,7 +759,7 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
 				<div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
-				<div class="column bloco is-mobile hvr-bounce-in" id="teste"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="numero-registros"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
 				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="dash-acessos-no-mes"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
