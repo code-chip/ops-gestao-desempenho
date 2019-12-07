@@ -1,0 +1,23 @@
+version: 2
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build-docker:
+          filters:
+            branches:
+              only: master
+
+jobs:
+  build-docker:
+    docker:
+    - image: evinobr/node-awscli:8.9.3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: aws configure set default.region us-east-1
+      - run: aws configure set aws_access_key_id $aws_access_key_production
+      - run: aws configure set aws_secret_access_key $aws_secret_access_key_production
+      - run: chmod 755 ./dionisio.sh
+      - run: ./dionisio.sh ops-gestao-desempenho V_$CIRCLE_BUILD_NUM production
