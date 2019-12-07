@@ -27,7 +27,7 @@ jobs:
       - run: aws configure set aws_secret_access_key $aws_secret_access_key_production
       - run: aws s3 cp s3://dionisio-production/ . --recursive
       - run: chmod 755 ./dionisio.sh
-      - run: ./dionisio.sh ops-gestao-desempenho latest-V_$CIRCLE_BUILD_NUM production
+      - run: ./dionisio.sh ops-gestao-desempenho dev-V_$CIRCLE_BUILD_NUM production
 
   build-master:
     docker:
@@ -40,4 +40,4 @@ jobs:
       - run: aws configure set aws_secret_access_key $aws_secret_access_key_production
       - run: aws s3 cp s3://dionisio-production/ . --recursive
       - run: chmod 755 ./dionisio.sh
-      - run: ./dionisio.sh ops-gestao-desempenho latest-V_$CIRCLE_BUILD_NUM production
+      - run: ./dionisio.sh ops-gestao-desempenho master-V_$CIRCLE_BUILD_NUM production
