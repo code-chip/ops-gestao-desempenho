@@ -1,0 +1,43 @@
+version: 2
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build-branch:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: master 
+      - build-master:
+          filters:
+            branches:
+              only: master
+
+jobs:
+  build-branch:
+    docker:
+    - image: evinobr/node-awscli:8.9.3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: aws configure set default.region us-east-1
+      - run: aws configure set aws_access_key_id $aws_access_key_production
+      - run: aws configure set aws_secret_access_key $aws_secret_access_key_production
+      - run: aws s3 cp s3://dionisio-production/ . --recursive
+      - run: chmod 755 ./dionisio.sh
+      - run: ./dionisio.sh ops-gestao-desempenho dev-V_$CIRCLE_BUILD_NUM production
+
+  build-master:
+    docker:
+    - image: evinobr/node-awscli:8.9.3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: aws configure set default.region us-east-1
+      - run: aws configure set aws_access_key_id $aws_access_key_production
+      - run: aws configure set aws_secret_access_key $aws_secret_access_key_production
+      - run: aws s3 cp s3://dionisio-production/ . --recursive
+      - run: chmod 755 ./dionisio.sh
+      - run: ./dionisio.sh ops-gestao-desempenho master-V_$CIRCLE_BUILD_NUM production
