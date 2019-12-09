@@ -93,7 +93,7 @@ $menuConfiguracoes;
 						<div class="navbar-dropdown">
 							<?php if($_SESSION["permissao"]!=1):?><a href="report.php" class="navbar-item hvr-grow">Gestão</a><?php endif;?>
 							<a href="report-private.php" class="navbar-item hvr-grow">Individual</a>
-							<a href="sql-query.php" class="navbar-item hvr-grow">SQL</a>							
+							<?php if($_SESSION["permissao"]==4):?><a href="sql-query.php" class="navbar-item hvr-grow">SQL</a><?php endif;?>							
 						</div>
 					</div>
 				<div class="navbar-item has-dropdown is-hoverable">
