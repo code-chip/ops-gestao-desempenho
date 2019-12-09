@@ -2,6 +2,32 @@
 $menuRelatorio="is-active";
 include('menu.php');
 $sql=trim($_POST['sql']);
+if(isset($_POST["executar"])!=null){		
+		if($sql!=""){				
+			$cnx= mysqli_query($phpmyadmin, $sql);
+			$erro=mysqli_error($phpmyadmin);
+			$x=0;
+			if($erro==null){
+				while ($row=mysqli_fetch_array($cnx)) { 
+					foreach ($cnx as $result) { 
+						//print_r($result); 
+						//$vt[$x]=print_r($result,true); echo "<br>";
+						$vt[$x]=preg_replace("/[^\p{L}\p{N}\s]/", " ", str_replace("Array", "", print_r($result,true)));
+						$x++;
+					} 
+				}
+				//$teste=preg_replace("/[^a-zA-Z0-9_]/", " ", str_replace("Array", "", $vt[0]));
+				//$teste=preg_replace("/[^\p{L}\p{N}\s]/", " ", str_replace("Array", "", $vt[0]));
+				//echo $teste;	
+			}
+			else{
+				?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
+			}
+		}	
+		else{
+			echo "<script>alert('O campo não pode está vazio!!')</script>";
+		}
+	}	
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,28 +55,12 @@ $sql=trim($_POST['sql']);
 	     	</form>	     	
 	   	</div>
 	</section>
-	<table><?php	
-	if(isset($_POST["executar"])!=null){		
-		if($sql!=""){				
-			$cnx= mysqli_query($phpmyadmin, $sql);
-			$erro=mysqli_error($phpmyadmin);
-			$x=0;
-			if($erro==null){
-				while ($row=mysqli_fetch_array($cnx)) { print_r($row); } 
-				/*while ($dados= $cnx->fetch_array()) {
-				 	
-				 	foreach($dados as $a) { echo $a." "; }
-				} */
-				echo sizeof($row);	
-			}
-			else{
-				?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
-			}
-		}	
-		else{
-			echo "<script>alert('O campo não pode está vazio!!')</script>";
-		}
-	}?>
+	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch"><?php	
+		for($y=0 ;$y<sizeof($vt) ;$y++):?>
+			<tr>
+				<td class="is-size-7"><?php echo $vt[$y]; ?></td>
+			</tr>	
+		<?php endfor?>
 	</table>	 	
 </body>
 </html>
