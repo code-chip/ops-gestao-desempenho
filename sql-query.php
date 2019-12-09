@@ -2,29 +2,6 @@
 $menuRelatorio="is-active";
 include('menu.php');
 $sql=trim($_POST['sql']);
-
-if(isset($_POST["executar"])!=null){
-	$sql="SELECT * FROM USUARIO;";
-	if($sql!=""){				
-		$cnx= mysqli_query($phpmyadmin, $sql);
-		$erro=mysqli_error($phpmyadmin);
-		$x=0;
-		if($erro==null){
-			while ($dados= $cnx->fetch_array()) {
-				//echo $dados[$x];
-				echo $cnx->fetch_array();
-				$x++;
-			}
-
-		}
-		else{
-			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
-		}
-	}	
-	else{
-		echo "<script>alert('O campo não pode está vazio!!')</script>";
-	}	
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,13 +21,36 @@ if(isset($_POST["executar"])!=null){
 	  	<div class="container">
 	   		<form action="sql-query.php" method="POST">	   					
 				<div class="control">
-					<textarea nome="sql" class="textarea" placeholder="SELECT ID FROM ..."></textarea>
+					<textarea name="sql" class="textarea" placeholder="SELECT ID FROM ..."></textarea>
 				</div>
 				<div class="control">
 					<button name="executar" type="submit" class="button is-primary">Executar</button>
 				</div>	
 	     	</form>	     	
 	   	</div>
-	</section>	 	
+	</section>
+	<table><?php	
+	if(isset($_POST["executar"])!=null){		
+		if($sql!=""){				
+			$cnx= mysqli_query($phpmyadmin, $sql);
+			$erro=mysqli_error($phpmyadmin);
+			$x=0;
+			if($erro==null){
+				while ($row=mysqli_fetch_array($cnx)) { print_r($row); } 
+				/*while ($dados= $cnx->fetch_array()) {
+				 	
+				 	foreach($dados as $a) { echo $a." "; }
+				} */
+				echo sizeof($row);	
+			}
+			else{
+				?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
+			}
+		}	
+		else{
+			echo "<script>alert('O campo não pode está vazio!!')</script>";
+		}
+	}?>
+	</table>	 	
 </body>
 </html>
