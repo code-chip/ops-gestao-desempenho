@@ -2,32 +2,28 @@
 $menuRelatorio="is-active";
 include('menu.php');
 $sql=trim($_POST['sql']);
-if(isset($_POST["executar"])!=null){		
-		if($sql!=""){				
-			$cnx= mysqli_query($phpmyadmin, $sql);
-			$erro=mysqli_error($phpmyadmin);
-			$x=0;
-			if($erro==null){
-				while ($row=mysqli_fetch_array($cnx)) { 
-					foreach ($cnx as $result) { 
-						//print_r($result); 
-						//$vt[$x]=print_r($result,true); echo "<br>";
-						$vt[$x]=preg_replace("/[^\p{L}\p{N}\s]/", " ", str_replace("Array", "", print_r($result,true)));
-						$x++;
-					} 
-				}
-				//$teste=preg_replace("/[^a-zA-Z0-9_]/", " ", str_replace("Array", "", $vt[0]));
-				//$teste=preg_replace("/[^\p{L}\p{N}\s]/", " ", str_replace("Array", "", $vt[0]));
-				//echo $teste;	
-			}
-			else{
-				?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
-			}
-		}	
+
+if(isset($_POST["executar"])!=null && $_SESSION["permissao"]==4){
+	if($sql!=""){				
+		$cnx= mysqli_query($phpmyadmin, $sql);
+		$erro=mysqli_error($phpmyadmin);
+		$x=0;
+		if($erro==null){
+			while ($row=mysqli_fetch_array($cnx)) { 
+				foreach ($cnx as $result) { 
+					$vt[$x]=preg_replace("/[^\p{L}\p{N}\s_]/", " ", str_replace("Array", "", print_r($result,true)));
+					$x++;
+				} 
+			}				
+		}
 		else{
-			echo "<script>alert('O campo não pode está vazio!!')</script>";
+			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
 		}
 	}	
+	else{
+		echo "<script>alert('O campo não pode está vazio!!')</script>";
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,27 +36,48 @@ if(isset($_POST["executar"])!=null){
 		color:#ff0000;
 		display:none;
 		}
-	</style>
+	</style>	
 </head>
 <body>
 	<section class="section">
 	  	<div class="container">
+	  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	   		<form action="sql-query.php" method="POST">	   					
 				<div class="control">
-					<textarea name="sql" class="textarea" placeholder="SELECT ID FROM ..."></textarea>
+					<textarea id="buscar" name="sql" class="textarea" placeholder="SELECT ID FROM ..."></textarea>
 				</div>
 				<div class="control">
 					<button name="executar" type="submit" class="button is-primary">Executar</button>
 				</div>	
 	     	</form>	     	
 	   	</div>
-	</section>
+	<?php if($x>0): ?>   		
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch"><?php	
 		for($y=0 ;$y<sizeof($vt) ;$y++):?>
 			<tr>
 				<td class="is-size-7"><?php echo $vt[$y]; ?></td>
 			</tr>	
-		<?php endfor?>
-	</table>	 	
+		<?php endfor?>		
+	</table>
+	<?php endif; ?>
+	<script type="text/javascript">
+		$("#buscar").on("blur", function(e) {
+	  		verify(e);
+		});
+		$("#buscar").on("keypress", function(e) {
+	  		if (e.keyCode == 13) {
+	   		verify(e);
+	  	}
+		});
+		function verify(e) {
+		  if (!(/\w/.test($("#buscar").val()))) {
+		    e.preventDefault();
+		    $('p').html('Preencha algo!');
+		  } else {
+		    $('p').html('');
+		  }
+		}	
+	</script>
+	</section>	 	
 </body>
 </html>
