@@ -92,7 +92,7 @@ UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(RE
     $x++;
   }
   /*DASH SEXO*/
-  $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO GROUP BY SEXO ORDER BY SEXO DESC;";
+  $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO WHERE SITUACAO='Ativo' GROUP BY SEXO ORDER BY SEXO DESC;";
   $cnx= mysqli_query($phpmyadmin, $querySexo);
   $x=0;
   while ($sexo= $cnx->fetch_array()) {
