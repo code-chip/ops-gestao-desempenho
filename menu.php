@@ -1,5 +1,4 @@
 <?php 
-//session_start();
 include('login-check.php');
 include('connection.php');
 header('Content-Type: text/html; charset=UTF-8');
@@ -7,7 +6,6 @@ ini_set('display_errors', 1);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 date_default_timezone_set('America/Sao_Paulo');
 //print_r($_SESSION);exit();
-//$menuInicio="is-active";
 $menuInicio;
 $menuDesempenho;
 $menuRelatorio;
@@ -93,7 +91,7 @@ $menuConfiguracoes;
 						<div class="navbar-dropdown">
 							<?php if($_SESSION["permissao"]!=1):?><a href="report.php" class="navbar-item hvr-grow">Gestão</a><?php endif;?>
 							<a href="report-private.php" class="navbar-item hvr-grow">Individual</a>
-							<?php if($_SESSION["permissao"]==4):?><a href="sql-query.php" class="navbar-item hvr-grow">SQL</a><?php endif;?>							
+							<?php if($_SESSION["permissao"]==4):?><a href="sql-query.php" class="navbar-item hvr-grow">SQL</a><?php endif;?>
 						</div>
 					</div>
 				<div class="navbar-item has-dropdown is-hoverable">
@@ -101,6 +99,7 @@ $menuConfiguracoes;
 			        <div class="navbar-dropdown">
 				        <a href="register.php" class="navbar-item hvr-grow">Cadastro</a>
 				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item hvr-grow">Permissões</a><?php endif;?>
+				        <?php if($_SESSION["permissao"]!=1):?><a href="backup.php" class="navbar-item hvr-grow">Backup</a><?php endif;?>
 				        <!--<a class="navbar-item hvr-grow">Tema</a>-->
 				        <hr class="navbar-divider hvr-grow">
 				        <a href="contact.php" class="navbar-item hvr-grow">Reportar bug</a>
