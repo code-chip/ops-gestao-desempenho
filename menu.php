@@ -99,7 +99,7 @@ $menuConfiguracoes;
 			        <div class="navbar-dropdown">
 				        <a href="register.php" class="navbar-item hvr-grow">Cadastro</a>
 				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item hvr-grow">Permissões</a><?php endif;?>
-				        <?php if($_SESSION["permissao"]!=1):?><a href="backup.php" class="navbar-item hvr-grow">Backup</a><?php endif;?>
+				        <?php if($_SESSION["permissao"]==4):?><a href="backup.php" class="navbar-item hvr-grow">Backup</a><?php endif;?>
 				        <!--<a class="navbar-item hvr-grow">Tema</a>-->
 				        <hr class="navbar-divider hvr-grow">
 				        <a href="contact.php" class="navbar-item hvr-grow">Reportar bug</a>
