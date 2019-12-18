@@ -89,7 +89,7 @@ $feedRequest=mysqli_num_rows($cnx3);
 		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
 		        	else{
-		        		checkFeed();		        			
+		        		echo $nome;
 		        	}
 		        	?>
 		      	</h3>
