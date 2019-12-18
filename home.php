@@ -78,7 +78,7 @@ $feedRequest=mysqli_num_rows($cnx3);
 							var feedRequest=<?php echo $feedRequest ?>;
 							alert('Atenção! '+feedRequest+' solicitaçõe(s) recebido(s).');
 						</script><?php
-						}
+					}
 		      		if($acesso==1){
 		      			echo $nome.", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 		      		}
@@ -88,8 +88,8 @@ $feedRequest=mysqli_num_rows($cnx3);
 		        	else if($dias>6){ 
 		        		echo $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
 		        	}
-		        	else{		        			
-		        		echo $nome.", já está disponível o módulo Feedback";
+		        	else{
+		        		checkFeed();		        			
 		        	}
 		        	?>
 		      	</h3>
