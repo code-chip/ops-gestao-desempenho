@@ -198,20 +198,52 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
     }
   }
   //DASH EXPEDIÇÃO DE CAIXAS E VINHOS.
-  $queryCaixas="select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 3 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 2 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-20', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3,0) as CAIXAS from DESEMPENHO  where ATIVIDADE_ID=3 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
-  $queryVinhos="select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 4 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH)
-union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 3 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH)
-union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH)),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 2 MONTH) and REGISTRO<=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMPENHO  where ATIVIDADE_ID=4 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'),0) as GARRAFAS from DESEMPENHO  where ATIVIDADE_ID=1 and REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) and REGISTRO<='".$anoMes."-20'";
+  $queryCaixas="SELECT IFNULL(SUM(A.ALCANCADO),0) AS CAIXAS FROM (
+SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')='".date('Y-m')."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) A
+UNION ALL
+SELECT SUM(B.ALCANCADO) FROM (
+SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')= '".date('Y-m', strtotime('-1 month'))."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) B
+UNION ALL
+SELECT SUM(C.ALCANCADO) FROM (
+SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')='".date('Y-m', strtotime('-2 month'))."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) C
+UNION ALL
+SELECT SUM(D.ALCANCADO) FROM (
+SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')='".date('Y-m', strtotime('-3 month'))."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) D
+";
+  $queryVinhosC="SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m')."'
+UNION ALL
+SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-1 month'))."'
+UNION ALL
+SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-2 month'))."'
+UNION ALL
+SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."'
+";
+  $queryVinhosP="SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m')."' GROUP BY REGISTRO) as PBL
+UNION ALL
+SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-1 month'))."' GROUP BY REGISTRO) as PBL
+UNION ALL
+SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-2 month'))."' GROUP BY REGISTRO) as PBL
+UNION ALL
+SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."' GROUP BY REGISTRO) as PBL";
+  
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $queryCaixas);
   while ($caixasVinhos= $cnx->fetch_array()) {
     $vtCaiVin[0][$x]=$caixasVinhos["CAIXAS"];
+    $x++;    
+  }
+  $x=0;  
+  $cnx= mysqli_query($phpmyadmin, $queryVinhosC);
+  while ($caixasVinhosC= $cnx->fetch_array()) {
+    $vtCaiVin[1][$x]=$caixasVinhosC["CHECKOUT"];
     $x++;
   }
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $queryVinhos);
-  while ($caixasVinhos= $cnx->fetch_array()) {
-    $vtCaiVin[1][$x]=$caixasVinhos["GARRAFAS"];
+  $x=0;  
+  $cnx= mysqli_query($phpmyadmin, $queryVinhosP);
+  while ($caixasVinhosP= $cnx->fetch_array()) {
+    $vtCaiVin[1][$x]=$vtCaiVin[1][$x]+$caixasVinhosP["PBL"];
+    echo $vtCaiVin[1][$x];
+    echo "</br>";
     $x++;
   }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
@@ -259,8 +291,6 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
       $vtQtdTempodeCasa[$x]=$vtQtdTempodeCasa[$x]+1;
     }
   }
-  //echo $vtMediaTempoCasa[0]/$vtQtdTempodeCasa[0];
-  //echo sizeof($vtQtdTempodeCasa);
 ?>
 <!DOCTYPE html>
 <html>
@@ -567,11 +597,11 @@ union select ROUND(SUM(ALCANCADO)/3+(select SUM(ALCANCADO)/10 as PBL from DESEMP
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Mês', 'Caixas', 'Vinhos'],
-          ['<?php echo $mes-3;?>', <?php echo $vtCaiVin[0][3]?>, <?php echo $vtCaiVin[1][3]?>],
-          ['<?php echo $mes-2;?>', <?php echo $vtCaiVin[0][2]?>, <?php echo $vtCaiVin[1][2]?>],
-          ['<?php echo $mes-1;?>', <?php echo $vtCaiVin[0][1]?>, <?php echo $vtCaiVin[1][1]?>],
-          ['<?php echo $mes;?>', <?php echo $vtCaiVin[0][0]?>, <?php echo $vtCaiVin[1][0]?>]
+          ['Mês', 'C', 'V'],
+          ['<?php echo strftime('%h', strtotime("-3 months"))?>', <?php echo $vtCaiVin[0][3]?>, <?php echo $vtCaiVin[1][3]?>],
+          ['<?php echo strftime('%h', strtotime("-2 months"))?>', <?php echo $vtCaiVin[0][2]?>, <?php echo $vtCaiVin[1][2]?>],
+          ['<?php echo strftime('%h', strtotime("-1 months"))?>', <?php echo $vtCaiVin[0][1]?>, <?php echo $vtCaiVin[1][1]?>],
+          ['<?php echo strftime('%h')?>', <?php echo $vtCaiVin[0][0]?>, <?php echo $vtCaiVin[1][0]?>]
         ]);
         var options = {
           chart: {
