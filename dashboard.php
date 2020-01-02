@@ -224,8 +224,7 @@ SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPEN
 UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-2 month'))."' GROUP BY REGISTRO) as PBL
 UNION ALL
-SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."' GROUP BY REGISTRO) as PBL";
-  
+SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."' GROUP BY REGISTRO) as PBL";  
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $queryCaixas);
   while ($caixasVinhos= $cnx->fetch_array()) {
@@ -242,8 +241,6 @@ SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPEN
   $cnx= mysqli_query($phpmyadmin, $queryVinhosP);
   while ($caixasVinhosP= $cnx->fetch_array()) {
     $vtCaiVin[1][$x]=$vtCaiVin[1][$x]+$caixasVinhosP["PBL"];
-    echo $vtCaiVin[1][$x];
-    echo "</br>";
     $x++;
   }
   //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
