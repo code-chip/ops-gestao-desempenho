@@ -186,6 +186,20 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
     $vtMediaTop10[$x]=$top10["MEDIA"];
     $x++;
   }
+  //DASH FAIXA ETÁRIA POR IDADE
+  $queryFaixaEtaria="SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=18 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=21 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=22 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=22 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=26 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=28 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=29 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=31 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=32 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=35 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=36 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=40 AND SITUACAO<>'Desligado' UNION ALL
+SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=41 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=44 AND SITUACAO<>'Desligado';";
+  $x=0;
+  $cnx=mysqli_query($phpmyadmin, $queryFaixaEtaria);
+  while ($faiEta=$cnx->fetch_array()) {
+    $vtFaixaEtaria[$x]=$faiEta["COUNT(ID)"];
+    $x++;
+  }
   //DASH META ATINGIDA PERDIDA - meta-pacman
   $querypacman="SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);";
   $x=0;
@@ -551,13 +565,13 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Desempenho', 'Funcionários'],
-          ['Acima de 160', 4], ['95 a 99', 30], ['120 a 130', 5],
-          ['100 a 119', 20], ['89 a 70', 5], ['131 a 159', 4],
-          ['90 a 94', 38], ['59 a 69', 5.5], ['Abaixo de 58', 3],          
+          ['Acima de 44', 0], ['41 a 44', <?php echo $vtFaixaEtaria[6]?>], ['36 a 40', <?php echo $vtFaixaEtaria[5]?>],
+          ['32 a 35', <?php echo $vtFaixaEtaria[4]?>], ['29 a 31', <?php echo $vtFaixaEtaria[3]?>], ['26 a 28', <?php echo $vtFaixaEtaria[2]?>],
+          ['22 a 25', <?php echo $vtFaixaEtaria[1]?>], ['18 a 21', <?php echo $vtFaixaEtaria[0]?>],          
         ]);
 
         var options = {
-          title: 'Divisão de funcionários por desempenho no mês',
+          title: 'Distribuição por faixa etária',
           legend: 'none',
           pieSliceText: 'label',
           slices: {  4: {offset: 0.2},
