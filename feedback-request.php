@@ -85,7 +85,7 @@ if(isset($_POST["inserirSolicitacao"])!=null){
 					<div class="field-body">
 						<div class="field" style="max-width:17em;">							
 							<div class="control">
-								<textarea name="mensagem" class="textarea" maxlenght="200"></textarea>
+								<textarea name="mensagem" class="textarea" maxlenght="200" placeholder="Me envie um feedback!"></textarea>
 							</div>
 							<div class="control">
 								<button name="inserirSolicitacao" type="submit" class="button is-primary" value="Filtrar">Enviar solicitação</button>
