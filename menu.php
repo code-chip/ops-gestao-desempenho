@@ -68,7 +68,7 @@ $menuConfiguracoes;
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuFeedback?> hvr-grow">Feedback</a>					
 						<div class="navbar-dropdown">
-							<?php if($_SESSION["permissao"]!=1):{?>
+							<?php if($_SESSION["userId"]==1 || $_SESSION["userId"]==10 || $_SESSION["userId"]==100):{?>
 							<a href="feedback-approval.php" class="navbar-item hvr-grow">Aprovar</a>
 							<?php }endif;?>
 							<a href="feedback-insert.php" class="navbar-item hvr-grow">Enviar</a>
