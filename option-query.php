@@ -1,6 +1,11 @@
 <?php 
 $menuConfiguracoes="is-active";
 include('menu.php');
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $opcao=trim($_POST['opcao']);
 $nome=trim($_POST['nome']);
 ?>
@@ -145,4 +150,4 @@ $nome=trim($_POST['nome']);
 	   	</div>	
 	</section>	 	
 </body>
-</html>
+</html><?php }//ELSE - caso o usuário tenha permissão.?>

@@ -1,8 +1,11 @@
 <?php
-//session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $contador = 0;
 $query1="SELECT NOME, SITUACAO FROM CARGO;";
 $query2="SELECT NOME, SITUACAO FROM GESTOR;";
@@ -94,4 +97,4 @@ if(mysqli_num_rows($cnx)==0){
 	</div>	
 </section>	
 </body>
-</html>
+</html><?php }//ELSE - caso o usuário tenha permissão.?>
