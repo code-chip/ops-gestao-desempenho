@@ -1,10 +1,12 @@
-<style type="text/css">
-</style>
+<style type="text/css"></style>
 <?php
-//session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $contador = 0;
 $query="SELECT U.MATRICULA, U.NOME, C.NOME AS CARGO,T.NOME AS TURNO, G.NOME AS GESTOR, U.EFETIVACAO, P.NOME AS PERMISSAO, U.SITUACAO, U.DESLIGADO_EM FROM USUARIO U INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID INNER JOIN CARGO C ON C.ID=U.CARGO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID WHERE U.SITUACAO='Desligado'
 ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME";
@@ -94,4 +96,4 @@ ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME";
 	</div>
 </section>	
 </body>
-</html>
+</html><?php }//ELSE - caso o usuário não tenha permissão.
