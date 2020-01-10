@@ -1,6 +1,11 @@
 <?php 
 $menuMeta="is-active";
 include('menu.php');
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $meta=trim($_POST['meta']);
 $atividade=trim($_POST['atividade']);
 $setor=trim($_POST['setor']);
@@ -184,4 +189,4 @@ if(isset($_POST["inserirMeta"])!=null){
 	   	</div>
 	</section>	 	
 </body>
-</html>
+</html><?php }//ELSE - caso o usuário tenha permissão.

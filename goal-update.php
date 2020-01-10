@@ -1,7 +1,11 @@
 <?php
 $menuMeta="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $periodo= trim($_REQUEST['periodo']);
 $setor= trim($_REQUEST['setor']);
 $nome= trim($_REQUEST['nome']);
@@ -303,4 +307,5 @@ if(isset($_POST['alterarDados'])){
 		</script><?php
 	}
 }
+}//ELSE - caso o usuário não tenha permissão.
 ?>
