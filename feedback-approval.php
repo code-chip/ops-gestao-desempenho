@@ -3,6 +3,11 @@ $menuFeedback="is-active";
 include('menu.php');
 $situacao= trim($_POST["situacao"]);
 $contador = 0;
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh: 1;url=home.php");
+}
+else{
 if(isset($_POST['consultar'])){
 	if($situacao=="'Enviado'"){
 		$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE F.SITUACAO=".$situacao;
@@ -29,7 +34,7 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 			window.location.href=window.location.href;
 		</script> <?php		
 	}	
-}	
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -182,4 +187,5 @@ if(isset($_POST["aprovar"])){
 		</script> <?php	
 	}
 }
+}//ELSE - caso tenha permissão.
 ?>
