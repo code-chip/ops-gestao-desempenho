@@ -15,6 +15,11 @@
 $menuDashboard="is-active";
 include('menu.php');
 require("query.php");
+if($_SESSION["permissao"]==1){
+  echo "<script>alert('Usuário sem permissão')<script>";
+  header("Refresh: 1;url=dashboard-private.php");
+}
+else{
 //SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
   $queryReg="SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO;";
   $cnx=mysqli_query($phpmyadmin, $queryReg);
@@ -787,7 +792,6 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 	<div class="hero is-fullheight is-primary has-background">
 	  	<img alt="Fill Murray" class="hero-background is-transparent animated bounceInDown" src="img/wallpaper/data-science17-min.jpg" />
 	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
-	  		<?php if($_SESSION["permissao"]>1):{?>
      		<div class="columns bloco" id="graficos">		
 				<div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
 				<div class="column is-mobile hvr-grow-shadow" id="dash-mediageral"></div>
@@ -812,8 +816,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="dash-acessos-no-mes"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
 			</div>	
-			<?php } endif;?>			
 	  	</div>	  		  	
 	</div>	
 </body>
-</html>
+</html><?php }//ELSE - caso o usuário tenha permissão.?>
