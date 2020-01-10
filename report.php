@@ -8,6 +8,11 @@ $ordenacao = trim($_REQUEST['ordenacao']);
 $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado=0;
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh: 1;url=report-private.php");
+}
+else{
 ?>
 <!DOCTYPE html>
 <html>
@@ -113,7 +118,7 @@ $totalAlcancado=0;
 <!--FINAL DO FORMULÁRIO-->
 <?php
 $turno = trim($_REQUEST['turno']);
-if( $periodo != "" && $_SESSION["permissao"]!=1){
+if( $periodo != ""){
 	if($atividade=="agrupado"){
 	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
@@ -403,3 +408,4 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
   ?>
 </body>
 </html>
+<?php }//ELSE- caso o usuário tenha permissão.?>
