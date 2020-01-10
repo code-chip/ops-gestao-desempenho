@@ -119,12 +119,21 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if( $nome != ""){	
+if(isset($_POST['consultar'])){
+	if( $nome != ""){	
 	$query="SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
 INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
+WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%' AND SETOR_ID=".$setor.")
 	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+	}	
+	else{
+	$query="SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
+INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
+INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
+WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.")
+	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	if(mysqli_num_rows($cnx)>0){
