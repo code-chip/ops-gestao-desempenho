@@ -24,6 +24,10 @@ if(isset($_POST["executar"])!=null && $_SESSION["permissao"]==4){
 		echo "<script>alert('O campo não pode está vazio!!')</script>";
 	}
 }
+else{
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
 ?>
 <!DOCTYPE html>
 <html>
