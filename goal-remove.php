@@ -121,17 +121,25 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if( $nome != ""){	
-	$query="SELECT M.ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
-	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+if(isset($_POST['consultar'])){	
+	if( $nome != ""){		
+		$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
+	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
+	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
+	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%' AND SETOR_ID=".$setor.")
+		AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+	}	
+	else{	
+		$query="SELECT M.ID AS ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
+	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
+	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
+	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20') ORDER BY 1;";
+	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	if(mysqli_num_rows($cnx)>0){
 		while($meta= $cnx->fetch_array()){
-			$vtId=$meta["ID"];
+			$vtId[$x]=$meta["ID"];
 			$vtNome[$x]=$meta["NOME"];
 			$vtAtividade[$x]=$meta["ATIVIDADE"];
 			$vtMeta[$x]=$meta["META"];
@@ -147,7 +155,7 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 			alert('Nenhum registrado encontrado nesta consulta!');
 			window.location.href=window.location.href;
 		</script> <?php		
-	}	
+	}
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
