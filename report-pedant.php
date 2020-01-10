@@ -1,7 +1,11 @@
 <?php
 $menuDesempenho="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 $turno= trim($_REQUEST['turno']);
 $setor= trim($_REQUEST['setor']);
 $data= trim($_REQUEST['data']);
@@ -227,4 +231,4 @@ else if(isset($_POST['consultar'])!=null){
 <?php endif; ?>
 </body>
 </html>
-<?php
+<?php }//ELSE - caso o usuário tenha permissão.
