@@ -85,7 +85,7 @@ if(isset($_POST["inserirMeta"])!=null){
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
 									<select name="atividade">
-									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID NOT IN(1,2,3,4) ORDER BY NOME";
+									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' ORDER BY NOME";
 									$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
 									while($atividade = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
@@ -106,7 +106,7 @@ if(isset($_POST["inserirMeta"])!=null){
 								<div class="select is-size-7-touch">
 									<select name="setor" id="setor">
 									<option value="">Selecione</option>
-									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' AND ID NOT IN(1,2,6,7) ORDER BY NOME";
+									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
 										$cnx = mysqli_query($phpmyadmin, $query);
 										while($reSetor = mysqli_fetch_assoc($cnx)) {
 											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
