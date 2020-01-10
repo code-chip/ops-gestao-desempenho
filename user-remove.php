@@ -1,11 +1,13 @@
 <?php
-//session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$filtro = trim($_REQUEST['filtro']);
-$busca= trim($_REQUEST['busca']);
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
+	$filtro = trim($_REQUEST['filtro']);
+	$busca= trim($_REQUEST['busca']);
 	$nome = trim($_POST['nome']);
 	$login = trim($_POST['login']);
 	$senha = trim($_POST['senha']);
@@ -327,4 +329,5 @@ if(isset($_POST['excluir'])){
 	$result = mysqli_query($phpmyadmin, $delUser);		 				
 	?><script language="Javascript"> alert('Funcionário removido com sucesso!!!');</script><?php
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
+}//ELSE - caso o usuário tenha permissão.
 ?>
