@@ -152,6 +152,12 @@ if( $nome != ""){
 			window.location.href=window.location.href;
 		</script> <?php		
 	}	
+}
+else if(isset($_POST['consultar'])){
+	?><script type="text/javascript">
+		alert('Preencha o campo Nome!');
+		window.location.href=window.location.href;
+	</script><?php
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
