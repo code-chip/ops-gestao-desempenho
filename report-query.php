@@ -40,7 +40,7 @@ $totalAlcancado=0;
 	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
 	?>
 	<br/>
-	<span id="topo"></span>
+	<span id="top"></span>
 <div>	
 	<?php if($setor =="" && isset($_POST['consultar'])==null ): ?>
 	<section class="section">
@@ -119,13 +119,23 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if( $nome != ""){	
+if(isset($_POST['consultar'])){
+	if( $nome != ""){	
 	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D 
 	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
 	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
 	WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
 	AND D.REGISTRO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO<= CONCAT('".$periodo."', '-20');";
+	}
+	else{	
+	$query="SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D 
+	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
+	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
+	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
+	WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO)
+	AND D.REGISTRO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO<= CONCAT('".$periodo."', '-20') ORDER BY REGISTRO, U.NOME;";
+	}
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
@@ -186,8 +196,7 @@ if( $nome != ""){
 	</tr>
 <?php endfor;?>
 	</table>
-	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
-	<a href="#topo">		
+	<a href="#top">		
 		<div class=".scrollWrapper">
 			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
 		</div>
