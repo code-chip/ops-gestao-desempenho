@@ -22,12 +22,12 @@ $totalAlcancado=0;
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
 	        if ($(this).scrollTop() > 100) {
-	            $('a[href="#top"]').fadeIn();
+	            $('a[href="#topo"]').fadeIn();
 	        }else {
-	            $('a[href="#top"]').fadeOut();
+	            $('a[href="#topo"]').fadeOut();
 	        }
 	    });
-	    $('a[href="#top"]').click(function(){
+	    $('a[href="#topo"]').click(function(){
 	        $('html, body').animate({scrollTop : 0},800);
 	        return false;
 	    });
@@ -119,14 +119,13 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-
 if( $nome != ""){	
 	$query="SELECT D.ID AS ID, U.NOME AS USUARIO, D.PRESENCA_ID AS PRESENCA_ID,P.NOME AS PRESENCA, D.ATIVIDADE_ID AS ATIVIDADE_ID, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D 
-	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
-	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
-	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
-	WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
-	AND D.REGISTRO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO<= CONCAT('".$periodo."', '-20');";
+		INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
+		INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
+		INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
+		WHERE SETOR_ID=".$setor." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%')
+		AND D.REGISTRO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND D.REGISTRO<= CONCAT('".$periodo."', '-20');";
 	$x=0;
 	$cnx=mysqli_query($phpmyadmin, $query);
 	while($operadores= $cnx->fetch_array()){
@@ -150,6 +149,12 @@ if( $nome != ""){
 			window.location.href=window.location.href;
 		</script> <?php		
 	}	
+}
+else if(isset($_POST['consultar'])){
+	?><script type="text/javascript">
+		alert('Preencha o campo Nome!');
+		window.location.href=window.location.href;
+	</script><?php
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
@@ -257,7 +262,6 @@ if( $nome != ""){
 	</tr>
 <?php endfor;?>
 	</table>
-	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
 	<a href="#topo">		
 		<div class=".scrollWrapper">
 			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
