@@ -186,7 +186,6 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 		if($result>0){			
 			$idAtividade=$defMeta["ATIVIDADE_ID"];
 		}
-		echo $_SESSION["metaAdd"];
 	}
 	else{
 		$result=0;
