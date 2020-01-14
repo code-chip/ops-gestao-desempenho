@@ -1,7 +1,11 @@
 <?php
-//session_start();
 $menuConfiguracoes="is-active";
 include('menu.php');
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão!')</script>";
+	header("Refresh:1;url=home.php");
+}
+else{
 ?>
 <!DOCTYPE html>
 <html>
@@ -212,7 +216,7 @@ include('menu.php');
 					<div class="control">
 						<div class="select">
 							<select name="permissao">								
-								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo'"; 
+								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE ID<=".$_SESSION["permissao"]." AND SITUACAO='Ativo'"; 
 								$con = mysqli_query($phpmyadmin , $gdPermissao); $x=0; 
 								while($permissao = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=$permissao["NOME"];?></option>
@@ -344,4 +348,5 @@ if(isset($_POST['cadastrar'])){
 		}
 	}	
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
+}//ELSE - caso o usuário tenha permissão.
 ?>
