@@ -1,11 +1,6 @@
 <?php
 $menuRelatorio="is-active";
 include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
-}
-else{
 $contador = 0;
 $totalDesempenho=0;
 ?>
@@ -181,7 +176,7 @@ else{
 <?php endif; ?>
 </section>
 </body>
-</html><?php }//ELSE - caso o usuário não tenha permissão.		
+</html>
 
 
 
