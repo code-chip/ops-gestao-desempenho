@@ -1,11 +1,6 @@
 <?php
 $menuConfiguracoes="is-active";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
-}
-else{	
+include('menu.php');	
 	$filtro = trim($_REQUEST['filtro']);
 	$busca= trim($_REQUEST['busca']);
 	$nome = trim($_POST['nome']);
@@ -309,7 +304,7 @@ else if(isset($_POST['consultar'])!=null){
 						<div class="select">
 							<select name="permissao">							
 								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option>	
-								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo' AND ID<>".$dados["PERMISSAO_ID"]; 
+								<?php $gdPermissao="SELECT ID, NOME FROM PERMISSAO WHERE SITUACAO='Ativo' AND ID<=".$_SESSION["permissao"]." AND ID<>".$dados["PERMISSAO_ID"]; 
 								$con = mysqli_query($phpmyadmin , $gdPermissao);
 								$x=0; while($permissao = $con->fetch_array()):{ ?>
 									<option value="<?php echo $vtId[$x]=$permissao["ID"];?>"><?php echo $vtNome[$x]=$permissao["NOME"]; ?></option>
@@ -393,11 +388,7 @@ if(isset($_POST['atualizar'])){
 	$efetivacao = trim($_POST['efetivacao']);
 	$permissao = trim($_POST['permissao']);
 	$situacao = trim($_POST['situacao']);
-	$observacao = trim($_POST['observacao']);
-	//VERIFICA PERMISSÃO DO USUÁRIO, SE A PERMISSÃO FOR A MÍNIMA NÃO ALTERAR;
-	if($_SESSION["permissao"]==1){
-		$permissao=1;	
-	}
+	$observacao = trim($_POST['observacao']);	
 	//VALIDAÇÃO SE LOGIN É ÚNICO.
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."' AND ID<>".$_SESSION["upUser"]."";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
@@ -474,5 +465,4 @@ if(isset($_POST['atualizar'])){
 		}
 	}	
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
-}//ELSE - caso o usuário tenha permissão.
 ?>
