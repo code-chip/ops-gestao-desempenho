@@ -35,6 +35,10 @@ if($row == 1){//ADICIONAR INFORMAÇÕES DE ACESSO NA TABELA.
 		$addAcesso="INSERT INTO ACESSO(USUARIO_ID, ULTIMO_LOGIN, ANO_MES ,ACESSO, ACESSO_TOTAL) VALUES(".$cnx["ID"].", '".date('Y-m-d H:i:s',time())."','".date('Y-m')."',1,".$acessoTotal.")";
 		$up=mysqli_query($phpmyadmin, $addAcesso);
 	}
+	//ADICIONA DATA E HORA NA TABELA ACESSO_HISTORICO.
+	$queryDh="INSERT INTO ACESSO_HISTORICO(USUARIO_ID, DATA_HORA) VALUES(".$_SESSION["userId"].",'".date('Y-m-d H:i:s', time())."')";
+	$upAcesso=mysqli_query($phpmyadmin, $queryDh);
+
 	$_SESSION["$visualizou"]=false;//VARIAVEL P/ PÁGINA HOME.
 	$_SESSION['usuario'] = $_POST['usuario'];
 	header('Location: home.php');
