@@ -65,6 +65,7 @@ $menuConfiguracoes;
 							<?php }endif;?>
 						</div>
 					</div>
+					<?php if($_SESSION["permissao"]>1):{?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuFeedback?> hvr-grow">Feedback</a>					
 						<div class="navbar-dropdown">
@@ -76,6 +77,7 @@ $menuConfiguracoes;
 							<a href="feedback-query.php" class="navbar-item hvr-grow">Consultar</a>
 						</div>
 					</div>
+					<?php } endif?>
 					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
 						<div class="navbar-dropdown">
