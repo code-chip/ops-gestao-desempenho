@@ -52,6 +52,7 @@ $usuario= $cnx->fetch_array();
 							<select name="modulo">
 								<option selected="selected" value="Dashboard">Dashboard</option>	
 								<option value="Meta">Meta</option>
+								<option value="Feedback">Feedback</option>
 								<option value="Desempenho">Desempenho</option>
 								<option value="Relatório">Relatório</option>
 								<option value="Configurações">Configurações</option>
