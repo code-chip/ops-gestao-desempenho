@@ -64,7 +64,17 @@ $menuConfiguracoes;
 							<?php if($_SESSION["permissao"]>2):{?><a href="goal-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
 							<?php }endif;?>
 						</div>
-					</div>
+					</div>					
+					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
+						<div class="navbar-dropdown">
+							<a href="report-query.php" class="navbar-item hvr-grow">Consultar</a>
+							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
+							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>							
+							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
+							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedente</a>
+						</div>
+					</div><?php }endif;?>
 					<?php if($_SESSION["permissao"]>1):{?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuFeedback?> hvr-grow">Feedback</a>					
@@ -78,16 +88,6 @@ $menuConfiguracoes;
 						</div>
 					</div>
 					<?php } endif?>
-					<?php if($_SESSION["permissao"]!=1):{?><div href="#" class="navbar-item has-dropdown is-hoverable">
-						<a class="navbar-link <?php echo $menuDesempenho?> hvr-grow">Desempenho</a>					
-						<div class="navbar-dropdown">
-							<a href="report-query.php" class="navbar-item hvr-grow">Consultar</a>
-							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
-							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>							
-							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
-							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedente</a>
-						</div>
-					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a href="#" class="navbar-link <?php echo $menuRelatorio?> hvr-grow">Relatórios</a>					
 						<div class="navbar-dropdown">
