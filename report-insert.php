@@ -177,21 +177,15 @@ $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";
 	</tr>
 <?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :
 	$result=0; 
-	if($setor==3 || $setor==4 || $setor==5 || $setor==4 || $setor==8){//VERIFICA SE É SETOR COM METAS VARIADAS.
-		$_SESSION["metaAdd"]=1;
-		$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
-		$cx= mysqli_query($phpmyadmin, $getMeta);
-		$defMeta= $cx->fetch_array();
-		$result=mysqli_num_rows($cx);
-		if($result>0){			
-			$idAtividade=$defMeta["ATIVIDADE_ID"];
-		}
-	}
-	else{
-		$result=0;
-		$idAtividade=0;
-	}
-	?>
+	//VERIFICA SE É SETOR COM METAS VARIADAS.
+	$_SESSION["metaAdd"]=1;
+	$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
+	$cx= mysqli_query($phpmyadmin, $getMeta);
+	$defMeta= $cx->fetch_array();
+	$result=mysqli_num_rows($cx);
+	if($result>0){			
+		$idAtividade=$defMeta["ATIVIDADE_ID"];
+	}?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
@@ -346,9 +340,10 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			else{
 				$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);	
 			}				
-			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"]."); ";
+			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
 			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
+			echo $inserirDesempenho;
 			if($_SESSION["metaAdd"]==1){//VERIFICA E DAR BAIXA NA META CADASTRADA.
 				$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
 				$cnx2= mysqli_query($phpmyadmin, $checkMeta);			
@@ -363,13 +358,13 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 	if(mysqli_error($phpmyadmin)==null){
 		$metaAdd=0;
 		?><script type="text/javascript">
-			alert('Desempenho cadastro com sucessos');
-			window.location.href=window.location.href;		
+			alert('Desempenho cadastro com sucesso!');
+			//window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
 		?><script type="text/javascript">
-			alert('Erro ao cadastrar Desempenho, campos Meta e/ou Alcançado não pode estar vazio!!');
+			alert('Erro ao cadastrar Desempenho, campo Meta e/ou Alcançado vazio!!');
 			window.location.href=window.location.href;
 		</script><?php
 	}
