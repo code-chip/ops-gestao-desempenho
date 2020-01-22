@@ -343,7 +343,6 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
 			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
-			echo $inserirDesempenho;
 			if($_SESSION["metaAdd"]==1){//VERIFICA E DAR BAIXA NA META CADASTRADA.
 				$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
 				$cnx2= mysqli_query($phpmyadmin, $checkMeta);			
@@ -359,7 +358,7 @@ if(isset($_POST['salvarDados']) && $_POST['id']!=null){
 		$metaAdd=0;
 		?><script type="text/javascript">
 			alert('Desempenho cadastro com sucesso!');
-			//window.location.href=window.location.href;		
+			window.location.href=window.location.href;		
 		</script><?php
 	}
 	else{
