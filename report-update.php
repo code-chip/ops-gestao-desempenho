@@ -327,7 +327,7 @@ if(isset($_POST['alterarDados'])){
 			else{
 				$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);
 			}
-			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"]." WHERE ID=".$ids[$i].";";		
+			$upDesempenho="UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"].", ATUALIZADO_DATA='".date('Y-m-d')."' WHERE ID=".$ids[$i].";";		
 			$cnx=mysqli_query($phpmyadmin, $upDesempenho);
 			$upCount=$upCount+1;			
 		}
