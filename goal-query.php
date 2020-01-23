@@ -201,4 +201,3 @@ if(isset($_POST['consultar'])){
 <?php endif; ?>
 </body>
 </html>
-<?php
