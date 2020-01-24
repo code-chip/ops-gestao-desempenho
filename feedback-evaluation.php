@@ -1,23 +1,25 @@
 <?php
-$menuMeta="is-active";
+$menuFeedback="is-active";
 include('menu.php');
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Gestão de Desempenho - Avaliação</title>
+	<title>Gestão de Desempenho - Autoavaliação</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
+    <link rel="stylesheet" type="text/css" href="/css/test.css">   
 </head>
 <body>
 <div>	
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="" method="POST">
+	<div class="box" style="margin-bottom: -30px; background-color: rgb(205,92,92)"></div>
 	<div class="box">
 		<div class="is-size-1-desktop"><strong>Avaliação de Desempenho - Operação ( evino )</strong></div>
 	</div>
-	<div class="is-size-4-desktop"> Operador I <br></div><br>
+	<div class="box is-size-4-desktop has-text-white" style="margin-bottom: -30px; background-color: rgb(205,92,92);"> Operador I <br></div><br>
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div>
