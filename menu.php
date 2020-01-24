@@ -85,6 +85,8 @@ $menuConfiguracoes;
 							<a href="feedback-insert.php" class="navbar-item hvr-grow">Enviar</a>
 							<a href="feedback-request.php" class="navbar-item hvr-grow">Solicitar</a>							
 							<a href="feedback-query.php" class="navbar-item hvr-grow">Consultar</a>
+							<?php if($_SESSION["permissao"]!=1):?>
+							<a href="feedback-self-evaluation.php" class="navbar-item hvr-grow">Avaliação</a>	
 						</div>
 					</div>
 					<?php } endif?>
