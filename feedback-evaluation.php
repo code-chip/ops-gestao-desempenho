@@ -15,19 +15,19 @@ include('menu.php');
 	<div class="container">	
 	<form id="form1" action="" method="POST">
 	<div class="box">
-		<div><strong>Avaliação de Desempenho - Operação ( evino )</strong></div>
+		<div class="is-size-1-desktop"><strong>Avaliação de Desempenho - Operação ( evino )</strong></div>
 	</div>
-	Operador I <br>
-	<div class="box">
+	<div class="is-size-4-desktop"> Operador I <br></div><br>
+	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div>
-	<div class="box">	
+	<div class="box is-size-7-touch">	
 		<div class="field is-horizontal">
 			<div class="text">Executa movimentos ágeis e com naturalidade em todos as áreas (checkout,
 separação, caixas e recebimento).				
 			</div>				
 		</div>
-		<div class="field">
+		<div class="field ">
 		  	<div class="control">
 		    	<label class="radio">
 		      		<input type="radio" name="question">1 - Não atende
