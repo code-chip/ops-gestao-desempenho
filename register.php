@@ -63,15 +63,15 @@ include('menu.php');
 	</div>	
 </div>
 <br/>
-<!--<div class="field has-addons has-addons-centered">
+<div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Gestor</a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Gestor</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Gestor</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Gestor</span></a>&nbsp&nbsp&nbsp		
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Avaliação</a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Avaliação</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Avaliação</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Avaliação</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
-<br/>
+<!--<br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Permissão</span></a>&nbsp&nbsp&nbsp
