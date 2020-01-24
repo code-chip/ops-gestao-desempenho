@@ -303,6 +303,22 @@ passados, bem como assimilar novos processos.
 		    	</label>		    	
 		  	</div>
 		</div>
+	</div>	
+	<div class="box">	
+		<div class="field">
+		  	<label class="label">Comente os pontos positivos e pontos de melhorias mais relevantes: *</label>
+		  	<div class="control">
+		    	<textarea class="textarea" placeholder="Sua resposta" maxlength="500"></textarea>
+		  	</div>
+		</div>
+		<div class="field is-grouped">
+		  	<div class="control">
+		    	<button class="button is-link">Cancelar</button>
+		  	</div>
+		  	<div class="control">
+		    	<button class="button is-link is-light">Próxima</button>
+		  	</div>
+		</div>
 	</div>									
 	</form>
 	</div>
