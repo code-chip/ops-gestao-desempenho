@@ -22,8 +22,10 @@ include('menu.php');
 	<div class="box is-size-4-desktop has-text-white" style="margin-bottom: -30px; background-color: rgb(64,224,208);"> Operador I <br></div><br>
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
-	</div>
-	<?php $getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA ORDER BY ORDEM;";
+	</div><?php
+	$y=1;
+	$questao="questao".$y; 
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
 	while ($pergunta=$cnx->fetch_array()):{?>
 	<div class="box">	
@@ -37,13 +39,13 @@ include('menu.php');
 		<div class="field ">
 		  	<div class="control">
 		    	<label class="radio">
-		      		<input type="radio" name="question" value="<?php echo $resposta["ID"];?>"><?php echo $resposta["RESPOSTA"];?>
+		      		<input type="radio" name="<?php echo $questao;?>" value="<?php echo $resposta["ID"];?>"><?php echo $resposta["RESPOSTA"];?>
 		    	</label>		    	
 		  	</div>
 		</div>
 		<?php	$x++;} ?>		
 	</div>
-<?php }endwhile;?>
+<?php $y++;}endwhile;?>
 	<div class="box">	
 		<div class="field">
 		  	<label class="label">Comente os pontos positivos e pontos de melhorias mais relevantes: *</label>
@@ -56,7 +58,7 @@ include('menu.php');
 		    	<button class="button is-link">Cancelar</button>
 		  	</div>
 		  	<div class="control">
-		    	<button class="button is-link is-light">Próxima</button>
+		    	<button class="button is-link is-light" name="proxima">Próxima</button>
 		  	</div>
 		</div>
 	</div>									
@@ -66,3 +68,6 @@ include('menu.php');
 </section>	
 </body>
 </html>
+<?php 
+//isset($_POST['proxima']){}
+?>
