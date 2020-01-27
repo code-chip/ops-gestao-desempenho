@@ -1,6 +1,7 @@
 <?php
 $menuFeedback="is-active";
 include('menu.php');
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,11 +24,10 @@ include('menu.php');
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div><?php
-	$y=1;
-	$questao="questao".$y; 
+	$y=1;	
 	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
-	while ($pergunta=$cnx->fetch_array()):{?>
+	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];?>
 	<div class="box">	
 		<div class="field is-horizontal">
 			<div class="text"><?php echo $pergunta["PERGUNTA"];?></div>				
@@ -69,5 +69,16 @@ include('menu.php');
 </body>
 </html>
 <?php 
-//isset($_POST['proxima']){}
+if(isset($_POST['proxima'])){
+	$z=1;
+	while ($z <= $y) {//ARMAZENAS AS RESPOSTAS NO VETOR.
+		$reposta[$z-1]=$_POST["questao".$z];
+		$z++;
+	}
+	for($i=0 ;$i<sizeof($reposta);$i++){//INSERE NO BANCO OS ID'S DAS PERGUNTAS E RESPOSTAS.
+		$salvar="INSERT INTO AVAL_REALIZADA(USUARIO_ID, AVAL_PERGUNTA, AVAL_RESPOSTA, REGISTRO) VALUES(".$_SESSION["idUser"].", ".$idPergunta[$i].","$resposta[$i]", '".date('Y-m-d')."')";
+		$cnx=mysqli_query($phpmyadmin, $salvar);
+	}
+	header("refresh: 1; url=feedback-techinnal.php");
+}
 ?>
