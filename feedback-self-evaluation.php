@@ -1,7 +1,11 @@
 <?php
 $menuFeedback="is-active";
 include('menu.php');
-
+$info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID=1".$_SESSION["userId"];
+$cx=mysqli_query($phpmyadmin, $info);
+$cargo=$cx->fetch_array();
+echo $cargo["CARGO"];
+echo $_SESSION["userId"];
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +24,7 @@ include('menu.php');
 	<div class="box">
 		<div class="is-size-1-desktop"><strong>Avaliação de Desempenho - Operação ( evino )</strong></div>
 	</div>
-	<div class="box is-size-4-desktop has-text-white" style="margin-bottom: -30px; background-color: rgb(64,224,208);"> Operador I <br></div><br>
+	<div class="box is-size-4-desktop has-text-white" style="margin-bottom: -30px; background-color: rgb(64,224,208);"><?php echo $cargo["CARGO"];?><br></div><br>
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div><?php
@@ -72,13 +76,15 @@ include('menu.php');
 if(isset($_POST['proxima'])){
 	$z=1;
 	while ($z <= $y) {//ARMAZENAS AS RESPOSTAS NO VETOR.
-		$reposta[$z-1]=$_POST["questao".$z];
+		$resposta[$z-1]=$_POST["questao".$z];
 		$z++;
 	}
-	for($i=0 ;$i<sizeof($reposta);$i++){//INSERE NO BANCO OS ID'S DAS PERGUNTAS E RESPOSTAS.
-		$salvar="INSERT INTO AVAL_REALIZADA(USUARIO_ID, AVAL_PERGUNTA, AVAL_RESPOSTA, REGISTRO) VALUES(".$_SESSION["idUser"].", ".$idPergunta[$i].","$resposta[$i]", '".date('Y-m-d')."')";
-		$cnx=mysqli_query($phpmyadmin, $salvar);
+	for($i=0 ;$i<sizeof($resposta);$i++){//INSERE NO BANCO OS ID'S DAS PERGUNTAS E RESPOSTAS.
+		echo $resposta[$i];
+		$salvar="INSERT INTO AVAL_REALIZADA(USUARIO_ID, AVAL_PERGUNTA, AVAL_RESPOSTA, REGISTRO) VALUES(".$_SESSION['userId'].", ".$idPergunta[$i].",".$resposta[$i].", '".date('Y-m-d')."');";
+		echo $salvar;
+		//$cnx=mysqli_query($phpmyadmin, $salvar);
 	}
-	header("refresh: 1; url=feedback-techinnal.php");
+	//header("refresh: 1; url=feedback-techinnal.php");
 }
 ?>
