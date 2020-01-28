@@ -28,7 +28,7 @@ $cargo=$cx->fetch_array();
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div><?php
 	$y=1;	
-	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA ORDER BY ORDEM;";
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_ID=1 ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
 	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
 		//CHECK SE A PERGUNTA FOI RESPONDIDA;
@@ -101,7 +101,7 @@ if(isset($_POST['proxima'])){
 		for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE PELAS QUESTÕES.
 			$verifResposta="SELECT ID FROM AVAL_REALIZADA WHERE USUARIO_ID=".$_SESSION["userId"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$i]." AND REGISTRO='".date('Y-m-d')."';";	
 			$cnx4=mysqli_query($phpmyadmin, $verifResposta);
-			if(mysqli_num_rows($cnx4)==1){			
+			if(mysqli_num_rows($cnx4)==1){//CASO O USUÁRIO JÁ RESPONDEU ALGUMA PERGUNTA, ATUALIZA AS RESPOSTAS.			
 				$getRes=$cnx4->fetch_array();
 				$atualiza="UPDATE AVAL_REALIZADA SET AVAL_RESPOSTA_ID=".$resposta[$i]." WHERE ID=".$getRes["ID"].";";
 				echo $atualiza;
@@ -127,7 +127,6 @@ if(isset($_POST['proxima'])){
 	}
 	else{
 		header("refresh: 1; url=feedback-techninal-evaluation.php");
-	}
-	
+	}	
 }
 ?>
