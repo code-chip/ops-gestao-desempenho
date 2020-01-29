@@ -14,12 +14,20 @@ session_start();
     <link rel="stylesheet" href="css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="css/login.css">
     <!---<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">-->
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
     <style type="text/css">
-    .hero-background.is-transparent{
-    opacity: 0.73;
-}
-    </style>	 
+    	.hero-background.is-transparent{
+    	opacity: 0.73;
+	}
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-156503826-3"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-156503826-3');
+	</script> 
 </head>
 <body>
     <div class="hero is-fullheight is-primary has-background">
