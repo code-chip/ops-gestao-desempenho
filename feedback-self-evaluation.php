@@ -26,9 +26,47 @@ $cargo=$cx->fetch_array();
 	<div class="box is-size-4-desktop has-text-white" style="margin-bottom: -30px; background-color: rgb(64,224,208);"><?php echo $cargo["CARGO"];?><br></div><br>
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
-	</div><?php
+	</div>
+	<div class="box">Técnicas</div><?php
 	$y=1;	
-	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_ID=1 ORDER BY ORDEM;";
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=1 AND CARGO_ID=1 ORDER BY ORDEM;";
+	$cnx=mysqli_query($phpmyadmin, $getPergunta);
+	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
+		//CHECK SE A PERGUNTA FOI RESPONDIDA;
+		$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE USUARIO_ID=".$_SESSION["userId"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1]." AND REGISTRO='".date('Y-m-d')."';";
+		$cnx2=mysqli_query($phpmyadmin, $verifResposta);
+		if(mysqli_num_rows($cnx2)>0){
+			$houveResposta=true;
+			$getRes=$cnx2->fetch_array();
+			$getIdResposta=$getRes["AVAL_RESPOSTA_ID"];
+			$selecao="CHECKED";
+		}
+		else{
+			$selecao=null;
+		}
+		?>
+	<div class="box">	
+		<div class="field is-horizontal">
+			<div class="text"><?php echo $pergunta["PERGUNTA"];?></div>				
+		</div>
+		<?php $getResposta="SELECT ID, RESPOSTA FROM AVAL_RESPOSTA WHERE SITUACAO='Ativo';";
+		$x=0;
+		$cnx3=mysqli_query($phpmyadmin, $getResposta);
+		while ($resposta= $cnx3->fetch_array()){?>
+		<div class="field ">
+		  	<div class="control">
+		    	<label class="radio">
+		      		<input type="radio" name="<?php echo $questao;?>" value="<?php echo $resposta["ID"];?>" <?php if($getIdResposta==$resposta["ID"]){ echo $selecao;}?>><?php echo $resposta["RESPOSTA"];?>
+		    	</label>		    	
+		  	</div>
+		</div>
+		<?php	$x++;} ?>		
+	</div>
+<?php $y++;}endwhile;?>
+	<!--COMPORTAMENTAL-->
+	<div class="box">Comportamentais</div><?php
+	$y=1;	
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=2 AND CARGO_ID=1 ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
 	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
 		//CHECK SE A PERGUNTA FOI RESPONDIDA;
