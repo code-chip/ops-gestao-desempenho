@@ -66,7 +66,7 @@ $cargo=$cx->fetch_array();
 		<div class="field">
 		  	<label class="label">Comente os pontos positivos e pontos de melhorias mais relevantes: *</label>
 		  	<div class="control">
-		    	<textarea class="textarea" placeholder="Sua resposta" maxlength="500"></textarea>
+		    	<textarea name="comentario" class="textarea" placeholder="Sua resposta" maxlength="500"></textarea>
 		  	</div>
 		</div>
 		<div class="field is-grouped">
@@ -88,6 +88,7 @@ $cargo=$cx->fetch_array();
 </html>
 <?php 
 if(isset($_POST['proxima'])){
+	$comentario=$_POST["comentario"];
 	$z=1; $respostaNula=0;
 	while ($z <= $y) {//ARMAZENA AS RESPOSTAS NO VETOR.
 		$resposta[$z-1]=$_POST["questao".$z];
@@ -104,11 +105,9 @@ if(isset($_POST['proxima'])){
 			if(mysqli_num_rows($cnx4)==1){//CASO O USUÁRIO JÁ RESPONDEU ALGUMA PERGUNTA, ATUALIZA AS RESPOSTAS.			
 				$getRes=$cnx4->fetch_array();
 				$atualiza="UPDATE AVAL_REALIZADA SET AVAL_RESPOSTA_ID=".$resposta[$i]." WHERE ID=".$getRes["ID"].";";
-				echo $atualiza;
 			}
 			else{
 				$atualiza="INSERT INTO AVAL_REALIZADA(USUARIO_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID, REGISTRO) VALUES(".$_SESSION['userId'].", ".$idPergunta[$i].",".$resposta[$i].", '".date('Y-m-d')."');";
-				echo "<br>"." INSERT";
 			}
 			$cnx=mysqli_query($phpmyadmin, $atualiza);				
 		}
@@ -119,14 +118,17 @@ if(isset($_POST['proxima'])){
 		$cnx5=mysqli_query($phpmyadmin, $salvar);
 		}
 	}
+	$respostaNula=$respostaNula-1;
 	if($respostaNula>0){?>
 		<script type="text/javascript">
 			alert('Atenção a respostas de todas perguntas são obrigatórias!');
 			window.location.href=window.location.href;
 		</script><?php	
 	}
-	else{
-		header("refresh: 1; url=feedback-techninal-evaluation.php");
-	}	
+	else{?>
+		<script type="text/javascript">
+			window.location.href="feedback-technical-evaluation.php";
+		</script><?php	
+	}
 }
 ?>
