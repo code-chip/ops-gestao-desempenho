@@ -1,0 +1,772 @@
+CREATE TABLE AVAL_TIPO (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  TIPO VARCHAR(15) NULL,
+  SITUACAO VARCHAR(8) NULL,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE AVAL_TIPO_PERGUNTA (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  AVAL_TIPO_ID INTEGER UNSIGNED NOT NULL,
+  CLASSIFICACAO VARCHAR(15) NULL,
+  SITUACAO VARCHAR(8) NULL,
+  PRIMARY KEY(ID),
+  INDEX AVAL_TIPO_PERGUNTA_FKIndex1(AVAL_TIPO_ID)
+);
+
+CREATE TABLE AVAL_PERGUNTA (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  AVAL_TIPO_PERGUNTA_ID INTEGER UNSIGNED NOT NULL,
+  CARGO_ID INTEGER UNSIGNED NOT NULL,
+  ORDEM INTEGER UNSIGNED NULL,
+  PERGUNTA VARCHAR(350) NULL,
+  SITUACAO VARCHAR(8) NULL,
+  PRIMARY KEY(ID),
+  INDEX AVAL_PERGUNTA_FKIndex1(CARGO_ID),
+  INDEX AVAL_PERGUNTA_FKIndex3(AVAL_TIPO_PERGUNTA_ID)
+);
+
+CREATE TABLE AVAL_RESPOSTA (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  RESPOSTA VARCHAR(25) NULL,
+  SITUACAO VARCHAR(8) NULL,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE AVAL_PERGUNTA_COM (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  AVAL_TIPO_ID INTEGER UNSIGNED NOT NULL,
+  PERGUNTA VARCHAR(250) NULL,
+  SITUACAO VARCHAR(8) NULL,
+  PRIMARY KEY(ID),
+  INDEX AVAL_PERGUNTA_COM_FKIndex1(AVAL_TIPO_ID)
+);
+
+
+
+CREATE TABLE AVAL_INDICE (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  USUARIO_ID INTEGER UNSIGNED NOT NULL,
+  REGISTRO DATE NULL,
+  SITUACAO VARCHAR(12) NULL,
+  PRIMARY KEY(ID),
+  INDEX AVAL_INDICE_FKIndex1(USUARIO_ID)
+);
+
+CREATE TABLE AVAL_REALIZADA (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  AVAL_INDICE_ID INTEGER UNSIGNED NOT NULL,
+  AVAL_PERGUNTA_ID INTEGER UNSIGNED NOT NULL,
+  AVAL_RESPOSTA_ID INTEGER UNSIGNED NOT NULL,
+  AVAL_NUM INTEGER UNSIGNED NULL,
+  REGISTRO DATE NULL,
+  PRIMARY KEY(ID),
+  INDEX AVAL_REALIZADA_FKIndex1(AVAL_PERGUNTA_ID),
+  INDEX AVAL_REALIZADA_FKIndex2(AVAL_RESPOSTA_ID),
+  INDEX AVAL_REALIZADA_FKIndex3(AVAL_INDICE_ID)
+);
+
+CREATE TABLE AVAL_COMENTARIO (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  AVAL_INDICE_ID INTEGER UNSIGNED NOT NULL,
+  AVAL_PERGUNTA_COM_ID INTEGER UNSIGNED NOT NULL,
+  AVAL_NUM INTEGER UNSIGNED NULL,
+  COMENTARIO VARCHAR(1000) NULL,
+  PRIMARY KEY(ID),
+   INDEX AVAL_COMENTARIO_FKIndex1(AVAL_INDICE_ID),
+  INDEX AVAL_COMENTARIO_FKIndex2(AVAL_PERGUNTA_COM_ID)
+ 
+);
+
+INSERT INTO AVAL_TIPO(ID, TIPO, SITUACAO)
+VALUES(1,'Autoavaliação','Ativo'),(2,'Líder','Ativo');
+
+INSERT INTO AVAL_TIPO_PERGUNTA(ID, AVAL_TIPO_ID,CLASSIFICACAO, SITUACAO)
+VALUES(1,1,'Técnicas','Ativo'),
+(2,1,'Comportamentais','Ativo'),
+(3,2,'Técnicas','Ativo'),
+(4,2,'Comportamentais','Ativo');
+
+INSERT INTO AVAL_RESPOSTA(RESPOSTA, SITUACAO) VALUES
+('1 - Não atende','Ativo'),
+('2 - Atende parcialmente','Ativo'),
+('3 - Conforme esperado','Ativo'),
+('4 - Acima do esperado','Ativo'),
+('5 - Aguardando resposta','Inativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador I - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,1,1,'Executa movimentos ágeis e com naturalidade em todos as áreas (checkout,
+separação, caixas e recebimento). *','Ativo'),
+(1,1,2,'Cumpre e/ou colabora para o cumprimento das metas e resultados relacionados
+à velocidade de produção e entregas dentro do prazo. *','Ativo'),
+(1,1,3,'Transmite segurança na conferência de itens (no estoque, mesa e/ou
+recebimento), fazendo-o de forma consistente e assertiva. *','Ativo'),
+(1,1,4,'Demonstra atenção aos detalhes e qualidade ao lidar com produtos, caixas,
+ferramentas de trabalho e processos em geral. *','Ativo'),
+(1,1,5,'Demonstra que conhece e respeita os procedimentos e padrões da Evino em
+todas as áreas em que atua, sem cometer equívocos ou gerar falhas processuais.
+*','Ativo'),
+(1,1,6,'Demonstra zelo e cuidado pela integridade e higiene do local e instrumentos de
+trabalho. *','Ativo'),
+(1,1,7,'Colabora para a manutenção de uma organização eficiente e de acordo com os
+padrões. Mantém cada coisa em seu lugar e no melhor lugar possível
+(instrumentos de trabalho, caixas, pallets, etiquetas, notas, ondas, etc). *','Ativo'),
+(1,1,8,'Demonstra facilidade em aprender e entender os direcionamentos que são
+passados, bem como assimilar novos processos. *','Ativo'),
+(1,1,9,'Para a execução de todas as atribuições do cargo, demonstra já possuir os
+conhecimentos básicos necessários: endereço de estoque, separação,
+paletização, planilha de pedidos com problemas, etc. *','Ativo'),
+(1,1,10,'Entende e soluciona os problemas que acontecem com autonomia. *','Ativo'),
+(2,1,11,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,1,12,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,1,13,'Demonstra atitude enérgica e dinâmica durante o trabalho, fazendo primeiro o
+que é mais urgente antes que se torne um problema. *','Ativo'),
+(2,1,14,'Antecipa-se aos possíveis problemas antes que aconteçam. É proativo e tem
+muita iniciativa. *','Ativo'),
+(2,1,15,'Demonstra preocupação e respeito aos procedimentos de segurança e
+utilização de EPIs. *','Ativo'),
+(2,1,16,'É atento(a), e não distraído(a), em sua movimentação e com o que acontece a
+sua volta, a fim de evitar ser vítima ou causador de qualquer acidente. *','Ativo'),
+(2,1,17,'Colabora para um bom clima e relacionamento da equipe. Trata os colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,1,18,'Ajuda e colabora com a equipe. Trabalha bem em grupo e sempre faz a sua
+parte. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador I - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,1,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,1,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,1,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,1,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,1,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,1,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,1,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,1,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,1,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,1,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,1,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,1,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,1,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,1,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,1,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,1,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,1,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,1,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,1,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,1,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador II - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,2,1,'Executa movimentos ágeis e com naturalidade em todos as áreas (checkout,
+separação, caixas e recebimento). *','Ativo'),
+(3,2,2,'Cumpre e/ou colabora para o cumprimento das metas e resultados relacionados
+à velocidade de produção e entregas dentro do prazo. *','Ativo'),
+(1,2,3,'Transmite segurança na conferência de itens (no estoque, mesa e/ou
+recebimento), fazendo-o de forma consistente e assertiva. *','Ativo'),
+(1,2,4,'Demonstra atenção aos detalhes e qualidade ao lidar com produtos, caixas,
+ferramentas de trabalho e processos em geral. *','Ativo'),
+(1,2,5,'Demonstra que conhece e respeita os procedimentos e padrões da Evino em
+todas as áreas em que atua, sem cometer equívocos ou gerar falhas processuais.
+*','Ativo'),
+(1,2,6,'Demonstra zelo e cuidado pela integridade e higiene do local e instrumentos de
+trabalho. *','Ativo'),
+(1,2,7,'Colabora para a manutenção de uma organização eficiente e de acordo com os
+padrões. Mantém cada coisa em seu lugar e no melhor lugar possível
+(instrumentos de trabalho, caixas, pallets, etiquetas, notas, ondas, etc). *','Ativo'),
+(1,2,8,'Demonstra facilidade em aprender e entender os direcionamentos que são
+passados, bem como assimilar novos processos. *','Ativo'),
+(1,2,9,'Para a execução de todas as atribuições do cargo, demonstra já possuir os
+conhecimentos básicos necessários: endereço de estoque, separação,
+paletização, planilha de pedidos com problemas, etc. *','Ativo'),
+(1,2,10,'Entende e soluciona os problemas que acontecem com autonomia. *','Ativo'),
+(2,2,11,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,2,12,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,2,13,'Demonstra atitude enérgica e dinâmica durante o trabalho, fazendo primeiro o
+que é mais urgente antes que se torne um problema. *','Ativo'),
+(2,2,14,'Antecipa-se aos possíveis problemas antes que aconteçam. É proativo e tem
+muita iniciativa. *','Ativo'),
+(2,2,15,'Demonstra preocupação e respeito aos procedimentos de segurança e
+utilização de EPIs. *','Ativo'),
+(2,2,16,'É atento(a), e não distraído(a), em sua movimentação e com o que acontece a
+sua volta, a fim de evitar ser vítima ou causador de qualquer acidente. *','Ativo'),
+(2,2,17,'Colabora para um bom clima e relacionamento da equipe. Trata os colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,2,18,'Ajuda e colabora com a equipe. Trabalha bem em grupo e sempre faz a sua
+parte. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador II - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,2,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,2,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,2,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,2,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,2,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,2,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,2,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,2,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,2,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,2,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,2,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,2,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,2,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,2,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,2,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,2,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,2,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,2,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,2,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,2,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador III - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,3,1,'Executa movimentos ágeis e com naturalidade em todos as áreas (checkout,
+separação, caixas e recebimento). *','Ativo'),
+(1,3,2,'Cumpre e/ou colabora para o cumprimento das metas e resultados relacionados
+à velocidade de produção e entregas dentro do prazo. *','Ativo'),
+(1,3,3,'Transmite segurança na conferência de itens (no estoque, mesa e/ou
+recebimento), fazendo-o de forma consistente e assertiva. *','Ativo'),
+(1,3,4,'Demonstra atenção aos detalhes e qualidade ao lidar com produtos, caixas,
+ferramentas de trabalho e processos em geral. *','Ativo'),
+(1,3,5,'Demonstra que conhece e respeita os procedimentos e padrões da Evino em
+todas as áreas em que atua, sem cometer equívocos ou gerar falhas processuais.
+*','Ativo'),
+(1,3,6,'Demonstra zelo e cuidado pela integridade e higiene do local e instrumentos de
+trabalho. *','Ativo'),
+(1,3,7,'Colabora para a manutenção de uma organização eficiente e de acordo com os
+padrões. Mantém cada coisa em seu lugar e no melhor lugar possível
+(instrumentos de trabalho, caixas, pallets, etiquetas, notas, ondas, etc). *','Ativo'),
+(1,3,8,'Demonstra facilidade em aprender e entender os direcionamentos que são
+passados, bem como assimilar novos processos. *','Ativo'),
+(1,3,9,'Para a execução de todas as atribuições do cargo, demonstra já possuir os
+conhecimentos básicos necessários: endereço de estoque, separação,
+paletização, planilha de pedidos com problemas, etc. *','Ativo'),
+(1,3,10,'Entende e soluciona os problemas que acontecem com autonomia. *','Ativo'),
+(2,2,11,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,2,12,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,2,13,'Demonstra atitude enérgica e dinâmica durante o trabalho, fazendo primeiro o
+que é mais urgente antes que se torne um problema. *','Ativo'),
+(2,2,14,'Antecipa-se aos possíveis problemas antes que aconteçam. É proativo e tem
+muita iniciativa. *','Ativo'),
+(2,2,15,'Demonstra preocupação e respeito aos procedimentos de segurança e
+utilização de EPIs. *','Ativo'),
+(2,2,16,'É atento(a), e não distraído(a), em sua movimentação e com o que acontece a
+sua volta, a fim de evitar ser vítima ou causador de qualquer acidente. *','Ativo'),
+(2,2,17,'Colabora para um bom clima e relacionamento da equipe. Trata os colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,2,18,'Ajuda e colabora com a equipe. Trabalha bem em grupo e sempre faz a sua
+parte. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador III - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,3,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,3,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,3,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,3,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,3,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,3,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,3,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,3,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,3,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,3,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,3,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,3,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,3,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,3,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,3,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,3,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,3,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,3,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,3,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,3,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Auxiliar Administrativo de Operação - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,4,1,'Executa suas funções com propriedade e conhecimento de cada processo:
+Lançamento de avarias e quebras; análise e controle dos indicadores de avaria e
+devolução, recuperação de avarias, conferência de devoluções, processamento
+da devolução no SAP, alimentação de planilhas, etc. *','Ativo'),
+(1,4,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(1,4,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(1,4,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(1,4,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(1,4,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(1,4,7,'Possui uma boa relação com os clientes externos do saldão: faz contato via e-
+mail, faz agendamento, recepciona no dia do pagamento. *','Ativo'),
+(1,4,8,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(1,4,9,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(1,4,10,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Auxilia os líderes a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(1,4,11,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(1,4,12,'Tem a habilidade de analisar informações e tomar decisões diárias com base nas
+respectivas conclusões. *','Ativo'),
+(2,4,13,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,4,14,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(2,4,15,'Demonstra preocupação e atenção com as atividades que mexem com o
+estoque: lançamento de avarias/ quebras, recuperação de garrafas e
+processamento da devolução. *','Ativo'),
+(2,4,16,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,4,17,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. é proativo e tem muita iniciativa. *','Ativo'),
+(2,4,18,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(2,4,19,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(2,4,20,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,4,21,'Orienta de forma assertiva as pessoas da produção e/ou funcionários do PA
+quando necessário, a fim de tratar e/ou apurar inconsistências. *','Ativo'),
+(2,4,22,'Presta suporte à liderança ao auditar e acompanhar os operadores da produção
+em processos de trabalho que envolvam sua área de atuação. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Auxiliar Administrativo de Operação - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,4,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,4,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,4,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,4,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,4,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,4,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,4,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,4,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,4,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,4,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,4,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,4,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,4,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,4,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,4,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,4,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,4,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,4,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,4,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,4,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operação ( evino ) - Assistente Administrativo de Operação - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,5,1,'Executa suas funções com propriedade e conhecimento de cada processo:
+geração de ondas, perfil de ondas, análise dos dashboards, alimentação de
+planilhas, etc. *','Ativo'),
+(1,5,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(1,5,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(1,5,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(1,5,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(1,5,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(1,5,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(1,5,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(1,5,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Auxilia os líderes a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(1,5,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(1,5,11,'Tem a habilidade de analisar informações e tomar decisões diárias com base nas
+respectivas conclusões. *','Ativo'),
+(2,5,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,5,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(2,5,14,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,5,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(2,5,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(2,5,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(2,5,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,5,19,'Orienta de forma assertiva as pessoas da produção e/ou funcionários do PA
+quando necessário, a fim de tratar e/ou apurar inconsistências. *','Ativo'),
+(2,5,20,'Presta suporte à liderança ao auditar e acompanhar os operadores da produção
+em processos de trabalho que envolvam sua área de atuação. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Assistente Administrativo de Operação - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,5,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,5,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,5,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,5,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,5,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,5,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,5,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,5,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,5,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,5,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,5,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,5,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,5,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,5,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,5,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,5,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,5,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,5,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,5,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,5,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador Armazenista de Operação - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,13,1,'Demonstra conhecimento e práticas de 5S (senso de utilização, organização,
+higiene, disciplina) ao gerar melhorias ativamente e de forma contínua na
+organização e funcionamento do setor. *','Ativo'),
+(1,13,2,'Domina os conhecimentos necessários para execução assertiva de controle e
+organização do estoque: conferência, alocação, endereço, inventário, acurácia,
+giro de estoque, etc. *','Ativo'),
+(1,13,3,'Demonstra conhecimentos em operação de empilhadeira elétrica o suficiente
+para substituir o empilhaderista com segurança e eficácia quando necessário. *','Ativo'),
+(1,13,4,'Utiliza de forma assertiva e eficiente as aplicações de informática necessárias ao
+desempenho de suas atribuições: excel básico, microsoft word básico, Silt
+intermediário para controle, organização e acompanhamento sistêmico do
+estoque (remanejamento, conferência de entrada, inventário, alocação de OR de
+recebimento e devoluções). *','Ativo'),
+(1,13,5,'Transmite segurança na conferência e auditoria de itens (no estoque ou
+recebimento), fazendo-a de forma consistente e assertiva. *','Ativo'),
+(1,13,6,'Executa suas atribuições com atenção e qualidade, sem cometer equívocos
+relevantes e/ou causar prejuízos ao setor e à empresa. *','Ativo'),
+(1,13,7,'Demonstra ser criterioso e detalhista com a qualidade dos produtos recebido e
+em estoque, bem como com as ferramentas de trabalho, ambiente físico e
+processos em geral. *','Ativo'),
+(1,13,8,'Atua ativamente para garantir a acurácia do inventário de estoque e da
+conferência de itens. Identifica problemas de organização do estoque e
+providencia tratavas eficientes para solucioná-los. *','Ativo'),
+(1,13,9,'Atua ativamente para garantir a higiene e boas condições de organização física
+do estoque, bem como uma alocação eficiente dos produtos. *','Ativo'),
+(1,13,10,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições e alcançar os objetivos da área. *','Ativo'),
+(1,13,11,'Quando necessário, comunica-se de forma clara e assertiva ao compartilhar
+informações e propor soluções. *','Ativo'),
+(1,13,12,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(1,13,13,'Tem a habilidade de analisar informações e tomar decisões diárias com base nas
+respectivas conclusões. *','Ativo'),
+(2,13,14,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,13,15,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(2,13,16,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,13,17,'Demonstra atitude enérgica e dinâmica durante o trabalho, fazendo primeiro o
+que é mais urgente antes que se torne um problema. *','Ativo'),
+(2,13,18,'Antecipa-se aos possíveis problemas antes que aconteçam. É proativo e tem
+muita iniciativa. *','Ativo'),
+(2,13,18,'Demonstra preocupação redobrada com a segurança das pessoas no CD,
+atuando com cautela e responsabilidade, a fim de evitar acidentes no ambiente e
+estoque e envolvendo a empilhadeira quando está operando. *','Ativo'),
+(2,13,18,'Cumpre orientações e procedimentos de segurança. Utiliza EPIs quando
+necessário. Observa e comunica ativamente necessidades de melhorias para a
+segurança dentro do estoque. *','Ativo'),
+(2,13,20,'Demonstra ser uma pessoa que colabora para um bom clima e relacionamento
+da equipe. Trata aos colegas com respeito, educação e empatia. *','Ativo'),
+(2,13,21,'Orienta de forma assertiva as pessoas da produção quando necessário, a fim de
+tratar e/ou apurar inconsistências. Exemplos: *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Operador Armazenista de Operação - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,13,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,13,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,13,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,13,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,13,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,13,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,13,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,13,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,13,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,13,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,13,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,13,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,13,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,13,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,13,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,13,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,13,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,13,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,13,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,13,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Auxiliar de Expedição I - parte 1
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(1,14,1,'Demonstra conhecimento e práticas de 5S (senso de utilização, organização,
+higiene, disciplina) ao gerar melhorias ativamente e de forma contínua na
+organização e funcionamento do setor. *','Ativo'),
+(1,14,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas e microsoft word
+quando necessário. *','Ativo'),
+(1,14,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP*, Looker, Zed*, Evinops, Comex). *','Ativo'),
+(1,14,4,'Transmite segurança na conferência e auditoria de itens (no estoque, mesa e/ou
+recebimento), fazendo-a de forma consistente e assertiva. *','Ativo'),
+(1,14,5,'Executa suas atribuições com atenção e qualidade, sem cometer equívocos
+relevantes e/ou causar prejuízos ao setor e à empresa. *','Ativo'),
+(1,14,6,'Demonstra ser criterioso e detalhista com a qualidade dos produtos recebido e
+em estoque, bem como com as ferramentas de trabalho, ambiente físico e
+processos em geral. *','Ativo'),
+(1,14,7,'Demonstra que conhece e respeita os procedimentos e padrões da Expedição,
+sem cometer equívocos ou gerar falhas processuais. *','Ativo'),
+(1,14,8,'Colabora para a manutenção de uma organização eficiente. Mantém cada coisa
+em seu lugar e no melhor lugar possível (palets, ferramentas de trabalho,
+documentos, informações, etc) *','Ativo'),
+(1,14,9,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições e alcançar os objetivos da área. *','Ativo'),
+(1,14,10,'Quando necessário, comunica-se de forma clara e assertiva ao compartilhar
+informações e propor soluções. *','Ativo'),
+(1,14,11,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(1,14,12,'Tem a habilidade de analisar informações e tomar decisões diárias com base nas
+respectivas conclusões. *','Ativo'),
+(2,14,13,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time. *','Ativo'),
+(2,14,14,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(2,14,15,'Fomenta uma boa imagem da empresa interna e externamente. Não reclama por
+reclamar. Ao invés disso, propõe melhorias e aponta soluções com
+responsabilidade. *','Ativo'),
+(2,14,16,'Demonstra atitude enérgica e dinâmica durante o trabalho, fazendo primeiro o
+que é mais urgente antes que se torne um problema. *','Ativo'),
+(2,14,17,'Antecipa-se aos possíveis problemas antes que aconteçam. É proativo e tem
+muita iniciativa. *','Ativo'),
+(2,14,18,'Demonstra preocupação e respeito aos procedimentos de segurança e
+utilização de EPIs, acompanhando seu cumprimento especialmente nos Pas. *','Ativo'),
+(2,14,19,'Demonstra ser atento(a), às movimentações de cargas e pessoas que
+acontecem nos PAs e próximo às áreas de expedição, a fim de evitar ser vítima
+ou causador de qualquer acidente. *','Ativo'),
+(2,14,20,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(2,14,21,'Presta suporte à liderança ao auditar e acompanhar os operadores dos P.A.s
+(transportadoras) e reportar ocorrências que demandem a interferência de um
+superior. *','Ativo'),
+(2,14,22,'Orienta de forma assertiva as pessoas da produção quando necessário, a fim de
+tratar e/ou apurar inconsistências. Exemplos: *','Ativo');
+
+#Avaliação de Desempenho - Operação ( evino ) - Auxiliar de Expedição - parte 2
+INSERT INTO AVAL_PERGUNTA( AVAL_TIPO_PERGUNTA_ID, CARGO_ID, ORDEM, PERGUNTA, SITUACAO)VALUES
+(3,14,1,'Demonstra ter domínio e conhecimentos de logística de armazém e distribuição.
+*','Ativo'),
+(3,14,2,'Demonstra conhecimento de Informática geral intermediário, ao lidar com
+ferramentas de e-mail, alimentação e leitura de planilhas, estruturação de
+apresentações básicas e microsoft word quando necessário. *','Ativo'),
+(3,14,3,'Utiliza de forma assertiva e eficiente as aplicações, necessárias ao desempenho
+de suas atribuições, dentro dos sistemas de informação que são disponibilizados
+(SAP, Looker, Zed, Evinops). *','Ativo'),
+(3,14,4,'Realiza uma comunicação oral assertiva, se fazendo entender com facilidade,
+objetividade e bom senso. *','Ativo'),
+(3,14,5,'Realiza uma comunicação escrita assertiva, via e-mail, chat interno ou
+documentações. Utiliza o canal escrito na hora certa, consegue se fazer
+entender e escreve com qualidade (potuação e gramática). *','Ativo'),
+(3,14,6,'Comunica-se com bom senso, empatia e transparência: levanta informações
+antes de tirar conclusões precipitadas, repassa informações assertivas,
+compartilha informações e envolve as pessoas certas nos assuntos certos. *','Ativo'),
+(3,14,7,'Prioriza as tarefas de forma eficiente, sendo capaz de se organizar para cumprir
+com suas atribuições dentro dos prazos e alcançar os objetivos da área. *','Ativo'),
+(3,14,8,'Mantém seu ambiente de trabalho, instrumentos e documentações bem
+organizados. *','Ativo'),
+(3,14,9,'Demonstra atenção e conhecimento em relação aos processos de segurança.
+Instrui a equipe a identificar e propor melhorias voltadas á segurança. *','Ativo'),
+(3,14,10,'Entende e soluciona os problemas que acontecem de forma lógica e assertiva. *','Ativo'),
+(3,14,11,'Tem a habilidade de analisar informações e tomar decisões diárias a fim de
+garantir o melhor resultado voltado para a organização. *','Ativo'),
+(4,14,12,'Refere-se à empresa como "nós". Demonstra brilhos nos olhos por fazer parte do
+time e transmite engajamento para a equipe. *','Ativo'),
+(4,14,13,'Pensa e atua levando em consideração a ótica do cliente e da empresa. "Veste a
+camisa" e coloca-se no lugar da empresa, demonstrando preocupação sobre a
+forma como ela será enxergada pelo cliente e pelo mercado. *','Ativo'),
+(4,14,14,'Fomenta uma boa imagem da empresa interna e externamente. Propõe
+melhorias e aponta soluções com responsabilidade. *','Ativo'),
+(4,14,15,'Demonstra atitude enérgica e dinâmica durante o trabalho. Antecipa-se aos
+possíveis problemas antes que aconteçam. É proativo e tem muita iniciativa. *','Ativo'),
+(4,14,16,'Cumpre prazos e responde prontamente às demandas que lhe são passadas.
+Não deixa nada para a última hora. *','Ativo'),
+(4,14,17,'Faz primeiro o que é mais urgente, antes que se torne um problema. Faz o que
+precisa ser feito, de forma ágil e dinâmica. *','Ativo'),
+(4,14,18,'Colabora para um bom clima e relacionamento da equipe. Trata aos colegas com
+respeito, educação e empatia. *','Ativo'),
+(4,14,19,'Orienta de forma assertiva as pessoas da equipe quando necessário, a fim de
+tratar e/ou apurar inconsistências. *','Ativo'),
+(4,14,20,'Presta suporte à equipe ao auditar e acompanhar a produção se fazendo
+presente e próximo quando necessário. *','Ativo');
+
+INSERT INTO AVAL_PERGUNTA_COM(AVAL_TIPO_ID, PERGUNTA, SITUACAO)VALUES
+(1,'Comente os pontos positivos e pontos de melhorias mais relevantes: *','Ativo'),
+(2,'Comente os pontos positivos e pontos de melhorias mais relevantes: *','Ativo');
+
+
