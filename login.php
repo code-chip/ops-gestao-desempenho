@@ -8,13 +8,14 @@ if(empty($_POST['usuario']) || empty($_POST['senha'])){
 //funcao p/ proteção de ataque sqlinject
 $usuario = mysqli_real_escape_string($phpmyadmin, $_POST['usuario']);
 $senha = mysqli_real_escape_string($phpmyadmin, $_POST['senha']);
-$query="SELECT ID, NOME, SENHA, PERMISSAO_ID, MATRICULA FROM USUARIO WHERE LOGIN='".$_POST['usuario']."' AND SENHA=md5('".$_POST['senha']."') AND SITUACAO<>'Desligado'";
+$query="SELECT ID, NOME, SENHA, CARGO_ID, PERMISSAO_ID, MATRICULA FROM USUARIO WHERE LOGIN='".$_POST['usuario']."' AND SENHA=md5('".$_POST['senha']."') AND SITUACAO<>'Desligado'";
 $result = mysqli_query($phpmyadmin, $query);
 $row = mysqli_num_rows($result);
 if($row == 1){//ADICIONAR INFORMAÇÕES DE ACESSO NA TABELA.
 	$cnx= $result->fetch_array();
 	$_SESSION["userId"]=$cnx["ID"];
 	$_SESSION["nameUser"]=$cnx["NOME"];
+	$_SESSION["cargo"]=$cnx["CARGO_ID"];
 	$_SESSION["permissao"]=$cnx["PERMISSAO_ID"];
 	$_SESSION["matriculaLogada"]=$cnx["MATRICULA"];
 	$countCheck="SELECT MAX(ACESSO_TOTAL) AS ACESSO_TOTAL FROM ACESSO WHERE USUARIO_ID=".$cnx["ID"].";";
