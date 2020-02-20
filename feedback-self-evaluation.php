@@ -1,10 +1,14 @@
 <?php
 $menuFeedback="is-active";
 include('menu.php');
-//$houveResposta[];
+$data=date('Y-m-d');
 $info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID=".$_SESSION["userId"];
 $cx=mysqli_query($phpmyadmin, $info);
 $cargo=$cx->fetch_array();
+//CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
+$checkInd="SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
+$cy=mysqli_query($phpmyadmin, $checkInd);
+$indice=$cy->fetch_array();
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,25 +31,21 @@ $cargo=$cx->fetch_array();
 	<div class="box is-size-7-touch">
 		<div><strong>Auto-avaliação</strong> <br>Aqui você deverá fazer  a sua auto avaliação sobre cada item abordado:</div>
 	</div><!--FINAL PERGUNTA TÉCNICA-->
-	<div class="box">Técnicas</div><?php $y=1;	
-	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=1 AND CARGO_ID=1 ORDER BY ORDEM;";//VERIFICA SE HÁ PERGUNTA PARA CARGO DO USUÁRIO.
+	<div class="box">Técnicas</div><?php $y=1;		
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=1 AND CARGO_ID=".$_SESSION["cargo"]." ORDER BY ORDEM;";//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
 	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
-		//CHECK SE A PERGUNTA FOI RESPONDIDA;
-		$checkInd="SELECT ID FROM AVAL_INDICE WHERE ID=".$_SESSION["userId"]." AND REGISTRO='".date('Y-m-d')."' AND SITUACAO<>'Finalizado';";
-		$cnx5=mysqli_query($phpmyadmin, $checkInd);
-		$indice=$cnx5->fetch_array();
-		$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$indice["ID"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1]." AND REGISTRO='".date('Y-m-d')."';";
-		$cnx2=mysqli_query($phpmyadmin, $verifResposta);
-		if(mysqli_num_rows($cnx2)>0){
-			$houveResposta[$y-1]=true;
+		if(mysqli_num_rows($cy)>0){
+			$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$indice["ID"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1].";";
+			$cnx2=mysqli_query($phpmyadmin, $verifResposta);
+			$houveResposta=true;
 			$getRes=$cnx2->fetch_array();
 			$getIdResposta=$getRes["AVAL_RESPOSTA_ID"];
 			$selecao="CHECKED";
 		}
 		else{
 			$selecao=null;
-			$houveResposta[$y-1]=false;
+			$houveResposta=false;
 		}
 		?>
 	<div class="box">	
@@ -65,25 +65,23 @@ $cargo=$cx->fetch_array();
 		</div>
 		<?php	$x++;} ?>		
 	</div>
-<?php $y++;}endwhile;?>
-	<!--PERGUNTA COMPORTAMENTAL-->
+<?php $y++;}endwhile;?>	<!--PERGUNTA COMPORTAMENTAL-->
 	<div class="box">Comportamentais</div><?php
-	//$y=1;	
 	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=2 AND CARGO_ID=1 ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
-	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
-		//CHECK SE A PERGUNTA FOI RESPONDIDA;
-		$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$indice["ID"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1]." AND REGISTRO='".date('Y-m-d')."';";
-		$cnx2=mysqli_query($phpmyadmin, $verifResposta);
-		if(mysqli_num_rows($cnx2)>0){
-			$houveResposta[$y-1]=true;
+	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];		
+		if(mysqli_num_rows($cy)>0){
+			//CHECK SE A PERGUNTA FOI RESPONDIDA;
+			$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$indice["ID"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1].";";
+		    $cnx2=mysqli_query($phpmyadmin, $verifResposta);
+			$houveResposta=true;
 			$getRes=$cnx2->fetch_array();
 			$getIdResposta=$getRes["AVAL_RESPOSTA_ID"];
 			$selecao="CHECKED";
 		}
 		else{
 			$selecao=null;
-			$houveResposta[$y-1]=false;
+			$houveResposta=false;
 		}
 		?>
 	<div class="box">	
@@ -140,14 +138,11 @@ if(isset($_POST['proxima'])){
 		}
 		$z++;			
 	}//CONSULTA SE HÁ REGISTRO DE AVALIAÇÃO NESTE DIA.
-	$checkInd="SELECT ID FROM AVAL_INDICE WHERE ID=".$_SESSION["userId"]." AND REGISTRO='".date('Y-m-d')."' AND SITUACAO<>'Finalizado';";
-	$cnx5=mysqli_query($phpmyadmin, $checkInd);
-	$indice=$cnx5->fetch_array();
-	if(mysqli_num_rows($cnx5)==0){
-		$upInd="INSERT INTO AVAL_INDICE(USUARIO_ID,REGISTRO,SITUACAO) VALUES(".$_SESSION["userId"].",'".date('Y-m-d')."','Iniciado')";
+	if(mysqli_num_rows($cy)==0){
+		$upInd="INSERT INTO AVAL_INDICE(USUARIO_ID,REGISTRO,SITUACAO) VALUES(".$_SESSION["userId"].",'".$data."','Iniciado')";
 		mysqli_query($phpmyadmin, $upInd);
 		//SALVA CHAVE DO INDICE.
-		$checkInd="SELECT ID FROM AVAL_INDICE WHERE ID=".$_SESSION["userId"]." AND REGISTRO='".date('Y-m-d')."' AND SITUACAO<>'Finalizado';";
+		$checkInd="SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
 		$cnx5=mysqli_query($phpmyadmin, $checkInd);
 		$indice=$cnx5->fetch_array();
 		$idInd=$indice["ID"];
@@ -155,32 +150,28 @@ if(isset($_POST['proxima'])){
 	else{//SALVA CHAVE DO INDICE.
 		$idInd=$indice["ID"];
 	}	
-	for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE PELAS QUESTÕES.
-		if($houveResposta[$i]==true){//CHECK SE HÁ ALGUMA PERGUNTA RESPONDIDA.	
-			$verifResposta="SELECT ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$idInd." AND AVAL_PERGUNTA_ID=".$idPergunta[$i]." AND REGISTRO='".date('Y-m-d')."';";	
+	if($houveResposta==true){//SE JÁ HOUVE RESPOSTA, ATUALIZA.	
+		for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE AS QUESTÕES.
+			$verifResposta="SELECT ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$idInd." AND AVAL_PERGUNTA_ID=".$idPergunta[$i].";";	
 			$cnx4=mysqli_query($phpmyadmin, $verifResposta);
-			if(mysqli_num_rows($cnx4)==1){//CASO O USUÁRIO JÁ RESPONDEU ALGUMA PERGUNTA, ATUALIZA AS RESPOSTAS.			
+			if(mysqli_num_rows($cnx4)>0){
 				$getRes=$cnx4->fetch_array();
 				$atualiza="UPDATE AVAL_REALIZADA SET AVAL_RESPOSTA_ID=".$resposta[$i]." WHERE ID=".$getRes["ID"].";";
+				mysqli_query($phpmyadmin, $atualiza);
 			}
-			else{
-				$atualiza="INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID, REGISTRO) VALUES(".$idInd.", ".$idPergunta[$i].",".$resposta[$i].", '".date('Y-m-d')."');";
-			}
-			$cnx=mysqli_query($phpmyadmin, $atualiza);				
-		}
-		else{			
-			//for($i=0 ;$i<sizeof($resposta);$i++){//INSERE NO BANCO OS ID'S DAS PERGUNTAS E RESPOSTAS.
-			$salvar="INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID, REGISTRO) VALUES(".$idInd.", ".$idPergunta[$i].",".$resposta[$i].", '".date('Y-m-d')."');";
-			echo $salvar;
-			$cnx5=mysqli_query($phpmyadmin, $salvar);
-		}
+		}					
 	}
-	
+	else{
+		for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE PELAS QUESTÕES.			
+			$salvar="INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID) VALUES(".$idInd.", ".$idPergunta[$i].",".$resposta[$i].");";
+			mysqli_query($phpmyadmin, $salvar);
+		}
+	}	
 	$respostaNula=$respostaNula-1;
 	if($respostaNula>0){?>
 		<script type="text/javascript">
-			//alert('Atenção a respostas de todas perguntas são obrigatórias!');
-			//window.location.href=window.location.href;
+			alert('Atenção a respostas de todas perguntas são obrigatórias!');
+			window.location.href=window.location.href;
 		</script><?php	
 	}
 	else{?>
