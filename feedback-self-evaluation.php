@@ -174,8 +174,10 @@ if(isset($_POST['proxima'])){
 			window.location.href=window.location.href;
 		</script><?php	
 	}
-	else{?>
-		<script type="text/javascript">
+	else{
+		$upInd="UPDATE AVAL_INDICE SET SITUACAO='Aval. Líder' WHERE ID=".$idInd;
+		mysqli_query($phpmyadmin, $upInd);
+		?><script type="text/javascript">
 			window.location.href="feedback-technical-evaluation.php";
 		</script><?php	
 	}
