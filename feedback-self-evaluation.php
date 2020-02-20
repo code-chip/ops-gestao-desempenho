@@ -67,7 +67,7 @@ $indice=$cy->fetch_array();
 	</div>
 <?php $y++;}endwhile;?>	<!--PERGUNTA COMPORTAMENTAL-->
 	<div class="box">Comportamentais</div><?php
-	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=2 AND CARGO_ID=1 ORDER BY ORDEM;";
+	$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=2 AND CARGO_ID=".$_SESSION["cargo"]." ORDER BY ORDEM;";
 	$cnx=mysqli_query($phpmyadmin, $getPergunta);
 	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];		
 		if(mysqli_num_rows($cy)>0){
