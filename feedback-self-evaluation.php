@@ -101,12 +101,22 @@ $indice=$cy->fetch_array();
 		</div>
 		<?php	$x++;} ?>		
 	</div>
-<?php $y++;}endwhile;?><!--FINAL PERGUNTA COMPORTAMENTAL-->
+<?php $y++;}endwhile; //<!--FINAL PERGUNTA COMPORTAMENTAL-->
+	$getPerComentario="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=1 AND SITUACAO='Ativo'";
+	$cnx7=mysqli_query($phpmyadmin, $getPerComentario);
+	$getComentario=$cnx7->fetch_array();
+	if($houveResposta==true){
+		$getResComentario="SELECT COMENTARIO FROM AVAL_COMENTARIO WHERE AVAL_PERGUNTA_COM_ID=".$getComentario["ID"]." AND AVAL_INDICE_ID=".$indice["ID"].";";
+		echo $getResComentario;
+		$cnx8=mysqli_query($phpmyadmin, $getResComentario);
+		$getCom=$cnx8->fetch_array();
+	}
+?>
 	<div class="box">	
 		<div class="field">
-		  	<label class="label">Comente os pontos positivos e pontos de melhorias mais relevantes: *</label>
+		  	<label class="label"><?php echo $getComentario["PERGUNTA"];?></label>
 		  	<div class="control">
-		    	<textarea name="comentario" class="textarea" placeholder="Sua resposta" maxlength="500"></textarea>
+		    	<textarea name="comentario" class="textarea" placeholder="Sua resposta" maxlength="500"><?php echo $getCom["COMENTARIO"];?></textarea>
 		  	</div>
 		</div>
 		<div class="field is-grouped">
@@ -151,9 +161,10 @@ if(isset($_POST['proxima'])){
 		$idInd=$indice["ID"];
 	}	
 	if($houveResposta==true){//SE JÁ HOUVE RESPOSTA, ATUALIZA.	
-		for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE AS QUESTÕES.
+		for($i=0 ;$i<sizeof($resposta)-1;$i++){//PERCORRE AS QUESTÕES.
 			$verifResposta="SELECT ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$idInd." AND AVAL_PERGUNTA_ID=".$idPergunta[$i].";";	
 			$cnx4=mysqli_query($phpmyadmin, $verifResposta);
+			echo $verifResposta;
 			if(mysqli_num_rows($cnx4)>0){
 				$getRes=$cnx4->fetch_array();
 				$atualiza="UPDATE AVAL_REALIZADA SET AVAL_RESPOSTA_ID=".$resposta[$i]." WHERE ID=".$getRes["ID"].";";
@@ -166,13 +177,31 @@ if(isset($_POST['proxima'])){
 			$salvar="INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID) VALUES(".$idInd.", ".$idPergunta[$i].",".$resposta[$i].");";
 			mysqli_query($phpmyadmin, $salvar);
 		}
-	}	
+	}//VERIFICAÇÃO DO COMENTÁRIO.
+	$checkComentario="SELECT ID FROM AVAL_COMENTARIO WHERE AVAL_PERGUNTA_COM_ID=(SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=1 AND SITUACAO='Ativo') AND AVAL_INDICE_ID=".$idInd;
+	$cnx6=mysqli_query($phpmyadmin, $checkComentario);
+	if(mysqli_num_rows($cnx6)==0 && $comentario!=null){
+		$insCom="INSERT INTO AVAL_COMENTARIO(AVAL_INDICE_ID, AVAL_PERGUNTA_COM_ID, COMENTARIO) VALUES(".$idInd.", (SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=1 AND SITUACAO='Ativo'),'".$comentario."')";
+		mysqli_query($phpmyadmin, $insCom);
+		$houveComentario=true;
+	}
+	else if(mysqli_num_rows($cnx6)==1 && $comentario!=null){
+		$idComentario=$cnx6->fetch_array();
+		$insCom="UPDATE AVAL_COMENTARIO SET COMENTARIO='".$comentario."' WHERE ID=".$idComentario["ID"];
+		mysqli_query($phpmyadmin, $insCom);
+	}
 	$respostaNula=$respostaNula-1;
 	if($respostaNula>0){?>
 		<script type="text/javascript">
-			alert('Atenção a respostas de todas perguntas são obrigatórias!');
+			alert('Atenção todas respostas são obrigatórias!');
 			window.location.href=window.location.href;
 		</script><?php	
+	}
+	else if($respostaNula==0 && $comentario==null){?>
+		<script type="text/javascript">
+			alert('Preenchimento do comentário é obrigatório!');
+			window.location.href=window.location.href;
+		</script><?php
 	}
 	else{
 		$upInd="UPDATE AVAL_INDICE SET SITUACAO='Aval. Líder' WHERE ID=".$idInd;
