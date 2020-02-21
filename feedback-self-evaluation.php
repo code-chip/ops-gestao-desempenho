@@ -121,7 +121,7 @@ $indice=$cy->fetch_array();
 		</div>
 		<div class="field is-grouped">
 		  	<div class="control">
-		    	<button class="button is-link">Cancelar</button>
+		    	<a href="home.php"><button class="button is-link">Cancelar</button></a>
 		  	</div>
 		  	<div class="control">
 		    	<button class="button is-link is-light" name="proxima" type="submit">Próxima</button>
