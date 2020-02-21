@@ -1,6 +1,8 @@
 <?php 
 $menuFeedback="is-active";
 include('menu.php');
+$n=rand(1,13);
+$img="img/wallpaper/evaluation".$n."-min.jpg";
 ?>
 <style type="text/css">
 	.transparencia {
@@ -9,7 +11,6 @@ include('menu.php');
      -moz-opacity:0.8;
      -webkit-opacity:0.8;
 }
-
 </style>
 <!DOCTYPE html>
 <html>
@@ -25,7 +26,7 @@ include('menu.php');
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
-	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/teste2.jpg" />
+	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
 	    		<div class="box transparencia bloco">
