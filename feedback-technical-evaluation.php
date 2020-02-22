@@ -1,15 +1,17 @@
 <?php
 $menuFeedback="is-active";
 include('menu.php');
-$houveResposta=false;
 $data=date('Y-m-d');
 $info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID=".$_SESSION["userId"];
 $cx=mysqli_query($phpmyadmin, $info);
 $cargo=$cx->fetch_array();
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$checkInd="SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
+$checkInd="SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."';";
 $cy=mysqli_query($phpmyadmin, $checkInd);
 $indice=$cy->fetch_array();
+if($indice["SITUACAO"]=="Finalizado"){
+	echo "<script>alert('Avaliação já realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,7 +40,6 @@ $indice=$cy->fetch_array();
 	while ($pergunta=$cnx->fetch_array()):{ $questao="questao".$y; $idPergunta[$y-1]=$pergunta["ID"];
 		if($indice["SITUACAO"]=="Lider"){
 			$verifResposta="SELECT AVAL_RESPOSTA_ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$indice["ID"]." AND AVAL_PERGUNTA_ID=".$idPergunta[$y-1].";";
-			echo $verifResposta;
 			$cnx2=mysqli_query($phpmyadmin, $verifResposta);
 			$houveResposta=true;
 			$getRes=$cnx2->fetch_array();
@@ -200,14 +201,14 @@ if(isset($_POST['enviar'])){
 	$respostaNula=$respostaNula-1;
 	if($respostaNula>0){?>
 		<script type="text/javascript">
-			//alert('Atenção todas respostas são obrigatórias!');
-			//window.location.href=window.location.href;
+			alert('Atenção todas respostas são obrigatórias!');
+			window.location.href=window.location.href;
 		</script><?php	
 	}
 	else if($respostaNula==0 && $comentario==null){?>
 		<script type="text/javascript">
-			//alert('Preenchimento do comentário é obrigatório!');
-			//window.location.href=window.location.href;
+			alert('Preenchimento do comentário é obrigatório!');
+			window.location.href=window.location.href;
 		</script><?php
 	}
 	else{
