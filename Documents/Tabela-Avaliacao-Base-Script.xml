@@ -1,3 +1,10 @@
+CREATE TABLE AVAL_PERIODO (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  INICIO DATE NULL,
+  FIM INTEGER UNSIGNED NULL,
+  PRIMARY KEY(ID)
+);
+
 CREATE TABLE AVAL_TIPO (
   ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   TIPO VARCHAR(15) NULL,
@@ -768,5 +775,6 @@ presente e próximo quando necessário. *','Ativo');
 INSERT INTO AVAL_PERGUNTA_COM(AVAL_TIPO_ID, PERGUNTA, SITUACAO)VALUES
 (1,'Comente os pontos positivos e pontos de melhorias mais relevantes: *','Ativo'),
 (2,'Comente os pontos positivos e pontos de melhorias mais relevantes: *','Ativo');
+
 
 
