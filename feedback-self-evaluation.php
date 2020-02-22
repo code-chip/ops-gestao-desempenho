@@ -6,7 +6,7 @@ $info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHE
 $cx=mysqli_query($phpmyadmin, $info);
 $cargo=$cx->fetch_array();
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$checkInd="SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
+$checkInd="SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
 $cy=mysqli_query($phpmyadmin, $checkInd);
 $indice=$cy->fetch_array();
 ?>
@@ -107,7 +107,6 @@ $indice=$cy->fetch_array();
 	$getComentario=$cnx7->fetch_array();
 	if($houveResposta==true){
 		$getResComentario="SELECT COMENTARIO FROM AVAL_COMENTARIO WHERE AVAL_PERGUNTA_COM_ID=".$getComentario["ID"]." AND AVAL_INDICE_ID=".$indice["ID"].";";
-		echo $getResComentario;
 		$cnx8=mysqli_query($phpmyadmin, $getResComentario);
 		$getCom=$cnx8->fetch_array();
 	}
@@ -124,7 +123,7 @@ $indice=$cy->fetch_array();
 		    	<a href="home.php"><button class="button is-link">Cancelar</button></a>
 		  	</div>
 		  	<div class="control">
-		    	<button class="button is-link is-light" name="proxima" type="submit">Próxima</button>
+		    	<input type="button" name="proxima" class="button is-link is-light" value="Próxima" onclick="window.location.href='feedback-technical-evaluation.php'">
 		  	</div>
 		</div>
 	</div>									
@@ -164,7 +163,6 @@ if(isset($_POST['proxima'])){
 		for($i=0 ;$i<sizeof($resposta)-1;$i++){//PERCORRE AS QUESTÕES.
 			$verifResposta="SELECT ID FROM AVAL_REALIZADA WHERE AVAL_INDICE_ID=".$idInd." AND AVAL_PERGUNTA_ID=".$idPergunta[$i].";";	
 			$cnx4=mysqli_query($phpmyadmin, $verifResposta);
-			echo $verifResposta;
 			if(mysqli_num_rows($cnx4)>0){
 				$getRes=$cnx4->fetch_array();
 				$atualiza="UPDATE AVAL_REALIZADA SET AVAL_RESPOSTA_ID=".$resposta[$i]." WHERE ID=".$getRes["ID"].";";
@@ -173,7 +171,7 @@ if(isset($_POST['proxima'])){
 		}					
 	}
 	else{
-		for($i=0 ;$i<sizeof($resposta);$i++){//PERCORRE PELAS QUESTÕES.			
+		for($i=0 ;$i<sizeof($resposta)-1;$i++){//PERCORRE PELAS QUESTÕES.			
 			$salvar="INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID) VALUES(".$idInd.", ".$idPergunta[$i].",".$resposta[$i].");";
 			mysqli_query($phpmyadmin, $salvar);
 		}
@@ -204,8 +202,10 @@ if(isset($_POST['proxima'])){
 		</script><?php
 	}
 	else{
-		$upInd="UPDATE AVAL_INDICE SET SITUACAO='Aval. Líder' WHERE ID=".$idInd;
-		mysqli_query($phpmyadmin, $upInd);
+		if($indice["SITUACAO"]!="Lider"){
+			$upInd="UPDATE AVAL_INDICE SET SITUACAO='Auto' WHERE ID=".$idInd;
+			mysqli_query($phpmyadmin, $upInd);
+		}
 		?><script type="text/javascript">
 			window.location.href="feedback-technical-evaluation.php";
 		</script><?php	
