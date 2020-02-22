@@ -6,9 +6,12 @@ $info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHE
 $cx=mysqli_query($phpmyadmin, $info);
 $cargo=$cx->fetch_array();
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$checkInd="SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."' AND SITUACAO<>'Finalizado';";
+$checkInd="SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID=".$_SESSION["userId"]." AND REGISTRO='".$data."';";
 $cy=mysqli_query($phpmyadmin, $checkInd);
 $indice=$cy->fetch_array();
+if($indice["SITUACAO"]=="Finalizado"){
+	echo "<script>alert('Avaliação já realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
+}
 ?>
 <!DOCTYPE html>
 <html>
