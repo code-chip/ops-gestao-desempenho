@@ -3,6 +3,9 @@ $menuFeedback="is-active";
 include('menu.php');
 $n=rand(1,13);
 $img="img/wallpaper/evaluation".$n."-min.jpg";
+if(isset($_POST["iniciar"]) && $_POST["concordo"]!=null){
+	header("Refresh:0.01;url=feedback-self-evaluation.php");
+}
 ?>
 <style type="text/css">
 	.transparencia {
@@ -29,6 +32,7 @@ $img="img/wallpaper/evaluation".$n."-min.jpg";
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
+	    		<form method="POST">
 	    		<div class="box transparencia bloco">
 	    			<strong>Orientações da Avaliação</strong>
 	    			<div class="box antitransparencia">
@@ -41,20 +45,21 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 		    	<div class="field">
 				<div class="control">
 				    <label class="checkbox">
-					    <input type="checkbox">
+					    <input type="checkbox" name="concordo">
 				      Eu li e concordo com as orientações
 				    </label>
 				</div>
 				</div>
 				<div class="field is-grouped">
 				  	<div class="control">
-				    	<a href="feedback-self-evaluation.php"><button class="button is-link">Iniciar</button></a>
+				    	<button class="button is-link" name="iniciar">Iniciar</button>
 				  	</div>
 				  	<div class="control">
 				    	<a href="home.php"><button class="button is-link is-light">Cancelar</button></a>
 				  	</div>
 				</div> 
 				</div>
+				</form>
 	    	</div>
 	  	</div>
 	</div>
