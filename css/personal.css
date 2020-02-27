@@ -1,5 +1,5 @@
 img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"]{
-			display:none;
+	display:none;
 }
 .table__wrapper {
   	overflow-x: auto;
@@ -26,4 +26,10 @@ img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost
 }
 .minhaTabela.th{
 	max-width:7em;
+}
+.transparencia {
+    filter:alpha(opacity=80);
+    opacity: 0.8;
+    -moz-opacity:0.8;
+    -webkit-opacity:0.8;
 }
