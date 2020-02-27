@@ -7,23 +7,15 @@ if(isset($_POST["iniciar"]) && $_POST["concordo"]!=null){
 	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 }
 ?>
-<style type="text/css">
-	.transparencia {
-     filter:alpha(opacity=80);
-     opacity: 0.8;
-     -moz-opacity:0.8;
-     -webkit-opacity:0.8;
-}
-</style>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Atualizar Cargo</title>
+	<title>Gestão de Desempenho - Orientações da Avaliação</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
-	<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
+	<link rel="stylesheet" href="css/personal.css"/>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
