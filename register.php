@@ -65,10 +65,10 @@ include('menu.php');
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Avaliação</a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Avaliação</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Avaliação</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Avaliação</span></a>&nbsp&nbsp&nbsp		
+		<a href="question-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Pergunta</a>&nbsp&nbsp&nbsp
+		<a href="question-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Pergunta</span></a>&nbsp&nbsp&nbsp
+		<a href="question-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Pergunta</span></a>&nbsp&nbsp&nbsp
+		<a href="question-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Pergunta</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <!--<br/>
