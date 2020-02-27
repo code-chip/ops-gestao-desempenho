@@ -1,6 +1,4 @@
 <?php 
-//session_start();
-//include('login-check.php');
 $menuConfiguracoes="is-active";
 include('menu.php');
 ?>
