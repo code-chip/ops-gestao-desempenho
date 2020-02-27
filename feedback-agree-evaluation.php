@@ -4,7 +4,7 @@ include('menu.php');
 $n=rand(1,13);
 $img="img/wallpaper/evaluation".$n."-min.jpg";
 if(isset($_POST["iniciar"]) && $_POST["concordo"]!=null){
-	header("Refresh:0.01;url=feedback-self-evaluation.php");
+	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 }
 ?>
 <style type="text/css">
