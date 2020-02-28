@@ -7,7 +7,7 @@ include('menu.php');
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Opções de Configurações</title>
+	<title>Gestão de Desempenho - Opções Habilitadas</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/personal.css">
@@ -16,68 +16,111 @@ include('menu.php');
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
-	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/options.jpg" />
+	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/options.jpg"/>
 	  	<div class="hero-body">
 	    	<div class="container">
-	    		<div class="box transparenci">		     	
-				<div class="field">
-					<div class="control">
-					    <label class="is-size-5">
-					     Dashboard
-					    </label>
-					</div>					
-  					<div class="control">
+	    		<div class="box">
+	    		<div class="columns">
+					<div class="column">
+					    <label class="is-size-5"><strong>Meta</strong></label>
 					    <input id="switch-shadow0" class="switch switch--shadow" type="checkbox" CHECKED>
 				  		<label for="switch-shadow0"></label>				    
-					</div>
-					<div class="control">
-					    <label class="is-size-5">
-					     Meta
-					    </label>
-					</div>					
-  					<div class="control">
+					    <label class="is-size-5">Consultar</label>
 					    <input id="switch-flat0" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat0"></label>			    
-					</div>
-					<div class="control">
-					    <label class="is-size-5">
-					     Desempenho
-					    </label>
-					</div>					
-  					<div class="control">
+					    <label class="is-size-5">Inserir</label>
 					    <input id="switch-shadow1" class="switch switch--shadow" type="checkbox" CHECKED>
-				  		<label for="switch-shadow1"></label>				    
-					</div>
-					<div class="control">
-					    <label class="is-size-5">
-					     Feedback
-					    </label>
-					</div>					
-  					<div class="control">
+				  		<label for="switch-shadow1"></label>   
+				  		<label class="is-size-5">Atualizar</label>
 					    <input id="switch-flat1" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat1"></label>			    
-					</div>
-					<div class="control">
-					    <label class="is-size-5">
-					     Avaliação
-					    </label>
-					</div>					
-  					<div class="control">
+					    <label class="is-size-5">Remover</label>
 					    <input id="switch-shadow2" class="switch switch--shadow" type="checkbox" CHECKED>
 				  		<label for="switch-shadow2"></label>				    
-					</div>
-					<div class="control">
-					    <label class="is-size-5">
-					     Relatórios
-					    </label>
-					</div>					
-  					<div class="control">
+					    <label class="is-size-5">Pedente</label>
 					    <input id="switch-flat2" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat2"></label>			    
 					</div>
+					<div class="column">
+					    <label class="is-size-5"><strong>Desempenho</strong></label>
+					    <input id="switch-shadow3" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow3"></label>				    
+					    <label class="is-size-5">Consultar</label>
+					    <input id="switch-flat3" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat3"></label>			    
+					    <label class="is-size-5">Inserir</label>
+					    <input id="switch-shadow4" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow4"></label>   
+				  		<label class="is-size-5">Atualizar</label>
+					    <input id="switch-flat4" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat4"></label>			    
+					    <label class="is-size-5">Remover</label>
+					    <input id="switch-shadow6" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow6"></label>				    
+					    <label class="is-size-5">Pedente</label>
+					    <input id="switch-flat6" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat6"></label>			    
+					</div>
+					<div class="column">
+					    <label class="is-size-5"><strong>Feedback</strong></label>
+					    <input id="switch-shadow7" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow7"></label>				    
+					    <label class="is-size-5">Aprovar</label>
+					    <input id="switch-flat7" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat7"></label>			    
+					    <label class="is-size-5">Enviar</label>
+					    <input id="switch-shadow8" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow8"></label>   
+				  		<label class="is-size-5">Solicitar</label>
+					    <input id="switch-flat8" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat8"></label>			    
+					    <label class="is-size-5">Consultar</label>
+					    <input id="switch-shadow9" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow9"></label>				    
+					    <label class="is-size-5">Avaliação</label>
+					    <input id="switch-flat9" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat9"></label>			    
+					</div>
+					<div class="column">
+					    <label class="is-size-5"><strong>Dashboard</strong></label>
+					    <input id="switch-shadow10" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow10"></label>				    
+					    <label class="is-size-5"><strong>Relatórios</strong></label>
+					    <input id="switch-flat10" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat10"></label>			    
+					    <label class="is-size-5">Gestão</label>
+					    <input id="switch-shadow11" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow11"></label>   
+				  		<label class="is-size-5">Individual</label>
+					    <input id="switch-flat11" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat11"></label>
+				  		<label class="is-size-5">SQL</label>
+					    <input id="switch-shadow12" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow12"></label>			    
+					</div>
+					<div class="column">
+					    <label class="is-size-5"><strong>Configurações</strong></label>
+					    <input id="switch-shadow13" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow13"></label>				    
+					    <label class="is-size-5">Cadastro</label>
+					    <input id="switch-flat12" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat12"></label>			    
+					    <label class="is-size-5">Backup</label>
+					    <input id="switch-shadow14" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow14"></label>   
+				  		<label class="is-size-5">Reportar</label>
+					    <input id="switch-flat13" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat13"></label>			    
+					    <label class="is-size-5">Remover</label>
+					    <input id="switch-shadow15" class="switch switch--shadow" type="checkbox" CHECKED>
+				  		<label for="switch-shadow15"></label>				    
+					    <label class="is-size-5">Pedente</label>
+					    <input id="switch-flat14" class="switch switch--flat" type="checkbox">
+				  		<label for="switch-flat14"></label>			    
+					</div>
 				</div>
-				</div>
-	    	</div>
+	    		</div>
+	    	</div>	
 	  	</div>
 	</div>
 </body>
