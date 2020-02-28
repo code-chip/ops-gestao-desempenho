@@ -78,11 +78,12 @@ $menuConfiguracoes;
 						<div class="navbar-dropdown">
 							<a href="report-query.php" class="navbar-item hvr-grow">Consultar</a>
 							<a href="report-insert.php" class="navbar-item hvr-grow">Inserir</a>
-							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>							
+							<a href="report-update.php" class="navbar-item hvr-grow">Atualizar</a>					
 							<?php if($_SESSION["permissao"]>2):{?><a href="report-remove.php" class="navbar-item hvr-grow">Remover</a><?php }endif;?>
 							<a href="report-pedant.php" class="navbar-item hvr-grow">Pedente</a>
 						</div>
 					</div><?php }endif;?>
+					<?php if($_SESSION["permissao"]>2):{?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link <?php echo $menuFeedback?> hvr-grow">Feedback</a>					
 						<div class="navbar-dropdown">
@@ -94,7 +95,7 @@ $menuConfiguracoes;
 							<a href="feedback-query.php" class="navbar-item hvr-grow">Consultar</a>
 							<a href="feedback-agree-evaluation.php" class="navbar-item hvr-grow">Avaliação</a>
 						</div>
-					</div>
+					</div><?php }endif;?>
 					<div href="#" class="navbar-item has-dropdown is-hoverable">
 						<a href="#" class="navbar-link <?php echo $menuRelatorio?> hvr-grow">Relatórios</a>					
 						<div class="navbar-dropdown">
@@ -107,7 +108,7 @@ $menuConfiguracoes;
 			     	<a class="navbar-link <?php echo $menuConfiguracoes?> hvr-grow">Configurações</a>
 			        <div class="navbar-dropdown">
 				        <a href="register.php" class="navbar-item hvr-grow">Cadastro</a>
-				        <?php if($_SESSION["permissao"]!=1):?><a class="navbar-item hvr-grow">Permissões</a><?php endif;?>
+				        <?php if($_SESSION["permissao"]!=1):?><a href="options.php" class="navbar-item hvr-grow">Opções</a><?php endif;?>
 				        <?php if($_SESSION["permissao"]==4):?><a href="backup.php" class="navbar-item hvr-grow">Backup</a><?php endif;?>
 				        <!--<a class="navbar-item hvr-grow">Tema</a>-->
 				        <hr class="navbar-divider hvr-grow">
