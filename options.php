@@ -13,6 +13,24 @@ include('menu.php');
 	<link rel="stylesheet" href="css/personal.css">
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(".meses").click(function(){
+		  let meses = document.querySelectorAll(".meses");
+		  for (let i = 0; i < meses.length; i++) {
+		    if (meses[i].checked && i+1 < meses.length){
+		      meses[i+1].removeAttribute("disabled");
+		    } else {
+		      if (i+1 < meses.length) {
+		        for (let j = i+1; j < meses.length; j++) {
+		          meses[j].checked = false;
+		          meses[j].setAttribute("disabled", "true");
+		        }
+		      }
+		    }
+		  }
+		});
+	</script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -22,24 +40,21 @@ include('menu.php');
 	    		<div class="box">
 	    		<div class="columns">
 					<div class="column">
-					    <label class="is-size-5"><strong>Meta</strong></label>
+					    <label class="meses is-size-5"><strong>Meta</strong></label>
 					    <input id="switch-shadow0" class="switch switch--shadow" type="checkbox" CHECKED>
 				  		<label for="switch-shadow0"></label>				    
-					    <label class="is-size-5">Consultar</label>
+					    <label class="meses is-size-5">Consultar</label>
 					    <input id="switch-flat0" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat0"></label>			    
-					    <label class="is-size-5">Inserir</label>
+					    <label class="meses is-size-5">Inserir</label>
 					    <input id="switch-shadow1" class="switch switch--shadow" type="checkbox" CHECKED>
 				  		<label for="switch-shadow1"></label>   
-				  		<label class="is-size-5">Atualizar</label>
+				  		<label class="meses is-size-5">Atualizar</label>
 					    <input id="switch-flat1" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat1"></label>			    
-					    <label class="is-size-5">Remover</label>
+					    <label class="meses is-size-5">Remover</label>
 					    <input id="switch-shadow2" class="switch switch--shadow" type="checkbox" CHECKED>
-				  		<label for="switch-shadow2"></label>				    
-					    <label class="is-size-5">Pedente</label>
-					    <input id="switch-flat2" class="switch switch--flat" type="checkbox">
-				  		<label for="switch-flat2"></label>			    
+				  		<label for="switch-shadow2"></label>    
 					</div>
 					<div class="column">
 					    <label class="is-size-5"><strong>Desempenho</strong></label>
@@ -105,18 +120,15 @@ include('menu.php');
 					    <label class="is-size-5">Cadastro</label>
 					    <input id="switch-flat12" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat12"></label>			    
-					    <label class="is-size-5">Backup</label>
+					    <label class="is-size-5">Opções</label>
 					    <input id="switch-shadow14" class="switch switch--shadow" type="checkbox" CHECKED>
 				  		<label for="switch-shadow14"></label>   
-				  		<label class="is-size-5">Reportar</label>
+				  		<label class="is-size-5">Backup</label>
 					    <input id="switch-flat13" class="switch switch--flat" type="checkbox">
 				  		<label for="switch-flat13"></label>			    
-					    <label class="is-size-5">Remover</label>
+					    <label class="is-size-5">Reportar</label>
 					    <input id="switch-shadow15" class="switch switch--shadow" type="checkbox" CHECKED>
-				  		<label for="switch-shadow15"></label>				    
-					    <label class="is-size-5">Pedente</label>
-					    <input id="switch-flat14" class="switch switch--flat" type="checkbox">
-				  		<label for="switch-flat14"></label>			    
+				  		<label for="switch-shadow15"></label>
 					</div>
 				</div>
 	    		</div>
