@@ -70,13 +70,21 @@ include('menu.php');
 		<a href="question-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Pergunta</span></a>&nbsp&nbsp&nbsp
 		<a href="question-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Pergunta</span></a>&nbsp&nbsp&nbsp		
 	</div>	
-</div>
+</div><br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Menu</span></a>&nbsp&nbsp&nbsp
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Menu</span></a>&nbsp&nbsp&nbsp
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Menu</span></a>&nbsp&nbsp&nbsp
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Menu</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div><br/>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Mensagem</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Mensagem</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Mensagem</span></a>&nbsp&nbsp&nbsp
+		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Mensagem</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <!--<br/>
