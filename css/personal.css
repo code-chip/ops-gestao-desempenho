@@ -33,3 +33,99 @@ img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost
     -moz-opacity:0.8;
     -webkit-opacity:0.8;
 }
+/* Estilo iOS reference willianjusten.com.br/criando-um-switch-button-com-css*/
+.switch__container {
+  margin: 30px auto;
+  width: 120px;
+}
+
+.switch {/*esconder o checkbox feio e jogá-lo para fora da tela.*/
+  visibility: hidden;
+  position: absolute;
+  margin-left: -9999px;
+}
+
+.switch + label {/*deixar o elemento ali "clicável" usando a propriedade cursor: pointer, também remove a opção de selecionar a label com o user-select: none e deixa ele como um elemento de bloco, para que possamos botar tamanho e estilo.*/
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.switch--shadow + label {/*criação do desenho*/
+  padding: 2px;
+  width: 60px;
+  height: 30px;
+  background-color: #dddddd;
+  border-radius: 60px;
+}
+.switch--shadow + label:before,
+.switch--shadow + label:after {/*seletor :before, que vai ser responsável por fazer a transição entre o cinza e o fundo verde. E vamos usar o seletor :after para criar a bolinha, que irá de um lado para o outro.*/
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  content: "";
+}
+.switch--shadow + label:before {/**/
+  right: 1px;
+  background-color: #f1f1f1;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--shadow + label:after {/**/
+  width: 31px;/*Largura da bolinha*/
+  background-color: #fff;
+  border-radius: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s;
+}
+.switch--shadow:checked + label:before {/**/
+  background-color: #8ce196;
+}
+.switch--shadow:checked + label:after {/**/
+  transform: translateX(30px);/*Distância da transição*/
+}
+
+/* Estilo Flat */
+.switch--flat + label {
+  padding: 2px;
+  width: 60px;
+  height: 30px;
+  background-color: #dddddd;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:before,
+.switch--flat + label:after {
+  display: block;
+  position: absolute;
+  content: "";
+}
+.switch--flat + label:before {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:after {
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 28px;/*Largura da bolinha*/
+  background-color: #dddddd;
+  border-radius: 52px;
+  transition: margin 0.4s, background 0.4s;
+}
+.switch--flat:checked + label {
+  background-color: #8ce196;
+}
+.switch--flat:checked + label:after {
+  margin-left: 30px;
+  background-color: #8ce196;
+}
