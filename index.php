@@ -27,7 +27,7 @@ session_start();
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 		gtag('config', 'UA-156503826-3');
-	</script> 
+	</script>
 </head>
 <body>
     <div class="hero is-fullheight is-primary has-background">
