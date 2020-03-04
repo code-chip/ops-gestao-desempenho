@@ -1,5 +1,5 @@
 <?php
-$menuRelatorio="is-active";
+$menuAtivo="Relatórios";
 include('menu.php');
 $periodo = trim($_REQUEST['periodo']);
 $idUsuario = trim($_REQUEST['idUsuario']);
