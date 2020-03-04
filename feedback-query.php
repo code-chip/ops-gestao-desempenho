@@ -1,5 +1,5 @@
 <?php
-$menuFeedback="is-active";
+$menuAtivo="Feedback";
 include('menu.php');
 $tipo= trim($_POST["tipo"]);
 $feedback= trim($_POST["feedback"]);

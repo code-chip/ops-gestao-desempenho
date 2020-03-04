@@ -1,5 +1,5 @@
 <?php
-$menuFeedback="is-active";
+$menuAtivo="Feedback";
 include('menu.php');
 $data=date('Y-m-d');
 $info="SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID=".$_SESSION["userId"];

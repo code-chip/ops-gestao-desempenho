@@ -1,5 +1,5 @@
 <?php
-$menuFeedback="is-active";
+$menuAtivo="Feedback";
 include('menu.php');
 $situacao= trim($_POST["situacao"]);
 $contador = 0;

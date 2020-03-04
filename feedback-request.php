@@ -1,5 +1,5 @@
 <?php 
-$menuFeedback="is-active";
+$menuAtivo="Feedback";
 include('menu.php');
 $colaborador=trim($_POST['colaborador']);
 $mensagem=trim($_POST['mensagem']);

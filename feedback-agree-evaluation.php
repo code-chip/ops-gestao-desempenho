@@ -1,5 +1,5 @@
 <?php 
-$menuFeedback="is-active";
+$menuAtivo="Feedback";
 include('menu.php');
 $n=rand(1,13);
 $img="img/wallpaper/evaluation".$n."-min.jpg";
