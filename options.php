@@ -17,7 +17,7 @@ include('menu.php');
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
-	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/options.jpg"/>
+	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/options1-min.jpg"/>
 	  	<div class="hero-body">
 	    	<div class="container">
 	    		<div class="box">
