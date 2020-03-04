@@ -1,16 +1,3 @@
-<style>
-.transparencia {
-     filter:alpha(opacity=80);
-     opacity: 0.8;
-     -moz-opacity:0.8;
-     -webkit-opacity:0.8;
-}
-.bloco{ 
-    -webkit-box-shadow: 20px -14px 5px rgba(50, 50, 50, 0.77);
-    -moz-box-shadow:    20px -14px 5px rgba(50, 50, 50, 0.77);
-    box-shadow:         20px -14px 5px rgba(50, 50, 50, 0.77);
-}
-</style>
 <?php 
 $menuDashboard="is-active";
 include('menu.php');
@@ -205,6 +192,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
   <meta name="viewport" content="width=device-widht, initial-scale=1">
   <title>Gestão de Desempenho - Dashboard</title>
   <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/personal.css" />
   <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
   <link rel="stylesheet" href="css/bulma.min.css"/>
   <link rel="stylesheet" href="css/animate.css" />
