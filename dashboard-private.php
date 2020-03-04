@@ -1,5 +1,5 @@
 <?php 
-$menuDashboard="is-active";
+$menuAtivo="Dashboard";
 include('menu.php');
 require("query.php");
   $queryReg="SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"];
