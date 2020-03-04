@@ -1,7 +1,5 @@
-<style type="text/css">
-</style>
 <?php
-$menuMeta="is-active";
+$menuAtivo="Meta";
 include('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
@@ -157,8 +155,7 @@ if(isset($_POST['consultar'])){
 		</script> <?php		
 	}
 }	
-?>
-<!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
+?><!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if(isset($_POST['consultar']) && $contador!=0) : ?>
 <hr/>
 <section class="section">

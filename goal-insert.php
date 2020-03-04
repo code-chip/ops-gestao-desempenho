@@ -1,5 +1,5 @@
 <?php 
-$menuMeta="is-active";
+$menuAtivo="Meta";
 include('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
