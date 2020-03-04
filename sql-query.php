@@ -1,5 +1,5 @@
 <?php 
-$menuRelatorio="is-active";
+$menuAtivo="Relatórios";
 include('menu.php');
 $sql=trim($_POST['sql']);
 

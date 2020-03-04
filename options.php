@@ -1,5 +1,5 @@
 <?php 
-$menuConfiguracoes="is-active";
+$menuAtivo="Configurações";
 include('menu.php');
 ?>
 <!DOCTYPE html>
