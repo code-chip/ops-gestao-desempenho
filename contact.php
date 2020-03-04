@@ -1,5 +1,5 @@
 <?php 
-$menuConfiguracoes="is-active";
+$menuAtivo="Configurações";
 include('menu.php');
 $query="SELECT NOME, EMAIL FROM USUARIO WHERE ID=".$_SESSION["userId"];
 $cnx= mysqli_query($phpmyadmin, $query);
