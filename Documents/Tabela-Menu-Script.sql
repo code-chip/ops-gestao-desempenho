@@ -103,25 +103,25 @@ INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Aprovar',1,'feedback-approval.php', 'n');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Enviar',2,'feedback-insert.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Solicitar',3,'feedback-request.php', 's');
-INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Consultar',4,'feedback-remove.php', 's');
+INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Consultar',4,'feedback-query.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,17,'Avaliação',5,'feedback-agree-evaluation.php', 's');
 #Item de menu Feedback líder
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Aprovar',1,'feedback-approval.php', 'n');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Enviar',2,'feedback-insert.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Solicitar',3,'feedback-request.php', 's');
-INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Consultar',4,'feedback-remove.php', 's');
+INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Consultar',4,'feedback-query.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(2,18,'Avaliação',5,'feedback-agree-evaluation.php', 's');
 #Item de menu Feedback gestor
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Aprovar',1,'feedback-approval.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Enviar',2,'feedback-insert.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Solicitar',3,'feedback-request.php', 's');
-INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Consultar',4,'feedback-remove.php', 's');
+INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Consultar',4,'feedback-query.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(3,19,'Avaliação',5,'feedback-agree-evaluation.php', 's');
 #Item de menu Feedback admin
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Aprovar',1,'feedback-approval.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Enviar',2,'feedback-insert.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Solicitar',3,'feedback-request.php', 's');
-INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Consultar',4,'feedback-remove.php', 's');
+INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Consultar',4,'feedback-query.php', 's');
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(4,20,'Avaliação',5,'feedback-agree-evaluation.php', 's');
 #Item de menu Relatórios usuário
 INSERT INTO MENU_ITEM (PERMISSAO_ID, MENU_ID, ITEM, POSICAO, LINK, ATIVO) VALUES(1,21,'Gestão',1,'report.php', 'n');
