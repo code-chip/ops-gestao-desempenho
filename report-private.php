@@ -1,5 +1,5 @@
 <?php
-$menuAtivo="Desempenho";
+$menuAtivo="Relatórios";
 include('menu.php');
 $contador = 0;
 $totalDesempenho=0;

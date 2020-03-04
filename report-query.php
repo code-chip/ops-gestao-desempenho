@@ -35,8 +35,7 @@ $totalAlcancado=0;
     </script>   
 </head>
 <body>
-	<?php
-	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
+	<?php /*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
 	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
 	?>
 	<br/>
