@@ -1,18 +1,5 @@
-<style>
-.transparencia {
-     filter:alpha(opacity=80);
-     opacity: 0.8;
-     -moz-opacity:0.8;
-     -webkit-opacity:0.8;
-}
-.bloco{ 
-    -webkit-box-shadow: 20px -14px 5px rgba(50, 50, 50, 0.77);
-    -moz-box-shadow:    20px -14px 5px rgba(50, 50, 50, 0.77);
-    box-shadow:         20px -14px 5px rgba(50, 50, 50, 0.77);
-}
-</style>
 <?php 
-$menuDashboard="is-active";
+$menuAtivo="Dashboard";
 include('menu.php');
 require("query.php");
 if($_SESSION["permissao"]==1){
