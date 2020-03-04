@@ -6,10 +6,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 date_default_timezone_set('America/Sao_Paulo');
 //print_r($_SESSION);exit();
-$menuInicio;
-$menuDesempenho;
-$menuRelatorio;
-$menuConfiguracoes;
+$menuAtivo;
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,7 +40,7 @@ $menuConfiguracoes;
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
 		gtag('config', 'UA-156503826-3');
-	</script> -->
+	</script>
 </head>
 <body>
 	<header>
@@ -65,7 +62,7 @@ $menuConfiguracoes;
 					while ($menu=$cnx->fetch_array()): {
 						if($menu["SUBMENU"]=="s"):{?>
 							<div href="#" class="navbar-item has-dropdown is-hoverable">
-								<a class="navbar-link <?php echo $menuMeta?> hvr-grow"><?php echo $menu["MENU"]?></a>					
+								<a class="navbar-link <?php if($menuAtivo==$menu["MENU"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>					
 								<div class="navbar-dropdown"><?php 
 									$loadItemMenu="SELECT ITEM, LINK FROM MENU_ITEM WHERE ATIVO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 									$cnx2=mysqli_query($phpmyadmin, $loadItemMenu);
@@ -77,7 +74,7 @@ $menuConfiguracoes;
 							</div><?php
 						}endif;		
 						if($menu["SUBMENU"]=="n"):{?>
-							<a href="<?php echo $menu["LINK"] ?>" class="navbar-item <?php echo $menuInicio?> hvr-grow"><?php echo $menu["MENU"] ?></a><?php
+							<a href="<?php echo $menu["LINK"] ?>" class="navbar-item <?php if($menuAtivo==$menu["MENU"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"] ?></a><?php
 						}endif;	
 					}endwhile; #final while
 					?>		
