@@ -57,14 +57,14 @@ $menuAtivo;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<?php 
-					$loadMenu="SELECT ID, MENU, LINK, SUBMENU FROM MENU WHERE LIBERADO='s' AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
+					$loadMenu="SELECT ID, MENU, LINK, SUBMENU FROM MENU WHERE ATIVO='s' and LIBERADO='s' AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 					$cnx=mysqli_query($phpmyadmin, $loadMenu);					
 					while ($menu=$cnx->fetch_array()): {
 						if($menu["SUBMENU"]=="s"):{?>
 							<div href="#" class="navbar-item has-dropdown is-hoverable">
 								<a class="navbar-link <?php if($menuAtivo==$menu["MENU"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>					
 								<div class="navbar-dropdown"><?php 
-									$loadItemMenu="SELECT ITEM, LINK FROM MENU_ITEM WHERE LIBERADO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
+									$loadItemMenu="SELECT ITEM, LINK FROM MENU_ITEM WHERE ATIVO='s' and LIBERADO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 									$cnx2=mysqli_query($phpmyadmin, $loadItemMenu);
 									while ($itemMenu= $cnx2->fetch_array()): {?>
 										<a href="<?php echo $itemMenu["LINK"]?>" class="navbar-item hvr-grow"><?php echo $itemMenu["ITEM"]?></a>	
