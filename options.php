@@ -1,11 +1,16 @@
 <?php 
 $menuAtivo="Configurações";
 include('menu.php');
-//function AtualizarMenu($menu){
-//	$upMenu="UPDATE MENU SET ATIVO='n' WHERE MENU=".$menu;
-//	$cnx=mysqli_query($phpmyadmin, $upMenu);
-//	echo "CHAMADA DE FUNCAO";
-//}
+if(isset($_GET["q"])){
+	$_SESSION["TESTE"]="LEVOU OS DADOS";
+	$test = $_GET['q'];
+	$_SESSION["TESTE"]=$test;
+	echo $_SESSION["TESTE"];
+	$upMenu="UPDATE MENU SET ATIVO='n' WHERE TAG='".$test."'";
+	$cnx=mysqli_query($phpmyadmin, $upMenu);
+	$upItem="UPDATE MENU_ITEM SET ATIVO='n' WHERE MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$test."');";
+	$cnx=mysqli_query($phpmyadmin, $upItem); echo "TESTE";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,13 +56,18 @@ include('menu.php');
 	  	</div>
 	</div>
 	<script type="text/javascript">
-		var tag2;		
+		var tag; var ativo;		
 		$(".meta").click(function(){
 		  let meta = document.querySelectorAll(".meta");		 
 		  for (let i = 0; i < meta.length; i++) {
-		    if (meta[0].checked && i+1 < meta.length){
+		    if (meta[0].checked && i+1 < meta.length){//Verifica se o menu está marcada enquanto houver itens de menu.
 		      meta[i+1].removeAttribute("disabled");
-		      tag='meta';
+		      if (meta[i].checked){
+		      	ativo='s';
+		      }
+		      else{
+		      	ativo='n';
+		      }		      		      
 		    } else {
 		      if (i+1 < meta.length) {
 		        for (let j = i+1; j < meta.length; j++) {
@@ -65,10 +75,9 @@ include('menu.php');
 		          meta[j].setAttribute("disabled", "true");
 		        }
 		      }
-		    }		     
-		  }<?php $tag="meta";?>
-		  tag2="meta";
-		  atualizaMenu();		  
+		    }		    	     
+		  }tag="meta";		  
+		  atualizaMenu(tag);		  
 		});		
 		$(".desempenho").click(function(){
 		  let desempenho = document.querySelectorAll(".desempenho");		 
@@ -83,9 +92,9 @@ include('menu.php');
 		        }
 		      }
 		    }
-		  }<?php $tag="desempenho";?>
-		  tag2="desempenho";
-		  atualizaMenu();	
+		  }
+		  tag="desempenho";
+		  atualizaMenu(tag);	
 		});
 		$(".feedback").click(function(){
 		  let feedback = document.querySelectorAll(".feedback");		 
@@ -100,9 +109,9 @@ include('menu.php');
 		        }
 		      }
 		    }
-		  }<?php $tag="feedback";?>
-		  tag2="feedback";
-		  atualizaMenu();	
+		  }
+		  tag="feedback";
+		  atualizaMenu(tag);	
 		});
 		$(".relatorios").click(function(){
 		  let relatorios = document.querySelectorAll(".relatorios");		 
@@ -118,16 +127,15 @@ include('menu.php');
 		        }
 		      }
 		    }		    
-		  }<?php $tag="relatorios";?>
-		  tag2="relatorios";
-		  atualizaMenu();	
+		  }
+		  tag="relatorios";
+		  atualizaMenu(tag);	
 		});
 		$(".configuracoes").click(function(){
 		  let configuracoes = document.querySelectorAll(".configuracoes");		 
 		  for (let i = 0; i < configuracoes.length; i++) {
 		    if (configuracoes[0].checked && i+1 < configuracoes.length){
 		      configuracoes[i+1].removeAttribute("disabled");
-		      <?php $tag="configuracoes2";?>
 		    } else {
 		      if (i+1 < configuracoes.length) {
 		        for (let j = i+1; j < configuracoes.length; j++) {
@@ -137,33 +145,27 @@ include('menu.php');
 		      }
 		    }		    
 		  }
-		  tag2="configuracoes";
-		  atualizaMenu();		  
-		});
-		function atualizaMenu(){
-			alert('<?php echo $tag;?>');
-			alert(tag2);			
-			<?php
-			$test=?>tag2<?php
-			var_dump($test); 
-			$upMenu="UPDATE MENU SET ATIVO='s' WHERE TAG='".$test."'";
-			$cnx=mysqli_query($phpmyadmin, $upMenu);
-			$upItem="UPDATE MENU_ITEM SET ATIVO='s' WHERE MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$test."');";
-			$cnx=mysqli_query($phpmyadmin, $upItem); echo "TESTE";
-			?>						
-			//location.replace(location.href);
+		  tag="configuracoes";
+		  atualizaMenu(tag);		  
+		});		
+		function atualizaMenu(str) {
+			if (str.length == 0) {
+		    	document.getElementById("txtHint").innerHTML = "";
+		    	return;
+		  	}else {
+		    	var xmlhttp = new XMLHttpRequest();
+		    	xmlhttp.onreadystatechange = function() {
+		      	if (this.readyState == 4 && this.status == 200) {
+		        	document.getElementById("txtHint").innerHTML = this.responseText;
+		      	}
+		    };
+		    xmlhttp.open("GET", "options.php?q=" + str, true);
+		    xmlhttp.send();
+		  }
+		  setTimeout(function(){
+		  	window.location.reload('menu.php');
+		  },1000);		  
 		}
 	</script>
 </body>
 </html>
-<?php 
-function AtualizarMenu2(){
-	$upMenu="UPDATE MENU SET ATIVO='n' WHERE MENU=Meta";
-	$cnx=mysqli_query($phpmyadmin, $upMenu);
-	echo "CHAMADA DE FUNCAO";
-}
-function meuA(){
-	echo "<script>alert('TESTE55')</script>";
-}
-
-?>
