@@ -17,9 +17,6 @@ if($indice["SITUACAO"]=="Finalizado"){
 <html>
 <head>
 	<title>Gestão de Desempenho - Avaliação Líder</title>
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
-    <link rel="stylesheet" type="text/css" href="/css/test.css">   
 </head>
 <body>
 <div>	
