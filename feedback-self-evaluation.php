@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+/* Habilita a exibição de erros */
+ini_set("display_errors", 1);
 $menuAtivo="Feedback";
 include('menu.php');
 $data=date('Y-m-d');
@@ -17,15 +20,12 @@ if($indice["SITUACAO"]=="Finalizado"){
 <html>
 <head>
 	<title>Gestão de Desempenho - Autoavaliação</title>
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
-    <link rel="stylesheet" type="text/css" href="/css/test.css">   
 </head>
 <body>
 <div>	
 	<section class="section">
 	<div class="container">	
-	<form id="form" action="" method="POST">
+	<form id="form" action="feedback-self-evaluation.php" method="POST">
 	<div class="box" style="margin-bottom: -30px; background-color: rgb(64,224,208)"></div>
 	<div class="box">
 		<div class="is-size-1-desktop"><strong>Avaliação de Desempenho - Operação ( evino )</strong></div>
@@ -126,19 +126,17 @@ if($indice["SITUACAO"]=="Finalizado"){
 		    	<a href="home.php"><button class="button is-link">Cancelar</button></a>
 		  	</div>
 		  	<div class="control">
-		    	<input type="button" name="proxima" class="button is-link is-light" value="Próxima" onclick="window.location.href='feedback-technical-evaluation.php'">
+		    	<input type="submit" name="proxima" class="button is-link is-light" onclick="window.location.href='feedback-technical-evaluation.php'" value="Próxima">
 		  	</div>
 		</div>
 	</div>									
-	</form>
-	<script>
-</script>
+	</form>	
 	</div>
 	</section>	
 </section>	
 </body>
 </html>
-<?php 
+<?php
 if(isset($_POST['proxima'])){
 	$comentario=$_POST["comentario"];
 	$z=1; $respostaNula=0;
