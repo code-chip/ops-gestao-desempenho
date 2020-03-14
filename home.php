@@ -76,7 +76,7 @@ $feedRequest=mysqli_num_rows($cnx3);
 					if($feedRequest>0){?>
 						<script>
 							var feedRequest=<?php echo $feedRequest ?>;
-							alert('Atenção! '+feedRequest+' solicitaçõe(s) recebido(s).');
+							alert('Atenção! '+feedRequest+' solicitaçõe(s) de Feedback recebido(s). Clique em Feedback->Consultar para maiores detalhes.');
 						</script><?php
 					}
 		      		if($acesso==1){
