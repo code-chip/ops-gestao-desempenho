@@ -6,44 +6,32 @@ if($_SESSION["permissao"]==1){
 	header("Refresh:1;url=home.php");
 }
 else{
-$meta=trim($_POST['meta']);
-$atividade=trim($_POST['atividade']);
-$setor=trim($_POST['setor']);
-$descricao=trim($_POST['descricao']);
-$usuario=trim($_POST['usuario']);
-$execucao=trim($_POST['execucao']);
-
-if(isset($_POST["inserirMeta"])!=null){
-	if($meta!="" && $descricao!="" && $execucao!=""){
-		if($usuario=="Todos"){
-			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor." AND SITUACAO<>'Desligado';";
-			$cnx= mysqli_query($phpmyadmin, $listIds);
-			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$execucao."','".date('Y-m-d')."',0);";
-				$cx= mysqli_query($phpmyadmin, $inserirMeta);
+if(isset($_POST["inserirPergunta"])!=null){
+$tipo=trim($_POST['tipo']);
+$classificacao=trim($_POST['classificacao']);
+$resposta=trim($_POST['resposta']);
+$cargo=trim($_POST['cargo']);
+$pergunta=trim($_POST['pergunta']);
+$situacao=trim($_POST['situacao']);
+	if($cargo!="" && $pergunta!=""){
+		if($resposta=="checkbox"){
+			if($tipo==2){
+				$classificacao=$classificacao+2;
 			}
+			$insPergunta="INSERT INTO AVAL_PERGUNTA(AVAL_TIPO_PERGUNTA_ID, CARGO_ID, PERGUNTA, SITUACAO) VALUES(".$classificacao.",".$cargo.",'".$pergunta."','".$situacao."');";			
 		}
 		else{
-			$inserirMeta="INSERT INTO META(META, ATIVIDADE_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$meta.",".$atividade.",".$setor.",'".$descricao."',".$usuario.",'".$execucao."','".date('Y-m-d')."',0);";			
-			$cnx= mysqli_query($phpmyadmin, $inserirMeta);
-			echo "<script>alert('Meta's cadastrada com sucesso!!')</script>";
+			$insPergunta="INSERT INTO AVAL_PERGUNTA_COM(AVAL_TIPO_ID, CARGO_ID, PERGUNTA, SITUACAO) VALUES(".$tipo.",'".$pergunta."','".$situacao."');";
 		}
-		$erro=mysqli_error($phpmyadmin);
-		if($erro==null){
-			echo "<script>alert('Meta cadastrada com sucesso!!')</script>";	
-		}
-		else{
-			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
-		}
+		echo $insPergunta;
+		$cnx= mysqli_query($phpmyadmin, $insPergunta);		
+		echo "<script>alert('Pegunta cadastrada com sucesso.')</script>";	
 	}
-	else if($meta==""){
-		echo "<script>alert('Preencher o campo Meta é obrigatório!!')</script>";
-	}
-	else if($descricao==""){
-		echo "<script>alert('Preencher o campo Descricao é obrigatório!!')</script>";
+	else if($cargo==""){
+		echo "<script>alert('A seleção do Cargo é obrigatório!!')</script>";
 	}
 	else{
-		echo "<script>alert('Preencher o campo Expiração é obrigatório!!')</script>";
+		echo "<script>alert('Preencher o campo Pergunta é obrigatório!!')</script>";
 	}	
 }
 ?>
@@ -60,7 +48,7 @@ if(isset($_POST["inserirMeta"])!=null){
 	   		<form action="question-insert.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">tipo:</label>
+						<label class="label">Tipo:</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
@@ -86,12 +74,9 @@ if(isset($_POST["inserirMeta"])!=null){
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
-									<select name="Classificacao">
-									<?php $gdTipo="SELECT ID, CLASSIFICACAO FROM AVAL_TIPO_PERGUNTA WHERE SITUACAO='Ativo' ORDER BY ID";
-									$con = mysqli_query($phpmyadmin , $gdTipo); $x=0; 
-									while($tipo = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $tipo["ID"]; ?>"><?php echo $vtNome[$x] = $tipo["CLASSIFICACAO"]; ?></option>
-									<?php $x;} endwhile;?>
+									<select name="classificacao">									
+										<option value="1">Técnicas</option>
+										<option value="2">Comportamentais</option>		
 									</select>	
 								</div>
 							</div>						
@@ -106,7 +91,7 @@ if(isset($_POST["inserirMeta"])!=null){
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
-									<select name="atividade">									
+									<select name="resposta">									
 									<option value="checkbox">Por checkbox</option>
 									<option value="comentario">Por comentário</option>
 									</select>	
@@ -143,7 +128,7 @@ if(isset($_POST["inserirMeta"])!=null){
 					<div class="field-body">
 						<div class="field" style="max-width:17em;">							
 							<div class="control">
-								<textarea name="descricao" class="textarea" maxlenght="200"></textarea>
+								<textarea name="pergunta" class="textarea" maxlenght="1000"></textarea>
 							</div>						
 						</div>
 					</div>
@@ -156,14 +141,14 @@ if(isset($_POST["inserirMeta"])!=null){
 						<div class="field is-grouped" style="max-width:17em;">							
 							<div class="control">
 								<div class="select">
-									<select name="usuario" id="usuario">
-										<option selected="selected" value="Todos">Ativo</option>
-										<option value="Todos">Inativo</option>
+									<select name="situacao" id="situacao">
+										<option selected="selected" value="Ativo">Ativo</option>
+										<option value="Inativo">Inativo</option>
 									</select>	
 								</div>
 							</div>
 							<div class="control">
-								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirPergunta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 							</div>						
 						</div>
 					</div>					
