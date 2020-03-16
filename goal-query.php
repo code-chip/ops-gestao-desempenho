@@ -1,5 +1,5 @@
 <?php
-$menuAtivo="Meta";
+$menuAtivo="meta";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $periodo= trim($_REQUEST['periodo']);

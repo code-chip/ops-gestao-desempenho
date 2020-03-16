@@ -1,5 +1,5 @@
 <?php 
-$menuAtivo="Início";
+$menuAtivo="inicio";
 include('menu.php');
 $n=rand(1,25);
 $img="img/wallpaper/data-science".$n."-min.jpg";

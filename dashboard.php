@@ -1,5 +1,5 @@
 <?php 
-$menuAtivo="Dashboard";
+$menuAtivo="dashboard";
 include('menu.php');
 require("query.php");
 if($_SESSION["permissao"]==1){
