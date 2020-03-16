@@ -1,5 +1,5 @@
 <?php
-$menuConfiguracoes="is-active";
+$menuAtivo="configuracoes";
 include('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão!')</script>";
@@ -306,7 +306,7 @@ if(isset($_POST['cadastrar'])){
 			$cnx=mysqli_query($phpmyadmin, $inserirUsuario);		
 			if(mysqli_error($phpmyadmin)==null){
 				?><script language="Javascript"> alert('Funcionário cadastrado com sucesso!!!');</script><?php
-				header("Location: localhost/gestaodesempenho/register.php");	
+				header("Location: register.php");	
 			}
 			else{
 				?><script language="Javascript"> alert('Erro ao cadastrar!!!');</script><?php
