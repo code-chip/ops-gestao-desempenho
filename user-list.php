@@ -1,6 +1,6 @@
 <style type="text/css"></style>
 <?php
-$menuConfiguracoes="is-active";
+$menuAtivo="configuracoes";
 include('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
