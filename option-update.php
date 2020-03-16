@@ -1,6 +1,6 @@
 <?php 
-$menuConfiguracao="is-active";
-include('menu.php');
+$menuAtivo="configuracoes";
+require('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");

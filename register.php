@@ -22,7 +22,7 @@
 }
 </style>
 <?php
-$menuAtivo="Configurações";
+$menuAtivo="configuracoes";
 include('menu.php');
 ?>
 <!DOCTYPE html>
