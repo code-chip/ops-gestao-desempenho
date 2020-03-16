@@ -1,5 +1,5 @@
 <?php
-$menuConfiguracoes="is-active";
+$menuAtivo="configuracoes";
 include('menu.php');	
 	$filtro = trim($_REQUEST['filtro']);
 	$busca= trim($_REQUEST['busca']);

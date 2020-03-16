@@ -1,6 +1,5 @@
 <?php
-//session_start();
-$menuConfiguracoes="is-active";
+$menuAtivo="configuracoes";
 include('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $filtro = trim($_POST['filtro']);
