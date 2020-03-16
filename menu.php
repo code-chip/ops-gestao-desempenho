@@ -20,7 +20,7 @@ $menuAtivo;
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>    
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!--<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>-->
 	<script type="text/javascript" src="js/jquery.mask.min.js"></script>
     <script language="javascript">
 	    $(document).ready(function () {	    	
@@ -57,12 +57,12 @@ $menuAtivo;
 			<div id="navMenu" class="navbar-menu">
 				<div class="navbar-end">
 					<?php 
-					$loadMenu="SELECT ID, MENU, LINK, SUBMENU FROM MENU WHERE ATIVO='s' and LIBERADO='s' AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
+					$loadMenu="SELECT ID, MENU, TAG, LINK, SUBMENU FROM MENU WHERE ATIVO='s' and LIBERADO='s' AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 					$cnx=mysqli_query($phpmyadmin, $loadMenu);					
 					while ($menu=$cnx->fetch_array()): {
 						if($menu["SUBMENU"]=="s"):{?>
 							<div href="#" class="navbar-item has-dropdown is-hoverable">
-								<a class="navbar-link <?php if($menuAtivo==$menu["MENU"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>					
+								<a class="navbar-link <?php if($menuAtivo==$menu["TAG"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>					
 								<div class="navbar-dropdown"><?php 
 									$loadItemMenu="SELECT ITEM, LINK FROM MENU_ITEM WHERE ATIVO='s' and LIBERADO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 									$cnx2=mysqli_query($phpmyadmin, $loadItemMenu);
