@@ -62,8 +62,7 @@ $menuAtivo;
 					while ($menu=$cnx->fetch_array()): {
 						if($menu["SUBMENU"]=="s"):{?>
 							<div href="#" class="navbar-item has-dropdown is-hoverable">
-								<a class="navbar-link <?php if($menuAtivo==$menu["TA
-								G"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>					
+								<a class="navbar-link <?php if($menuAtivo==$menu["TAG"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>
 								<div class="navbar-dropdown"><?php 
 									$loadItemMenu="SELECT ITEM, LINK FROM MENU_ITEM WHERE ATIVO='s' and LIBERADO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 									$cnx2=mysqli_query($phpmyadmin, $loadItemMenu);
