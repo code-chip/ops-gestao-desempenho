@@ -1,6 +1,6 @@
 <?php 
 $menuAtivo="configuracoes";
-include('menu.php');
+require('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
@@ -149,6 +149,9 @@ $situacao=trim($_POST['situacao']);
 							</div>
 							<div class="control">
 								<button name="inserirPergunta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+							</div>
+							<div class="control">
+								<a href="register.php" class="button is-primary">Voltar</a>	
 							</div>						
 						</div>
 					</div>					
