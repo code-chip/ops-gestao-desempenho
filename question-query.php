@@ -77,6 +77,9 @@ else{
 							</div>
 							<div class="control">
 								<button name="consultar" type="submit" class="button is-primary" value="Filtrar">Consultar</button>
+							</div>
+							<div class="control">
+								<a href="register.php" class="button is-primary">Voltar</a>	
 							</div>						
 						</div>
 					</div>					
