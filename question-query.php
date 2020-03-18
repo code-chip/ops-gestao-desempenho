@@ -137,14 +137,16 @@ else{
 
 				<?php }endif;								
 				if($cargo==null){
-					echo "<script>alert('A seleção do Cargo é obrigatório!!')</script>";
+					echo "<script>alert('A seleção do Cargo é obrigatório!!'); window.location.href='question-query.php';</script>";
 				}
-				if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)==0){					
-					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query.php';</script>";
+				else{
+					if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)==0){					
+						echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query.php';</script>";
 
-				}
-				else if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)>0){					
-					echo "<script>alert('Nenhuma pergunta Técnica ou Comportamental encontrada com o filtro aplicado!');</script>";
+					}
+					else if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)>0){					
+						echo "<script>alert('Nenhuma pergunta Técnica ou Comportamental encontrada com o filtro aplicado!');</script>";
+					}
 				}							
 			}
 	     	?>	     	
