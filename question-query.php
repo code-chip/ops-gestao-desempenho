@@ -69,8 +69,8 @@ else{
 							<div class="control">
 								<div class="select">
 									<select name="situacao" id="situacao">
-										<option selected="selected" value="Ativo">Ativo</option>
-										<option value="Inativo">Inativo</option>
+										<option selected="selected" value="AND SITUACAO='Ativo'">Ativo</option>
+										<option value="AND SITUACAO='Inativo'">Inativo</option>
 										<option value="">Todas</option>
 									</select>	
 								</div>
@@ -89,49 +89,63 @@ else{
 				$tipo=trim($_POST['tipo']);
 				$cargo=trim($_POST['cargo']);
 				$situacao=trim($_POST['situacao']);
-				if($cargo!="" ):{?>
-					
+				if($tipo==1){//OS ID REFERÊNCIA P/ TÉCNICO E COMPORTAMENTAL.
+					$tecnica=1;
+					$comportamental=2;
+				}
+				else{
+					$tecnica=3;
+					$comportamental=4;
+				}
+				if($cargo!="" ):{?>					
 					<form id="form2" action="" method="POST">	
 					<div class="box">Técnicas</div><?php $y=1;		
-					$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=3 AND CARGO_ID=".$cargo." ORDER BY ORDEM;";//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
+					$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=".$tecnica." AND CARGO_ID=".$cargo." ".$situacao." ORDER BY ORDEM;";//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
 					$cnx=mysqli_query($phpmyadmin, $getPergunta);
+					if(mysqli_num_rows($cnx)>0):{
 					while ($pergunta=$cnx->fetch_array()):{ ?>
 					<div class="box">	
 						<div class="field is-horizontal">
 							<div class="text"><?php echo $pergunta["PERGUNTA"];?></div>				
 						</div>								
 					</div>
-				<?php $y++;}endwhile;?>	<!--PERGUNTA COMPORTAMENTAL-->
+				<?php $y++;}endwhile; }endif;  ?>	<!--PERGUNTA COMPORTAMENTAL-->
 					<div class="box">Comportamentais</div><?php
-					$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=4 AND CARGO_ID=".$cargo." ORDER BY ORDEM;";
-					$cnx=mysqli_query($phpmyadmin, $getPergunta);
-					while ($pergunta=$cnx->fetch_array()):{ ?>
+					$getPergunta="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID=".$comportamental." AND CARGO_ID=".$cargo." ".$situacao." ORDER BY ORDEM;";
+					$cnx2=mysqli_query($phpmyadmin, $getPergunta);
+					if(mysqli_num_rows($cnx2)>0):{
+					while ($pergunta=$cnx2->fetch_array()):{ ?>
 					<div class="box">	
 						<div class="field is-horizontal">
 							<div class="text"><?php echo $pergunta["PERGUNTA"];?></div>				
 						</div>								
 					</div>
-				<?php $y++;}endwhile; //<!--FINAL PERGUNTA COMPORTAMENTAL-->
-					$getPerComentario="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=2 AND SITUACAO='Ativo'";
-					$cnx7=mysqli_query($phpmyadmin, $getPerComentario);
-					$getComentario=$cnx7->fetch_array();					
+				<?php $y++;}endwhile; }endif; //<!--FINAL PERGUNTA COMPORTAMENTAL-->
+					$getPerComentario="SELECT ID, PERGUNTA FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=2 ".$situacao;
+					$cnx3=mysqli_query($phpmyadmin, $getPerComentario);
+					$getComentario=$cnx3->fetch_array();					
 					?>
 					<div class="box">	
 						<div class="field">
 						  	<label class="label"><?php echo $getComentario["PERGUNTA"];?></label>
-						</div>
-						<div class="field is-grouped">
-						  	<div class="control">
-						    	<input type="button" class="button is-link" value="Voltar" onclick="window.location.href='question-query.php'">
-						  	</div>						  	
-						</div>
-					</div>									
+						</div>						
+					</div>
+					<div class="control">
+					   	<input type="button" class="button is-link" value="Voltar" onclick="window.location.href='question-query.php'">
+					</div>						  	
 					</form>
 
-				<?php }endif;				
+				<?php }endif;								
 				if($cargo==null){
 					echo "<script>alert('A seleção do Cargo é obrigatório!!')</script>";
-				}	
+				}
+				if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)==0){					
+					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query.php';</script>";
+
+				}
+				else if(mysqli_num_rows($cnx)==0 && mysqli_num_rows($cnx2)==0 && mysqli_num_rows($cnx3)>0){					
+					echo "<script>alert('Nenhuma pergunta Técnica ou Comportamental encontrada com o filtro aplicado!');</script>";
+				}							
 			}
 	     	?>	     	
 	   	</div>
