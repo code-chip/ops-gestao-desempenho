@@ -226,7 +226,7 @@ else{
 				$x++;
 			}
 		}
-		if($idTec!=null){
+		if($idCom!=null){
 			while ($y < sizeof($idCom)) {
 				$upPerguntaCom="UPDATE AVAL_PERGUNTA SET PERGUNTA='".$comportamentais[$y]."', SITUACAO='".$situacaoCom[$y]."' WHERE ID=".$idCom[$y].";";
 				mysqli_query($phpmyadmin, $upPerguntaCom);

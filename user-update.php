@@ -1,23 +1,23 @@
 <?php
 $menuAtivo="configuracoes";
-include('menu.php');	
-	$filtro = trim($_REQUEST['filtro']);
-	$busca= trim($_REQUEST['busca']);
-	$nome = trim($_POST['nome']);
-	$login = trim($_POST['login']);
-	$senha = trim($_POST['senha']);
-	$email = trim($_POST['email']);
-	$sexo = trim($_POST['sexo']);
-	$nascimento = trim($_POST['nascimento']);
-	$cargo = trim($_POST['cargo']);
-	$turno = trim($_POST['turno']);
-	$gestor = trim($_POST['gestor']);
-	$setor = trim($_POST['setor']);
-	$matricula = trim($_POST['matricula']);
-	$efetivacao = trim($_POST['efetivacao']);
-	$permissao = trim($_POST['permissao']);
-	$situacao = trim($_POST['situacao']);
-	$observacao = trim($_POST['observacao']);
+require('menu.php');	
+$filtro = trim($_REQUEST['filtro']);
+$busca= trim($_REQUEST['busca']);
+$nome = trim($_POST['nome']);
+$login = trim($_POST['login']);
+$senha = trim($_POST['senha']);
+$email = trim($_POST['email']);
+$sexo = trim($_POST['sexo']);
+$nascimento = trim($_POST['nascimento']);
+$cargo = trim($_POST['cargo']);
+$turno = trim($_POST['turno']);
+$gestor = trim($_POST['gestor']);
+$setor = trim($_POST['setor']);
+$matricula = trim($_POST['matricula']);
+$efetivacao = trim($_POST['efetivacao']);
+$permissao = trim($_POST['permissao']);
+$situacao = trim($_POST['situacao']);
+$observacao = trim($_POST['observacao']);
 ?>
 <!DOCTYPE html>
 <html>
