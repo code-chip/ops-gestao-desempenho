@@ -208,33 +208,36 @@ else{
 	</section>	 	
 </body>
 </html><?php
-	if(isset($_POST["atualizar"])!=null){
-		$tecnicas=array_filter($_POST['tecnica']);
-		$comportamentais=array_filter($_POST['comportamental']);
-		$situacaoTec=array_filter($_POST['situacaoTec']);
-		$situacaoCom=array_filter($_POST['situacaoCom']);
-		$idTec=array_filter($_POST['idTec']);
-		$idCom=array_filter($_POST['idCom']);
-		$idCome=trim($_POST['idCome']);
-		$comentario=trim($_POST['comentario']);
-		$situacaoCome=trim($_POST['situacaoCome']);
-		$x=0; $y=0;
-		if($idTec!=null){
+	if(isset($_POST["atualizar"])!=null){		 
+		if(isset($_POST['idTec'])){
+			$idTec=array_filter($_POST['idTec']);
+			$tecnicas=array_filter($_POST['tecnica']);
+			$situacaoTec=array_filter($_POST['situacaoTec']);
+			$x=0;
 			while ($x < sizeof($idTec)) {
 				$upPerguntaTec="UPDATE AVAL_PERGUNTA SET PERGUNTA='".$tecnicas[$x]."', SITUACAO='".$situacaoTec[$x]."' WHERE ID=".$idTec[$x].";";
 				mysqli_query($phpmyadmin, $upPerguntaTec);
 				$x++;
 			}
 		}
-		if($idCom!=null){
+		if(isset($_POST['idCom'])){			
+			$idCom=array_filter($_POST['idCom']);
+			$comportamentais=array_filter($_POST['comportamental']);
+			$situacaoCom=array_filter($_POST['situacaoCom']);
+			$y=0;
 			while ($y < sizeof($idCom)) {
 				$upPerguntaCom="UPDATE AVAL_PERGUNTA SET PERGUNTA='".$comportamentais[$y]."', SITUACAO='".$situacaoCom[$y]."' WHERE ID=".$idCom[$y].";";
 				mysqli_query($phpmyadmin, $upPerguntaCom);
 				$y++;
 			}
+		}
+		if(isset($_POST['idCome'])){	
+			$idCome=trim($_POST['idCome']);
+			$comentario=trim($_POST['comentario']);
+			$situacaoCome=trim($_POST['situacaoCome']);	
+			$upComentario="UPDATE AVAL_PERGUNTA_COM SET PERGUNTA='".$comentario."', SITUACAO='".$situacaoCome."' WHERE ID=".$idCome.";";
+			mysqli_query($phpmyadmin, $upComentario);
 		}	
-		$upComentario="UPDATE AVAL_PERGUNTA_COM SET PERGUNTA='".$comentario."', SITUACAO='".$situacaoCome."' WHERE ID=".$idCome.";";
-		mysqli_query($phpmyadmin, $upComentario);
 		echo "<script>alert('Atualização realizada com sucesso.')</script>";		
 	}
 }//ELSE - caso o usuário tenha permissão.
