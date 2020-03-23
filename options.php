@@ -1,16 +1,31 @@
 <?php 
-$menuAtivo="Configurações";
-include('menu.php');
-if(isset($_GET["q"])){
-	$_SESSION["TESTE"]="LEVOU OS DADOS";
-	$test = $_GET['q'];
-	$_SESSION["TESTE"]=$test;
-	echo $_SESSION["TESTE"];
-	$upMenu="UPDATE MENU SET ATIVO='n' WHERE TAG='".$test."'";
-	$cnx=mysqli_query($phpmyadmin, $upMenu);
-	$upItem="UPDATE MENU_ITEM SET ATIVO='n' WHERE MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$test."');";
-	$cnx=mysqli_query($phpmyadmin, $upItem); echo "TESTE";
-}
+$menuAtivo="configuracoes";
+require('menu.php');
+if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
+	echo "<script>alert('OK 2');</script>";
+	$menu = $_GET['tag'];	
+	$situacao= array_filter($_GET['menuAtivo']);	
+	$upMenu="UPDATE MENU SET ATIVO='".$situacao[0]."' WHERE TAG='".$menu."'";
+	mysqli_query($phpmyadmin, $upMenu);	
+	if($situacao[0]=="n"){
+		$upItem="UPDATE MENU_ITEM SET ATIVO='".$situacao[0]."' WHERE MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$menu."');";
+		mysqli_query($phpmyadmin, $upItem); echo "TESTE";
+	}
+	else{
+		$chkMenu="SELECT ID FROM MENU WHERE TAG='".$menu."';";//SELECIONA OS ID's.
+		$cnx=mysqli_query($phpmyadmin, $chkMenu);
+		while($idMenu=$cnx->fetch_array()){
+			$chkMenuItem="SELECT ID FROM MENU_ITEM WHERE MENU_ID=".$idMenu["ID"].";";
+			$cnx2=mysqli_query($phpmyadmin, $chkMenuItem);
+			$x=1;
+			while($xId=$cnx2->fetch_array()) {
+				$upItem="UPDATE MENU_ITEM SET ATIVO='".$situacao[$x]."' WHERE ID=".$xId["ID"];
+				$cnx3=mysqli_query($phpmyadmin, $upItem); echo "</br> ".$upItem;
+				$x++;	
+			}
+		}	
+	}
+}	
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,6 +46,8 @@ if(isset($_GET["q"])){
 	  	<div class="hero-body">
 	    	<div class="container">
 	    		<div class="box">
+	    			<div class="has-text-righ">
+	    			<label class="is-size-5 "><center><strong>Habilitar/Desativar Menu e Item de menu</strong></center></label>	    			
 	    		<div class="columns">	    			
 					<?php $x=0; $y=0;
 						$checkMenu="SELECT ID, MENU, TAG, ATIVO FROM MENU WHERE ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
@@ -56,29 +73,38 @@ if(isset($_GET["q"])){
 	  	</div>
 	</div>
 	<script type="text/javascript">
-		var tag; var ativo;		
-		$(".meta").click(function(){
+		var tag; var selecao; var ativo;		
+		function carregaSelecao(tag){			
+			let meta = document.querySelectorAll("."+tag);
+			var menu = [];
+			var r=0;
+			while(r < meta.length){
+				if(meta[r].checked==true){
+					menu.push('s');
+				}
+				else{
+					menu.push('n');
+				}				
+				r++;
+			}			
+			atualizaMenu(tag, menu);
+		}					
+		$(".meta").click(function(){//FUNCAO P/ DESMARCAR TODOS ITENS DE MENU.
 		  let meta = document.querySelectorAll(".meta");		 
 		  for (let i = 0; i < meta.length; i++) {
-		    if (meta[0].checked && i+1 < meta.length){//Verifica se o menu está marcada enquanto houver itens de menu.
+		    if (meta[0].checked && i+1 < meta.length){
 		      meta[i+1].removeAttribute("disabled");
-		      if (meta[i].checked){
-		      	ativo='s';
-		      }
-		      else{
-		      	ativo='n';
-		      }		      		      
 		    } else {
 		      if (i+1 < meta.length) {
 		        for (let j = i+1; j < meta.length; j++) {
 		          meta[j].checked = false;
 		          meta[j].setAttribute("disabled", "true");
 		        }
-		      }
-		    }		    	     
-		  }tag="meta";		  
-		  atualizaMenu(tag);		  
-		});		
+		      }		      
+		    }		     
+		  }		  
+		  carregaSelecao("meta");		  
+		});				
 		$(".desempenho").click(function(){
 		  let desempenho = document.querySelectorAll(".desempenho");		 
 		  for (let i = 0; i < desempenho.length; i++) {
@@ -93,8 +119,7 @@ if(isset($_GET["q"])){
 		      }
 		    }
 		  }
-		  tag="desempenho";
-		  atualizaMenu(tag);	
+		  carregaSelecao("desempenho");
 		});
 		$(".feedback").click(function(){
 		  let feedback = document.querySelectorAll(".feedback");		 
@@ -110,8 +135,7 @@ if(isset($_GET["q"])){
 		      }
 		    }
 		  }
-		  tag="feedback";
-		  atualizaMenu(tag);	
+		  carregaSelecao("feedback");	
 		});
 		$(".relatorios").click(function(){
 		  let relatorios = document.querySelectorAll(".relatorios");		 
@@ -128,8 +152,7 @@ if(isset($_GET["q"])){
 		      }
 		    }		    
 		  }
-		  tag="relatorios";
-		  atualizaMenu(tag);	
+		  carregaSelecao("relatorios");	
 		});
 		$(".configuracoes").click(function(){
 		  let configuracoes = document.querySelectorAll(".configuracoes");		 
@@ -145,10 +168,25 @@ if(isset($_GET["q"])){
 		      }
 		    }		    
 		  }
-		  tag="configuracoes";
-		  atualizaMenu(tag);		  
-		});		
-		function atualizaMenu(str) {
+		  carregaSelecao("configuracoes");		  
+		});
+		$(".dashboard").click(function(){
+		  let dashboard = document.querySelectorAll(".dashboard");		 
+		  for (let i = 0; i < dashboard.length; i++) {
+		    if (dashboard[0].checked && i+1 < dashboard.length){
+		      dashboard[i+1].removeAttribute("disabled");
+		    } else {
+		      if (i+1 < dashboard.length) {
+		        for (let j = i+1; j < dashboard.length; j++) {
+		          dashboard[j].checked = false;
+		          dashboard[j].setAttribute("disabled", "true");
+		        }
+		      }
+		    }		    
+		  }
+		  carregaSelecao("dashboard");		  
+		});			
+		function atualizaMenu(str, ativos) {								
 			if (str.length == 0) {
 		    	document.getElementById("txtHint").innerHTML = "";
 		    	return;
@@ -158,9 +196,9 @@ if(isset($_GET["q"])){
 		      	if (this.readyState == 4 && this.status == 200) {
 		        	document.getElementById("txtHint").innerHTML = this.responseText;
 		      	}
-		    };
-		    xmlhttp.open("GET", "options.php?q=" + str, true);
-		    xmlhttp.send();
+		    };		    
+		    xmlhttp.open("GET", "options.php?tag="+str+"&menuAtivo[]="+ativos[0]+"&menuAtivo[]="+ativos[1]+"&menuAtivo[]="+ativos[2]+"&menuAtivo[]="+ativos[3]+"&menuAtivo[]="+ativos[4]+"&menuAtivo[]="+ativos[5]+"&menuAtivo[]="+ativos[6], true);	    
+		    xmlhttp.send();		   	
 		  }
 		  setTimeout(function(){
 		  	window.location.reload('menu.php');
