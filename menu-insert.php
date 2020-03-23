@@ -1,12 +1,59 @@
 <?php 
-$menuAtivo="is-active";
+$menuAtivo="configuracoes";
 require('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
 }
 else{
-
+if(isset($_POST["inserirMenu"])!=null){
+	$nome=trim($_POST['nome']);
+	$tipo=trim($_POST['tipoMenu']);
+	$link=trim($_POST['link']);
+	$menu=trim($_POST['menu']);
+	$situacao=trim($_POST['situacao']);
+	function cleanString($text) {
+    	$utf8 = array('/[áàâãªä]/u'=>'a', '/[ÁÀÂÃÄ]/u'=>'A', '/[ÍÌÎÏ]/u'=>'I', '/[íìîï]/u'=>'i', '/[éèêë]/u'=>'e','/[ÉÈÊË]/u'=>'E', '/[óòôõºö]/u'=>'o',
+        '/[ÓÒÔÕÖ]/u'=>'O', '/[úùûü]/u'=>'u','/[ÚÙÛÜ]/u'=>'U', '/ç/'=>'c', '/Ç/'=>'C', '/ñ/'=>'n','/Ñ/'=>'N', '/@/u'=>'a','/–/'=>'-',
+        '/[’‘‹›‚]/u'=>' ', '/[“”«»„]/u'=>' ', '/ /'=>' ',);
+    	return preg_replace(array_keys($utf8), array_values($utf8), $text);
+	}
+	$tag= strtolower(cleanString($nome));
+	if($nome!="" && $tipo!=""){
+		if($tipo=="MENU"){
+			$checkPermissoes="SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;";
+			$cnx= mysqli_query($phpmyadmin, $checkPermissoes);
+		    while($permissao= $cnx->fetch_array()){
+				$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$link."','n','n','".$situacao."');";
+				mysqli_query($phpmyadmin, $insMenu);
+				echo $insMenu;
+			}
+		}
+		else{
+			$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
+			$cnx= mysqli_query($phpmyadmin, $checkMenu);
+		    while($loadMenu= $cnx->fetch_array()){
+				$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, POSICAO, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', ".$loadMenu["POSICAO"].",'".$link."','n','".$situacao."');";
+				mysqli_query($phpmyadmin, $insMenu);
+				echo "</br>".$insMenu;
+			}
+			
+		}		
+		if(mysqli_error($phpmyadmin)==null){
+			echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar.!!')</script>";
+		}
+		else{
+			$erro=mysqli_error($phpmyadmin);
+			echo "<script>alert('Erro ".$erro."!!')</script>";
+		}			
+	}
+	else if($nome==""){
+		echo "<script>alert('Preencher o campo Nome é obrigatório!!')</script>";
+	}
+	else{
+		echo "<script>alert('Preencher o campo Link é obrigatório!!')</script>";
+	}	
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,7 +80,7 @@ else{
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="option-insert.php" method="POST">
+	   		<form action="menu-insert.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
@@ -73,10 +120,10 @@ else{
 							<div class="control" style="max-width:17em;">
 								<div class="select">
 									<select name="menu">
-										<?php $loadMenu="SELECT ID, MENU FROM MENU WHERE ATIVO='s' GROUP BY MENU ORDER BY POSICAO;"; 
+										<?php $loadMenu="SELECT TAG, MENU FROM MENU WHERE ATIVO='s' GROUP BY MENU ORDER BY POSICAO;"; 
 										$cnx=mysqli_query($phpmyadmin, $loadMenu);
 										while ($menu=$cnx->fetch_array()):{?>										
-										<option value="<?php echo $menu["ID"];?>"><?php echo $menu["MENU"];?></option>
+										<option value="<?php echo $menu["TAG"];?>"><?php echo $menu["MENU"];?></option>
 										<?php }endwhile; ?>										
 									</select>	
 								</div>
