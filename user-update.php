@@ -29,44 +29,45 @@ $observacao = trim($_POST['observacao']);
 <body>
 </br>
 <div>
-	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>	
+	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+<section class="section">
+  	<div class="container">  		
 	<form id="form1" action="user-update.php" method="POST">
-		<div class="field is-horizontal section">			
-			<div class="field is-horizontal">				
-				<div class="field-label is-normal">
-					<label class="label">Filtro:</label>
-				</div>
-				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
-						<div class="control">
-							<div class="select">
-								<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
-									<option value="MATRICULA=">Matricula</option>
-									<option value="LOGIN=">Login</option>
-									<option value="NOME LIKE">Nome</option>
-									<option value="EMAIL=">E-mail</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>			
-			<div class="field is-horizontal">&nbsp&nbsp&nbsp&nbsp
-				<div class="field-label is-normal">
-					<label class="label">Buscar:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="busca" type="text" class="input" id="filtro" placeholder="629">
-							</div>
+		<div class="field is-horizontal">				
+			<div class="field-label is-normal">
+				<label class="label">Filtro:</label>
+			</div>
+			<div class="field-body">
+				<div class="field" style="max-width:17em;">							
+					<div class="control">
+						<div class="select">
+							<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
+								<option value="MATRICULA=">Matricula</option>
+								<option value="LOGIN=">Login</option>
+								<option value="NOME LIKE">Nome</option>
+								<option value="EMAIL=">E-mail</option>
+							</select>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label"></div>
+		</div>			
+		<div class="field is-horizontal">
+			<div class="field-label is-normal">
+				<label class="label">Buscar:</label>
+			</div>
+			<div class="field-body">
+				<div class="field">							
+					<div class="control">
+						<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
+						<input name="busca" type="text" class="input" id="filtro" placeholder="629">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="field is-horizontal">
+			<div class="field-label"></div>
 				<div class="field-body">
 					<div class="field is-grouped">
 						<div class="control">
@@ -80,6 +81,8 @@ $observacao = trim($_POST['observacao']);
 			</div>
 		</div>						
 	</form>
+	</div>
+</section>	
 <?php endif;?>
 </div>	
 <?php
@@ -94,7 +97,7 @@ if( $busca != ""){
 		$f="U.".$filtro."'".$busca."' LIMIT 1;";
 	}	
 	$query="SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.CELULAR, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, 
-U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, G.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.SITUACAO  FROM USUARIO U
+U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, G.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.OBSERVACAO, U.SITUACAO  FROM USUARIO U
 INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID 
 INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID 
 INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
@@ -122,6 +125,9 @@ else if(isset($_POST['consultar'])!=null){
 <?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
 	<main>
+		<div class="container">
+			<h3 class="title">Atualizar Usuário</h3>
+		<hr>
 	<form id="form2" action="user-update.php" method="POST">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
@@ -361,7 +367,7 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." maxlenght="60">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." maxlenght="250" value="<?php echo $dados["OBSERVACAO"]?>">
 				</div>			
 		</div>
 		<div class="field-body">
@@ -378,6 +384,7 @@ else if(isset($_POST['consultar'])!=null){
 			</div>
 		</div>
 		</form>
+	</div><!--final div container-->
 	</main>	
 </section>
 <?php endif;?>
@@ -393,6 +400,7 @@ if(isset($_POST['atualizar'])){
 	$senha = trim($_POST['senha']);
 	$email = trim($_POST['email']);
 	$sexo = trim($_POST['sexo']);
+	$celular = trim($_POST['celular']);
 	$nascimento = trim($_POST['nascimento']);
 	$cargo = trim($_POST['cargo']);
 	$turno = trim($_POST['turno']);
@@ -425,10 +433,10 @@ if(isset($_POST['atualizar'])){
 				$desligadoEm=", DESLIGADO_EM=NULL";
 			}
 			if(mysqli_num_rows($cx)==0 || mysqli_num_rows($cx)==""){
-				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";				
+				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', SENHA=MD5('".$senha."'), EMAIL='".$email."', SEXO='".$sexo."', CELULAR='".$celular."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.",OBSERVACAO='".$observacao."', SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";				
 			}
 			else{
-				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.", SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";
+				$upUser="UPDATE USUARIO SET NOME='".$nome."', LOGIN='".$login."', EMAIL='".$email."', SEXO='".$sexo."', CELULAR='".$celular."', NASCIMENTO='".$nascimento."', CARGO_ID=".$cargo.", TURNO_ID=".$turno.",GESTOR_ID=".$gestor.", SETOR_ID=".$setor.", MATRICULA=".$matricula.", EFETIVACAO='".$efetivacao."', PERMISSAO_ID=".$permissao.",OBSERVACAO='".$observacao."', SITUACAO='".$situacao."'".$desligadoEm." WHERE ID=".$_SESSION["upUser"].";";
 			}
 			$cnx=mysqli_query($phpmyadmin, $upUser);					
 			if(mysqli_error($phpmyadmin)==null){
