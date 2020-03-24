@@ -3,27 +3,12 @@ $menuAtivo="configuracoes";
 require('menu.php');	
 $filtro = trim($_REQUEST['filtro']);
 $busca= trim($_REQUEST['busca']);
-$nome = trim($_POST['nome']);
-$login = trim($_POST['login']);
-$senha = trim($_POST['senha']);
-$email = trim($_POST['email']);
-$sexo = trim($_POST['sexo']);
-$celular = trim($_POST['celular']);
-$nascimento = trim($_POST['nascimento']);
-$cargo = trim($_POST['cargo']);
-$turno = trim($_POST['turno']);
-$gestor = trim($_POST['gestor']);
-$setor = trim($_POST['setor']);
-$matricula = trim($_POST['matricula']);
-$efetivacao = trim($_POST['efetivacao']);
-$permissao = trim($_POST['permissao']);
-$situacao = trim($_POST['situacao']);
-$observacao = trim($_POST['observacao']);
 ?>
 <!DOCTYPE html>
 <html>
 <head>	
 	<title>Gestão de Desempenho - Atualizar Usuário</title>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
 	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
@@ -132,13 +117,13 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>" maxlenght="60">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Harry Will" value="<?php echo $dados["NOME"];?>" maxlenght="60">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>" maxlenght="60">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="harry.will" value="<?php echo $dados["LOGIN"];?>" maxlenght="60">				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -157,16 +142,17 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
+		    	<input name="email" class="input" id="email" type="text" placeholder="willvix@outlook.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form2.email)"  maxlength="50">
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
 		    	</span>
-		    	<span class="icon is-small is-right">
-		      		<i class="fas fa-exclamation-triangle"></i>
-		    	</span>		    	
-		    	<div id="msgemail"></div>
+		    	<div id="msgemail" style="display:none;">
+			    	<span class="icon is-small is-right">
+			      		<i class="fas fa-exclamation-triangle"></i>
+			    	</span>
+			    	<p class="help is-danger">E-mail inválido, este campo é obrigatório!</p>		    	
+		    	</div>
 		  	</div>
-		  	<p class="help is-danger">E-mail inválido</p>
 		</div>
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
@@ -379,7 +365,7 @@ else if(isset($_POST['consultar'])!=null){
 					<a href="user-update.php"><button class="button is-primary">Voltar</button></a>										
 				</div>
 				<div class="control">
-					<a href="register.php"><button class="button is-primary">Cancelar</button></a>										
+					<a href="register.php" class="button is-primary">Cancelar</a>										
 				</div>
 			</div>
 		</div>
