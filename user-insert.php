@@ -51,16 +51,17 @@ else{
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="willvix@outlook.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
+		    	<input name="email" class="input" id="email" type="text" placeholder="willvix@outlook.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="50" size='65'>
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
 		    	</span>
-		    	<span class="icon is-small is-right">
-		      		<i class="fas fa-exclamation-triangle"></i>
-		    	</span>		    	
-		    	<div id="msgemail"></div>
-		  	</div>
-		  	<p class="help is-danger">E-mail inválido</p>
+		    	<div id="msgemail" style="display:none;">
+			    	<span class="icon is-small is-right">
+			      		<i class="fas fa-exclamation-triangle"></i>
+			    	</span>
+			    	<p class="help is-danger">E-mail inválido</p>		    	
+		    	</div>
+		  	</div>		  	
 		</div>
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
