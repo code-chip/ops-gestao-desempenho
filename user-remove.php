@@ -1,6 +1,6 @@
 <?php
 $menuAtivo="configuracoes";
-include('menu.php');
+require('menu.php');
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
@@ -8,33 +8,21 @@ if($_SESSION["permissao"]==1){
 else{
 	$filtro = trim($_REQUEST['filtro']);
 	$busca= trim($_REQUEST['busca']);
-	$nome = trim($_POST['nome']);
-	$login = trim($_POST['login']);
-	$senha = trim($_POST['senha']);
-	$email = trim($_POST['email']);
-	$sexo = trim($_POST['sexo']);
-	$nascimento = trim($_POST['nascimento']);
-	$cargo = trim($_POST['cargo']);
-	$turno = trim($_POST['turno']);
-	$gestor = trim($_POST['gestor']);
-	$setor = trim($_POST['setor']);
-	$matricula = trim($_POST['matricula']);
-	$efetivacao = trim($_POST['efetivacao']);
-	$permissao = trim($_POST['permissao']);
-	$situacao = trim($_POST['situacao']);
-	$observacao = trim($_POST['observacao']);
 ?>
 <!DOCTYPE html>
 <html>
 <head>	
 	<title>Gestão de Desempenho - Remover Usuário</title>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
+	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
 </br>
 <div>
-	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
-	<form id="form1" action="user-remove.php" method="POST">
-		<div class="field is-horizontal section">			
+<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+<section class="section">
+	<div class="container">  
+		<form id="form1" action="user-remove.php" method="POST">
 			<div class="field is-horizontal">				
 				<div class="field-label is-normal">
 					<label class="label">Filtro:</label>
@@ -43,7 +31,7 @@ else{
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="filtro">
+								<select onchange="upPlaceholder(this.value)" name="filtro">
 									<option value="MATRICULA=">Matricula</option>
 									<option value="LOGIN=">Login</option>
 									<option value="NOME LIKE">Nome</option>
@@ -54,7 +42,7 @@ else{
 					</div>
 				</div>
 			</div>			
-			<div class="field is-horizontal">&nbsp&nbsp&nbsp&nbsp
+			<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Buscar:</label>
 				</div>
@@ -62,7 +50,7 @@ else{
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="busca" type="text" class="input" id="filtro" placeholder="635">
+							<input name="busca" type="text" class="input" id="filtro" placeholder="629">
 							</div>
 						</div>
 					</div>
@@ -81,8 +69,9 @@ else{
 					</div>
 				</div>
 			</div>
-		</div>						
-	</form>
+		</form>
+	</div><!--div container-->
+</section>
 <?php endif;?>
 </div>	
 <?php
@@ -119,17 +108,20 @@ WHERE ".$f;
 <?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
 	<main>
+	<div class="container">
+	<h3 class="title">Remover Usuário</h3>
+	<hr>
 	<form id="form2" action="user-remove.php" method="POST">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Harry Will" value="<?php echo $dados["NOME"];?>">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="harry.will" value="<?php echo $dados["LOGIN"];?>">				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -141,23 +133,24 @@ WHERE ".$f;
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
-				<div class="control">
-					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>">
-				</div>			
+			<div class="control">
+				<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>">
+			</div>			
 		</div>
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
+		    	<input name="email" class="input" id="email" type="text" placeholder="willvix@outlook.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form2.email)"  maxlength="60">
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
-		    	</span>
-		    	<span class="icon is-small is-right">
+		    	</span>		    		    	
+		    	<div id="msgemail" style="display: none;">
+		    		<span class="icon is-small is-right">
 		      		<i class="fas fa-exclamation-triangle"></i>
-		    	</span>		    	
-		    	<div id="msgemail"></div>
+		    		</span>
+		    		<p class="help is-danger">E-mail inválido, este campo é obrigatório!</p>	
+		    	</div>
 		  	</div>
-		  	<p class="help is-danger">E-mail inválido</p>
 		</div>
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
@@ -302,20 +295,24 @@ WHERE ".$f;
 		<div class="field"><!---->	
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo:Informações de e-mail e celular pedente.">
 				</div>			
 		</div>
 		<div class="field-body">
-			<div class="field is-grouped">											
+			<div class="field is-grouped">
 				<div class="control">
-					<a href="user-remove.php"><button class="button is-primary">Voltar</button></a>										
+					<button name="excluir" type="submit" class="button is-primary" id="submitQuery">Remover</button>
+				</div>											
+				<div class="control">
+					<a href="user-remove.php" class="button is-primary">Voltar</a>										
 				</div>
 				<div class="control">
-					<button name="excluir" type="submit" class="button is-primary" id="submitQuery">Excluir</button>
-				</div>
+					<a href="register.php" class="button is-primary">Cancelar</a>										
+				</div>				
 			</div>
 		</div>					
 		</form>
+		</div><!--div container-->
 	</main>	
 </section>
 <?php endif;?>
