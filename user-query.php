@@ -117,13 +117,13 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
 				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Ana Clara" value="<?php echo $dados["NOME"];?>" disabled>
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
 				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>">				
+					<input name="login" class="input" type="text" id="textInput" placeholder="ana.clara" value="<?php echo $dados["LOGIN"];?>" disabled>				
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -136,13 +136,13 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
 				<div class="control">
-					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>">
+					<input name="senha" type="password" class="input" id="textInput" placeholder="" value="<?php echo $dados["SENHA"];?>" disabled>
 				</div>			
 		</div>
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input" id="email" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="50" size='65'>
+		    	<input name="email" class="input" id="email" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="50" disabled>
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
 		    	</span>
@@ -162,7 +162,7 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="sexo">
+							<select name="sexo" disabled>
 								<?php if($dados["SEXO"] =="M"):{?>							
 								<option selected="selected" value="M">Masculino</option>
 								<?php }endif?>
@@ -180,7 +180,7 @@ else if(isset($_POST['consultar'])!=null){
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:9em;">
-						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195" value="<?php echo $dados["CELULAR"];?>">
+						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195" value="<?php echo $dados["CELULAR"];?>" disabled>
 					</div>
 				</div>
 			</div>
@@ -190,7 +190,7 @@ else if(isset($_POST['consultar'])!=null){
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31" value="<?php echo $dados["NASCIMENTO"];?>">
+						<input name="nascimento" type="text" class="input mascara-data" placeholder="1992-12-31" value="<?php echo $dados["NASCIMENTO"];?>" disabled>
 					</div>
 				</div>
 			</div>
@@ -200,7 +200,7 @@ else if(isset($_POST['consultar'])!=null){
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:7em;">
-						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31" value="<?php echo $dados["EFETIVACAO"];?>">
+						<input name="efetivacao" type="text" class="input mascara-data" placeholder="2018-12-31" value="<?php echo $dados["EFETIVACAO"];?>" disabled>
 					</div>
 				</div>
 			</div>
@@ -214,7 +214,7 @@ else if(isset($_POST['consultar'])!=null){
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select">
-						<select name="cargo">
+						<select name="cargo" disabled>
 							<option selected="selected" value="<?php echo $dados["CARGO_ID"];?>"><?php echo $dados["CARGO"];?></option>	
 						</select>	
 					</div>
@@ -228,7 +228,7 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="turno">
+							<select name="turno" disabled>
 								<option selected="selected" value="<?php echo $dados["TURNO_ID"];?>"><?php echo $dados["TURNO"];?></option>
 							</select>	
 						</div>
@@ -242,7 +242,7 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="gestor">								
+							<select name="gestor" disabled>								
 								<option selected="selected" value="<?php echo $dados["GESTOR_ID"];?>"><?php echo $dados["GESTOR"];?></option>	
 							</select>	
 						</div>
@@ -258,7 +258,7 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="setor">
+							<select name="setor" disabled>
 								<option selected="selected" value="<?php echo $dados["SETOR_ID"];?>"><?php echo $dados["SETOR"];?></option>
 							</select>	
 						</div>
@@ -271,7 +271,7 @@ else if(isset($_POST['consultar'])!=null){
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input" placeholder="629" value="<?php echo $dados["MATRICULA"]?>">
+						<input name="matricula" type="text" class="input" placeholder="629" value="<?php echo $dados["MATRICULA"]?>" disabled>
 					</div>
 				</div>
 			</div>
@@ -282,8 +282,8 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="permissao">							
-								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option>
+							<select name="permissao" disabled>							
+								<option selected="selected" value="<?php echo $dados["PERMISSAO_ID"];?>"><?php echo $dados["PERMISSAO"];?></option disabled>
 							</select>	
 						</div>
 					</div>					
@@ -296,8 +296,8 @@ else if(isset($_POST['consultar'])!=null){
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select">
-							<select name="situacao">
-								<option selected="selected" value="<?php echo $dados["SITUACAO"];?>"><?php echo $dados["SITUACAO"];?></option>
+							<select name="situacao" disabled>
+								<option selected="selected" value="<?php echo $dados["SITUACAO"];?>"><?php echo $dados["SITUACAO"];?></option disabled>
 							</select>	
 						</div>
 					</div>					
@@ -307,7 +307,7 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field"><!---->	
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." value="<?php echo $dados["OBSERVACAO"];?>">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." value="<?php echo $dados["OBSERVACAO"];?>" disabled>
 				</div>			
 		</div>
 			<div class="field is-grouped">
