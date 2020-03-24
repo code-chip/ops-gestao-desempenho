@@ -9,6 +9,7 @@ $busca= trim($_POST['busca']);
 <html>
 <head>	
 	<title>Gestão de Desempenho - Consultar Usuário</title>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
 	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
@@ -141,16 +142,17 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field">
 		  	<label class="label">Email</label>
 		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input is-danger" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="60" size='65'>
+		    	<input name="email" class="input" id="email" type="text" placeholder="anaclara@gmail.com" value="<?php echo $dados["EMAIL"];?>" onblur="validacaoEmail(form1.email)"  maxlength="50" size='65'>
 		    	<span class="icon is-small is-left">
 		      		<i class="fas fa-envelope"></i>
 		    	</span>
-		    	<span class="icon is-small is-right">
-		      		<i class="fas fa-exclamation-triangle"></i>
-		    	</span>		    	
-		    	<div id="msgemail"></div>
+		    	<div id="msgemail" style="display:none;">
+			    	<span class="icon is-small is-right">
+			      		<i class="fas fa-exclamation-triangle"></i>
+			    	</span>
+			    	<p class="help is-danger">E-mail inválido</p>		    	
+		    	</div>
 		  	</div>
-		  	<p class="help is-danger">E-mail inválido</p>
 		</div>
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
