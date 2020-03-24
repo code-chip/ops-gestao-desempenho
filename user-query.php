@@ -315,7 +315,7 @@ else if(isset($_POST['consultar'])!=null){
 					<a href="user-query.php"><button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Voltar</button></a>
 				</div>
 				<div class="control">
-					<a href="register.php"><button name="cadastrar" type="submit" class="button is-primary">Cancelar</button></a>
+					<a href="register.php" class="button is-primary">Cancelar</a>
 				</div>
 			</div>						
 		</form>
