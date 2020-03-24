@@ -1,6 +1,6 @@
 <?php
 $menuAtivo="configuracoes";
-include('menu.php');
+require('menu.php');
 //<!--- DECLARAÇÃO DAS VARIAVEIS -->
 $filtro = trim($_POST['filtro']);
 $busca= trim($_POST['busca']);
@@ -9,13 +9,15 @@ $busca= trim($_POST['busca']);
 <html>
 <head>	
 	<title>Gestão de Desempenho - Consultar Usuário</title>
+	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
 </br>
 <div>
-	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>	
-	<form id="form1" action="" method="POST">
-		<div class="field is-horizontal section">			
+<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+<section class="section">
+  	<div class="container">  		
+		<form id="form1" action="" method="POST">
 			<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Filtro:</label>
@@ -24,7 +26,7 @@ $busca= trim($_POST['busca']);
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="filtro">
+								<select onchange="upPlaceholder(this.value)" name="filtro">
 									<option value="MATRICULA=">Matricula</option>
 									<option value="LOGIN=">Login</option>
 									<option value="NOME LIKE">Nome</option>
@@ -35,7 +37,7 @@ $busca= trim($_POST['busca']);
 					</div>
 				</div>
 			</div>			
-			<div class="field is-horizontal">&nbsp&nbsp&nbsp&nbsp
+			<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Buscar:</label>
 				</div>
@@ -43,7 +45,7 @@ $busca= trim($_POST['busca']);
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="busca" type="text" class="input" id="filtro" placeholder="635">
+							<input name="busca" type="text" class="input" id="filtro" placeholder="629">
 						</div>
 						</div>
 					</div>
@@ -64,6 +66,8 @@ $busca= trim($_POST['busca']);
 			</div>
 		</div>						
 	</form><!--FINAL DO FORM FILTRAR CONSULTA-->
+	</div><!--Final div container-->
+</section>
 	<?php endif;?>
 <?php
 if( $busca != ""){
@@ -104,6 +108,9 @@ else if(isset($_POST['consultar'])!=null){
 ?>
 <?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
+		<div class="container">
+			<h3 class="title">Consultar Usuário</h3>
+		<hr>
 	<main>	
 	<form id="form2" action="user-query.php" method="POST">		
 		<div class="field">
@@ -164,6 +171,16 @@ else if(isset($_POST['consultar'])!=null){
 						</div>
 					</div>					
 				</div>						
+			</div>
+			<div class="field-label is-normal"><!--CAMPO CELULAR-->
+				<label class="label" for="celular">Celular</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control" style="max-width:9em;">
+						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195" value="<?php echo $dados["CELULAR"];?>">
+					</div>
+				</div>
 			</div>
 			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
 				<label class="label" for="nascimento">Nascimento</label>
@@ -288,12 +305,15 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field"><!---->	
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService...">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo: funcionário terceirizado da empresa MWService..." value="<?php echo $dados["OBSERVACAO"];?>">
 				</div>			
 		</div>
-			<div class="field">
+			<div class="field is-grouped">
 				<div class="control">
 					<a href="user-query.php"><button name="cadastrar" type="submit" class="button is-primary" id="submitQuery">Voltar</button></a>
+				</div>
+				<div class="control">
+					<a href="register.php"><button name="cadastrar" type="submit" class="button is-primary">Cancelar</button></a>
 				</div>
 			</div>						
 		</form>
