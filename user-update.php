@@ -8,6 +8,7 @@ $login = trim($_POST['login']);
 $senha = trim($_POST['senha']);
 $email = trim($_POST['email']);
 $sexo = trim($_POST['sexo']);
+$celular = trim($_POST['celular']);
 $nascimento = trim($_POST['nascimento']);
 $cargo = trim($_POST['cargo']);
 $turno = trim($_POST['turno']);
@@ -23,11 +24,12 @@ $observacao = trim($_POST['observacao']);
 <html>
 <head>	
 	<title>Gestão de Desempenho - Atualizar Usuário</title>
+	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
 </br>
 <div>
-	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>	
 	<form id="form1" action="user-update.php" method="POST">
 		<div class="field is-horizontal section">			
 			<div class="field is-horizontal">				
@@ -38,7 +40,7 @@ $observacao = trim($_POST['observacao']);
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="filtro">
+								<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
 									<option value="MATRICULA=">Matricula</option>
 									<option value="LOGIN=">Login</option>
 									<option value="NOME LIKE">Nome</option>
@@ -57,7 +59,7 @@ $observacao = trim($_POST['observacao']);
 					<div class="field">							
 						<div class="control">
 							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="busca" type="text" class="input" id="filtro" placeholder="635">
+							<input name="busca" type="text" class="input" id="filtro" placeholder="629">
 							</div>
 						</div>
 					</div>
@@ -91,7 +93,7 @@ if( $busca != ""){
 	else{
 		$f="U.".$filtro."'".$busca."' LIMIT 1;";
 	}	
-	$query="SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, 
+	$query="SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.CELULAR, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, 
 U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, G.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.SITUACAO  FROM USUARIO U
 INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID 
 INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID 
@@ -115,8 +117,7 @@ else if(isset($_POST['consultar'])!=null){
 		window.location.href=window.location.href;
 	</script> <?php	
 }	
-?>
-<!--FINAL DO FORM FILTRAR CONSULTA-->
+?><!--FINAL DO FORM FILTRAR CONSULTA-->
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if(isset($_POST['consultar']) && $row!=0) : ?>
 	<section class="section">
@@ -180,6 +181,16 @@ else if(isset($_POST['consultar'])!=null){
 						</div>
 					</div>					
 				</div>						
+			</div>
+			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
+				<label class="label" for="celular">Celular</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control" style="max-width:9em;">
+						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195" value="<?php echo $dados["CELULAR"];?>">
+					</div>
+				</div>
 			</div>
 			<div class="field-label is-normal"><!--CAMPO EFETIVADO-->
 				<label class="label" for="nascimento">Nascimento</label>
@@ -354,12 +365,15 @@ else if(isset($_POST['consultar'])!=null){
 				</div>			
 		</div>
 		<div class="field-body">
-			<div class="field is-grouped">											
+			<div class="field is-grouped">
+				<div class="control">
+					<button name="atualizar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
+				</div>											
 				<div class="control">
 					<a href="user-update.php"><button class="button is-primary">Voltar</button></a>										
 				</div>
 				<div class="control">
-					<button name="atualizar" type="submit" class="button is-primary" id="submitQuery">Atualizar</button>
+					<a href="register.php"><button class="button is-primary">Cancelar</button></a>										
 				</div>
 			</div>
 		</div>
