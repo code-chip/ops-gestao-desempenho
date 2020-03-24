@@ -13,28 +13,7 @@ else{
 	<title>Gestão de Desempenho - Inserir Usuário</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script language="Javascript">
-		function validacaoEmail(field) {
-		usuario = field.value.substring(0, field.value.indexOf("@"));
-		dominio = field.value.substring(field.value.indexOf("@")+ 1, field.value.length);
-		if ((usuario.length >=1) &&
-		    (dominio.length >=3) && 
-		    (usuario.search("@")==-1) && 
-		    (dominio.search("@")==-1) &&
-		    (usuario.search(" ")==-1) && 
-		    (dominio.search(" ")==-1) &&
-		    (dominio.search(".")!=-1) &&      
-		    (dominio.indexOf(".") >=1)&& 
-		    (dominio.lastIndexOf(".") < dominio.length - 1)) {
-		document.getElementById("msgemail").innerHTML="E-mail válido";
-		//alert("email valido");
-		}
-		else{
-		document.getElementById("msgemail").innerHTML="<font color='red'>Email inválido </font>";
-		alert("E-mail invalido");
-		}
-		}
-	</script>	
+    <script type="text/javascript" src="js/myjs.js"></script>	
 </head>
 <body>
 <div>	
@@ -258,7 +237,7 @@ else{
 		<div class="field">
 			<label class="label" for="observacao">Observação</label>
 				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo:Informações de e-mail e celular pedente." maxlength="300">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo:Informações de e-mail e celular pedente." maxlength="250">
 				</div>			
 		</div>
 		<div class="field-body">
