@@ -1,6 +1,6 @@
 <?php 
-include('login-check.php');
-include('connection.php');
+require('login-check.php');
+require('connection.php');
 header('Content-Type: text/html; charset=UTF-8');
 ini_set('display_errors', 1);
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
@@ -26,7 +26,8 @@ $menuAtivo;
 	    $(document).ready(function () {	    	
 	        $('.registro').mask('9999-99-99');
 	        $('.desempenho').mask('9999');
-	        $('.numero').mask('9999');	       
+	        $('.numero').mask('9999');
+	        $('.celular').mask('(999)99999-9999');	       
 	        return false;
 	    });
 	    function msg(){
