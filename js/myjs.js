@@ -33,3 +33,9 @@ function validacaoEmail(field) {//função usada no cadastro de usuário.
 	}
 
 }
+function addLoadField(id){//função p/ adicionar icone de carregamento ao digitar.
+    document.getElementById(""+id).classList.add("is-loading");
+}
+function rmvLoadField(id){//função p/ remover icone de carregamento ao parar de digitar.
+    document.getElementById(""+id).classList.remove("is-loading");
+}
