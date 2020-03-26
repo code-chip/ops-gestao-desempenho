@@ -27,7 +27,8 @@ $menuAtivo;
 	        $('.registro').mask('9999-99-99');
 	        $('.desempenho').mask('9999');
 	        $('.numero').mask('9999');
-	        $('.celular').mask('(999)99999-9999');	       
+	        $('.celular').mask('(999)99999-9999');
+	        $('.maskCep').mask('99999-999');	       
 	        return false;
 	    });
 	    function msg(){
