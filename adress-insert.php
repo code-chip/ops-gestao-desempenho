@@ -34,19 +34,19 @@ require('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="endereco">
-						<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input" placeholder="Rua Holdercim"  maxlength="50" onblur="checkAdress(form1.endereco)" id="inputAdress">
+						<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input" placeholder="Rua Holdercim"  maxlength="50" onblur="checkAdress(form1.endereco, 'msgAdressOk','msgAdressNok')" id="inputAdress">
 						<span class="icon is-small is-left">
 				      		<i class="fas fa-home"></i>
 				    	</span>
-				    	<div id="msgEnderecoNok" style="display:none;">
+				    	<div id="msgAdressNok" style="display:none;">
 					    	<span class="icon is-small is-right">
-					      		<i class="fas fa-fw" id="icon"></i>
+					      		<i class="fas fa-fw"></i>
 					    	</span>
-					    	<p class="help is-danger">Preenchimento do endereço é obrigatório</p>		    	
+					    	<p class="help is-danger">O endereço é obrigatório</p>		    	
 				    	</div>
-				    	<div id="msgEnderecoOk" style="display:none;">
-					    	<span class="icon is-small is-right mdi mdi-dark">
-					      		<i class="fas fa-check mdi mdi-dark " id="icon"></i>
+				    	<div id="msgAdressOk" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-check"></i>
 					    	</span>
 				    	</div>
 					</div>
@@ -57,11 +57,22 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control has-icons-left" style="max-width:9em;" id="numero">
-						<input name="numero" type="text" class="input numero" placeholder="840" maxlength="4" onkeypress="addLoadField('numero')" onkeyup="rmvLoadField('numero')">
+					<div class="control has-icons-left has-icons-right" style="max-width:9em;" id="numero">
+						<input name="numero" type="text" class="input numero" placeholder="840" maxlength="4" onkeypress="addLoadField('numero')" onkeyup="rmvLoadField('numero')" onblur="checkAdress(form1.numero, 'msgNumberOk','msgNumberNok')" id="inputNumber">
 						<span class="icon is-small is-left">
 							<i class="fas fa-list-ol"></i>
 						</span>
+						<div id="msgNumberNok" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-fw"></i>
+					    	</span>
+					    	<p class="help is-danger">O número é obrigatório</p>		    	
+				    	</div>
+				    	<div id="msgNumberOk" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-check"></i>
+					    	</span>
+				    	</div>
 					</div>
 				</div>
 			</div>	  	
@@ -73,15 +84,18 @@ require('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="referencia">
-						<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="50" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')">
+						<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="50" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')" onblur="checkAdress(form1.complemento, 'msgComplementOk','msgComplementNok')" id="inputComplement">
 						<span class="icon is-small is-left">
 				      		<i class="fas fa-road"></i>
-				    	</span>
-				    	<div id="msgemail" style="display:none;">
+				    	</span>				    	
+				    	<div id="msgComplementOk" style="display:none;">
 					    	<span class="icon is-small is-right">
-					      		<i class="fas fa-exclamation-triangle"></i>
+					      		<i class="fas fa-check"></i>
 					    	</span>
-					    	<p class="help is-danger">Preenchimento do endereço é obrigatório</p>		    	
+				    	</div>
+				    	<div id="msgComplementNok" style="display:none;">
+					    	<span class="icon is-small is-right">
+					    	</span>
 				    	</div>
 					</div>
 				</div>
@@ -91,11 +105,20 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control has-icons-left" style="max-width:9em;" id="quadra">
-						<input name="quadra" type="text" class="input numero" placeholder="3" maxlength="4">
+					<div class="control has-icons-left has-icons-right" style="max-width:9em;" id="quadra">
+						<input name="quadra" type="text" class="input numero" placeholder="3" maxlength="4" onblur="checkAdress(form1.quadra, 'msgBlockOk','msgBlockNok')" id="inputBlock">
 						<span class="icon is-small is-left">
 							<i class="fas fa-sort-numeric-up"></i>
 						</span>
+						<div id="msgBlockOk" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-check"></i>
+					    	</span>
+				    	</div>
+				    	<div id="msgBlockNok" style="display:none;">
+					    	<span class="icon is-small is-right">
+					    	</span>
+				    	</div>
 					</div>
 				</div>
 			</div>	  	
@@ -104,13 +127,13 @@ require('menu.php');
 		<div class="field is-horizontal"><!--SELEÇÃO CARGO-->			
 			<div class="field-label is-normal">
 				<label for="cargo" class="label">Bairro*</label>
-			</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 			<div class="field-body">
 				<div class="field is-grouped">
 				<div class="control has-icons-left">
 				    <div class="select">
 				      	<select name="bairro">							
-							<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=3;"; 
+							<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO;"; 
 							$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 							while($bairro = $con->fetch_array()):{?>
 								<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
@@ -148,20 +171,23 @@ require('menu.php');
 		<!---->
 		<div class="field is-horizontal"><!--SELEÇÃO CARGO-->
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
-				<label for="observacao" class="label">Observação*</label>
+				<label for="observacao" class="label">Observação</label>
 			</div>&nbsp&nbsp
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="observacao">
-						<input name="observacao" onkeypress="addLoadField('observacao')" onkeyup="rmvLoadField('observacao')" type="text" class="input" placeholder="Galpão"  maxlength="50">
+						<input name="observacao" onkeypress="addLoadField('observacao')" onkeyup="rmvLoadField('observacao')" type="text" class="input" placeholder="Galpão"  maxlength="50" onblur="checkAdress(form1.observacao, 'msgNoteOk','msgNoteNok')" id="inputNote">
 						<span class="icon is-small is-left">
 				      		<i class="fas fa-file-alt"></i>
 				    	</span>
-				    	<div id="msgemail" style="display:none;">
+				    	<div id="msgNoteOk" style="display:none;">
 					    	<span class="icon is-small is-right">
-					      		<i class="fas fa-exclamation-triangle"></i>
+					      		<i class="fas fa-check"></i>
 					    	</span>
-					    	<p class="help is-danger">Preenchimento do endereço é obrigatório</p>		    	
+				    	</div>
+				    	<div id="msgNoteNok" style="display:none;">
+					    	<span class="icon is-small is-right">
+					    	</span>
 				    	</div>
 					</div>
 				</div>
@@ -171,11 +197,22 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control has-icons-left" style="max-width:9em;" id="cep">
-						<input name="cep" type="text" class="input maskCep" placeholder="29166-066" maxlength="9" onkeypress="addLoadField('cep')" onkeyup="rmvLoadField('cep')">
+					<div class="control has-icons-left has-icons-right" style="max-width:9em;" id="cep">
+						<input name="cep" type="text" class="input maskCep" placeholder="29166-066" maxlength="9" onkeypress="addLoadField('cep')" onkeyup="rmvLoadField('cep')" onblur="checkAdress(form1.cep, 'msgZipcodeOk','msgZipcodeNok')" id="inputZipcode">
 						<span class="icon is-small is-left">
 							<i class="fas fa-map-marked-alt"></i>
 						</span>
+						<div id="msgZipcodeNok" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-fw"></i>
+					    	</span>
+					    	<p class="help is-danger">O CEP é obrigatório</p>		    	
+				    	</div>
+				    	<div id="msgZipcodeOk" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-check"></i>
+					    	</span>
+				    	</div>
 					</div>
 				</div>
 			</div>			
