@@ -44,6 +44,15 @@ include('menu.php');
 	</div>	
 </div>
 <br/>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="user-filter-query.php" value="<?php $_SESSION[filter]=array(); array_push($_SESSION[filter],'Inserir Endereço','adress-insert.php');?>"><span class="button is-white is-primary is-outlined mw12">Inserir Endereço</span></a>&nbsp&nbsp&nbsp
+		<a href="adress-query.php?&post=1"><span class="button is-media is-primary is-outlined mw12">Consultar Endereço</span></a>&nbsp&nbsp&nbsp
+		<a href="adress-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Endereço</span></a>&nbsp&nbsp&nbsp
+		<a href="adress-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Endereço</span></a>&nbsp&nbsp&nbsp		
+	</div>	
+</div>
+<br/>
 <?php if($_SESSION["permissao"]!=1):?>	
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
