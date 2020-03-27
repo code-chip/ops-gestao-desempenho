@@ -25,14 +25,14 @@ else{
 	<form id="form1" action="user-insert.php" method="POST">
 		<div class="field">
 			<label class="label" for="textInput">Nome completo</label>
-				<div class="control">
-					<input name="nome" type="text" class="input" id="textInput" placeholder="Harry Will" maxlength="60">
+				<div class="control" id="nome">
+					<input name="nome" type="text" class="input" id="textInput" placeholder="Harry Will" maxlength="60" onkeypress="addLoadField('nome')" onkeyup="rmvLoadField('nome')">
 				</div>			
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Login</label>
-				<div class="control has-icons-left has-icons-right">
-					<input name="login" class="input" type="text" id="textInput" placeholder="harry.will" maxlength="60">				
+				<div class="control has-icons-left has-icons-right" id="login">
+					<input name="login" class="input" type="text" id="textInput" placeholder="harry.will" maxlength="60" onkeypress="addLoadField('login')" onkeyup="rmvLoadField('login')">
 					<span class="icon is-small is-left">
 				      	<i class="fas fa-user"></i>
 				    </span>
@@ -44,22 +44,23 @@ else{
 		</div>
 		<div class="field">
 			<label class="label" for="numberInput">Senha</label>
-				<div class="control">
-					<input name="senha" type="password" class="input" id="textInput" placeholder="">
+				<div class="control" id="senha">
+					<input name="senha" type="password" class="input" id="textInput" placeholder="" onkeypress="addLoadField('senha')" onkeyup="rmvLoadField('senha')">
 				</div>			
 		</div>
 		<div class="field">
 		  	<label class="label">Email</label>
-		  	<div class="control has-icons-left has-icons-right">
-		    	<input name="email" class="input" id="email" type="text" placeholder="willvix@outlook.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="50" size='65'>
+		  	<div class="control has-icons-left has-icons-right" id="emailLoad">
+		    	<input name="email" class="input" id="email" type="text" placeholder="willvix@outlook.com" value="" onblur="validacaoEmail(form1.email)"  maxlength="50" onkeypress="addLoadField('emailLoad')" onkeyup="rmvLoadField('emailLoad')">
 		    	<span class="icon is-small is-left">
-		      		<i class="fas fa-envelope"></i>
+		      		<i class="fas fa-envelope" id="iconMail"></i>
 		    	</span>
 		    	<div id="msgemail" style="display:none;">
 			    	<span class="icon is-small is-right">
 			      		<i class="fas fa-exclamation-triangle"></i>
 			    	</span>
-			    	<p class="help is-danger">E-mail inválido</p>		    	
+			    	
+			    	<p class="help is-danger">E-mail inválido, este campo é obrigatório!</p>		    	
 		    	</div>
 		  	</div>		  	
 		</div>
@@ -85,8 +86,8 @@ else{
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:9em;">
-						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195">
+					<div class="control" id="celular" style="max-width:9em;">
+						<input name="celular" type="text" class="input celular" placeholder="(027)99296-8195" onkeypress="addLoadField('celular')" onkeyup="rmvLoadField('celular')">
 					</div>
 				</div>
 			</div>
@@ -95,8 +96,8 @@ else{
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:6.5em;">
-						<input name="nascimento" type="text" class="input registro" placeholder="1992-12-31">
+					<div class="control" id="nascimento" style="max-width:6.5em;">
+						<input name="nascimento" type="text" class="input registro" placeholder="1992-12-31" onkeypress="addLoadField('nascimento')" onkeyup="rmvLoadField('nascimento')">
 					</div>
 				</div>
 			</div>
@@ -105,8 +106,8 @@ else{
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:6.5em;">
-						<input name="efetivacao" type="text" class="input registro" placeholder="2018-12-31">
+					<div class="control" id="admissao" style="max-width:6.5em;">
+						<input name="efetivacao" type="text" class="input registro" placeholder="2018-12-31" onkeypress="addLoadField('admissao')" onkeyup="rmvLoadField('admissao')">
 					</div>
 				</div>
 			</div>			
@@ -193,8 +194,8 @@ else{
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:8em;">
-						<input name="matricula" type="text" class="input numero" placeholder="629" maxlength="4">
+					<div class="control" id="matricula" style="max-width:8em;">
+						<input name="matricula" type="text" class="input numero" placeholder="629" maxlength="4" onkeypress="addLoadField('matricula')" onkeyup="rmvLoadField('matricula')">
 					</div>
 				</div>
 			</div>
@@ -237,8 +238,8 @@ else{
 		<!---->					
 		<div class="field">
 			<label class="label" for="observacao">Observação</label>
-				<div class="control">
-					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo:Informações de e-mail e celular pedente." maxlength="250">
+				<div class="control" id="observacao">
+					<input name="observacao" type="text" class="input" id="textInput" placeholder="Exemplo:Informações de e-mail e celular pedente." maxlength="250" onkeypress="addLoadField('observacao')" onkeyup="rmvLoadField('observacao')">
 				</div>			
 		</div>
 		<div class="field-body">

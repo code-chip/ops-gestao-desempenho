@@ -14,7 +14,7 @@ $busca= trim($_REQUEST['busca']);
 <body>
 </br>
 <div>
-	<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
+<?php if($filtro =="" && isset($_POST['consultar'])==null ): ?>
 <section class="section">
   	<div class="container">  		
 	<form id="form1" action="user-update.php" method="POST">

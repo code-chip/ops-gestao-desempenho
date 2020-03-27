@@ -150,7 +150,7 @@ else if(isset($_POST['consultar'])!=null){
 			    	<span class="icon is-small is-right">
 			      		<i class="fas fa-exclamation-triangle"></i>
 			    	</span>
-			    	<p class="help is-danger">E-mail inválido</p>		    	
+			    	<p class="help is-danger">E-mail inválido, este campo é obrigatório!</p>		    	
 		    	</div>
 		  	</div>
 		</div>
@@ -270,8 +270,11 @@ else if(isset($_POST['consultar'])!=null){
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:8em;">
+					<div class="control has-icons-right" style="max-width:8em;">
 						<input name="matricula" type="text" class="input" placeholder="629" value="<?php echo $dados["MATRICULA"]?>" disabled>
+						<span class="icon has-text-danger">
+						  	<i class="fas fa-ban"></i>
+						</span>
 					</div>
 				</div>
 			</div>
