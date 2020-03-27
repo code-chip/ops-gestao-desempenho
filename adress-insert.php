@@ -17,14 +17,15 @@ require('menu.php');
     </style>	
 </head>
 <body>
-<div>	
+<div>
 <section class="section">
 	<section class="section">
 	<div class="container">
 	<main>
 	<form id="form1" action="adress-insert.php" method="POST">
 	<div class="layout">
-	<h3 class="title">Inserir Endereço</h3>
+	<h3 class="title"><i class="fas fa-plus-square"></i>&nbsp&nbsp  ENDEREÇO</h3>
+	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
 	<hr>		
 		<div class="field is-horizontal">
 		  	<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
@@ -33,15 +34,20 @@ require('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="endereco">
-						<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input" placeholder="Rua Holdercim"  maxlength="50">
+						<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input" placeholder="Rua Holdercim"  maxlength="50" onblur="checkAdress(form1.endereco)" id="inputAdress">
 						<span class="icon is-small is-left">
-				      		<i class="fas fa-fw"></i>
+				      		<i class="fas fa-home"></i>
 				    	</span>
-				    	<div id="msgemail" style="display:none;">
+				    	<div id="msgEnderecoNok" style="display:none;">
 					    	<span class="icon is-small is-right">
-					      		<i class="fas fa-exclamation-triangle"></i>
+					      		<i class="fas fa-fw" id="icon"></i>
 					    	</span>
 					    	<p class="help is-danger">Preenchimento do endereço é obrigatório</p>		    	
+				    	</div>
+				    	<div id="msgEnderecoOk" style="display:none;">
+					    	<span class="icon is-small is-right mdi mdi-dark">
+					      		<i class="fas fa-check mdi mdi-dark " id="icon"></i>
+					    	</span>
 				    	</div>
 					</div>
 				</div>
@@ -51,8 +57,11 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:8em;" id="numero">
+					<div class="control has-icons-left" style="max-width:9em;" id="numero">
 						<input name="numero" type="text" class="input numero" placeholder="840" maxlength="4" onkeypress="addLoadField('numero')" onkeyup="rmvLoadField('numero')">
+						<span class="icon is-small is-left">
+							<i class="fas fa-list-ol"></i>
+						</span>
 					</div>
 				</div>
 			</div>	  	
@@ -64,9 +73,9 @@ require('menu.php');
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="referencia">
-						<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão móveis simonetti"  maxlength="50" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')">
+						<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="50" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')">
 						<span class="icon is-small is-left">
-				      		<i class="fas fa-fw"></i>
+				      		<i class="fas fa-road"></i>
 				    	</span>
 				    	<div id="msgemail" style="display:none;">
 					    	<span class="icon is-small is-right">
@@ -82,8 +91,11 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:8em;" id="quadra">
+					<div class="control has-icons-left" style="max-width:9em;" id="quadra">
 						<input name="quadra" type="text" class="input numero" placeholder="3" maxlength="4">
+						<span class="icon is-small is-left">
+							<i class="fas fa-sort-numeric-up"></i>
+						</span>
 					</div>
 				</div>
 			</div>	  	
@@ -94,18 +106,21 @@ require('menu.php');
 				<label for="cargo" class="label">Bairro*</label>
 			</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 			<div class="field-body">
-				<div class="field is-grouped">							
-					<div class="control" style="max-width:160em;">
-						<div class="select" >
-							<select name="bairro">							
-								<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=3;"; 
-								$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
-								while($bairro = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
-								<?php $x;} endwhile;?>														
-							</select>	
-						</div>
+				<div class="field is-grouped">
+				<div class="control has-icons-left">
+				    <div class="select">
+				      	<select name="bairro">							
+							<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=3;"; 
+							$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
+							while($bairro = $con->fetch_array()):{?>
+								<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
+							<?php $x;} endwhile;?>														
+						</select>
+				    </div>
+					<div class="icon is-small is-left">
+					  	<i class="fas fa-city"></i>
 					</div>
+			  	</div>			
 				</div>
 			</div>&nbsp&nbsp&nbsp
 			<div class="field-label is-normal"><!--SELEÇÃO TURNO-->
@@ -113,7 +128,7 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control has-icons-left">
 						<div class="select">
 							<select name="cidade">
 								<?php $gdCidade="SELECT ID, CIDADE FROM CIDADE"; 
@@ -123,6 +138,9 @@ require('menu.php');
 								<?php $x;} endwhile;?>	
 							</select>	
 						</div>
+						<span class="icon is-small is-left">
+							<i class="fas fa-globe"></i>
+						</span>
 					</div>					
 				</div>						
 			</div>						
@@ -131,13 +149,13 @@ require('menu.php');
 		<div class="field is-horizontal"><!--SELEÇÃO CARGO-->
 			<div class="field-label is-normal"><!--SELEÇÃO SEXO-->
 				<label for="observacao" class="label">Observação*</label>
-			</div>
+			</div>&nbsp&nbsp
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left has-icons-right" id="observacao">
 						<input name="observacao" onkeypress="addLoadField('observacao')" onkeyup="rmvLoadField('observacao')" type="text" class="input" placeholder="Galpão"  maxlength="50">
 						<span class="icon is-small is-left">
-				      		<i class="fas fa-spinner fa-pulse"></i>
+				      		<i class="fas fa-file-alt"></i>
 				    	</span>
 				    	<div id="msgemail" style="display:none;">
 					    	<span class="icon is-small is-right">
@@ -153,8 +171,11 @@ require('menu.php');
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control" style="max-width:8em;" id="cep">
+					<div class="control has-icons-left" style="max-width:9em;" id="cep">
 						<input name="cep" type="text" class="input maskCep" placeholder="29166-066" maxlength="9" onkeypress="addLoadField('cep')" onkeyup="rmvLoadField('cep')">
+						<span class="icon is-small is-left">
+							<i class="fas fa-map-marked-alt"></i>
+						</span>
 					</div>
 				</div>
 			</div>			
@@ -168,7 +189,7 @@ require('menu.php');
 					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"></a>
 				</div>
 				<div class="control">
-					<a href="register.php" class="button is-primary">Voltar</a>										
+					<a href="user-filter-query.php" class="button is-primary">Voltar</a>										
 				</div>									
 			</div>
 		</div>
@@ -197,11 +218,10 @@ if(isset($_POST['cadastrar'])){
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
 	if($endereco!="" && $numero!="" && $cep!=""){
-		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM) VALUES(".$_SESSION["userId"].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."')";
+		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."')";
 		mysqli_query($phpmyadmin, $inserirEndereco);
-		echo $inserirEndereco;		
 		if(mysqli_error($phpmyadmin)==null){
-			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!');</script>";
+			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
 		}
 		else{
 			echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
