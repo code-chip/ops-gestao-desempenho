@@ -1,6 +1,7 @@
 <?php 
-$menuConfiguracoes="is-active";
-include('menu.php');
+$menuAtivo="configuracoes";
+require('menu.php');
+header("Refresh:3;url=home.php");
 ?>
 <!DOCTYPE html>
 <html>
