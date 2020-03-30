@@ -5,7 +5,7 @@ function upPlaceholder(selecao){//função usada no cadastro de usuário.
 	}
 	else if(selecao=="LOGIN="){
 		id=document.getElementById("filtro");
-		//id.classList.remove("numero");//adição de mascara restrigir a número.
+		//Adiid.classList.remove("numero");//adição de mascara restrigir a número.
 		id.placeholder="harry.will";
 		
 	}
@@ -59,5 +59,29 @@ function checkAdress(field, msgOk, msgNok){//função p/ ativar ou desativar ico
 		document.getElementById(""+msgOk).style.display="none";
 		document.getElementById(""+field.id).classList.remove("is-success");
 		document.getElementById(""+field.id).classList.add("is-danger");
+	}
+}
+function enableVehicle(){//função usada no módulo endereço.
+	document.getElementById("vehicleType").style.display="block";
+	document.getElementById("vehicleModel").style.display="block";
+	document.getElementById("vehicleBoard").style.display="block";
+	document.getElementById("vehicleColor").style.display="block";
+	document.getElementById("vehicleYear").style.display="block";
+}
+function disableVehicle(){//função usada no módulo endereço.
+	document.getElementById("vehicleType").style.display="none";
+	document.getElementById("vehicleModel").style.display="none";
+	document.getElementById("vehicleBoard").style.display="none";
+	document.getElementById("vehicleColor").style.display="none";
+	document.getElementById("vehicleYear").style.display="none";
+}
+function upIconVehicle(id){
+	if(id==1){
+		document.getElementById("motoVehicle").style.display="none"
+		document.getElementById("carVehicle").style.display="block";		
+	}
+	else{
+		document.getElementById("carVehicle").style.display="none";
+		document.getElementById("motoVehicle").style.display="block"
 	}
 }
