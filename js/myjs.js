@@ -109,4 +109,22 @@ function checkForm(){
     	return false;
   	} else { return true; }
 }
+function upList(valor){
+	alert(valor);
+	if(valor==1){
+		document.getElementById("cariacica").style.display="none";
+		document.getElementById("vitoria").style.display="none"
+		document.getElementById("serra").style.display="block";
+	}
+	else if(valor==2){
+		document.getElementById("serra").style.display="none";
+		document.getElementById("cariacica").style.display="none";
+		document.getElementById("vitoria").style.display="block"		
+	}
+	else{
+		document.getElementById("serra").style.display="none";
+		document.getElementById("vitoria").style.display="none"
+		document.getElementById("cariacica").style.display="block";				
+	}
+}
 //FINAL ADRESS-INSERT;//
