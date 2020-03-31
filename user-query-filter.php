@@ -9,7 +9,7 @@ if($_SESSION["permissao"]==1){
 		$cnx2=mysqli_query($phpmyadmin, $checkAdress);
 		$endereco= $cnx->fetch_array();
 		if(mysqli_num_rows($cnx2)==0){
-			$_SESSION["filter"][0]=$_SESSION["userId"];
+			$_SESSION["filter"][3]=$_SESSION["userId"];
 			array_push($_SESSION["filter"],$_SESSION["nameUser"]);
 			echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
 		}
@@ -19,7 +19,7 @@ if($_SESSION["permissao"]==1){
 		}
 	}
 	else{
-		$_SESSION["filter"][0]=$_SESSION["userId"];
+		$_SESSION["filter"][3]=$_SESSION["userId"];
 		array_push($_SESSION["filter"],$_SESSION["nameUser"]);
 		header("Refresh:0;url=".$_SESSION["filter"][1]);
 	}
@@ -110,12 +110,12 @@ if( $busca != ""){
 		echo "<script>alert('Nenhum usuário encontrado com o filtro aplicado!'); window.location.href=window.location.href;</script>";			
 	}
 	else{
+		$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"];
+		$cnx2=mysqli_query($phpmyadmin, $checkAdress);
+		$endereco= $cnx->fetch_array();
 		if($_SESSION["filter"][1]=="adress-insert.php"){//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.
-			$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"];
-			$cnx2=mysqli_query($phpmyadmin, $checkAdress);
-			$endereco= $cnx->fetch_array();
 			if(mysqli_num_rows($cnx2)==0){//verifica se não tem endereço.
-				$_SESSION["filter"][0]=$dados["ID"];
+				$_SESSION["filter"][3]=$dados["ID"];
 				$_SESSION["filter"][2]=$dados["NOME"];
 				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
 			}
@@ -123,10 +123,12 @@ if( $busca != ""){
 				echo "<script>alert('Já existe endereço cadastrado para ".$dados["NOME"]."!'); window.location.href=window.location.href;</script>";
 			}
 		}
-		else{
-			$_SESSION["filter"][0]=$dados["ID"];
-			$_SESSION["filter"][2]=$dados["NOME"];
-			echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
+		else{//Caso seja consultar, atualizar e remover endereço.
+			if(mysqli_num_rows($cnx2)==1){//verifica se existe endereço.
+				$_SESSION["filter"][2]=$dados["NOME"];
+				$_SESSION["filter"][3]=$dados["ID"];				
+				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
+			}
 		}
 		
 	}	
