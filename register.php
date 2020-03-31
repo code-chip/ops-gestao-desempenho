@@ -24,6 +24,8 @@
 <?php
 $menuAtivo="configuracoes";
 include('menu.php');
+$_SESSION["filter"]=array();
+array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link'])); 
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,10 +51,10 @@ include('menu.php');
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<button class="button is-white is-primary is-outlined mw12" value="adress-insert, Inserir Endereço" onclick="actionAdress(this.value)">Inserir Endereço</button>&nbsp
-		<button class="button is-white is-primary is-outlined mw12" value="adress-query, Consultar Endereço" onclick="actionAdress(this.value)">Consultar Endereço</button>&nbsp
-		<button class="button is-white is-primary is-outlined mw12" value="adress-update, Atualizar Endereço" onclick="actionAdress(this.value)">Atualizar Endereço</button>&nbsp
-		<button class="button is-white is-primary is-outlined mw12" value="adress-remove, Remover Endereço" onclick="actionAdress(this.value)">Remover Endereço</button>&nbsp&nbsp		
+		<button class="button is-white is-primary is-outlined mw12" value="adress-insert.php, Inserir Endereço" onclick="actionAdress(this.value)">Inserir Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-query.php, Consultar Endereço" onclick="actionAdress(this.value)">Consultar Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-update.php, Atualizar Endereço" onclick="actionAdress(this.value)">Atualizar Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-remove.php, Remover Endereço" onclick="actionAdress(this.value)">Remover Endereço</button>&nbsp&nbsp		
 	</div>	
 </div>
 <br/>
@@ -126,10 +128,10 @@ include('menu.php');
 		        	document.getElementById("txtHint").innerHTML = this.responseText;
 		      	}
 		    };		    
-		    xmlhttp.open("GET", "user-query-filter.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
+		    xmlhttp.open("GET", "register.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
 		    xmlhttp.send();		   	
 		  }
-		  window.location.replace('user-query-filter.php?link='+valor[0]+"&descricao="+valor[1]);
+		  window.location.replace('user-query-filter.php');
 		}
 </script>
 </body>
