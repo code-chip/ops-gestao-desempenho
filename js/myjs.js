@@ -41,6 +41,7 @@ function validacaoEmail(field) {//função usada no cadastro de usuário.
 	}
 
 }
+//FINAL ADRESS-INSERT;//
 function addLoadField(id){//função p/ adicionar icone de carregamento ao digitar.
     document.getElementById(""+id).classList.add("is-loading");
 }
@@ -85,3 +86,27 @@ function upIconVehicle(id){
 		document.getElementById("motoVehicle").style.display="block"
 	}
 }
+function checkForm(){
+	var inputs = document.getElementsByClassName('required');
+	var vehicle= document.getElementsByClassName('inputVehicle');
+	var vale= document.getElementsByClassName('inputVale');
+  	var len = inputs.length;
+  	var valid = true;
+  	if(vehicle[0].checked==false && vehicle[1].checked==false){//caso tenha marcado não p/ veículo, desconsidera os 3 campos obrigatórios seguintes.
+  		valid = false;
+  	}
+  	else if(vehicle[1].checked==true){//caso tenha marcado não p/ veículo, desconsidera os 3 campos obrigatórios seguintes.
+  		len=len-3;
+  	}
+  	if(vale[0].checked==false && vale[1].checked==false){//
+  		valid = false;
+  	}
+  	for(var i=0; i < len; i++){
+    	if (!inputs[i].value){ valid = false; }
+  	}
+  	if (!valid){
+  		alert('Por favor preencha todos os campos* obrigatórios.');
+    	return false;
+  	} else { return true; }
+}
+//FINAL ADRESS-INSERT;//

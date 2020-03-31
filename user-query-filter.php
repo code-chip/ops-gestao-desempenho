@@ -1,6 +1,8 @@
 <?php
 $menuAtivo="configuracoes";
 require('menu.php');
+array_push($_SESSION["filter"],null);
+
 if($_SESSION["permissao"]==1){
 	if($_SESSION["filter"][1]=="adress-insert.php"){//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.
 		$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"];
@@ -21,9 +23,8 @@ if($_SESSION["permissao"]==1){
 		array_push($_SESSION["filter"],$_SESSION["nameUser"]);
 		header("Refresh:0;url=".$_SESSION["filter"][1]);
 	}
-
 }
-else{	
+else{
 $filtro = trim($_REQUEST['filtro']);
 $busca= trim($_REQUEST['busca']);
 ?>
@@ -68,7 +69,7 @@ $busca= trim($_REQUEST['busca']);
 				<div class="field">							
 					<div class="control">
 						<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input id="filtro" name="busca" type="text" class="input" placeholder="629" >
+							<input id="filtro" name="busca" type="text" class="input" placeholder="629" autofocus>
 						</div>
 					</div>
 				</div>
@@ -113,9 +114,9 @@ if( $busca != ""){
 			$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"];
 			$cnx2=mysqli_query($phpmyadmin, $checkAdress);
 			$endereco= $cnx->fetch_array();
-			if(mysqli_num_rows($cnx2)==0){
+			if(mysqli_num_rows($cnx2)==0){//verifica se não tem endereço.
 				$_SESSION["filter"][0]=$dados["ID"];
-				array_push($_SESSION["filter"],$dados["NOME"]);
+				$_SESSION["filter"][2]=$dados["NOME"];
 				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
 			}
 			else{
@@ -124,7 +125,7 @@ if( $busca != ""){
 		}
 		else{
 			$_SESSION["filter"][0]=$dados["ID"];
-			array_push($_SESSION["filter"],$dados["NOME"]);
+			$_SESSION["filter"][2]=$dados["NOME"];
 			echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
 		}
 		
