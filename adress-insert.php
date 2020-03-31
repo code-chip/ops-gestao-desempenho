@@ -111,8 +111,22 @@ require('menu.php');
 			<label class="label" for="textInput">Bairro*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro" style="width:50em;" class="required">							
-						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO;"; 
+				  	<select name="bairro" style="width:50em;" class="required" id="serra">							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1;"; 
+						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
+						while($bairro = $con->fetch_array()):{?>
+							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
+							<?php $x;} endwhile;?>														
+					</select>
+					<select name="bairro" style="display: none; width:50em;" class="required" id="vitoria">							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1;"; 
+						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
+						while($bairro = $con->fetch_array()):{?>
+							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
+							<?php $x;} endwhile;?>														
+					</select>
+					<select name="bairro" style="display: none; width:50em;" class="required" id="cariacica">							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=3;"; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
@@ -128,7 +142,7 @@ require('menu.php');
 			<label class="label" for="textInput">Cidade*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-					<select name="cidade" style="width:9.6em;" class="required">
+					<select name="cidade" style="width:9.6em;" class="required" onchange="upList(this.value)">
 						<?php $gdCidade="SELECT ID, CIDADE FROM CIDADE"; 
 						$con = mysqli_query($phpmyadmin , $gdCidade); $x=0; 
 							while($cidade = $con->fetch_array()):{?>
@@ -369,9 +383,9 @@ if(isset($_POST['cadastrar'])){
 		$placa = trim($_POST['placa']);
 		$ano = trim($_POST['ano']);
 		if($modelo!="" && $placa!="" && $ano!="" ){
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
 			mysqli_query($phpmyadmin, $inserirEndereco);
-			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][0].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
+			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][3].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
 			echo $inserirVeiculo;
 			mysqli_query($phpmyadmin, $inserirVeiculo);
 			if(mysqli_error($phpmyadmin)==null){
@@ -393,7 +407,7 @@ if(isset($_POST['cadastrar'])){
 		}	
 	}
 	else{
-		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
 		mysqli_query($phpmyadmin, $inserirEndereco);
 		if(mysqli_error($phpmyadmin)==null){
 			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
