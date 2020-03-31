@@ -21,7 +21,7 @@ require('menu.php');
 <section class="section">
 	<div class="container">
 	<main>
-	<form id="form1" action="adress-insert.php" method="POST">
+	<form id="form1" action="adress-insert.php" method="POST" onsubmit="return checkForm()">
 	<div class="layout">
 	<h3 class="title"><i class="fas fa-plus-square"></i>&nbsp&nbsp  ENDEREÇO</h3>
 	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
@@ -30,7 +30,7 @@ require('menu.php');
 		<div class="field">
 			<label class="label" for="textInput">Endereço*</label>
 			<div class="control has-icons-left has-icons-right" id="endereco">
-				<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input" placeholder="Rua Holdercim"  maxlength="200" onblur="checkAdress(form1.endereco, 'msgAdressOk','msgAdressNok')" id="inputAdress" style="width: 50em;" autofocus>
+				<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input required" placeholder="Rua Holdercim"  maxlength="200" onblur="checkAdress(form1.endereco, 'msgAdressOk','msgAdressNok')" id="inputAdress" style="width: 50em;" autofocus>
 				<span class="icon is-small is-left">
 			   		<i class="fas fa-home"></i>
 			   	</span>
@@ -50,7 +50,7 @@ require('menu.php');
 		<div class="field">
 			<label class="label" for="textInput">Número*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:9.6em;" id="numero">
-				<input name="numero" type="text" class="input numero" placeholder="840" maxlength="4" onkeypress="addLoadField('numero')" onkeyup="rmvLoadField('numero')" onblur="checkAdress(form1.numero, 'msgNumberOk','msgNumberNok')" id="inputNumber" style="width:20em;">
+				<input name="numero" type="text" class="input numero required" placeholder="840" maxlength="4" onkeypress="addLoadField('numero')" onkeyup="rmvLoadField('numero')" onblur="checkAdress(form1.numero, 'msgNumberOk','msgNumberNok')" id="inputNumber" style="width:20em;">
 				<span class="icon is-small is-left">
 					<i class="fas fa-list-ol"></i>
 				</span>
@@ -111,7 +111,7 @@ require('menu.php');
 			<label class="label" for="textInput">Bairro*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro" style="width:50em;">							
+				  	<select name="bairro" style="width:50em;" class="required">							
 						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO;"; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
@@ -128,7 +128,7 @@ require('menu.php');
 			<label class="label" for="textInput">Cidade*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-					<select name="cidade" style="width:9.6em;">
+					<select name="cidade" style="width:9.6em;" class="required">
 						<?php $gdCidade="SELECT ID, CIDADE FROM CIDADE"; 
 						$con = mysqli_query($phpmyadmin , $gdCidade); $x=0; 
 							while($cidade = $con->fetch_array()):{?>
@@ -164,7 +164,7 @@ require('menu.php');
 		<div class="field">
 			<label class="label" for="textInput">CEP*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:10em;" id="cep">
-				<input name="cep" type="text" class="input maskCep" placeholder="29166-066" maxlength="9" onkeypress="addLoadField('cep')" onkeyup="rmvLoadField('cep')" onblur="checkAdress(form1.cep, 'msgZipcodeOk','msgZipcodeNok')" id="inputZipcode">
+				<input name="cep" type="text" class="input maskCep required" placeholder="29166-066" maxlength="9" onkeypress="addLoadField('cep')" onkeyup="rmvLoadField('cep')" onblur="checkAdress(form1.cep, 'msgZipcodeOk','msgZipcodeNok')" id="inputZipcode">
 				<span class="icon is-small is-left">
 					<i class="fas fa-map-marked-alt"></i>
 				</span>
@@ -190,10 +190,10 @@ require('menu.php');
 	    	<div class="field is-narrow">
 	      		<div class="control">
 	        		<label class="radio">
-	          			<input type="radio" name="vale" value="s">Sim	          		
+	          			<input type="radio" name="vale" value="s" class="inputVale">Sim	          		
 	        		</label>
 	        		<label class="radio">
-	          			<input type="radio" name="vale" value="n">Não
+	          			<input type="radio" name="vale" value="n" class="inputVale">Não
 	        		</label>
 	      		</div>
 	    	</div>
@@ -205,10 +205,10 @@ require('menu.php');
 	    	<div class="field is-narrow">
 	      		<div class="control">
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s">Sim	          		
+	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s" class="inputVehicle">Sim	          		
 	        		</label>
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n">Não
+	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n" class="inputVehicle">Não
 	        		</label>
 	      		</div>
 	    	</div>
@@ -219,7 +219,7 @@ require('menu.php');
 			<label class="label" for="textInput">Tipo*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro" onchange="upIconVehicle(this.value)">							
+				  	<select name="tipo" onchange="upIconVehicle(this.value)">							
 						<?php $gdVeiculoTipo="SELECT ID, TIPO FROM VEICULO_TIPO;"; 
 						$con = mysqli_query($phpmyadmin , $gdVeiculoTipo); $x=0; 
 						while($veiculoTipo = $con->fetch_array()):{?>
@@ -242,7 +242,7 @@ require('menu.php');
 		<div class="field" style="display: none;" id="vehicleModel">
 			<label class="label" for="textInput">Modelo*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:18em;" id="modelo">
-				<input name="modelo" type="text" class="input" placeholder="Fiat Uno" maxlength="10" onblur="checkAdress(form1.modelo, 'msgModelOk','msgModelNok')" id="inputModel">
+				<input name="modelo" type="text" class="input required" placeholder="Fiat Uno" maxlength="40" onblur="checkAdress(form1.modelo, 'msgModelOk','msgModelNok')" id="inputModel">
 				<span class="icon is-small is-left">
 					<i class="fas fa-sort"></i>
 				</span>
@@ -262,7 +262,7 @@ require('menu.php');
 		<div class="field" style="display: none;" id="vehicleBoard">
 			<label class="label" for="textInput">Placa*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:11em;" id="placa">
-				<input name="placa" type="text" class="input numero" placeholder="MQD-2045" maxlength="4" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard">
+				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard">
 				<span class="icon is-small is-left">
 					<i class="fas fa-square"></i>
 				</span>
@@ -283,7 +283,7 @@ require('menu.php');
 			<label class="label" for="textInput">Cor*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro">							
+				  	<select name="cor">							
 						<?php $gdCor="SELECT ID, COR FROM COR ORDER BY COR;"; 
 						$con = mysqli_query($phpmyadmin , $gdCor); $x=0; 
 						while($cor = $con->fetch_array()):{?>
@@ -299,7 +299,7 @@ require('menu.php');
 		<div class="field" style="display: none;" id="vehicleYear">
 			<label class="label" for="textInput">Ano*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:9.6em;" id="ano">
-				<input name="ano" type="text" class="input numero" placeholder="2008" maxlength="4" onblur="checkAdress(form1.ano, 'msgYearOk','msgYearNok')" id="inputYear">
+				<input name="ano" type="text" class="input numero required" placeholder="2008" maxlength="4" onblur="checkAdress(form1.ano, 'msgYearOk','msgYearNok')" id="inputYear">
 				<span class="icon is-small is-left">
 					<i class="fas fa-newspaper"></i>
 				</span>
@@ -326,7 +326,7 @@ require('menu.php');
 					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"></a>
 				</div>
 				<div class="control">
-					<a href="user-query-query.php" class="button is-primary">Voltar</a>										
+					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary">Voltar</a>										
 				</div>
 				<?php if($_SESSION["permissao"]>1):{?>
 				<div class="control">
@@ -362,40 +362,18 @@ if(isset($_POST['cadastrar'])){
 	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
 	$result = mysqli_query($phpmyadmin, $checkLogin);		 
 	$check = mysqli_num_rows($result);	
-	if($endereco!="" && $numero!="" && $cep!="" && $vale!="" && $veiculo!=""){
-		if($veiculo=="s"){
-			if($modelo!="" && $placa!="" && $ano!="" ){
-				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."')";
-				mysqli_query($phpmyadmin, $inserirEndereco);
-				$tipo = trim($_POST['tipo']);
-				$cor = trim($_POST['cor']);
-				$modelo = trim($_POST['modelo']);
-				$placa = trim($_POST['placa']);
-				$ano = trim($_POST['ano']);
-				$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][0].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
-				mysqli_query($phpmyadmin, $inserirVeiculo);
-				if(mysqli_error($phpmyadmin)==null){
-					echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
-				}
-				else{
-					echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
-					echo mysqli_error($phpmyadmin);				
-				}
-			}
-			else if($modelo==""){
-				echo"<script language='Javascript'> alert('Preenchimento do modelo é obrigatório!');</script>";
-			}
-			else if($placa==""){
-				echo"<script language='Javascript'> alert('Preenchimento da placa é obrigatório!');</script>";
-			}
-			else{
-				echo"<script language='Javascript'> alert('Preenchimento do ano é obrigatório!');</script>";
-			}
-			
-		}
-		else{
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."')";
+	if($veiculo=="s"){
+		$tipo = trim($_POST['tipo']);
+		$cor = trim($_POST['cor']);
+		$modelo = trim($_POST['modelo']);
+		$placa = trim($_POST['placa']);
+		$ano = trim($_POST['ano']);
+		if($modelo!="" && $placa!="" && $ano!="" ){
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
 			mysqli_query($phpmyadmin, $inserirEndereco);
+			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][0].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
+			echo $inserirVeiculo;
+			mysqli_query($phpmyadmin, $inserirVeiculo);
 			if(mysqli_error($phpmyadmin)==null){
 				echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
 			}
@@ -404,21 +382,26 @@ if(isset($_POST['cadastrar'])){
 				echo mysqli_error($phpmyadmin);				
 			}
 		}
+		else if($modelo==""){
+			echo"<script language='Javascript'> alert('Preenchimento do modelo é obrigatório!');</script>";
+		}
+		else if($placa==""){
+			echo"<script language='Javascript'> alert('Preenchimento da placa é obrigatório!');</script>";
+		}
+		else{
+			echo"<script language='Javascript'> alert('Preenchimento do ano é obrigatório!');</script>";
+		}	
 	}
-	else if($endereco==""){
-		echo"<script language='Javascript'> alert('Preenchimento do Endereço é obrigatório!');</script>"; 
+	else{
+		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		mysqli_query($phpmyadmin, $inserirEndereco);
+		if(mysqli_error($phpmyadmin)==null){
+			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
+		}
+		else{
+			echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
+			echo mysqli_error($phpmyadmin);				
+		}
 	}
-	else if($numero==""){
-		echo"<script language='Javascript'> alert('Preenchimento do Número é obrigatório!');</script>";
-	} 
-	else if($cep==""){
-		echo"<script language='Javascript'> alert('Preenchimento do CEP é obrigatório!');</script>";
-	}
-	else if($vale==""){
-		echo"<script language='Javascript'> alert('Resposta do vale transporte é obrigatória!');</script>";
-	}
-	else if($vale==""){
-		echo"<script language='Javascript'> alert('Resposta do veículo é obrigatória!');</script>";
-	}  	
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
 ?>
