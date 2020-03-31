@@ -29,6 +29,9 @@ include('menu.php');
 <html>
 <head>
 	<title>Gestão Desempenho - Cadastro</title>
+	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
 <div class="hero is-fullheight is-primary has-background field has-addons">
@@ -40,16 +43,16 @@ include('menu.php');
 		<?php if($_SESSION["permissao"]!=1):?><a href="user-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Usuário</span></a>&nbsp&nbsp&nbsp<?php endif;?>		
 		<a href="user-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Usuário</span></a>&nbsp&nbsp&nbsp
 		<a href="user-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Usuário</span></a>&nbsp&nbsp&nbsp			
-		<?php if($_SESSION["permissao"]==4):?><a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Usuário</span></a>&nbsp&nbsp&nbsp<?php endif;?>		
+		<?php if($_SESSION["permissao"]==4):?><a href="user-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Usuário</span></a>&nbsp<?php endif;?>		
 	</div>	
 </div>
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="user-query-filter.php" value="<?php $_SESSION["filter"]=array(); array_push($_SESSION["filter"],'Inserir Endereço','adress-insert.php');?>"><span class="button is-white is-primary is-outlined mw12">Inserir Endereço</span></a>&nbsp&nbsp&nbsp
-		<a href="user-query-filter.php" value="<?php $_SESSION["filter"]=array(); array_push($_SESSION["filter"],'Consultar Endereço','adress-query.php');?>"><span class="button is-media is-primary is-outlined mw12">Consultar Endereço</span></a>&nbsp&nbsp&nbsp
-		<a href="user-query-filter.php" value="<?php $_SESSION["filter"]=array(); array_push($_SESSION["filter"],'Atualizar Endereço','adress-update.php');?>"><span class="button is-media is-primary is-outlined mw12">Atualizar Endereço</span></a>&nbsp&nbsp&nbsp
-		<a href="user-query-filter.php" value="<?php $_SESSION["filter"]=array(); array_push($_SESSION["filter"],'Remover Endereço','adress-remove.php');?>"><span class="button is-media is-primary is-outlined mw12">Remover Endereço</span></a>&nbsp&nbsp&nbsp		
+		<button class="button is-white is-primary is-outlined mw12" value="adress-insert, Inserir Endereço" onclick="actionAdress(this.value)">Inserir Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-query, Consultar Endereço" onclick="actionAdress(this.value)">Consultar Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-update, Atualizar Endereço" onclick="actionAdress(this.value)">Atualizar Endereço</button>&nbsp
+		<button class="button is-white is-primary is-outlined mw12" value="adress-remove, Remover Endereço" onclick="actionAdress(this.value)">Remover Endereço</button>&nbsp&nbsp		
 	</div>	
 </div>
 <br/>
@@ -109,5 +112,25 @@ include('menu.php');
 <?php endif;?>
 </section>
 </div>
+
+<script type="text/javascript">
+	function actionAdress(valor) {
+		valor= valor.split(',',2);
+		if (valor.length == 0) {
+		   	document.getElementById("txtHint").innerHTML = "";
+		   	return;
+		  	}else {
+		    	var xmlhttp = new XMLHttpRequest();
+		    	xmlhttp.onreadystatechange = function() {
+		      	if (this.readyState == 4 && this.status == 200) {
+		        	document.getElementById("txtHint").innerHTML = this.responseText;
+		      	}
+		    };		    
+		    xmlhttp.open("GET", "user-query-filter.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
+		    xmlhttp.send();		   	
+		  }
+		  window.location.replace('user-query-filter.php?link='+valor[0]+"&descricao="+valor[1]);
+		}
+</script>
 </body>
 </html>
