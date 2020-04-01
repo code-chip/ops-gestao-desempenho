@@ -86,7 +86,7 @@ function upIconVehicle(id){
 		document.getElementById("motoVehicle").style.display="block"
 	}
 }
-function checkForm(){
+function checkForm(cidade){
 	var inputs = document.getElementsByClassName('required');
 	var vehicle= document.getElementsByClassName('inputVehicle');
 	var vale= document.getElementsByClassName('inputVale');
@@ -107,13 +107,28 @@ function checkForm(){
   	if (!valid){
   		alert('Por favor preencha todos os campos* obrigatórios.');
     	return false;
-  	} else { return true; }
+  	} 
+  	else{ 
+		if(cidade==1){
+			$("#cariacica").empty();
+			$("#vitoria").empty();
+		}
+		else if(cidade==2){
+			$("#cariacica").empty();
+			$("#serra").empty();
+		}
+		else{
+			$("#serra").empty();
+			$("#vitoria").empty();
+		}
+  		return true; 
+  	}
 }
 function upList(valor){
-	alert(valor);
+	alert('Lista de bairros atualizada!');
 	if(valor==1){
 		document.getElementById("cariacica").style.display="none";
-		document.getElementById("vitoria").style.display="none"
+		document.getElementById("vitoria").style.display="none";
 		document.getElementById("serra").style.display="block";
 	}
 	else if(valor==2){
