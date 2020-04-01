@@ -54,7 +54,8 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 		<button class="button is-white is-primary is-outlined mw12" value="adress-insert.php, Inserir Endereço" onclick="actionAdress(this.value)">Inserir Endereço</button>&nbsp
 		<button class="button is-white is-primary is-outlined mw12" value="adress-query.php, Consultar Endereço" onclick="actionAdress(this.value)">Consultar Endereço</button>&nbsp
 		<button class="button is-white is-primary is-outlined mw12" value="adress-update.php, Atualizar Endereço" onclick="actionAdress(this.value)">Atualizar Endereço</button>&nbsp
-		<button class="button is-white is-primary is-outlined mw12" value="adress-remove.php, Remover Endereço" onclick="actionAdress(this.value)">Remover Endereço</button>&nbsp&nbsp		
+		<?php if($_SESSION["permissao"]!=1):?>
+		<button class="button is-white is-primary is-outlined mw12" value="adress-remove.php, Remover Endereço" onclick="actionAdress(this.value)">Remover Endereço</button>&nbsp&nbsp<?php endif;?>			
 	</div>	
 </div>
 <br/>
