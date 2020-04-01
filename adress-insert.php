@@ -1,7 +1,6 @@
 <?php
 $menuAtivo="configuracoes";
 require('menu.php');
-$_SESSION["country"]=1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -113,7 +112,7 @@ $_SESSION["country"]=1;
 			<div class="control has-icons-left">
 				<div class="select">
 				  	<select name="bairro" style="width:50em;" class="required hidden" id="serra">							
-						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=".$_SESSION["country"]; 
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1;"; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
