@@ -400,5 +400,6 @@ if(isset($_POST['cadastrar'])){
 			echo mysqli_error($phpmyadmin);				
 		}
 	}
+	echo $inserirEndereco;
 }//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
 ?>
