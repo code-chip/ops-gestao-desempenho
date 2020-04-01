@@ -1,6 +1,7 @@
 <?php
 $menuAtivo="configuracoes";
 require('menu.php');
+$_SESSION["country"]=1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,7 +22,7 @@ require('menu.php');
 <section class="section">
 	<div class="container">
 	<main>
-	<form id="form1" action="adress-insert.php" method="POST" onsubmit="return checkForm()">
+	<form id="form1" action="adress-insert.php" method="POST" onsubmit="return checkForm(form1.cidade.value)">
 	<div class="layout">
 	<h3 class="title"><i class="fas fa-plus-square"></i>&nbsp&nbsp  ENDEREÇO</h3>
 	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
@@ -111,15 +112,15 @@ require('menu.php');
 			<label class="label" for="textInput">Bairro*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro" style="width:50em;" class="required" id="serra">							
-						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1;"; 
+				  	<select name="bairro" style="width:50em;" class="required hidden" id="serra">							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=".$_SESSION["country"]; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
 							<?php $x;} endwhile;?>														
 					</select>
-					<select name="bairro" style="display: none; width:50em;" class="required" id="vitoria">							
-						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1;"; 
+					<select name="bairro" style="display: none; width:50em;" class="required" id="vitoria" hidden="true">							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=2;"; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
@@ -131,7 +132,7 @@ require('menu.php');
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
 							<?php $x;} endwhile;?>														
-					</select>
+					</select>				
 				</div>
 				<div class="icon is-small is-left">
 				  	<i class="fas fa-city"></i>
