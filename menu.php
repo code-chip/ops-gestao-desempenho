@@ -28,7 +28,8 @@ $menuAtivo;
 	        $('.desempenho').mask('9999');
 	        $('.numero').mask('9999');
 	        $('.celular').mask('(999)99999-9999');
-	        $('.maskCep').mask('99999-999');	       
+	        $('.maskCep').mask('99999-999');
+	        $('.maskPlaca').mask('AAA-AAAA');	       
 	        return false;
 	    });
 	    function msg(){
