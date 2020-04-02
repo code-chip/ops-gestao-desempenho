@@ -30,6 +30,10 @@ else{
 	$dCariacica="display: block;";
 }
 $optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</option>";
+if($car==1){
+	$inputVehicleType="<option value=".$veiculo["VEICULO_TIPO_ID"].">".$veiculo["TIPO"]."</option>";
+	$inputVehicleColor="<option value=".$veiculo["COR_ID"].">".$veiculo["COR"]."</option>";
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -269,8 +273,9 @@ $optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</optio
 			<div class="control has-icons-left">
 				<div class="select">
 				  	<select name="tipo" onchange="upIconVehicle(this.value)">
-				  		<option value="<?php echo $veiculo["VEICULO_TIPO_ID"];?>"><?php echo $veiculo["TIPO"];?></option>							
-						<?php $gdVeiculoTipo="SELECT ID, TIPO FROM VEICULO_TIPO WHERE ID<>".$veiculo["VEICULO_TIPO_ID"]; 
+						<?php if($car==1){ $fTipo="WHERE ID<>".$veiculo["VEICULO_TIPO_ID"]; echo $inputVehicleType;}
+						else{ $fTipo=null;}
+						$gdVeiculoTipo="SELECT ID, TIPO FROM VEICULO_TIPO ".$fTipo; 
 						$con = mysqli_query($phpmyadmin , $gdVeiculoTipo); $x=0; 
 						while($veiculoTipo = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$veiculoTipo["ID"];?>"><?php echo $vtVeiculoTipo[$x]=$veiculoTipo["TIPO"];?></option>
@@ -333,9 +338,10 @@ $optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</optio
 			<label class="label" for="textInput">Cor*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="cor">
-				  		<option value="<?php echo $veiculo["COR_ID"];?>"><?php echo $veiculo["COR"];?></option>							
-						<?php $gdCor="SELECT ID, COR FROM COR WHERE ID<>".$veiculo["COR_ID"]." ORDER BY COR;"; 
+				  	<select name="cor">				  								
+						<?php if($car==1){ $fCor=" WHERE ID<>".$veiculo["COR_ID"]." ORDER BY COR"; echo $inputVehicleColor;}
+						else{ $fCor=null;}
+						$gdCor="SELECT ID, COR FROM COR".$fCor; echo $gdCor;
 						$con = mysqli_query($phpmyadmin , $gdCor); $x=0; 
 						while($cor = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$cor["ID"];?>"><?php echo $vtCor[$x]=$cor["COR"];?></option>
@@ -427,8 +433,14 @@ if(isset($_POST['cadastrar'])){
 				$updateAdress="UPDATE ENDERECO SET ENDERECO='".$endereco."', NUMERO=".$numero.", QUADRA=".$quadra.", COMPLEMENTO='".$complemento."', BAIRRO_ID=".$bairro.", CEP='".$cep."', OBSERVACAO='".$observacao."', ATUALIZADO_EM='".date('Y-m-d')."', VALE_TRANSPORTE='".$vale."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
 			}			
 			mysqli_query($phpmyadmin, $updateAdress);
-			$updateVehicle="UPDATE VEICULO SET VEICULO_TIPO_ID=".$tipo.", COR_ID=".$cor.", MODELO='".$modelo."', PLACA='".$placa."', ANO='".$ano."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
-			mysqli_query($phpmyadmin, $updateVehicle);
+			if($car==1){
+				$updateVehicle="UPDATE VEICULO SET VEICULO_TIPO_ID=".$tipo.", COR_ID=".$cor.", MODELO='".$modelo."', PLACA='".$placa."', ANO='".$ano."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
+				mysqli_query($phpmyadmin, $updateVehicle);
+			}
+			else{
+				$insertVehicle="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][3].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
+				mysqli_query($phpmyadmin, $insertVehicle);
+			}
 			if(mysqli_error($phpmyadmin)==null){
 				echo"<script language='Javascript'> alert('Endereço atualizado com sucesso!!!'); window.location.href='register.php';</script>";
 			}
