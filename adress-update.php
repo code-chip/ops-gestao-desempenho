@@ -312,7 +312,7 @@ $optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</optio
 		<div class="field" style="<?php echo $display;?>" id="vehicleBoard">
 			<label class="label" for="textInput">Placa*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:11em;" id="placa">
-				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard" value="<?php echo $veiculo["PLACA"];?>" onkeyup="uppercase(this)">
+				<input name="placa" type="text" class="input required maskPlaca" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard" value="<?php echo $veiculo["PLACA"];?>" onkeyup="uppercase(this)">
 				<span class="icon is-small is-left">
 					<i class="fas fa-square"></i>
 				</span>
@@ -421,11 +421,11 @@ if(isset($_POST['cadastrar'])){
 		$ano = trim($_POST['ano']);
 		if($modelo!="" && $placa!="" && $ano!="" ){
 			if($quadra==""){//Tratativa caso quadra seja nula.
-				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+				$updateAdress="UPDATE ENDERECO SET ENDERECO='".$endereco."', NUMERO=".$numero.", QUADRA=NULL, COMPLEMENTO='".$complemento."', BAIRRO_ID=".$bairro.", CEP='".$cep."', OBSERVACAO='".$observacao."', ATUALIZADO_EM='".date('Y-m-d')."', VALE_TRANSPORTE='".$vale."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
 			}
 			else{
-				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-			}
+				$updateAdress="UPDATE ENDERECO SET ENDERECO='".$endereco."', NUMERO=".$numero.", QUADRA=".$quadra.", COMPLEMENTO='".$complemento."', BAIRRO_ID=".$bairro.", CEP='".$cep."', OBSERVACAO='".$observacao."', ATUALIZADO_EM='".date('Y-m-d')."', VALE_TRANSPORTE='".$vale."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
+			}			
 			mysqli_query($phpmyadmin, $updateAdress);
 			$updateVehicle="UPDATE VEICULO SET VEICULO_TIPO_ID=".$tipo.", COR_ID=".$cor.", MODELO='".$modelo."', PLACA='".$placa."', ANO='".$ano."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
 			mysqli_query($phpmyadmin, $updateVehicle);
@@ -449,12 +449,16 @@ if(isset($_POST['cadastrar'])){
 	}
 	else{
 		if($quadra==""){//Tratativa caso quadra seja nula.
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			$updateAdress="UPDATE ENDERECO SET ENDERECO='".$endereco."', NUMERO=".$numero.", QUADRA=NULL, COMPLEMENTO='".$complemento."', BAIRRO_ID=".$bairro.", CEP='".$cep."', OBSERVACAO='".$observacao."', ATUALIZADO_EM='".date('Y-m-d')."', VALE_TRANSPORTE='".$vale."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
 		}
 		else{
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-		}
+			$updateAdress="UPDATE ENDERECO SET ENDERECO='".$endereco."', NUMERO=".$numero.", QUADRA=".$quadra.", COMPLEMENTO='".$complemento."', BAIRRO_ID=".$bairro.", CEP='".$cep."', OBSERVACAO='".$observacao."', ATUALIZADO_EM='".date('Y-m-d')."', VALE_TRANSPORTE='".$vale."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
+		}	
 		mysqli_query($phpmyadmin, $updateAdress);
+		if($car==1){
+			$updateVehicle="DELETE FROM VEICULO WHERE USUARIO_ID=".$_SESSION["filter"][3];
+			mysqli_query($phpmyadmin, $updateVehicle);
+		}	
 		if(mysqli_error($phpmyadmin)==null){
 			echo"<script language='Javascript'> alert('Endereço atualizado com sucesso!!!'); window.location.href='register.php';</script>";
 		}
