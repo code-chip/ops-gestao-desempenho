@@ -72,7 +72,7 @@ require('menu.php');
 		<div class="field">
 			<label class="label" for="textInput">Complemento</label>
 			<div class="control has-icons-left has-icons-right" id="referencia">
-				<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="100" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')" onblur="checkAdress(form1.complemento, 'msgComplementOk','msgComplementNok')" id="inputComplement" style="width: 50em;">
+				<input name="complemento" type="text" class="input required" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="100" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')" onblur="checkAdress(form1.complemento, 'msgComplementOk','msgComplementNok')" id="inputComplement" style="width: 50em;">
 				<span class="icon is-small is-left">
 					<i class="fas fa-road"></i>
 				</span>				    	
@@ -83,7 +83,9 @@ require('menu.php');
 				</div>
 				<div id="msgComplementNok" style="display:none;">
 				  	<span class="icon is-small is-right">
+				  		<i class="fas fa-fw"></i>
 				   	</span>
+				   	<p class="help is-danger">O complemento é obrigatório</p>
 				</div>
 			</div>
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -383,10 +385,14 @@ if(isset($_POST['cadastrar'])){
 		$placa = trim($_POST['placa']);
 		$ano = trim($_POST['ano']);
 		if($modelo!="" && $placa!="" && $ano!="" ){
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			if($quadra==""){//Tratativa caso quadra seja nula.
+				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			}
+			else{
+				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			}
 			mysqli_query($phpmyadmin, $inserirEndereco);
 			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][3].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
-			echo $inserirVeiculo;
 			mysqli_query($phpmyadmin, $inserirVeiculo);
 			if(mysqli_error($phpmyadmin)==null){
 				echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
@@ -407,7 +413,12 @@ if(isset($_POST['cadastrar'])){
 		}	
 	}
 	else{
-		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		if($quadra==""){//Tratativa caso quadra seja nula.
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		}
+		else{
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		}
 		mysqli_query($phpmyadmin, $inserirEndereco);
 		if(mysqli_error($phpmyadmin)==null){
 			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
