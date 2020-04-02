@@ -312,7 +312,7 @@ $optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</optio
 		<div class="field" style="<?php echo $display;?>" id="vehicleBoard">
 			<label class="label" for="textInput">Placa*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:11em;" id="placa">
-				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard" value="<?php echo $veiculo["PLACA"];?>">
+				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard" value="<?php echo $veiculo["PLACA"];?>" onkeyup="uppercase(this)">
 				<span class="icon is-small is-left">
 					<i class="fas fa-square"></i>
 				</span>
