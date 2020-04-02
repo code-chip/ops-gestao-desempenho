@@ -1,18 +1,40 @@
 <?php
 $menuAtivo="configuracoes";
 require('menu.php');
-$checkAdress="SELECT E.*, B.BAIRRO, C.CIDADE FROM ENDERECO E INNER JOIN BAIRRO B ON B.ID=E.BAIRRO_ID INNER JOIN CIDADE C ON C.ID=B.CIDADE_ID WHERE USUARIO_ID=".$_SESSION["filter"][0];
+$checkAdress="SELECT E.*, B.BAIRRO, B.CIDADE_ID, C.CIDADE FROM ENDERECO E INNER JOIN BAIRRO B ON B.ID=E.BAIRRO_ID INNER JOIN CIDADE C ON C.ID=B.CIDADE_ID WHERE USUARIO_ID=".$_SESSION["filter"][3];
 $cnx=mysqli_query($phpmyadmin, $checkAdress);
 $endereco= $cnx->fetch_array();
-$checkVehicle="SELECT * FROM VEICULO WHERE USUARIO_ID=".$_SESSION["filter"][0];
+$checkVehicle="SELECT V.*, T.TIPO, C.COR FROM VEICULO V INNER JOIN VEICULO_TIPO T ON T.ID=V.VEICULO_TIPO_ID INNER JOIN COR C ON C.ID=V.COR_ID WHERE USUARIO_ID=".$_SESSION["filter"][3];
 $cnx2=mysqli_query($phpmyadmin, $checkVehicle);
 $veiculo= $cnx2->fetch_array();
 $car=mysqli_num_rows($cnx2);
+if($car==0){//Define se os campos veículos devem aparecer.
+	$display="display: none;";
+}
+else{
+	$display="display: block;";
+}
+if($endereco["CIDADE_ID"]==1){//Define qual select de bairros deve aparecer.
+	$dSerra="display: block;";
+	$dVitoria="display: none;";
+	$dCariacica="display: none;";
+}
+else if($endereco["CIDADE_ID"]==2){
+	$dSerra="display: none;";
+	$dVitoria="display: block;";
+	$dCariacica="display: none;";
+}
+else{
+	$dSerra="display: none;";
+	$dVitoria="display: none;";
+	$dCariacica="display: block;";
+}
+$optionVehicle="<option value=".$endereco["ID"].">".$endereco["BAIRRO"]."</option>";
 ?>
 <!DOCTYPE html>
 <html>
 <head>	
-	<title>Gestão de Desempenho - Consultar Endereço</title>
+	<title>Gestão de Desempenho - Inserir Endereço</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script type="text/javascript" src="js/myjs.js"></script>
@@ -28,16 +50,16 @@ $car=mysqli_num_rows($cnx2);
 <section class="section">
 	<div class="container">
 	<main>
-	<form id="form1" action="adress-insert.php" method="POST" onsubmit="return checkForm()">
+	<form id="form1" action="adress-update.php" method="POST" onsubmit="return checkForm(form1.cidade.value)">
 	<div class="layout">
-	<h3 class="title"><i class="fas fa-arrow-alt-circle-right"></i>&nbsp&nbsp  ENDEREÇO</h3>
+	<h3 class="title"><i class="fas fa-plus-square"></i>&nbsp&nbsp  ENDEREÇO</h3>
 	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
 	<hr>	
 	<div class="field is-horizontal" style="margin-bottom: -7px;"><!--DIVISÃO EM HORIZONTAL-->
 		<div class="field">
 			<label class="label" for="textInput">Endereço*</label>
 			<div class="control has-icons-left has-icons-right" id="endereco">
-				<input class="input required" placeholder="Rua Holdercim"  maxlength="200" value="<?php echo $endereco["ENDERECO"];?>" style="width: 50em;" disabled>
+				<input name="endereco" onkeypress="addLoadField('endereco')" onkeyup="rmvLoadField('endereco')" type="text" class="input required" placeholder="Rua Holdercim"  maxlength="200" onblur="checkAdress(form1.endereco, 'msgAdressOk','msgAdressNok')" id="inputAdress" style="width: 50em;" autofocus value="<?php echo $endereco["ENDERECO"];?>">
 				<span class="icon is-small is-left">
 			   		<i class="fas fa-home"></i>
 			   	</span>
@@ -79,7 +101,7 @@ $car=mysqli_num_rows($cnx2);
 		<div class="field">
 			<label class="label" for="textInput">Complemento</label>
 			<div class="control has-icons-left has-icons-right" id="referencia">
-				<input name="complemento" type="text" class="input" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="100" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')" onblur="checkAdress(form1.complemento, 'msgComplementOk','msgComplementNok')" id="inputComplement" style="width: 50em;" value="<?php echo $endereco["COMPLEMENTO"];?>">
+				<input name="complemento" type="text" class="input required" placeholder="Ao lado do galpão Móveis Simonetti"  maxlength="100" onkeypress="addLoadField('referencia')" onkeyup="rmvLoadField('referencia')" onblur="checkAdress(form1.complemento, 'msgComplementOk','msgComplementNok')" id="inputComplement" style="width: 50em;" value="<?php echo $endereco["COMPLEMENTO"];?>">
 				<span class="icon is-small is-left">
 					<i class="fas fa-road"></i>
 				</span>				    	
@@ -90,7 +112,9 @@ $car=mysqli_num_rows($cnx2);
 				</div>
 				<div id="msgComplementNok" style="display:none;">
 				  	<span class="icon is-small is-right">
+				  		<i class="fas fa-fw"></i>
 				   	</span>
+				   	<p class="help is-danger">O complemento é obrigatório</p>
 				</div>
 			</div>
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -118,13 +142,30 @@ $car=mysqli_num_rows($cnx2);
 			<label class="label" for="textInput">Bairro*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="bairro" style="width:50em;" class="required">							
-						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO;"; 
+				  	<select name="bairro" style="width:50em;" class="required hidden" id="serra">
+				  		<?php if($endereco["CIDADE_ID"]==1){ echo $optionVehicle;} ?>
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=1 AND ID<>".$endereco["BAIRRO_ID"]; 
 						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
 						while($bairro = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
-							<?php $x;} endwhile;?>														
+						<?php $x;} endwhile;?>														
 					</select>
+					<select name="bairro" style="display: none; width:50em;" class="required" id="vitoria" hidden="true">
+						<?php if($endereco["CIDADE_ID"]==2){ echo $optionVehicle;} ?>							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=2 AND ID<>".$endereco["BAIRRO_ID"]; 
+						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
+						while($bairro = $con->fetch_array()):{?>							
+							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
+						<?php $x;} endwhile;?>														
+					</select>
+					<select name="bairro" style="display: none; width:50em;" class="required" id="cariacica">
+						<?php if($endereco["CIDADE_ID"]==3){ echo $optionVehicle;} ?>							
+						<?php $gdBairro="SELECT ID, BAIRRO FROM BAIRRO WHERE CIDADE_ID=3 AND ID<>".$endereco["BAIRRO_ID"]; 
+						$con = mysqli_query($phpmyadmin , $gdBairro); $x=0; 
+						while($bairro = $con->fetch_array()):{?>
+							<option value="<?php echo $vtId[$x]=$bairro["ID"];?>"><?php echo $vtBairro[$x]=$bairro["BAIRRO"];?></option>
+						<?php $x;} endwhile;?>														
+					</select>				
 				</div>
 				<div class="icon is-small is-left">
 				  	<i class="fas fa-city"></i>
@@ -135,12 +176,13 @@ $car=mysqli_num_rows($cnx2);
 			<label class="label" for="textInput">Cidade*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-					<select name="cidade" style="width:9.6em;" class="required">
-						<?php $gdCidade="SELECT ID, CIDADE FROM CIDADE"; 
+					<select name="cidade" style="width:9.6em;" class="required" onchange="upList(this.value)">
+						<option value="<?php echo $endereco["CIDADE_ID"];?>"><?php echo $endereco["CIDADE"];?></option>
+						<?php $gdCidade="SELECT ID, CIDADE FROM CIDADE WHERE ID<>".$endereco["CIDADE_ID"]; 
 						$con = mysqli_query($phpmyadmin , $gdCidade); $x=0; 
-							while($cidade = $con->fetch_array()):{?>
-								<option value="<?php echo $vtId[$x]=$cidade["ID"];?>"><?php echo $vtCidade[$x]=$cidade["CIDADE"];?></option>
-								<?php $x;} endwhile;?>	
+						while($cidade = $con->fetch_array()):{?>								
+							<option value="<?php echo $vtId[$x]=$cidade["ID"];?>"><?php echo $vtCidade[$x]=$cidade["CIDADE"];?></option>
+						<?php $x;} endwhile;?>	
 					</select>	
 				</div>
 				<span class="icon is-small is-left">
@@ -197,10 +239,10 @@ $car=mysqli_num_rows($cnx2);
 	    	<div class="field is-narrow">
 	      		<div class="control">
 	        		<label class="radio">
-	          			<input type="radio" name="vale" value="s" class="inputVale" <?php if($endereco["VALE_TRANSPORTE"]=="s"){echo "CHECKED";}?>>Sim	          		
+	          			<input type="radio" name="vale" value="s" class="inputVale" <?php if($endereco["VALE_TRANSPORTE"]=="s"){ echo "CHECKED";}?>>Sim	          		
 	        		</label>
 	        		<label class="radio">
-	          			<input type="radio" name="vale" value="n" class="inputVale" <?php if($endereco["VALE_TRANSPORTE"]=="n"){echo "CHECKED";}?>>Não
+	          			<input type="radio" name="vale" value="n" class="inputVale" <?php if($endereco["VALE_TRANSPORTE"]=="n"){ echo "CHECKED";}?>>Não
 	        		</label>
 	      		</div>
 	    	</div>
@@ -212,26 +254,27 @@ $car=mysqli_num_rows($cnx2);
 	    	<div class="field is-narrow">
 	      		<div class="control">
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s" class="inputVehicle" <?php if($car==1){echo "CHECKED";}?>>Sim	          		
+	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s" class="inputVehicle" <?php if($car==1){ echo "CHECKED";}?>>Sim	          		
 	        		</label>
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n" class="inputVehicle" <?php if($car==0){echo "CHECKED";}?>>Não
+	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n" class="inputVehicle" <?php if($car==0){ echo "CHECKED";}?>>Não
 	        		</label>
 	      		</div>
 	    	</div>
 	  	</div>
 	</div><!--FINAL DIVISÃO EM HORIZONTAL-->
 	<div hidden class="field is-horizontal"><!--DIVISÃO EM HORIZONTAL-->
-		<div class="field" style="display: none;" id="vehicleType">
+		<div class="field" style="<?php echo $display;?>" id="vehicleType">
 			<label class="label" for="textInput">Tipo*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="tipo" onchange="upIconVehicle(this.value)">							
-						<?php $gdVeiculoTipo="SELECT ID, TIPO FROM VEICULO_TIPO;"; 
+				  	<select name="tipo" onchange="upIconVehicle(this.value)">
+				  		<option value="<?php echo $veiculo["VEICULO_TIPO_ID"];?>"><?php echo $veiculo["TIPO"];?></option>							
+						<?php $gdVeiculoTipo="SELECT ID, TIPO FROM VEICULO_TIPO WHERE ID<>".$veiculo["VEICULO_TIPO_ID"]; 
 						$con = mysqli_query($phpmyadmin , $gdVeiculoTipo); $x=0; 
 						while($veiculoTipo = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$veiculoTipo["ID"];?>"><?php echo $vtVeiculoTipo[$x]=$veiculoTipo["TIPO"];?></option>
-							<?php $x;} endwhile;?>
+						<?php $x;} endwhile;?>
 					</select>
 				</div>
 				<div id="carVehicle">
@@ -246,10 +289,10 @@ $car=mysqli_num_rows($cnx2);
 				</div>
 			</div>
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<div class="field" style="display: none;" id="vehicleModel">
+		<div class="field" style="<?php echo $display;?>" id="vehicleModel">
 			<label class="label" for="textInput">Modelo*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:18em;" id="modelo">
-				<input name="modelo" type="text" class="input required" placeholder="Fiat Uno" maxlength="40" onblur="checkAdress(form1.modelo, 'msgModelOk','msgModelNok')" id="inputModel">
+				<input name="modelo" type="text" class="input required" placeholder="Fiat Uno" maxlength="40" onblur="checkAdress(form1.modelo, 'msgModelOk','msgModelNok')" id="inputModel" value="<?php echo $veiculo["MODELO"];?>">
 				<span class="icon is-small is-left">
 					<i class="fas fa-sort"></i>
 				</span>
@@ -266,10 +309,10 @@ $car=mysqli_num_rows($cnx2);
 				</div>
 			</div>			
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<div class="field" style="display: none;" id="vehicleBoard">
+		<div class="field" style="<?php echo $display;?>" id="vehicleBoard">
 			<label class="label" for="textInput">Placa*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:11em;" id="placa">
-				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard">
+				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" onblur="checkAdress(form1.placa, 'msgBoardOk','msgBoardNok')" id="inputBoard" value="<?php echo $veiculo["PLACA"];?>">
 				<span class="icon is-small is-left">
 					<i class="fas fa-square"></i>
 				</span>
@@ -286,16 +329,17 @@ $car=mysqli_num_rows($cnx2);
 				</div>
 			</div>			
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<div class="field" style="display: none;" id="vehicleColor">
+		<div class="field" style="<?php echo $display;?>" id="vehicleColor">
 			<label class="label" for="textInput">Cor*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="cor">							
-						<?php $gdCor="SELECT ID, COR FROM COR ORDER BY COR;"; 
+				  	<select name="cor">
+				  		<option value="<?php echo $veiculo["COR_ID"];?>"><?php echo $veiculo["COR"];?></option>							
+						<?php $gdCor="SELECT ID, COR FROM COR WHERE ID<>".$veiculo["COR_ID"]." ORDER BY COR;"; 
 						$con = mysqli_query($phpmyadmin , $gdCor); $x=0; 
 						while($cor = $con->fetch_array()):{?>
 							<option value="<?php echo $vtId[$x]=$cor["ID"];?>"><?php echo $vtCor[$x]=$cor["COR"];?></option>
-							<?php $x;} endwhile;?>
+						<?php $x;} endwhile;?>
 					</select>
 				</div>
 				<div class="icon is-small is-left">
@@ -303,10 +347,10 @@ $car=mysqli_num_rows($cnx2);
 				</div>
 			</div>
 		</div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<div class="field" style="display: none;" id="vehicleYear">
+		<div class="field" style="<?php echo $display;?>" id="vehicleYear">
 			<label class="label" for="textInput">Ano*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:9.6em;" id="ano">
-				<input name="ano" type="text" class="input numero required" placeholder="2008" maxlength="4" onblur="checkAdress(form1.ano, 'msgYearOk','msgYearNok')" id="inputYear">
+				<input name="ano" type="text" class="input numero required" placeholder="2008" maxlength="4" onblur="checkAdress(form1.ano, 'msgYearOk','msgYearNok')" id="inputYear" value="<?php echo $veiculo["ANO"];?>">
 				<span class="icon is-small is-left">
 					<i class="fas fa-newspaper"></i>
 				</span>
@@ -327,7 +371,7 @@ $car=mysqli_num_rows($cnx2);
 	<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<input name="cadastrar" type="submit" class="button is-primary" value="Inserir"/>
+					<input name="cadastrar" type="submit" class="button is-primary" value="Atualizar"/>
 				</div>
 				<div class="control">
 					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"></a>
@@ -376,16 +420,20 @@ if(isset($_POST['cadastrar'])){
 		$placa = trim($_POST['placa']);
 		$ano = trim($_POST['ano']);
 		if($modelo!="" && $placa!="" && $ano!="" ){
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-			mysqli_query($phpmyadmin, $inserirEndereco);
-			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][0].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
-			echo $inserirVeiculo;
-			mysqli_query($phpmyadmin, $inserirVeiculo);
-			if(mysqli_error($phpmyadmin)==null){
-				echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
+			if($quadra==""){//Tratativa caso quadra seja nula.
+				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
 			}
 			else{
-				echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
+				$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+			}
+			mysqli_query($phpmyadmin, $updateAdress);
+			$updateVehicle="UPDATE VEICULO SET VEICULO_TIPO_ID=".$tipo.", COR_ID=".$cor.", MODELO='".$modelo."', PLACA='".$placa."', ANO='".$ano."' WHERE USUARIO_ID=".$_SESSION["filter"][3];
+			mysqli_query($phpmyadmin, $updateVehicle);
+			if(mysqli_error($phpmyadmin)==null){
+				echo"<script language='Javascript'> alert('Endereço atualizado com sucesso!!!'); window.location.href='register.php';</script>";
+			}
+			else{
+				echo"<script language='Javascript'> alert('Erro ao atualizar!!!');</script>";
 				echo mysqli_error($phpmyadmin);				
 			}
 		}
@@ -400,13 +448,18 @@ if(isset($_POST['cadastrar'])){
 		}	
 	}
 	else{
-		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-		mysqli_query($phpmyadmin, $inserirEndereco);
-		if(mysqli_error($phpmyadmin)==null){
-			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
+		if($quadra==""){//Tratativa caso quadra seja nula.
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",NULL,'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
 		}
 		else{
-			echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
+			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][3].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
+		}
+		mysqli_query($phpmyadmin, $updateAdress);
+		if(mysqli_error($phpmyadmin)==null){
+			echo"<script language='Javascript'> alert('Endereço atualizado com sucesso!!!'); window.location.href='register.php';</script>";
+		}
+		else{
+			echo"<script language='Javascript'> alert('Erro ao atualizar!!!');</script>";
 			echo mysqli_error($phpmyadmin);				
 		}
 	}
