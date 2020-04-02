@@ -142,4 +142,8 @@ function upList(valor){
 		document.getElementById("cariacica").style.display="block";				
 	}
 }
+function uppercase(word){
+	up= word.value.toUpperCase();
+	word.value=up;
+}
 //FINAL ADRESS-INSERT;//
