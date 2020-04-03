@@ -102,6 +102,11 @@ $busca= trim($_REQUEST['busca']);
 </div>	
 <?php
 if( $busca != ""){
+	function checkQuery($cx){
+		if(mysqli_error($cx)!=null){
+			echo "<script>alert('Erro, o valor inserido no campo buscar é inválido!'); window.location.href=window.location.href;</script>";
+		}
+	}
 	if($filtro=="MATRICULA="){
 		$f="U.".$filtro."".$busca." LIMIT 1;";
 	}	
@@ -110,9 +115,11 @@ if( $busca != ""){
 	}	
 	$query="SELECT ID, NOME FROM USUARIO U WHERE ".$f;
 	$cnx=mysqli_query($phpmyadmin, $query);
+	checkQuery($phpmyadmin);
 	$dados= $cnx->fetch_array();
 	$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"];
 	$cnx2=mysqli_query($phpmyadmin, $checkAdress);
+	checkQuery($phpmyadmin);
 	$endereco= $cnx2->fetch_array();
 	$cadastrado=mysqli_num_rows($cnx2);
 	if(mysqli_num_rows($cnx)==0){		
