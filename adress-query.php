@@ -103,7 +103,7 @@ else{
 		<div class="field">
 			<label class="label" for="textInput">Quadra</label>
 			<div id="quadra" class="control has-icons-left has-icons-right" style="max-width:10em;">
-				<input name="quadra" type="text" class="input numero" placeholder="3" value="<?php echo $endereco["QUADRA"];?>">
+				<input name="quadra" type="text" class="input numero" placeholder="3" value="<?php echo $endereco["QUADRA"];?>" disabled>
 				<span class="icon is-small is-left">
 					<i class="fas fa-sort-numeric-up"></i>
 				</span>
@@ -210,10 +210,10 @@ else{
 	    	<div class="field is-narrow">
 	      		<div class="control">
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s" class="inputVehicle" <?php if($car==1){echo "CHECKED";}?>>Sim	          		
+	          			<input type="radio" name="veiculo" onclick="enableVehicle()" value="s" class="inputVehicle" <?php if($car==1){echo "CHECKED";}?> disabled>Sim	          		
 	        		</label>
 	        		<label class="radio">
-	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n" class="inputVehicle" <?php if($car==0){echo "CHECKED";}?>>Não
+	          			<input type="radio" name="veiculo" onclick="disableVehicle()" value="n" class="inputVehicle" <?php if($car==0){echo "CHECKED";}?> disabled>Não
 	        		</label>
 	      		</div>
 	    	</div>
@@ -224,7 +224,7 @@ else{
 			<label class="label" for="textInput">Tipo*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="tipo" onchange="upIconVehicle(this.value)">							
+				  	<select name="tipo" onchange="upIconVehicle(this.value)" disabled>							
 						<option value=""><?php echo $veiculo["TIPO"];?></option>
 					</select>
 				</div>
@@ -243,7 +243,7 @@ else{
 		<div class="field" style="<?php echo $display;?>" id="vehicleModel">
 			<label class="label" for="textInput">Modelo*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:18em;" id="modelo">
-				<input name="modelo" type="text" class="input required" placeholder="Fiat Uno" maxlength="40" value="<?php echo $veiculo["MODELO"];?>">
+				<input name="modelo" type="text" class="input required" placeholder="Fiat Uno" maxlength="40" value="<?php echo $veiculo["MODELO"];?>" disabled>
 				<span class="icon is-small is-left">
 					<i class="fas fa-sort"></i>
 				</span>
@@ -263,7 +263,7 @@ else{
 		<div class="field" style="<?php echo $display;?>" id="vehicleBoard">
 			<label class="label" for="textInput">Placa*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:11em;" id="placa">
-				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" value="<?php echo $veiculo["PLACA"];?>">
+				<input name="placa" type="text" class="input required" placeholder="MQD-2045" maxlength="8" value="<?php echo $veiculo["PLACA"];?>" disabled>
 				<span class="icon is-small is-left">
 					<i class="fas fa-square"></i>
 				</span>
@@ -284,7 +284,7 @@ else{
 			<label class="label" for="textInput">Cor*</label>
 			<div class="control has-icons-left">
 				<div class="select">
-				  	<select name="cor">							
+				  	<select name="cor" disabled>							
 						<option value=""><?php echo $veiculo["COR"];?></option>
 					</select>
 				</div>
@@ -296,7 +296,7 @@ else{
 		<div class="field" style="<?php echo $display;?>" id="vehicleYear">
 			<label class="label" for="textInput">Ano*</label>
 			<div class="control has-icons-left has-icons-right" style="max-width:9.6em;" id="ano">
-				<input name="ano" type="text" class="input numero required" placeholder="2008" maxlength="4" value="<?php echo $veiculo["ANO"];?>">
+				<input name="ano" type="text" class="input numero required" placeholder="2008" maxlength="4" value="<?php echo $veiculo["ANO"];?>" disabled>
 				<span class="icon is-small is-left">
 					<i class="fas fa-newspaper"></i>
 				</span>
