@@ -115,25 +115,27 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 <?php endif;?>
 </section>
 </div>
-
 <script type="text/javascript">
 	function actionAdress(valor) {
 		valor= valor.split(',',2);
 		if (valor.length == 0) {
 		   	document.getElementById("txtHint").innerHTML = "";
 		   	return;
-		  	}else {
-		    	var xmlhttp = new XMLHttpRequest();
-		    	xmlhttp.onreadystatechange = function() {
-		      	if (this.readyState == 4 && this.status == 200) {
-		        	document.getElementById("txtHint").innerHTML = this.responseText;
-		      	}
-		    };		    
-		    xmlhttp.open("GET", "register.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
-		    xmlhttp.send();		   	
-		  }
-		  window.location.replace('user-query-filter.php');
 		}
+		else{
+		   	var xmlhttp = new XMLHttpRequest();
+		   	xmlhttp.onreadystatechange = function() {
+			   	if (this.readyState == 4 && this.status == 200) {
+			       	document.getElementById("txtHint").innerHTML = this.responseText;
+			   	}
+			};		    
+			xmlhttp.open("GET", "register.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
+			xmlhttp.send(valor[0]);		   	
+		}
+		setTimeout(function(){
+		  	window.location.replace('user-query-filter.php');
+		  },500);
+	}
 </script>
 </body>
 </html>
