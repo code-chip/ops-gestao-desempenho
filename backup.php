@@ -1,8 +1,9 @@
 <?php
+session_start();
 if($_SESSION["permissao"]==4){
-$DBUSER="id8414870_admin";
+$DBUSER="u574423931_evino";
 $DBPASSWD="ProjetoAlfa@2019";
-$DATABASE="id8414870_projetoalfa";
+$DATABASE="u574423931_evino";
 
 $filename = "backup-" . date("d-m-Y") . ".sql";
 $mime = "application/x-gzip";
