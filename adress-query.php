@@ -317,12 +317,6 @@ else{
 	<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<input name="cadastrar" type="submit" class="button is-primary" value="Inserir"/>
-				</div>
-				<div class="control">
-					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"></a>
-				</div>
-				<div class="control">
 					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary">Voltar</a>										
 				</div>
 				<?php if($_SESSION["permissao"]>1):{?>
@@ -342,63 +336,3 @@ else{
 </div>
 </body>
 </html>
-<!--LÓGICA DE INSERÇÃO NO BANCO DE DADOS-->
-<?php
-if(isset($_POST['cadastrar'])){
-	//<!--- DECLARAÇÃO DAS VARIAVEIS -->
-	$endereco = trim($_POST['endereco']);
-	$numero = trim($_POST['numero']);
-	$complemento = trim($_POST['complemento']);
-	$quadra = trim($_POST['quadra']);
-	$bairro = trim($_POST['bairro']);
-	$observacao = trim($_POST['observacao']);
-	$cep = trim($_POST['cep']);
-	$vale = trim($_POST['vale']);
-	$veiculo = trim($_POST['veiculo']);
-	//VALIDAÇÃO SE LOGIN É ÚNICO.
-	$checkLogin="SELECT LOGIN FROM USUARIO WHERE LOGIN='".$login."'";
-	$result = mysqli_query($phpmyadmin, $checkLogin);		 
-	$check = mysqli_num_rows($result);	
-	if($veiculo=="s"){
-		$tipo = trim($_POST['tipo']);
-		$cor = trim($_POST['cor']);
-		$modelo = trim($_POST['modelo']);
-		$placa = trim($_POST['placa']);
-		$ano = trim($_POST['ano']);
-		if($modelo!="" && $placa!="" && $ano!="" ){
-			$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-			mysqli_query($phpmyadmin, $inserirEndereco);
-			$inserirVeiculo="INSERT INTO VEICULO(USUARIO_ID, VEICULO_TIPO_ID, COR_ID, MODELO, PLACA, ANO) VALUES(".$_SESSION["filter"][0].",".$tipo.",".$cor.",'".$modelo."','".$placa."','".$ano."')";
-			echo $inserirVeiculo;
-			mysqli_query($phpmyadmin, $inserirVeiculo);
-			if(mysqli_error($phpmyadmin)==null){
-				echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
-			}
-			else{
-				echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
-				echo mysqli_error($phpmyadmin);				
-			}
-		}
-		else if($modelo==""){
-			echo"<script language='Javascript'> alert('Preenchimento do modelo é obrigatório!');</script>";
-		}
-		else if($placa==""){
-			echo"<script language='Javascript'> alert('Preenchimento da placa é obrigatório!');</script>";
-		}
-		else{
-			echo"<script language='Javascript'> alert('Preenchimento do ano é obrigatório!');</script>";
-		}	
-	}
-	else{
-		$inserirEndereco="INSERT INTO ENDERECO(USUARIO_ID, ENDERECO, NUMERO, QUADRA, COMPLEMENTO, BAIRRO_ID, CEP, OBSERVACAO, CADASTRADO_EM, VALE_TRANSPORTE) VALUES(".$_SESSION["filter"][0].",'".$endereco."',".$numero.",".$quadra.",'".$complemento."',".$bairro.",'".$cep."','".$observacao."','".date('Y-m-d')."', '".$vale."')";
-		mysqli_query($phpmyadmin, $inserirEndereco);
-		if(mysqli_error($phpmyadmin)==null){
-			echo"<script language='Javascript'> alert('Endereço cadastrado com sucesso!!!'); window.location.href='register.php';</script>";
-		}
-		else{
-			echo"<script language='Javascript'> alert('Erro ao cadastrar!!!');</script>";
-			echo mysqli_error($phpmyadmin);				
-		}
-	}
-}//FINAL DA VERIFICAÇÃO DO ENVIO DO FORMULÁRIO
-?>
