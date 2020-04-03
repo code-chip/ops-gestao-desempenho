@@ -23,7 +23,7 @@ require('menu.php');
 	<main>
 	<form id="form1" action="adress-insert.php" method="POST" onsubmit="return checkForm(form1.cidade.value)">
 	<div class="layout">
-	<h3 class="title"><i class="fas fa-plus-square"></i>&nbsp&nbsp  ENDEREÇO</h3>
+	<h3 class="title"><i class="fas fa-calendar-plus"></i>&nbsp&nbsp  ENDEREÇO</h3>
 	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
 	<hr>	
 	<div class="field is-horizontal" style="margin-bottom: -7px;"><!--DIVISÃO EM HORIZONTAL-->

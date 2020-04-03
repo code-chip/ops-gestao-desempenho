@@ -36,7 +36,7 @@ else{
 	<main>
 	<form id="form1" action="adress-remove.php" method="POST">
 	<div class="layout">
-	<h3 class="title"><i class="fas fa-trash-alt"></i>&nbsp&nbsp  ENDEREÇO</h3>
+	<h3 class="title"><i class="fas fa-calendar-times"></i>&nbsp&nbsp  ENDEREÇO</h3>
 	<h3 class="label"><?php echo $_SESSION["filter"][2];?></h3>
 	<hr>	
 	<div class="field is-horizontal" style="margin-bottom: -7px;"><!--DIVISÃO EM HORIZONTAL-->
