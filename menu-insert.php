@@ -12,7 +12,7 @@ if(isset($_POST["inserirMenu"])!=null){
 	$link=trim($_POST['link']);
 	$menu=trim($_POST['menu']);
 	$situacao=trim($_POST['situacao']);
-	$upFile=trim($_POST['upFile']);
+	$upFile=trim($_POST['userfile']);
 	function cleanString($text) {
     	$utf8 = array('/[áàâãªä]/u'=>'a', '/[ÁÀÂÃÄ]/u'=>'A', '/[ÍÌÎÏ]/u'=>'I', '/[íìîï]/u'=>'i', '/[éèêë]/u'=>'e','/[ÉÈÊË]/u'=>'E', '/[óòôõºö]/u'=>'o',
         '/[ÓÒÔÕÖ]/u'=>'O', '/[úùûü]/u'=>'u','/[ÚÙÛÜ]/u'=>'U', '/ç/'=>'c', '/Ç/'=>'C', '/ñ/'=>'n','/Ñ/'=>'N', '/@/u'=>'a','/–/'=>'-',
@@ -25,9 +25,8 @@ if(isset($_POST["inserirMenu"])!=null){
 			$checkPermissoes="SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;";
 			$cnx= mysqli_query($phpmyadmin, $checkPermissoes);
 		    while($permissao= $cnx->fetch_array()){
-				$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$link."','n','n','".$situacao."');";
-				//mysqli_query($phpmyadmin, $insMenu);
-				echo $insMenu;
+				$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$link."','s','s','".$situacao."');";
+				mysqli_query($phpmyadmin, $insMenu);
 			}
 		}
 		else{
@@ -35,13 +34,22 @@ if(isset($_POST["inserirMenu"])!=null){
 			$cnx= mysqli_query($phpmyadmin, $checkMenu);
 		    while($loadMenu= $cnx->fetch_array()){
 				$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, POSICAO, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', ".$loadMenu["POSICAO"].",'".$link."','n','".$situacao."');";
-				//mysqli_query($phpmyadmin, $insMenu);
-				echo "</br>".$insMenu;
+				mysqli_query($phpmyadmin, $insMenu);
 			}
 			
+		}
+		if($_FILES['userfile']['name']!=""){
+			$uploaddir = 'up/';
+			$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+			echo '<pre>';
+			if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+			    echo "Arquivo válido e enviado com sucesso.\n";
+			} else {
+			    echo "Possível ataque de upload de arquivo!\n";
+			}/*echo 'Aqui está mais informações de debug:'; print_r($_FILES); print "</pre>";*/
 		}		
 		if(mysqli_error($phpmyadmin)==null){
-			echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar.!!')</script>";
+			echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar.!!') </script>";
 		}
 		else{
 			$erro=mysqli_error($phpmyadmin);
@@ -53,22 +61,7 @@ if(isset($_POST["inserirMenu"])!=null){
 	}
 	else{
 		echo "<script>alert('Preencher o campo Link é obrigatório!!')</script>";
-	}
-	//if($upFile!=""){
-	$uploaddir = '/up/';
-	//$uploaddir = '/u574423931/domains/evino-gd.tk/public_html/up/';
-		//$uploaddir = '/var/www/html/ops-gestao-desempenho/up/';
-		$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
-		echo '<pre>';
-		if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-		    echo "Arquivo válido e enviado com sucesso.\n";
-		} else {
-		    echo "Possível ataque de upload de arquivo!\n";
-		}
-		echo 'Aqui está mais informações de debug:';
-		print_r($_FILES);
-		print "</pre>";
-	//}	
+	}		
 }
 ?>
 <!DOCTYPE html>
@@ -182,7 +175,7 @@ if(isset($_POST["inserirMenu"])!=null){
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left">
-								<input type="text" class="input" name="link" placeholder="rh-relatorio.php" maxlength="50">
+								<input type="text" class="input" name="link" placeholder="up/rh-relatorio.php" maxlength="50">
 								<span class="icon is-small is-left">
 									<i class="fas fa-link"></i>
 								</span>
@@ -199,7 +192,7 @@ if(isset($_POST["inserirMenu"])!=null){
 							<div id="file-js-example" class="file has-name" style="width:28.5em;">
 							  	<label class="file-label" style="width:28.5em;">
 							  		<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-							    	<input class="file-input" type="file" name="upFile" style="width:28.5em;">
+							    	<input class="file-input" type="file" name="userfile" style="width:28.5em;">
 							    	<span class="file-cta">
 							      		<span class="file-icon">
 							        		<i class="fas fa-upload"></i>
