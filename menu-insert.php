@@ -6,7 +6,7 @@ if($_SESSION["permissao"]==1){
 	header("Refresh:1;url=home.php");
 }
 else{
-if(isset($_POST["inserirMenu"])!=null){
+	if(isset($_POST["inserirMenu"])!=null){
 	$nome=trim($_POST['nome']);
 	$tipo=trim($_POST['tipoMenu']);
 	$target=trim($_POST['clique']);
@@ -21,52 +21,43 @@ if(isset($_POST["inserirMenu"])!=null){
     	return preg_replace(array_keys($utf8), array_values($utf8), $text);
 	}
 	$tag= strtolower(cleanString($nome));
-	if($nome!="" && $tipo!=""){
-		if($_FILES['userfile']['name']!=""){
-			$uploaddir = 'up/';
-			$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
-			echo '<pre>';
-			if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-			    echo "Arquivo válido e enviado com sucesso.\n";
-			} else {
-			    echo "Possível ataque de upload de arquivo!\n";
-			}/*echo 'Aqui está mais informações de debug:'; print_r($_FILES); print "</pre>";*/
-			if($link!=""){
-				$link="up/".$link;
-			}			
-		}	
-		if($tipo=="MENU"){
-			$checkPermissoes="SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;";
-			$cnx= mysqli_query($phpmyadmin, $checkPermissoes);
-		    while($permissao= $cnx->fetch_array()){
-				$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, TARGET, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$target."','".$link."','s','n','".$situacao."');";
-				mysqli_query($phpmyadmin, $insMenu);
-			}
-		}
-		else{
-			$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
-			$cnx= mysqli_query($phpmyadmin, $checkMenu);
-		    while($loadMenu= $cnx->fetch_array()){
-				$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, POSICAO, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', ".$loadMenu["POSICAO"].", '".$target."','".$link."','n','".$situacao."');";
-				mysqli_query($phpmyadmin, $insMenu);
-			}
-			
-		}
-		if(mysqli_error($phpmyadmin)==null){
-			echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar!!'); window.location.href='menu-insert.php';</script>";
-		}
-		else{
-			$erro=mysqli_error($phpmyadmin);
-			echo "<script>alert('Erro ".$erro."!!')</script>";
+	if($_FILES['userfile']['name']!=""){
+		$uploaddir = 'up/';
+		$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+		echo '<pre>';
+		if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+		    echo "Arquivo válido e enviado com sucesso.\n";
+		} else {
+		    echo "Possível ataque de upload de arquivo!\n";
+		}/*echo 'Aqui está mais informações de debug:'; print_r($_FILES); print "</pre>";*/
+		if($link!=""){
+			$link="up/".$link;
 		}			
-	}
-	else if($nome==""){
-		echo "<script>alert('Preencher o campo Nome é obrigatório!!')</script>";
+	}	
+	if($tipo=="MENU"){
+		$checkPermissoes="SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;";
+		$cnx= mysqli_query($phpmyadmin, $checkPermissoes);
+	    while($permissao= $cnx->fetch_array()){
+			$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, TARGET, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$target."','".$link."','s','n','".$situacao."');";
+			mysqli_query($phpmyadmin, $insMenu);
+		}
 	}
 	else{
-		echo "<script>alert('Preencher o campo Link é obrigatório!!')</script>";
-	}		
-}
+		$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
+		$cnx= mysqli_query($phpmyadmin, $checkMenu);
+	    while($loadMenu= $cnx->fetch_array()){
+			$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, POSICAO, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', ".$loadMenu["POSICAO"].", '".$target."','".$link."','n','".$situacao."');";
+			mysqli_query($phpmyadmin, $insMenu);
+		}		
+	}
+	if(mysqli_error($phpmyadmin)==null){
+		echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar!!'); window.location.href='menu-insert.php';</script>";
+	}
+	else{
+		$erro=mysqli_error($phpmyadmin);
+		echo "<script>alert('Erro ".$erro."!!')</script>";
+	}			
+}//Final if.
 ?>
 <!DOCTYPE html>
 <html>
