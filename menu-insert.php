@@ -123,6 +123,26 @@ if(isset($_POST["inserirMenu"])!=null){
 							</div>
 						</div>
 					</div>
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Clique:</label>
+					</div>
+					<div class="field-body">
+						<div class="field" >							
+							<div class="control has-icons-left">
+								<div class="select" id="exibeMenu">
+									<select name="clique" style="width:24.2em;">
+										<option value="">Abrir na mesma aba</option>
+										<option value="_blank">Abrir em nova aba</option>										
+									</select>	
+								</div>
+								<span class="icon is-small is-left">
+									<i class="fas fa-mouse-pointer"></i>
+								</span>
+							</div>						
+						</div>
+					</div>
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
@@ -167,7 +187,7 @@ if(isset($_POST["inserirMenu"])!=null){
 							</div>						
 						</div>
 					</div>
-				</div>
+				</div>				
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Link:</label>
