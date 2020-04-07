@@ -147,3 +147,29 @@ function uppercase(word){
 	word.value=up;
 }
 //FINAL ADRESS-INSERT;//
+//MENU-INSERT;//
+function menuInsertOnOffSelected(div){
+	if(div == 'MENU_ITEM'){	   			 				
+		document.getElementById('menu').style.display='block';	   				
+	   	document.getElementById('selecao').style.display='block';	
+	}
+	else{
+		document.getElementById('menu').style.display='none';	   				
+		document.getElementById('selecao').style.display='none';		
+	}
+}
+function menuInsertcheckForm(){
+	var inputs = document.getElementsByClassName('required');
+  	var len = inputs.length;
+  	var valid = true;
+  	for(var i=0; i < len; i++){
+    	if (!inputs[i].value){ valid = false; }
+  	}
+  	if (!valid){
+  		alert('Por favor preencha todos os campos* obrigatórios.');
+    	return false;
+  	} 
+  	else{ 
+  		return true; 
+  	}
+}//FINAL MENU-INSERT;//
