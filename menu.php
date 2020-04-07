@@ -65,12 +65,12 @@ $menuAtivo;
 					while ($menu=$cnx->fetch_array()): {
 						if($menu["SUBMENU"]=="s"):{?>
 							<div class="navbar-item has-dropdown is-hoverable">
-								<a href=""<?php echo $Menu["LINK"]?>"" target="<?php echo $menu["TARGET"]?>" class="navbar-link <?php if($menuAtivo==$menu["TAG"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>
+								<a href="<?php echo $menu["LINK"]?>" target="<?php echo $menu["TARGET"]?>" class="navbar-link <?php if($menuAtivo==$menu["TAG"]){ echo "is-active"; }?> hvr-grow"><?php echo $menu["MENU"]?></a>
 								<div class="navbar-dropdown"><?php 
 									$loadItemMenu="SELECT ITEM, TARGET, LINK FROM MENU_ITEM WHERE ATIVO='s' and LIBERADO='s' AND MENU_ID=".$menu["ID"]." AND PERMISSAO_ID=".$_SESSION["permissao"]." ORDER BY POSICAO";
 									$cnx2=mysqli_query($phpmyadmin, $loadItemMenu);
 									while ($itemMenu= $cnx2->fetch_array()): {?>
-										<a href="<?php echo $itemMenu["LINK"]?>" target="<?php echo $menu["TARGET"]?>" class="navbar-item hvr-grow"><?php echo $itemMenu["ITEM"]?></a>	
+										<a href="<?php echo $itemMenu["LINK"]?>" target="<?php echo $itemMenu["TARGET"]?>" class="navbar-item hvr-grow"><?php echo $itemMenu["ITEM"]?></a>	
 									<?php }endwhile;
 									?>
 								</div>
