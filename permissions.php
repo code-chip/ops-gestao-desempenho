@@ -3,12 +3,13 @@ $menuAtivo="configuracoes";
 require('menu.php');
 if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 	echo "<script>alert('OK 2');</script>";
-	$menu = $_GET['tag'];	
+	$menu = $_GET['tag'];
+	$permissao= $_GET['permissao'];	
 	$situacao= array_filter($_GET['menuAtivo']);	
-	$upMenu="UPDATE MENU SET ATIVO='".$situacao[0]."' WHERE TAG='".$menu."'";
+	$upMenu="UPDATE MENU SET LIBERADO='".$situacao[0]."' WHERE PERMISSAO_ID=".$permissao." AND TAG='".$menu."'";
 	mysqli_query($phpmyadmin, $upMenu);	
 	if($situacao[0]=="n"){
-		$upItem="UPDATE MENU_ITEM SET ATIVO='".$situacao[0]."' WHERE MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$menu."');";
+		$upItem="UPDATE MENU_ITEM SET LIBERADO='".$situacao[0]."' WHERE PERMISSAO_ID=".$permissao." AND MENU_ID IN(SELECT ID FROM MENU WHERE TAG='".$menu."');";
 		mysqli_query($phpmyadmin, $upItem); echo "TESTE";
 	}
 	else{
@@ -19,7 +20,7 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 			$cnx2=mysqli_query($phpmyadmin, $chkMenuItem);
 			$x=1;
 			while($xId=$cnx2->fetch_array()) {
-				$upItem="UPDATE MENU_ITEM SET ATIVO='".$situacao[$x]."' WHERE ID=".$xId["ID"];
+				$upItem="UPDATE MENU_ITEM SET LIBERADO='".$situacao[$x]."' WHERE PERMISSAO_ID=".$permissao." AND ID=".$xId["ID"];
 				$cnx3=mysqli_query($phpmyadmin, $upItem); echo "</br> ".$upItem;
 				$x++;	
 			}
@@ -32,7 +33,7 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Opções Habilitadas</title>
+	<title>Gestão de Desempenho - Permissões de Acesso</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/personal.css">
@@ -47,34 +48,124 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 	    	<div class="container">
 	    		<div class="box">
 	    			<div class="has-text-righ">
-	    			<label class="is-size-5 "><center><strong>Habilitar/Desativar Menu e Item de menu</strong></center></label>	    			
-	    		<div class="columns">	    			
+	    			<label class="is-size-5 "><center><strong>Permissões de acesso Usuário</strong></center></label>	    			
+	    		<div class="columns user">	    			
 					<?php $x=0; $y=0;
-						$checkMenu="SELECT ID, MENU, TAG, ATIVO FROM MENU WHERE ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
+						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=1 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
 						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
 						while($loadMenu=$cnx->fetch_array()):{ ?>
 						<div class="column">							
 							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
 				  			<label for="switch-shadow<?php echo $x?>"></label><?php
-							$checkItem="SELECT * FROM MENU_ITEM WHERE MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
+							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=1 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
 							$cnx2=mysqli_query($phpmyadmin, $checkItem);
 							while ($loadItem=$cnx2->fetch_array()):{ ?>
 								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
 				  				<label for="switch-flat<?php echo $y?>"></label>
 							<?php $y++; }endwhile; ?>
 						</div><?php	$x++;
 						}endwhile;
 					?>					    
 				</div>
-	    		</div>
-	    	</div>	
+	    		</div><!--Final div box-->	    		
+	    	</div><!--Final div container-->
+	    	<div class="container leader">
+	    		<div class="box">
+	    			<div class="has-text-righ">
+	    			<label class="is-size-5 "><center><strong>Permissões de acesso Líder</strong></center></label>	    			
+	    		<div class="columns">	    			
+					<?php $x=0; $y=0;
+						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=2 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
+						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
+						while($loadMenu=$cnx->fetch_array()):{ ?>
+						<div class="column">							
+							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+				  			<label for="switch-shadow<?php echo $x?>"></label><?php
+							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=2 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
+							$cnx2=mysqli_query($phpmyadmin, $checkItem);
+							while ($loadItem=$cnx2->fetch_array()):{ ?>
+								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+				  				<label for="switch-flat<?php echo $y?>"></label>
+							<?php $y++; }endwhile; ?>
+						</div><?php	$x++;
+						}endwhile;
+					?>					    
+				</div>
+	    		</div><!--Final div box-->	    		
+	    	</div><!--Final div container-->
+	    	<div class="container manager">
+	    		<div class="box">
+	    			<div class="has-text-righ">
+	    			<label class="is-size-5 "><center><strong>Permissões de acesso Gestor</strong></center></label>	    			
+	    		<div class="columns">	    			
+					<?php $x=0; $y=0;
+						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=3 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
+						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
+						while($loadMenu=$cnx->fetch_array()):{ ?>
+						<div class="column">							
+							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+				  			<label for="switch-shadow<?php echo $x?>"></label><?php
+							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=3 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
+							$cnx2=mysqli_query($phpmyadmin, $checkItem);
+							while ($loadItem=$cnx2->fetch_array()):{ ?>
+								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+				  				<label for="switch-flat<?php echo $y?>"></label>
+							<?php $y++; }endwhile; ?>
+						</div><?php	$x++;
+						}endwhile;
+					?>					    
+				</div>
+	    		</div><!--Final div box-->	    		
+	    	</div><!--Final div container-->
+	    	<div class="container admin" id="admin">
+	    		<div class="box">
+	    			<div class="has-text-righ">
+	    			<label class="is-size-5 "><center><strong>Permissões de acesso Administrador</strong></center></label>	    			
+	    		<div class="columns">	    			
+					<?php $x=0; $y=0;
+						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=4 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO"; 
+						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
+						while($loadMenu=$cnx->fetch_array()):{ ?>
+						<div class="column">							
+							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."d";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+				  			<label for="switch-shadow<?php echo $x?>"></label><?php
+							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=4 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
+							$cnx2=mysqli_query($phpmyadmin, $checkItem);
+							while ($loadItem=$cnx2->fetch_array()):{ ?>
+								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."d";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="test(this.id)">
+				  				<label for="switch-flat<?php echo $y?>"></label>
+							<?php $y++; }endwhile; ?>
+						</div><?php	$x++;
+						}endwhile;
+					?>					    
+				</div>
+	    		</div><!--Final div box-->	    		
+	    	</div><!--Final div container-->		
 	  	</div>
 	</div>
 	<script type="text/javascript">
-		var tag; var selecao; var ativo;		
-		function carregaSelecao(tag){			
+		var tag; var selecao; var ativo; var permissao=1;
+		$(".user").click(function(){
+			permissao=1;
+		});
+		$(".leader").click(function(){
+			permissao=2;
+		});
+		$(".manager").click(function(){
+			permissao=3;
+		});
+		$(".admin").click(function(){
+			permissao=4;
+		});
+		function carregaSelecao(tag){
 			let meta = document.querySelectorAll("."+tag);
 			var menu = [];
 			var r=0;
@@ -90,6 +181,8 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 			atualizaMenu(tag, menu);
 		}					
 		$(".meta").click(function(){//FUNCAO P/ DESMARCAR TODOS ITENS DE MENU.
+			//alert(document.getElementsByClassName(meta.value));
+			alert('foi');
 		  let meta = document.querySelectorAll(".meta");		 
 		  for (let i = 0; i < meta.length; i++) {
 		    if (meta[0].checked && i+1 < meta.length){
@@ -197,7 +290,7 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 		        	document.getElementById("txtHint").innerHTML = this.responseText;
 		      	}
 		    };		    
-		    xmlhttp.open("GET", "options.php?tag="+str+"&menuAtivo[]="+ativos[0]+"&menuAtivo[]="+ativos[1]+"&menuAtivo[]="+ativos[2]+"&menuAtivo[]="+ativos[3]+"&menuAtivo[]="+ativos[4]+"&menuAtivo[]="+ativos[5]+"&menuAtivo[]="+ativos[6], true);	    
+		    xmlhttp.open("GET", "permissions.php?tag="+str+"&permissao="+permissao+"&menuAtivo[]="+ativos[0]+"&menuAtivo[]="+ativos[1]+"&menuAtivo[]="+ativos[2]+"&menuAtivo[]="+ativos[3]+"&menuAtivo[]="+ativos[4]+"&menuAtivo[]="+ativos[5]+"&menuAtivo[]="+ativos[6], true);	    
 		    xmlhttp.send();		   	
 		  }
 		  setTimeout(function(){
