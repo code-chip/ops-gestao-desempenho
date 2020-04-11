@@ -45,50 +45,50 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 	<div class="hero is-fullheight is-primary has-background">
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/options1-min.jpg"/>
 	  	<div class="hero-body">
-	    	<div class="container">
+	    	<div class="container user" id="list">
 	    		<div class="box">
 	    			<div class="has-text-righ">
-	    			<label class="is-size-5 "><center><strong>Permissões de acesso Usuário</strong></center></label>	    			
-	    		<div class="columns user">	    			
-					<?php $x=0; $y=0;
-						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=1 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
-						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
-						while($loadMenu=$cnx->fetch_array()):{ ?>
-						<div class="column">							
-							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
-				  			<label for="switch-shadow<?php echo $x?>"></label><?php
-							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=1 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
-							$cnx2=mysqli_query($phpmyadmin, $checkItem);
-							while ($loadItem=$cnx2->fetch_array()):{ ?>
-								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
-				  				<label for="switch-flat<?php echo $y?>"></label>
-							<?php $y++; }endwhile; ?>
-						</div><?php	$x++;
-						}endwhile;
-					?>					    
-				</div>
-	    		</div><!--Final div box-->	    		
+	    				<label class="is-size-5 "><center><strong>Permissões de acesso Usuário</strong></center></label>	    			
+		    			<div class="columns">	    			
+						<?php $x=0; $y=0;
+							$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=1 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
+							$cnx=mysqli_query($phpmyadmin, $checkMenu);						
+							while($loadMenu=$cnx->fetch_array()):{ ?>
+							<div class="column" id="user">							
+								<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
+						    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."1";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','1')">
+					  			<label for="switch-shadow<?php echo $x?>"></label><?php
+								$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=1 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
+								$cnx2=mysqli_query($phpmyadmin, $checkItem);
+								while ($loadItem=$cnx2->fetch_array()):{ ?>
+									<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
+						    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."1";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','1')">
+					  				<label for="switch-flat<?php echo $y?>"></label>
+								<?php $y++; }endwhile; ?>
+							</div><?php	$x++;
+							}endwhile;
+						?>
+					</div><!--columns user-->					    
+	    		</div><!--Final div box-->
 	    	</div><!--Final div container-->
-	    	<div class="container leader">
+	    	<div id="container">
 	    		<div class="box">
 	    			<div class="has-text-righ">
 	    			<label class="is-size-5 "><center><strong>Permissões de acesso Líder</strong></center></label>	    			
-	    		<div class="columns">	    			
-					<?php $x=0; $y=0;
+	    		<div class="columns ">	    			
+					<?php //$x=0; $y=0;
 						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=2 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
 						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
 						while($loadMenu=$cnx->fetch_array()):{ ?>
-						<div class="column">							
+						<div class="column leader">							
 							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."2";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','2')">
 				  			<label for="switch-shadow<?php echo $x?>"></label><?php
 							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=2 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
 							$cnx2=mysqli_query($phpmyadmin, $checkItem);
 							while ($loadItem=$cnx2->fetch_array()):{ ?>
 								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."2";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','2')">
 				  				<label for="switch-flat<?php echo $y?>"></label>
 							<?php $y++; }endwhile; ?>
 						</div><?php	$x++;
@@ -97,24 +97,24 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 				</div>
 	    		</div><!--Final div box-->	    		
 	    	</div><!--Final div container-->
-	    	<div class="container manager">
+	    	<div class="container">
 	    		<div class="box">
 	    			<div class="has-text-righ">
 	    			<label class="is-size-5 "><center><strong>Permissões de acesso Gestor</strong></center></label>	    			
 	    		<div class="columns">	    			
-					<?php $x=0; $y=0;
+					<?php //$x=0; $y=0;
 						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=3 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO";
 						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
 						while($loadMenu=$cnx->fetch_array()):{ ?>
 						<div class="column">							
 							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."3";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','3')">
 				  			<label for="switch-shadow<?php echo $x?>"></label><?php
 							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=3 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
 							$cnx2=mysqli_query($phpmyadmin, $checkItem);
 							while ($loadItem=$cnx2->fetch_array()):{ ?>
 								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."3";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','3')">
 				  				<label for="switch-flat<?php echo $y?>"></label>
 							<?php $y++; }endwhile; ?>
 						</div><?php	$x++;
@@ -123,24 +123,24 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 				</div>
 	    		</div><!--Final div box-->	    		
 	    	</div><!--Final div container-->
-	    	<div class="container admin" id="admin">
+	    	<div class="container">
 	    		<div class="box">
 	    			<div class="has-text-righ">
 	    			<label class="is-size-5 "><center><strong>Permissões de acesso Administrador</strong></center></label>	    			
 	    		<div class="columns">	    			
-					<?php $x=0; $y=0;
+					<?php //$x=0; $y=0;
 						$checkMenu="SELECT ID, MENU, TAG, LIBERADO, ATIVO FROM MENU WHERE PERMISSAO_ID=4 AND ID NOT IN(1,2,3,4,29,30,31,32) GROUP BY MENU ORDER BY POSICAO"; 
 						$cnx=mysqli_query($phpmyadmin, $checkMenu);						
 						while($loadMenu=$cnx->fetch_array()):{ ?>
-						<div class="column">							
+						<div class="column" id="4">							
 							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."d";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"]."4";?> switch switch--shadow" <?php if($loadMenu["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','4')">
 				  			<label for="switch-shadow<?php echo $x?>"></label><?php
 							$checkItem="SELECT * FROM MENU_ITEM WHERE PERMISSAO_ID=4 AND MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
 							$cnx2=mysqli_query($phpmyadmin, $checkItem);
 							while ($loadItem=$cnx2->fetch_array()):{ ?>
 								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."d";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="test(this.id)">
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"]."4";?> switch switch--flat" <?php if($loadItem["LIBERADO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="update('<?php echo $loadMenu["TAG"];?>','4')">
 				  				<label for="switch-flat<?php echo $y?>"></label>
 							<?php $y++; }endwhile; ?>
 						</div><?php	$x++;
@@ -151,22 +151,10 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 	    	</div><!--Final div container-->		
 	  	</div>
 	</div>
-	<script type="text/javascript">
-		var tag; var selecao; var ativo; var permissao=1;
-		$(".user").click(function(){
-			permissao=1;
-		});
-		$(".leader").click(function(){
-			permissao=2;
-		});
-		$(".manager").click(function(){
-			permissao=3;
-		});
-		$(".admin").click(function(){
-			permissao=4;
-		});
+	<script type="text/javascript">		
+		var tag; var selecao; var ativo; permissao=1;	
 		function carregaSelecao(tag){
-			let meta = document.querySelectorAll("."+tag);
+			let meta = document.querySelectorAll("."+tag+permissao);
 			var menu = [];
 			var r=0;
 			while(r < meta.length){
@@ -179,106 +167,24 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 				r++;
 			}			
 			atualizaMenu(tag, menu);
+		}
+		function update(mytag, p){
+			permissao=p;
+			let dashboard = document.querySelectorAll("."+mytag+p);
+			for (let i = 0; i < dashboard.length; i++) {
+			    if (dashboard[0].checked && i+1 < dashboard.length){
+				    dashboard[i+1].removeAttribute("disabled");
+			    } else {
+			    	if (i+1 < dashboard.length) {
+			        for (let j = i+1; j < dashboard.length; j++) {
+			          dashboard[j].checked = false;
+			          dashboard[j].setAttribute("disabled", "true");
+			        }
+			      }
+			    }		    
+			}
+			carregaSelecao(mytag);		  
 		}					
-		$(".meta").click(function(){//FUNCAO P/ DESMARCAR TODOS ITENS DE MENU.
-			//alert(document.getElementsByClassName(meta.value));
-			alert('foi');
-		  let meta = document.querySelectorAll(".meta");		 
-		  for (let i = 0; i < meta.length; i++) {
-		    if (meta[0].checked && i+1 < meta.length){
-		      meta[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < meta.length) {
-		        for (let j = i+1; j < meta.length; j++) {
-		          meta[j].checked = false;
-		          meta[j].setAttribute("disabled", "true");
-		        }
-		      }		      
-		    }		     
-		  }		  
-		  carregaSelecao("meta");		  
-		});				
-		$(".desempenho").click(function(){
-		  let desempenho = document.querySelectorAll(".desempenho");		 
-		  for (let i = 0; i < desempenho.length; i++) {
-		    if (desempenho[0].checked && i+1 < desempenho.length){
-		      desempenho[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < desempenho.length) {
-		        for (let j = i+1; j < desempenho.length; j++) {
-		          desempenho[j].checked = false;
-		          desempenho[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }
-		  }
-		  carregaSelecao("desempenho");
-		});
-		$(".feedback").click(function(){
-		  let feedback = document.querySelectorAll(".feedback");		 
-		  for (let i = 0; i < feedback.length; i++) {
-		    if (feedback[0].checked && i+1 < feedback.length){
-		      feedback[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < feedback.length) {
-		        for (let j = i+1; j < feedback.length; j++) {
-		          feedback[j].checked = false;
-		          feedback[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }
-		  }
-		  carregaSelecao("feedback");	
-		});
-		$(".relatorios").click(function(){
-		  let relatorios = document.querySelectorAll(".relatorios");		 
-		  for (let i = 0; i < relatorios.length; i++) {
-		    if (relatorios[0].checked && i+1 < relatorios.length){
-		      relatorios[i+1].removeAttribute("disabled");
-		      tag="relatorios";
-		    } else {
-		      if (i+1 < relatorios.length) {
-		        for (let j = i+1; j < relatorios.length; j++) {
-		          relatorios[j].checked = false;
-		          relatorios[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("relatorios");	
-		});
-		$(".configuracoes").click(function(){
-		  let configuracoes = document.querySelectorAll(".configuracoes");		 
-		  for (let i = 0; i < configuracoes.length; i++) {
-		    if (configuracoes[0].checked && i+1 < configuracoes.length){
-		      configuracoes[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < configuracoes.length) {
-		        for (let j = i+1; j < configuracoes.length; j++) {
-		          configuracoes[j].checked = false;
-		          configuracoes[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("configuracoes");		  
-		});
-		$(".dashboard").click(function(){
-		  let dashboard = document.querySelectorAll(".dashboard");		 
-		  for (let i = 0; i < dashboard.length; i++) {
-		    if (dashboard[0].checked && i+1 < dashboard.length){
-		      dashboard[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < dashboard.length) {
-		        for (let j = i+1; j < dashboard.length; j++) {
-		          dashboard[j].checked = false;
-		          dashboard[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("dashboard");		  
-		});			
 		function atualizaMenu(str, ativos) {								
 			if (str.length == 0) {
 		    	document.getElementById("txtHint").innerHTML = "";
@@ -291,11 +197,12 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 		      	}
 		    };		    
 		    xmlhttp.open("GET", "permissions.php?tag="+str+"&permissao="+permissao+"&menuAtivo[]="+ativos[0]+"&menuAtivo[]="+ativos[1]+"&menuAtivo[]="+ativos[2]+"&menuAtivo[]="+ativos[3]+"&menuAtivo[]="+ativos[4]+"&menuAtivo[]="+ativos[5]+"&menuAtivo[]="+ativos[6], true);	    
-		    xmlhttp.send();		   	
+		    xmlhttp.send();
+		    		   	
 		  }
 		  setTimeout(function(){
 		  	window.location.reload('menu.php');
-		  },1000);		  
+		  },1000);
 		}
 	</script>
 </body>
