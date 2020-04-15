@@ -101,6 +101,11 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Mensagem</span></a>&nbsp&nbsp&nbsp
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Mensagem</span></a>&nbsp&nbsp&nbsp		
 	</div>	
+</div><br/>
+<div class="field has-addons has-addons-centered">
+	<div class="buttons">								
+		<a href="coupon-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Cupom</span></a>&nbsp&nbsp&nbsp		
+	</div>	
 </div>
 <!--<br/>
 
