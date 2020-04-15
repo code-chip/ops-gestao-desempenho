@@ -1,26 +1,3 @@
-<style type="text/css">
-.hero.is-success {
-	background: #0000;
-}
-.hero .nav, .hero.is-success .nav {
-  	-webkit-box-shadow: none;
-  	box-shadow: none;
-}
-.hero.has-background {
-	position: relative;
-	/*overflow: hidden;*/
-}
-.hero-background {
-	position: absolute;
-	object-fit: cover;
-	object-position: center center;
-	width: 100%;
-	height: 100%;
-}
-.hero-background.is-transparent{
-    opacity: 0.7;
-}
-</style>
 <?php
 $menuAtivo="configuracoes";
 include('menu.php');
@@ -34,6 +11,29 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.hero.is-success {
+			background: #0000;
+		}
+		.hero .nav, .hero.is-success .nav {
+		  	-webkit-box-shadow: none;
+		  	box-shadow: none;
+		}
+		.hero.has-background {
+			position: relative;
+			/*overflow: hidden;*/
+		}
+		.hero-background {
+			position: absolute;
+			object-fit: cover;
+			object-position: center center;
+			width: 100%;
+			height: 100%;
+		}
+		.hero-background.is-transparent{
+		    opacity: 0.7;
+		}
+	</style>
 </head>
 <body>
 <div class="hero is-fullheight is-primary has-background field has-addons">
