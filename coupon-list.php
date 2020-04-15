@@ -25,7 +25,7 @@ $query="SELECT C.MATRICULA_ID, U.NOME, C.CODIGO, C.UTILIZADO, C.REGISTRO FROM CU
 		$contador=$x;
 	}
 	if(mysqli_num_rows($cnx)==0){
-		echo "<script>alert('Nenhum cupom foi cadastrado!'); window.location.href=window.location.href; </script>";	
+		echo "<script>alert('Nenhum cupom foi cadastrado!'); window.history.back(); </script>";	
 	}
 ?>
 <!DOCTYPE html>
