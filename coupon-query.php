@@ -12,6 +12,9 @@ if($validate["CELULAR"]!=NULL && $validate["ENDERECO"]==1){
 	$checkCupom="SELECT CODIGO, UTILIZADO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;";
 	$cnx2=mysqli_query($phpmyadmin, $checkCupom);
 	$cupom= $cnx2->fetch_array();
+	if(mysqli_num_rows($cnx2)==0){
+		echo "<script>alert('Não foi liberado nenhum cupom p/ o seu usuário.'); window.history.back(); </script>";
+	}
 }
 else if($validate["CELULAR"]==NULL){
 	echo "<script>alert('Para acessar o seu cupom, o preenchimendo do campo Celular em Configurações->Atualizar Usuário é obrigatório!'); window.history.back();</script>";
@@ -61,7 +64,7 @@ if(isset($_POST["utilizado"])){
 	    		<div class="box transparencia bloco">
 	    			<strong>Cupom eviner, desconto de até R$100!</strong>
 	    			<div class="box antitransparencia">
-	    				Olá eviner <?php echo $_SESSION["nameUser"] ?>, aproveite o seu cupom:<br><h6 class="is-size-1" id="cupom" value="<?php echo $cupom["CODIGO"]?>"><?php echo $cupom["CODIGO"]?></h6> 
+	    				Olá eviner <?php echo $_SESSION["nameUser"] ?>, aproveite o seu cupom:<br><h6 class="is-size-1" id="cupom" value=""><?php echo $cupom["CODIGO"]?></h6> 
 	    			</div>	
 		    	<div class="field">
 				<div class="control">
