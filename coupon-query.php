@@ -9,7 +9,7 @@ $cnx=mysqli_query($phpmyadmin, $checkAdress);
 $validate= $cnx->fetch_array();
 if($validate["CELULAR"]!=NULL && $validate["ENDERECO"]==1){
 	$cupom= $cnx->fetch_array();
-	$checkCupom="SELECT CODIGO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;";
+	$checkCupom="SELECT CODIGO, UTILIZADO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;";
 	$cnx2=mysqli_query($phpmyadmin, $checkCupom);
 	$cupom= $cnx2->fetch_array();
 }
@@ -21,8 +21,8 @@ else{
 }
 if(isset($_POST["utilizado"])){
 	$upCoupon="UPDATE CUPOM SET UTILIZADO='s' WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"];
-	echo $upCoupon;
-$cnx=mysqli_query($phpmyadmin, $upCoupon);
+	mysqli_query($phpmyadmin, $upCoupon);
+	echo "<script>alert('Utilização do cupom registrado com sucesso!'); window.location.href=window.location.href;</script>";
 }
 ?>
 <!DOCTYPE html>
