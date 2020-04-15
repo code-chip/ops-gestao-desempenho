@@ -104,7 +104,8 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 </div><br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="coupon-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Cupom</span></a>&nbsp&nbsp&nbsp		
+		<a href="coupon-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Cupom</span></a>&nbsp&nbsp&nbsp
+		<a href="coupon-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Cupom</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div>
 <!--<br/>
