@@ -1,11 +1,8 @@
 <?php 
 $menuAtivo="Feedback";
 include('menu.php');
-$n=rand(1,13);
-$img="img/wallpaper/evaluation".$n."-min.jpg";
-if(isset($_POST["iniciar"]) && $_POST["concordo"]!=null){
-	//echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
-}
+$n=rand(1,1);
+$img="img/wallpaper/coupon".$n."-min.png";
 /*Verifica se existe celular e endereço cadastrado*/
 $checkAdress="SELECT CELULAR, (SELECT COUNT(*) FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ENDERECO FROM USUARIO WHERE ID=".$_SESSION["userId"];
 $cnx=mysqli_query($phpmyadmin, $checkAdress);
@@ -21,6 +18,11 @@ else if($validate["CELULAR"]==NULL){
 }
 else{
 	echo "<script>alert('Para acessar o seu cupom, o cadastro do endereço em Configurações->Inserir Endereçõ é obrigatório!'); window.history.back();</script>";
+}
+if(isset($_POST["utilizado"])){
+	$upCoupon="UPDATE CUPOM SET UTILIZADO='s' WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"];
+	echo $upCoupon;
+$cnx=mysqli_query($phpmyadmin, $upCoupon);
 }
 ?>
 <!DOCTYPE html>
@@ -39,6 +41,14 @@ else{
 	    	document.getElementById("demo").select();
 	    	document.execCommand('copy');
 		}
+		function checkForm(){
+			var clique= document.getElementById("utilizado").checked;
+			if(clique==false){
+				alert('Marque o checkbox Cupom utilizado!');
+			}
+			return clique;
+			
+		}
 </script>
 	
 </head>
@@ -47,7 +57,7 @@ else{
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
-	    		<form method="POST" action="coupon-query.php">
+	    		<form method="POST" action="coupon-query.php" onsubmit="return checkForm(form1.usado)" id="form1">
 	    		<div class="box transparencia bloco">
 	    			<strong>Cupom eviner, desconto de até R$100!</strong>
 	    			<div class="box antitransparencia">
@@ -56,18 +66,18 @@ else{
 		    	<div class="field">
 				<div class="control">
 				    <label class="checkbox">
-					    <input type="checkbox" id="demso" name="concordo" value="<?php echo $cupom["CODIGO"]?>">					    
-				      Cupom usado
+					    <input type="checkbox" id="utilizado" name="utilizado" <?php if($cupom["UTILIZADO"]=="s"){ echo "checked";}?>>					    
+				      Cupom utilizado
 				    </label>
 				</div>				
 				</div>
 				<textarea id="demo" style="position: absolute; margin-top: -2000px;"><?php echo $cupom["CODIGO"]?></textarea>
 				<div class="field is-grouped">
 				  	<div class="control">
-				    	<button class="button is-link" name="iniciar" onclick="copyText()">Copiar</button>
+				    	<button type="button" class="button is-link" name="iniciar" onclick="copyText()">Copiar cupom</button>
 				  	</div>
 				  	<div class="control">
-				    	<button class="button is-link" name="usado">Usado</button>
+				    	<button class="button is-link" name="utilizado" id="utilizadoBotao">Utilizado</button>
 				  	</div>
 				  	<div class="control">
 				    	<a href="home.php"><button class="button is-link is-light">Voltar</button></a>
@@ -78,11 +88,5 @@ else{
 	    	</div>
 	  	</div>
 	</div>
-	<script type="text/javascript">
-		document.getElementById("botao").addEventListener("click", function(){
-			document.getElementById("cupom").select();
-			document.execCommand('copy');
-		});
-	</script>
 </body>
 </html>
