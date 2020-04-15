@@ -32,6 +32,7 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 		}
 		.hero-background.is-transparent{
 		    opacity: 0.7;
+		    height: 100%;
 		}
 	</style>
 </head>
@@ -102,12 +103,13 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Mensagem</span></a>&nbsp&nbsp&nbsp		
 	</div>	
 </div><br/>
+<?php if($_SESSION["permissao"]==4 || $_SESSION["cargo"]==12):{ ?>	
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
 		<a href="coupon-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Cupom</span></a>&nbsp&nbsp&nbsp
-		<a href="coupon-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Cupom</span></a>&nbsp&nbsp&nbsp		
+		<a href="coupon-list.php"><span class="button is-media is-primary is-outlined mw12">Listar Cupom</span></a>&nbsp&nbsp&nbsp			
 	</div>	
-</div>
+</div><?php } endif;?>
 <!--<br/>
 
 <div class="field has-addons has-addons-centered">
