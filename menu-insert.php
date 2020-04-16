@@ -24,11 +24,11 @@ else{
 	if($_FILES['userfile']['name']!=""){
 		$uploaddir = 'up/';
 		$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
-		echo '<pre>';
+		//echo '<pre>';
 		if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-		    echo "Arquivo válido e enviado com sucesso.\n";
+		    echo "<script>alert('Arquivo válido e enviado com sucesso.');</script>";
 		} else {
-		    echo "Possível ataque de upload de arquivo!\n";
+		    //echo "Possível ataque de upload de arquivo!\n";
 		}/*echo 'Aqui está mais informações de debug:'; print_r($_FILES); print "</pre>";*/
 		if($link!=""){
 			$link="up/".$link;
@@ -44,12 +44,10 @@ else{
 	}
 	else{
 		$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
-		echo $checkMenu;
 		$cnx= mysqli_query($phpmyadmin, $checkMenu);		
 	    while($loadMenu= $cnx->fetch_array()){
 	    	$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', '".$target."','".$link."','n','".$situacao."');";
 			mysqli_query($phpmyadmin, $insMenu);
-			echo $insMenu."</br>";
 		}		
 	}
 	if(mysqli_error($phpmyadmin)==null){
