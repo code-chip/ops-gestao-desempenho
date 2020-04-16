@@ -44,10 +44,12 @@ else{
 	}
 	else{
 		$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
-		$cnx= mysqli_query($phpmyadmin, $checkMenu);
+		echo $checkMenu;
+		$cnx= mysqli_query($phpmyadmin, $checkMenu);		
 	    while($loadMenu= $cnx->fetch_array()){
-			$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, POSICAO, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', ".$loadMenu["POSICAO"].", '".$target."','".$link."','n','".$situacao."');";
+	    	$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', '".$target."','".$link."','n','".$situacao."');";
 			mysqli_query($phpmyadmin, $insMenu);
+			echo $insMenu."</br>";
 		}		
 	}
 	if(mysqli_error($phpmyadmin)==null){
@@ -109,7 +111,7 @@ else{
 							<div class="control has-icons-left">
 								<div class="select" id="exibeMenu">
 									<select name="clique" style="width:24.2em;">
-										<option value="">Abrir na mesma aba</option>
+										<option value="_self">Abrir na mesma aba</option>
 										<option value="_blank">Abrir em nova aba</option>										
 									</select>	
 								</div>
