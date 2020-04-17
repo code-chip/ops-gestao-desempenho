@@ -12,7 +12,6 @@ else{
 		$arquivo = new DomDocument();
 		$arquivo->load($_FILES['arquivo']['tmp_name']);
 		//var_dump($arquivo);
-		echo $_FILES['arquivo']['type'];		
 		$linhas = $arquivo->getElementsByTagName("Row");
 		//var_dump($linhas);		
 		$primeira_linha = true;		
@@ -20,10 +19,8 @@ else{
 			if($primeira_linha == false){
 				$matricula = $linha->getElementsByTagName("Data")->item(0)->nodeValue;						
 				$cupom = $linha->getElementsByTagName("Data")->item(2)->nodeValue;				
-				$insertCoupon = "INSERT INTO CUPOM(MATRICULA_IDl, CODIGO, REGISTRO) VALUES($matricula, '$cupom', '$registro');";
+				$insertCoupon = "INSERT INTO CUPOM(MATRICULA_ID, CODIGO, REGISTRO) VALUES($matricula, '$cupom', '$registro');";
 				mysqli_query($phpmyadmin, $insertCoupon);
-				//$erro=mysqli_error($phpmyadmin);
-				echo $insertCoupon;
 			}
 			$primeira_linha = false;
 		}
@@ -34,9 +31,6 @@ else{
 		else{
 			echo "<script>alert('Cupons importados com sucesso')</script>";
 		}
-
-		echo "<script>alert('Usuário sem permissão')</script>";
-		echo "erro ".mysqli_error($phpmyadmin);
 	}
 	else if(!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type']!="text/xml"){
 		echo "<script>alert('O arquivo precisa está no formato XML.')</script>";
