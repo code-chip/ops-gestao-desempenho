@@ -55,13 +55,13 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 						while($loadMenu=$cnx->fetch_array()):{ ?>
 						<div class="column">							
 							<label class="is-size-5"><strong><?php echo $loadMenu["MENU"]?></strong></label>
-					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    	<input id="switch-shadow<?php echo $x?>" class="<?php echo $loadMenu["TAG"];?> switch switch--shadow" <?php if($loadMenu["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="updateMenu('<?php echo $loadMenu["TAG"];?>')">
 				  			<label for="switch-shadow<?php echo $x?>"></label><?php
 							$checkItem="SELECT * FROM MENU_ITEM WHERE MENU_ID IN(SELECT ID FROM MENU WHERE MENU='".$loadMenu["MENU"]."') GROUP BY ITEM ORDER BY POSICAO;";
 							$cnx2=mysqli_query($phpmyadmin, $checkItem);
 							while ($loadItem=$cnx2->fetch_array()):{ ?>
 								<label class="is-size-5"><?php echo $loadItem["ITEM"]?></label>
-					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox">
+					    		<input id="switch-flat<?php echo $y?>" class="<?php echo $loadMenu["TAG"];?> switch switch--flat" <?php if($loadItem["ATIVO"]=="s"){ echo "CHECKED";}?> type="checkbox" onclick="updateMenu('<?php echo $loadMenu["TAG"];?>')">
 				  				<label for="switch-flat<?php echo $y?>"></label>
 							<?php $y++; }endwhile; ?>
 						</div><?php	$x++;
@@ -88,104 +88,23 @@ if(isset($_GET["tag"])){//VERIFICA SE O MENU PRINCIPAL FOI CLICADO
 				r++;
 			}			
 			atualizaMenu(tag, menu);
+		}
+		function updateMenu(mytag){
+			let menu = document.querySelectorAll("."+mytag);
+			for (let i = 0; i < menu.length; i++) {
+			    if (menu[0].checked && i+1 < menu.length){
+				    menu[i+1].removeAttribute("disabled");
+			    } else {
+			    	if (i+1 < menu.length) {
+			        for (let j = i+1; j < menu.length; j++) {
+			          menu[j].checked = false;
+			          menu[j].setAttribute("disabled", "true");
+			        }
+			      }
+			    }		    
+			}
+			carregaSelecao(mytag);		  
 		}					
-		$(".meta").click(function(){//FUNCAO P/ DESMARCAR TODOS ITENS DE MENU.
-		  let meta = document.querySelectorAll(".meta");		 
-		  for (let i = 0; i < meta.length; i++) {
-		    if (meta[0].checked && i+1 < meta.length){
-		      meta[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < meta.length) {
-		        for (let j = i+1; j < meta.length; j++) {
-		          meta[j].checked = false;
-		          meta[j].setAttribute("disabled", "true");
-		        }
-		      }		      
-		    }		     
-		  }		  
-		  carregaSelecao("meta");		  
-		});				
-		$(".desempenho").click(function(){
-		  let desempenho = document.querySelectorAll(".desempenho");		 
-		  for (let i = 0; i < desempenho.length; i++) {
-		    if (desempenho[0].checked && i+1 < desempenho.length){
-		      desempenho[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < desempenho.length) {
-		        for (let j = i+1; j < desempenho.length; j++) {
-		          desempenho[j].checked = false;
-		          desempenho[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }
-		  }
-		  carregaSelecao("desempenho");
-		});
-		$(".feedback").click(function(){
-		  let feedback = document.querySelectorAll(".feedback");		 
-		  for (let i = 0; i < feedback.length; i++) {
-		    if (feedback[0].checked && i+1 < feedback.length){
-		      feedback[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < feedback.length) {
-		        for (let j = i+1; j < feedback.length; j++) {
-		          feedback[j].checked = false;
-		          feedback[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }
-		  }
-		  carregaSelecao("feedback");	
-		});
-		$(".relatorios").click(function(){
-		  let relatorios = document.querySelectorAll(".relatorios");		 
-		  for (let i = 0; i < relatorios.length; i++) {
-		    if (relatorios[0].checked && i+1 < relatorios.length){
-		      relatorios[i+1].removeAttribute("disabled");
-		      tag="relatorios";
-		    } else {
-		      if (i+1 < relatorios.length) {
-		        for (let j = i+1; j < relatorios.length; j++) {
-		          relatorios[j].checked = false;
-		          relatorios[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("relatorios");	
-		});
-		$(".configuracoes").click(function(){
-		  let configuracoes = document.querySelectorAll(".configuracoes");		 
-		  for (let i = 0; i < configuracoes.length; i++) {
-		    if (configuracoes[0].checked && i+1 < configuracoes.length){
-		      configuracoes[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < configuracoes.length) {
-		        for (let j = i+1; j < configuracoes.length; j++) {
-		          configuracoes[j].checked = false;
-		          configuracoes[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("configuracoes");		  
-		});
-		$(".dashboard").click(function(){
-		  let dashboard = document.querySelectorAll(".dashboard");		 
-		  for (let i = 0; i < dashboard.length; i++) {
-		    if (dashboard[0].checked && i+1 < dashboard.length){
-		      dashboard[i+1].removeAttribute("disabled");
-		    } else {
-		      if (i+1 < dashboard.length) {
-		        for (let j = i+1; j < dashboard.length; j++) {
-		          dashboard[j].checked = false;
-		          dashboard[j].setAttribute("disabled", "true");
-		        }
-		      }
-		    }		    
-		  }
-		  carregaSelecao("dashboard");		  
-		});			
 		function atualizaMenu(str, ativos) {								
 			if (str.length == 0) {
 		    	document.getElementById("txtHint").innerHTML = "";
