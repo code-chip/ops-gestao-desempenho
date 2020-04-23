@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 Olá mundo 4.
+=======
+Hello word.
+>>>>>>> 9dbc5ecb9af508b1574855b32a04a30e7486b82a
