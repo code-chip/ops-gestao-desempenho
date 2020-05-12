@@ -36,7 +36,7 @@ include('menu.php');
 </head>
 <body>
 <div class="hero is-fullheight is-primary has-background field has-addons">
-	 <img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/sales2.jpg" />
+	 <img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/data-science19-min.jpg" />
 	 <div class="hero-background capas capas2">
 <section class="section">
 <div class="field has-addons has-addons-centered">
