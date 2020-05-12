@@ -1,6 +1,17 @@
 <?php
+
 $menuAtivo="configuracoes";
+
 include('menu.php');
+
+if($_SESSION["permissao"]==1){
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php';</script>";
+}
+
+$_SESSION["filter"] = array();
+
+array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link'])); 
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,39 +52,58 @@ include('menu.php');
 <section class="section">
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="-insert.php"><span class="button is-white is-primary is-outlined mw12">Inserir Vendas</span></a>&nbsp&nbsp&nbsp
-		<a href="-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Vendas</span></a>&nbsp&nbsp&nbsp
-		<a href="-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Vendas</span></a>&nbsp&nbsp&nbsp
-		<a href="-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Vendas</span></a>&nbsp&nbsp&nbsp		
-	</div>	
+		<button class="button is-white is-primary is-outlined mw12" value="goal-company-insert.php" onclick="loadPage(this.value)">Inserir Meta</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-company-query.php, Consultar Meta" onclick="redirect(this.value)">Consultar Meta</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-company-update.php, Atualizar Meta" onclick="redirect(this.value)">Atualizar Meta</button>
+		<?php if($_SESSION["permissao"]!=1):?>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-company-remove.php, Remover Meta" onclick="redirect(this.value)">Remover Meta</button><?php endif;?>			
+	</div>
 </div>
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Peso</a>&nbsp&nbsp&nbsp
-		<a href="-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Peso</span></a>&nbsp&nbsp&nbsp
-		<a href="-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Peso</span></a>&nbsp&nbsp&nbsp
-		<a href="-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Peso</span></a>&nbsp&nbsp&nbsp		
-	</div>	
+		<button class="button is-white is-primary is-outlined mw12" value="weight-insert.php" onclick="loadPage((this.value)">Inserir Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="weight-query.php, Consultar Peso" onclick="redirect(this.value)">Consultar Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="weight-update.php, Atualizar Peso" onclick="redirect(this.value)">Atualizar Peso</button>
+		<?php if($_SESSION["permissao"]!=1):?>
+		<button class="button is-white is-primary is-outlined mw12" value="weight-remove.php, Remover Peso" onclick="redirect(this.value)">Remover Peso</button><?php endif;?>			
+	</div>
 </div><br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<a href="-insert.php"><span class="button is-media is-primary is-outlined mw12">Inserir Penalidade</span></a>&nbsp&nbsp&nbsp
-		<a href="-query.php"><span class="button is-media is-primary is-outlined mw12">Consultar Penalidade</span></a>&nbsp&nbsp&nbsp
-		<a href="-update.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Penalidade</span></a>&nbsp&nbsp&nbsp
-		<a href="-remove.php"><span class="button is-media is-primary is-outlined mw12">Remover Penalidade</span></a>&nbsp&nbsp&nbsp		
-	</div>	
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-insert.php" onclick="loadPage(this.value)">Inserir Penalidade</button>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-query.php, Consultar Penalidade" onclick="redirect(this.value)">Consultar Penalidade</button>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-update.php, Atualizar Penalidade" onclick="redirect(this.value)">Atualizar Penalidade</button>
+		<?php if($_SESSION["permissao"]!=1):?>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-remove.php, Remover Penalidade" onclick="redirect(this.value)">Remover Penalidade</button><?php endif;?>			
+	</div>
 </div><br/>
-<!--<br/>
-<div class="field has-addons has-addons-centered">
-	<div class="buttons">								
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Inserir Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Consultar Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Atualizar Permissão</span></a>&nbsp&nbsp&nbsp
-		<a href="wait.php"><span class="button is-media is-primary is-outlined mw12">Remover Permissão</span></a>&nbsp&nbsp&nbsp		
-	</div>	
-</div>-->
 </section>
 </div>
+<script type="text/javascript">
+	function redirect(valor) {
+		valor= valor.split(',',2);
+		if (valor.length == 0) {
+		   	document.getElementById("txtHint").innerHTML = "";
+		   	return;
+		}
+		else{
+		   	var xmlhttp = new XMLHttpRequest();
+		   	xmlhttp.onreadystatechange = function() {
+			   	if (this.readyState == 4 && this.status == 200) {
+			       	document.getElementById("txtHint").innerHTML = this.responseText;
+			   	}
+			};		    
+			xmlhttp.open("GET", "metric.php?link="+valor[0]+"&descricao="+valor[1] , true);	    
+			xmlhttp.send(valor[0]);		   	
+		}
+		setTimeout(function(){
+		  	window.location.replace('query-filter.php');
+		  },500);
+	}
+	function loadPage(page){
+		window.location.replace(''+page);
+	}
+</script>
 </body>
 </html>
