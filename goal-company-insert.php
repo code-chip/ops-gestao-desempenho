@@ -12,8 +12,8 @@ else {
 		$desempenho = (trim($_POST['alcancado']) / trim($_POST['meta'])) * 100;
 		
 		//echo "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . "," . trim($_POST['dataInicio']) . ", '" . trim($_POST['dataFim']) . "', '" . date('%Y-%m-%d') . "',)";
-
-		mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . "," . trim($_POST['dataInicio']) . ", '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
+		echo "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . "," . trim($_POST['dataInicio']) . ", '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');";
+		mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['dataInicio']) . "', '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
 	}
 	
 }
@@ -118,7 +118,7 @@ else {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="dataFim">
-								<input type="text" class="input required registro" name="dataFim" placeholder="2019-12-20" maxlength="10" onkeypress="addLoadField('dataFim')" onkeyup="rmvLoadField('dataFim')" onblur="checkAdress(form1.dataFim, 'msgDataFimOk','msgDataFimNok')" id="inputDataFim" autofocus>
+								<input type="text" class="registro input required" name="dataFim" placeholder="2019-12-20" maxlength="10" onkeypress="addLoadField('dataFim')" onkeyup="rmvLoadField('dataFim')" onblur="checkAdress(form1.dataFim, 'msgDataFimOk','msgDataFimNok')" id="inputDataFim" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
