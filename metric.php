@@ -62,7 +62,7 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-insert.php" onclick="loadPage((this.value)">Inserir Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-insert.php" onclick="loadPage(this.value)">Inserir Peso</button>
 		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-query.php, Consultar Peso" onclick="redirect(this.value)">Consultar Peso</button>
 		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-update.php, Atualizar Peso" onclick="redirect(this.value)">Atualizar Peso</button>
 		<?php if($_SESSION["permissao"]!=1):?>
