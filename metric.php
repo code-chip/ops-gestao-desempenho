@@ -62,20 +62,20 @@ array_push($_SESSION["filter"], trim($_GET['descricao']), trim($_GET['link']));
 <br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<button class="button is-white is-primary is-outlined mw12" value="weight-insert.php" onclick="loadPage((this.value)">Inserir Peso</button>
-		<button class="button is-white is-primary is-outlined mw12" value="weight-query.php, Consultar Peso" onclick="redirect(this.value)">Consultar Peso</button>
-		<button class="button is-white is-primary is-outlined mw12" value="weight-update.php, Atualizar Peso" onclick="redirect(this.value)">Atualizar Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-insert.php" onclick="loadPage((this.value)">Inserir Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-query.php, Consultar Peso" onclick="redirect(this.value)">Consultar Peso</button>
+		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-update.php, Atualizar Peso" onclick="redirect(this.value)">Atualizar Peso</button>
 		<?php if($_SESSION["permissao"]!=1):?>
-		<button class="button is-white is-primary is-outlined mw12" value="weight-remove.php, Remover Peso" onclick="redirect(this.value)">Remover Peso</button><?php endif;?>			
+		<button class="button is-white is-primary is-outlined mw12" value="goal-weight-remove.php, Remover Peso" onclick="redirect(this.value)">Remover Peso</button><?php endif;?>			
 	</div>
 </div><br/>
 <div class="field has-addons has-addons-centered">
 	<div class="buttons">								
-		<button class="button is-white is-primary is-outlined mw12" value="penalty-insert.php" onclick="loadPage(this.value)">Inserir Penalidade</button>
-		<button class="button is-white is-primary is-outlined mw12" value="penalty-query.php, Consultar Penalidade" onclick="redirect(this.value)">Consultar Penalidade</button>
-		<button class="button is-white is-primary is-outlined mw12" value="penalty-update.php, Atualizar Penalidade" onclick="redirect(this.value)">Atualizar Penalidade</button>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-type-insert.php" onclick="loadPage(this.value)">Inserir Penalidade</button>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-type-query.php, Consultar Penalidade" onclick="redirect(this.value)">Consultar Penalidade</button>
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-type-update.php, Atualizar Penalidade" onclick="redirect(this.value)">Atualizar Penalidade</button>
 		<?php if($_SESSION["permissao"]!=1):?>
-		<button class="button is-white is-primary is-outlined mw12" value="penalty-remove.php, Remover Penalidade" onclick="redirect(this.value)">Remover Penalidade</button><?php endif;?>			
+		<button class="button is-white is-primary is-outlined mw12" value="penalty-type-remove.php, Remover Penalidade" onclick="redirect(this.value)">Remover Penalidade</button><?php endif;?>			
 	</div>
 </div><br/>
 </section>
