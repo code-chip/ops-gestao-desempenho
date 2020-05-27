@@ -2,18 +2,34 @@
 $menuAtivo="configuracoes";
 require('menu.php');
 
-if($_SESSION["permissao"] == 1){
+if ($_SESSION["permissao"] == 1) {
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
 }
 else {
-	if (isset($_POST["inserirMeta"]) != null){
+	if (isset($_POST["inserirMeta"]) != null) {
 		
 		$desempenho = (trim($_POST['alcancado']) / trim($_POST['meta'])) * 100;
+		$desempenho = round($desempenho, 2);
 		
-		//echo "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . "," . trim($_POST['dataInicio']) . ", '" . trim($_POST['dataFim']) . "', '" . date('%Y-%m-%d') . "',)";
-		echo "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . "," . trim($_POST['dataInicio']) . ", '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');";
-		mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['dataInicio']) . "', '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
+		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_EMPRESA WHERE INICIO = '" . trim($_POST['dataInicio']) . "' AND FIM = '" . trim($_POST['dataFim']) . "' ");
+
+		$cd = $checkDuplic->fetch_array();
+
+		if (mysqli_num_rows($checkDuplic) == 0) {
+
+			mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['dataInicio']) . "', '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
+			$erro = mysqli_error($phpmyadmin);
+			
+			if ($erro == "" && $erro == null) {
+				echo "<script>alert('Meta Empresa cadastrada com sucesso!'); window.location.href='metric.php';</script>";
+			} else {
+				echo $erro;
+				echo "<script>alert('Erro ao inserir Meta Empresa!');</script>";
+			}
+		} else {
+			echo "<script>alert('Já existe Meta Empresa cadastrada nesta Data Início e Fim.'); window.location.href='goal-company-insert.php';</script>";
+		}
 	}
 	
 }
@@ -40,7 +56,7 @@ else {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="meta">
-								<input type="text" class="input required" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgMetaOk','msgMetaNok')" id="inputMeta" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgMetaOk','msgMetaNok')" id="inputMeta" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
@@ -66,7 +82,7 @@ else {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="alcancado">
-								<input type="text" class="input required" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgAlcancadoOk','msgAlcancadoNok')" id="inputAlcancado" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgAlcancadoOk','msgAlcancadoNok')" id="inputAlcancado" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
@@ -92,7 +108,7 @@ else {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="dataInicio">
-								<input type="text" class="input required registro" name="dataInicio" placeholder="2019-11-21" maxlength="10" onkeypress="addLoadField('dataInicio')" onkeyup="rmvLoadField('dataInicio')" onblur="checkAdress(form1.dataInicio, 'msgDataInicioOk','msgDataInicioNok')" id="inputName" autofocus>
+								<input type="text" class="input required maskDataInicio" name="dataInicio" placeholder="2019-11-21" maxlength="10" onkeypress="addLoadField('dataInicio')" onkeyup="rmvLoadField('dataInicio')" onblur="checkAdress(form1.dataInicio, 'msgDataInicioOk','msgDataInicioNok')" id="inputName">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
@@ -118,7 +134,7 @@ else {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="dataFim">
-								<input type="text" class="registro input required" name="dataFim" placeholder="2019-12-20" maxlength="10" onkeypress="addLoadField('dataFim')" onkeyup="rmvLoadField('dataFim')" onblur="checkAdress(form1.dataFim, 'msgDataFimOk','msgDataFimNok')" id="inputDataFim" autofocus>
+								<input type="text" class="input required maskDataFim" name="dataFim" placeholder="2019-12-20" maxlength="10" onkeypress="addLoadField('dataFim')" onkeyup="rmvLoadField('dataFim')" onblur="checkAdress(form1.dataFim, 'msgDataFimOk','msgDataFimNok')" id="inputDataFim">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
@@ -154,43 +170,7 @@ else {
 						</div>
 					</div>
 				</div>
-				<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet"/>
-				<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.theme.css" rel="stylesheet"/>
-				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
-				<div id="msgExcluir" style="display: none">Inserir outra Meta Empresa?</div>	
 	     	</form>
-	     	<script type="text/javascript">
-	     		function checkFormGoalCompany(form1){
-	     			var inputs = document.getElementsByClassName('required');
-	     			
-	     			for (var x = 0 ; x < inputs.length; x++) {
-	     				if (!inputs[x].value) {
-	     					alert('Por favor preencha todos os campos* obrigatórios.');
-	     					
-	     					return false;
-	     				}
-	     			}
-	     			
-	     			return true;
-	     		}
-	     		function addAgain(){
-				  	var msgExcluir = $("#msgExcluir");
-					msgExcluir.dialog({
-						modal: true,
-					  	buttons: {
-					    	"Sim": function () {
-					      		alert("Excluido com Sucesso");
-					    	  	$(this).dialog('close');
-					    	},
-					    	"Não": function () {
-					      		$(this).dialog('close');
-					      	window.location.href='metric.php';
-					    	}
-					  	}
-					});
-				}
-	     	</script>
 	   	</div>	   	
 	</section>
 </body>
