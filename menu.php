@@ -29,7 +29,9 @@ $menuAtivo;
 	        $('.numero').mask('9999');
 	        $('.celular').mask('(999)99999-9999');
 	        $('.maskCep').mask('99999-999');
-	        $('.maskPlaca').mask('AAA-AAAA');	       
+	        $('.maskPlaca').mask('AAA-AAAA');
+	        $('.maskDataInicio').mask('9999-99-21');
+	        $('.maskDataFim').mask('9999-99-20');	       
 	        return false;
 	    });
 	    function msg(){
