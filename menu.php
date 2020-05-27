@@ -32,7 +32,7 @@ $menuAtivo;
 	        $('.maskPlaca').mask('AAA-AAAA');
 	        $('.maskDataInicio').mask('9999-99-21');
 	        $('.maskDataFim').mask('9999-99-20');
-	        $('.maskMetaEmpresa').mask('999999999999');	       
+	        $('.maskMetaEmpresa').mask('9999999999');	       
 	        return false;
 	    });
 	    function msg(){
