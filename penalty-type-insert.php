@@ -10,7 +10,7 @@ if ($_SESSION["permissao"] == 1) {
 } else {
 	if (isset($_POST['inserirPenalidade']) != null) {
 		
-			mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE_TIPO (TIPO, PENALIDADE, SITUACAO) VALUES (" . trim($_POST['tipo']) . ", " . trim($_POST['penalidade']) . ", '" . trim($_POST['situacao']) . "');");
+			mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE_TIPO (TIPO, PENALIDADE, SITUACAO) VALUES ('" . trim($_POST['tipo']) . "', " . trim($_POST['penalidade']) . ", '" . trim($_POST['situacao']) . "');");
 			$erro = mysqli_error($phpmyadmin);
 			
 			if ($erro == "" && $erro == null) {
