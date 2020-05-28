@@ -1,45 +1,41 @@
 <?php 
-$menuAtivo="configuracoes";
+$menuAtivo = 'configuracoes';
+
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
-}
-else {
-	if (isset($_POST["inserirMeta"]) != null) {
+} else {
+	if (isset($_POST["inserirempresa"]) != null) {
 		
-		$desempenho = (trim($_POST['alcancado']) / trim($_POST['meta'])) * 100;
-		$desempenho = round($desempenho, 2);
-		
-		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_EMPRESA WHERE INICIO = '" . trim($_POST['dataInicio']) . "' AND FIM = '" . trim($_POST['dataFim']) . "' ");
+		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_PESO;");
 
 		$cd = $checkDuplic->fetch_array();
 
 		if (mysqli_num_rows($checkDuplic) == 0) {
 
-			mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['dataInicio']) . "', '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
+			mysqli_query($phpmyadmin, "INSERT INTO META_PESO (EMPRESA, OPERADOR, SITUACAO) VALUES (" . trim($_POST['empresa']) . ", " . trim($_POST['funcionario']) . ", '" . trim($_POST['situacao']) . "');");
 			$erro = mysqli_error($phpmyadmin);
 			
 			if ($erro == "" && $erro == null) {
-				echo "<script>alert('Meta Empresa cadastrada com sucesso!'); window.location.href='metric.php';</script>";
+				echo "<script>alert('Peso cadastrada com sucesso!'); window.location.href='metric.php';</script>";
 			} else {
 				echo $erro;
-				echo "<script>alert('Erro ao inserir Meta Empresa!');</script>";
+				echo "<script>alert('Erro ao inserir Peso!');</script>";
 			}
 		} else {
-			echo "<script>alert('Já existe Meta Empresa cadastrada nesta Data Início e Fim.'); window.location.href='goal-company-insert.php';</script>";
+			echo "<script>alert('Já existe Peso cadastrado.'); window.location.href='metric.php';</script>";
 		}
 	}
-	
 }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">	
-	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Inserir Peso</title>
+	<empresa charset="UTF-8">	
+	<empresa name="viewport" content="width=device-widht, initial-scale=1">
+	<title>Gestão de Desempenho - Inserir empresa</title>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
@@ -55,18 +51,18 @@ else {
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left has-icons-right" id="meta">
-								<input type="text" class="input required numero" name="meta" placeholder="30" maxlength="2" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgMetaOk','msgMetaNok')" id="inputMeta" autofocus>
+							<div class="control has-icons-left has-icons-right" id="empresa">
+								<input type="text" class="input required maskPeso" name="empresa" placeholder="30" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgempresaOk','msgempresaNok')" id="inputempresa" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-balance-scale"></i>
 							   	</span>
-								<div id="msgMetaNok" style="display:none;">
+								<div id="msgempresaNok" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O peso da meta empresa é obrigatório</p>		    	
+						    	<p class="help is-danger">O empresa da empresa empresa é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgMetaOk" style="display:none;">
+							   	<div id="msgempresaOk" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -81,18 +77,18 @@ else {
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left has-icons-right" id="alcancado">
-								<input type="text" class="input required numero" name="alcancado" placeholder="70" maxlength="2" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgAlcancadoOk','msgAlcancadoNok')" id="inputAlcancado" autofocus>
+							<div class="control has-icons-left has-icons-right" id="funcionario">
+								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgfuncionarioOk','msgfuncionarioNok')" id="inputfuncionario" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-weight-hanging"></i>
 							   	</span>
-								<div id="msgAlcancadoNok" style="display:none;">
+								<div id="msgfuncionarioNok" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O peso da meta funcionário é obrigatório</p>		
+						    	<p class="help is-danger">O empresa da empresa funcionário é obrigatório</p>		
 							   	</div>
-							   	<div id="msgAlcancadoOk" style="display:none;">
+							   	<div id="msgfuncionarioOk" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -127,7 +123,7 @@ else {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirempresa" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
 								<button name="limpar" type="submit" class="button is-primary" value="Filtrar" onclick="addAgain()">Limpar</button>
