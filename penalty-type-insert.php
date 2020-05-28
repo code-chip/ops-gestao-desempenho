@@ -19,7 +19,6 @@ if ($_SESSION["permissao"] == 1) {
 				echo $erro;
 				echo "<script>alert('Erro ao inserir Peso!');</script>";
 			}
-		} 
 	}
 }
 ?>
@@ -33,11 +32,23 @@ if ($_SESSION["permissao"] == 1) {
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<script type="text/javascript">
+		function check() {
+			var inputs = document.getElementsByClassName('required');
+			
+			for (var x = 0 ; x < inputs.length; x++) {
+				if(!inputs[x].value){
+					alert('Preencha todos os campos * obrigatórios');
+					return false;
+				}
+			}
+		}
+	</script>
 </head>
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form enctype="multipart/form-data" action="penalty-type-insert.php" method="POST" id="form1" onsubmit="return checkFormGoalCompany(form1)">
+	   		<form enctype="multipart/form-data" action="penalty-type-insert.php" method="POST" id="form1" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Tipo*</label>
@@ -45,9 +56,9 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="tipo">
-								<input type="text" class="input required maskPeso" name="tipo" placeholder="Atraso" maxlength="2" onkeypress="addLoadField('tipo')" onkeyup="rmvLoadField('tipo')" onblur="checkAdress(form1.tipo, 'msgtipoOk','msgtipoNok')" id="inputtipo" autofocus>
+								<input type="text" class="input required" name="tipo" placeholder="Atraso" maxlength="20" onkeypress="addLoadField('tipo')" onkeyup="rmvLoadField('tipo')" onblur="checkAdress(form1.tipo, 'msgtipoOk','msgtipoNok')" id="inputtipo" autofocus>
 								<span class="icon is-small is-left">
-							   		<i class="fas fa-balance-scale"></i>
+							   		<i class="fas fa-book-reader"></i>
 							   	</span>
 								<div id="msgtipoNok" style="display:none;">
 						    	<span class="icon is-small is-right">
@@ -71,9 +82,9 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="penalidade">
-								<input type="text" class="input required maskPeso" name="penalidade" placeholder="70" maxlength="2" onkeypress="addLoadField('penalidade')" onkeyup="rmvLoadField('penalidade')" onblur="checkAdress(form1.penalidade, 'msgpenalidadeOk','msgpenalidadeNok')" id="inputpenalidade" autofocus>
+								<input type="text" class="input required maskPeso" name="penalidade" placeholder="2%" maxlength="2" onkeypress="addLoadField('penalidade')" onkeyup="rmvLoadField('penalidade')" onblur="checkAdress(form1.penalidade, 'msgpenalidadeOk','msgpenalidadeNok')" id="inputpenalidade" autofocus>
 								<span class="icon is-small is-left">
-							   		<i class="fas fa-weight-hanging"></i>
+							   		<i class="fas fa-angle-double-down"></i>
 							   	</span>
 								<div id="msgpenalidadeNok" style="display:none;">
 						    	<span class="icon is-small is-right">
