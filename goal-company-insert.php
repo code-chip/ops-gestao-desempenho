@@ -48,7 +48,7 @@ else {
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form enctype="multipart/form-data" action="goal-company-insert.php" method="POST" id="form1" onsubmit="return checkFormGoalCompany(form1)">
+	   		<form enctype="multipart/form-data" action="goal-company-insert.php" method="POST" id="form1" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Meta*</label>
