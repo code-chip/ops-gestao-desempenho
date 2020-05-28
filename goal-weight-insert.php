@@ -44,7 +44,7 @@ if ($_SESSION["permissao"] == 1) {
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form enctype="multipart/form-data" action="goal-weight-insert.php" method="POST" id="form1" onsubmit="return checkFormGoalCompany(form1)">
+	   		<form enctype="multipart/form-data" action="goal-weight-insert.php" method="POST" id="form1" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Empresa*</label>
@@ -52,7 +52,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="empresa">
-								<input type="text" class="input required maskPeso" name="empresa" placeholder="30" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgempresaOk','msgempresaNok')" id="inputempresa" autofocus>
+								<input type="text" class="input required maskPeso" name="empresa" placeholder="30%" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgempresaOk','msgempresaNok')" id="inputempresa" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-balance-scale"></i>
 							   	</span>
@@ -78,7 +78,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="funcionario">
-								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgfuncionarioOk','msgfuncionarioNok')" id="inputfuncionario" autofocus>
+								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70%" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgfuncionarioOk','msgfuncionarioNok')" id="inputfuncionario" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-weight-hanging"></i>
 							   	</span>
