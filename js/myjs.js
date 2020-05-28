@@ -173,3 +173,16 @@ function menuInsertcheckForm(){
   		return true; 
   	}
 }//FINAL MENU-INSERT;//
+
+function check() {
+	var inputs = document.getElementsByClassName('required');
+	
+	for (var x = 0 ; x < inputs.length; x++) {
+		if(!inputs[x].value){
+			alert('Preencha todos os campos * obrigatórios');
+			return false;
+		}
+	}
+	
+	return true;
+}
