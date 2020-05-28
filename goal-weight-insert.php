@@ -58,7 +58,7 @@ else {
 							<div class="control has-icons-left has-icons-right" id="meta">
 								<input type="text" class="input required numero" name="meta" placeholder="30" maxlength="2" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgMetaOk','msgMetaNok')" id="inputMeta" autofocus>
 								<span class="icon is-small is-left">
-							   		<i class="fas fa-bullseye"></i>
+							   		<i class="fas fa-balance-scale"></i>
 							   	</span>
 								<div id="msgMetaNok" style="display:none;">
 						    	<span class="icon is-small is-right">
@@ -84,7 +84,7 @@ else {
 							<div class="control has-icons-left has-icons-right" id="alcancado">
 								<input type="text" class="input required numero" name="alcancado" placeholder="70" maxlength="2" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgAlcancadoOk','msgAlcancadoNok')" id="inputAlcancado" autofocus>
 								<span class="icon is-small is-left">
-							   		<i class="fas fa-bullseye"></i>
+							   		<i class="fas fa-weight-hanging"></i>
 							   	</span>
 								<div id="msgAlcancadoNok" style="display:none;">
 						    	<span class="icon is-small is-right">
