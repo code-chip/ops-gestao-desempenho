@@ -1,13 +1,14 @@
 <?php
-$menuAtivo="Relatórios";
+$menuAtivo = 'relatorios';
 include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
+
 $periodo = trim($_REQUEST['periodo']);
 $atividade = trim($_REQUEST['atividade']);
 $ordenacao = trim($_REQUEST['ordenacao']);
 $meta = trim($_REQUEST['meta']);
 $contador = 0;
-$totalAlcancado=0;
+$totalAlcancado = 0;
+
 if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh: 1;url=report-private.php");
