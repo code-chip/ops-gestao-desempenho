@@ -153,10 +153,11 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20/".date('m',strtotime($periodo))."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$setor." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
 
-	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA FROM META_PESO");
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE INICIO='" . $periodo . "-21') AS ALCANCADO FROM META_PESO");
+	echo mysqli_error($phpmyadmin);
 	$peso = $cx->fetch_array();
 
-	$con = mysqli_query($phpmyadmin , $consulta);
+	$con = mysqli_query($phpmyadmin, $consulta);
 	
 	if (mysqli_num_rows($con) != 0) {
 	$x = 0;
@@ -256,7 +257,8 @@ if($contador !=0): ?>
 			<td>Folga's: <?php echo $totalFolgas;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
 			<td>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?></td>
-			<td>Maior: <?php echo $maior."%"?></td>			
+			<td>Maior: <?php echo $maior."%"?></td>
+			<td>Empresa: <?php echo $peso["ALCANCADO"]."%"?></td>			
 		</tr>
 	</table>
 	<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
@@ -272,33 +274,33 @@ if($contador !=0): ?>
 		<th width="4">Final</th>				
 		<th width="40">Período</th>			
 	</tr><?php
- for ( $i = 0; $i < sizeof($vtNome); $i++ ): 
-	$z=$i; $registro=1; 
-	
-	while ($vtNome[$z] == $vtNome[$z+1]) {
-		$registro++;
-		$repeat=$registro;
-		$z++;
-	}
-	if ($repeat>0){ $repeat--;}	
-	?>
-	<tr>
-		<td><?php echo $i+1;?></td>
-		<td><?php echo $vtNome[$i]?></td>
-		<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td width="1"; rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
-		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td width="5";><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
-		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
-		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
-		<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
-		<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>
-		<td></td>		
-		<td><?php echo $vtDesempenho[$i]."%"?></td>
-		<td><?php echo round(($vtDesempenho[$i] / 100) * $peso["OPERADOR"],2)  ?></td>				
-		<td style="max-width:800px;"><?php echo $vtRegistro[$i]?></td>
-		<?php if($vtNome[$i]!=$vtNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
-	</tr>
-<?php endfor; ?>
-	</table>
+ 	for ( $i = 0; $i < sizeof($vtNome); $i++ ): 
+		$z=$i; $registro=1; 
+		
+		while ($vtNome[$z] == $vtNome[$z+1]) {
+			$registro++;
+			$repeat=$registro;
+			$z++;
+		}
+		if ($repeat>0){ $repeat--;}	
+		?>
+		<tr>
+			<td><?php echo $i+1;?></td>
+			<td><?php echo $vtNome[$i]?></td>
+			<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td width="1"; rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
+			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td width="5";><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+			<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
+			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
+			<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
+			<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>
+			<td></td>		
+			<td><?php echo $vtDesempenho[$i]."%"?></td>
+			<td><?php echo round((($vtDesempenho[$i] / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2)."%"  ?></td>				
+			<td style="max-width:800px;"><?php echo $vtRegistro[$i]?></td>
+			<?php if($vtNome[$i]!=$vtNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
+		</tr><?php
+ 	endfor; 
+	?></table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-centered">
 			<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
