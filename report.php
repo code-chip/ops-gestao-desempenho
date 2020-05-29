@@ -13,7 +13,7 @@ if($_SESSION["permissao"]==1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh: 1;url=report-private.php");
 }
-else{
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,7 @@ else{
 <body>
 	<span id="topo"></span>
 	<section class="section">
-	<form id="form1" action="report.php" method="GET" >
+	<form id="form1" action="report.php" method="POST" >
 		<div class="field is-horizontal">
 			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
 				<label class="label is-size-7-touch" for="periodo">Período:</label>
@@ -85,12 +85,11 @@ else{
 					<div class="control">
 						<div class="select is-size-7-touch">
 							<select name="setor">
-							<option selected="selected"value="">Todos</option>																
-								<?php $gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'"; 
-								$con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; while($setor = $con->fetch_array()):{?>
-									<option value="AND SETOR_ID=<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
-								<?php $x;} endwhile;?>	
+							<option selected="selected" value="">Todos</option><?php																
+								$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
+								while($setor = $con->fetch_array()){
+									echo "<option value='AND SETOR_ID=" . $setor["ID"] . "'>" . $setor["NOME"] . "</option>";
+								}?>	
 							</select>	
 						</div>
 					</div>					
@@ -104,12 +103,11 @@ else{
 					<div class="control">
 						<div class="select is-size-7-touch">
 							<select name="turno" id="salvaTurno">
-							<option selected="selected"value="">Todos</option>																
-								<?php $gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'"; 
-								$con = mysqli_query($phpmyadmin , $gdTurno);
-								$x=0; while($turno = $con->fetch_array()):{?>
-									<option value="AND TURNO_ID=<?php echo $vtId[$x]=$turno["ID"]; ?>"><?php echo $vtNome[$x] = $turno["NOME"]; ?></option>
-								<?php $x;} endwhile;?>	
+							<option selected="selected"value="">Todos</option><?php																
+								$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
+								while($turno = $con->fetch_array()){
+									echo "<option value='AND TURNO_ID=" . $turno["ID"] ."'>" . $turno["NOME"] . "</option>";
+								}?>	
 							</select>	
 						</div>
 					</div>					
@@ -430,4 +428,4 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 	}
   ?>
 </body>
-</html><?php }//ELSE- caso o usuário tenha permissão.
+</html>
