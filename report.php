@@ -1,6 +1,7 @@
 <?php
+
 $menuAtivo = 'relatorios';
-include('menu.php');
+require('menu.php');
 
 $periodo = trim($_REQUEST['periodo']);
 $atividade = trim($_REQUEST['atividade']);
@@ -9,7 +10,7 @@ $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado = 0;
 
-if($_SESSION["permissao"]==1){
+if($_SESSION["permissao"] == 1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh: 1;url=report-private.php");
 }
@@ -137,39 +138,45 @@ if($_SESSION["permissao"]==1){
 	</form>		
 <!--FINAL DO FORMULÁRIO-->
 <?php
+
 $turno = trim($_REQUEST['turno']);
 $setor = trim($_REQUEST['setor']);
-if( $periodo != ""){
-	if($atividade=="agrupado"){
-	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FALTA, 
+
+if ( $periodo != "") {
+	if ($atividade == "agrupado") {
+		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20/".date('m',strtotime($periodo))."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." ".$turno." ".$setor." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
-	}
-	else{
-	$consulta ="SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FALTA, 
+	} else {
+		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20') AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20/".date('m',strtotime($periodo))."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$setor." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
+
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA FROM META_PESO");
+	$peso = $cx->fetch_array();
+
 	$con = mysqli_query($phpmyadmin , $consulta);
-	if(mysqli_num_rows($con)!=0){
-	$x=0;
-	$maior=0;
-	$menor=1000;
-	$totalFaltas=0;
-	$totalFolgas=0;
+	
+	if (mysqli_num_rows($con) != 0) {
+	$x = 0;
+	$maior = 0;
+	$menor = 1000;
+	$totalFaltas = 0;
+	$totalFolgas = 0;
 	while($dado = $con->fetch_array()){
-		$vtIdUsuario[$x]=$dado["ID"];				
+		$vtIdUsuario[$x] = $dado["ID"];				
 		$vtNome[$x] = $dado["NOME"];
 		$vtDesempenho[$x] = $dado["DESEMPENHO"];
 		$vtAtividade[$x] = $dado["ATIVIDADE"];
 		$vtFalta[$x] = $dado["FALTA"];
 		$vtFolga[$x] = $dado["FOLGA"];
-		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
+		$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
 		$vtRegistro[$x] = $dado["REGISTRO"];
-		$totalFaltas=$totalFaltas+$vtFalta[$x];
-		$totalFolgas=$totalFolgas+$vtFolga[$x];	
-		if($maior<$vtDesempenho[$x]){
-			$maior=$vtDesempenho[$x];
+		$totalFaltas = $totalFaltas + $vtFalta[$x];
+		$totalFolgas = $totalFolgas + $vtFolga[$x];	
+		if ($maior < $vtDesempenho[$x]) {
+			$maior = $vtDesempenho[$x];
 		}
 		if($menor>$vtDesempenho[$x] && $vtDesempenho[$x]!=0){
 			$menor=$vtDesempenho[$x];
@@ -196,19 +203,21 @@ SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM D
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
 WHERE REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
 AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5);";
+
 /*DASHABOARD DESEMPENHO POR SEXO*/
 $g3="SELECT U.SEXO, AVG(D.DESEMPENHO) MEDIA, MIN(D.DESEMPENHO) MINIMO FROM DESEMPENHO D 
 INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ".$turno."
 GROUP BY 1 ORDER BY MEDIA DESC";
+
 /*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
 $g4="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
 INNER JOIN USUARIO U ON U.ID=USUARIO_ID
 WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'
 GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
+
 	$x=0;
 	$cnxG3= mysqli_query($phpmyadmin, $g3);
-	echo mysqli_error($phpmyadmin);
 	while($G3 = $cnxG3->fetch_array()){
 		$vtG3sexo[$x]= $G3["SEXO"];
 		$vtG3media[$x]= $G3["MEDIA"];
@@ -217,7 +226,6 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 	}
 	$x=0;
 	$cnxG4= mysqli_query($phpmyadmin, $g4);
-	echo mysqli_error($phpmyadmin);
 	while($G4 = $cnxG4->fetch_array()){
 		$vtG4nome[$x]= $G4["NOME"];
 		$vtG4media[$x]= $G4["MEDIA"];
@@ -231,8 +239,8 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 		$xg++;
 	}
 	}	
-}?>
-<?php if($contador !=0): ?>
+} 
+if($contador !=0): ?>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div class="field is-horizontal" id="graficos">		
 		<div class="column is-mobile" id="dash-desempenho"></div>
@@ -258,17 +266,21 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 		<th width="4">Detalhes</th>		
 		<th width="4">Falta's</th>
 		<th width="4">Folga's</th>
+		<th width="4">Pena</th>
 		<?php if($atividade=="separado") : ?><th width="14">Atividade</th><?php endif; ?>
-		<th width="14">Desempenho</th>				
+		<th width="14">Desempenho</th>
+		<th width="4">Final</th>				
 		<th width="40">Período</th>			
-	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
-	<?php $z=$i; $registro=1; while($vtNome[$z]==$vtNome[$z+1]){
+	</tr><?php
+ for ( $i = 0; $i < sizeof($vtNome); $i++ ): 
+	$z=$i; $registro=1; 
+	
+	while ($vtNome[$z] == $vtNome[$z+1]) {
 		$registro++;
 		$repeat=$registro;
 		$z++;
 	}
-	if($repeat>0){ $repeat--;}	
+	if ($repeat>0){ $repeat--;}	
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
@@ -278,8 +290,10 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 		<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 		<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
 		<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
-		<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>		
-		<td><?php echo $vtDesempenho[$i]."%"?></td>				
+		<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>
+		<td></td>		
+		<td><?php echo $vtDesempenho[$i]."%"?></td>
+		<td><?php echo round(($vtDesempenho[$i] / 100) * $peso["OPERADOR"],2)  ?></td>				
 		<td style="max-width:800px;"><?php echo $vtRegistro[$i]?></td>
 		<?php if($vtNome[$i]!=$vtNome[$i+1] && $repeat==0 && $mescla==true){ $mescla=false; $mesclaf=false; $mesclaa=false;}?>				
 	</tr>
@@ -422,9 +436,8 @@ GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
   }
   </script>
 <?php endif;
-	if($contador==0 && isset($_GET["filtro"])!=null){
-		?><script type="text/javascript">alert('Nenhum resultado encontrao com o filtro aplicado!')</script>
-		<?php
+	if ($contador == 0 && isset($_GET["filtro"]) != null) {
+		echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";		
 	}
   ?>
 </body>
