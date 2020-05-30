@@ -20,7 +20,7 @@ $idMeta = 0;
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
 	<meta charset="UTF-8">
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>   
+	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
@@ -176,7 +176,7 @@ if ($contador != 0 ) : ?>
 	if ($result > 0) {			
 		$idAtividade = $defMeta["ATIVIDADE_ID"];
 	}
-	
+
 	?><tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
@@ -259,7 +259,7 @@ if ($contador != 0 ) : ?>
 		<td><!--COLUNA OBSERVAÇÃO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php if($result==1){ echo $defMeta["DESCRICAO"];}?>">
+					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php if ($result == 1){ echo $defMeta["DESCRICAO"]; } ?>">
 				</div>				
 			</div>
 		</td>						
@@ -347,7 +347,7 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 	if (mysqli_error($phpmyadmin) == null) {
 		$metaAdd = 0;
 		echo "<script>alert('Desempenho cadastro com sucesso!'); window.location.href=window.location.href; </script>";
-	} else{
+	} else {
 		echo "<script>alert('Erro ao cadastrar Desempenho, campo Meta e/ou Alcançado vazio!!'); window.location.href=window.location.href; </script>";
 	}
 } else if (isset($_POST['salvarDados']) != null) {
