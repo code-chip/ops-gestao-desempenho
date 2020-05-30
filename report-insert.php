@@ -312,10 +312,8 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 	$registros = array_filter($_POST['registro']);
 	$observacoes = $_POST['observacao'];
 	
-	$checkTurno = "SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
-	$cnx = mysqli_query($phpmyadmin, $checkTurno);
-	$turnoresult = $cnx->fetch_array();
-	$turno = $turnoresult["TURNO_ID"];
+	$cnx = mysqli_query($phpmyadmin, "SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."");
+	$turnoResult = $cnx->fetch_array();
 	$v = 0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
 	
 	for ( $i = 0; $i < sizeof($presencas); $i++ ) {
@@ -329,13 +327,25 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 				$alcancados[$i] = 0;
 			} else {
 				$desempenho = round(($alcancados[$i] / $metas[$i]) * 100,2);	
-			}				
-			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
+			}
+
+			$limitDay = new DateTime($registros[$i]);
+			$limitDay = $limitDay->format('Y-m-21');
+			
+			if ($registros[$i] >= $limitDay){
+				$anoMes = new DateTime($registros[$i]);
+				$anoMes->add(new DateInterval('P1M'));
+				$anoMes = $anoMes->format('Y-m');
+			}
+
+			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
 			$cnx = mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
+			
 			if ($_SESSION["metaAdd"] == 1) {//VERIFICA E DAR BAIXA NA META CADASTRADA.
 				$checkMeta = "SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
 				$cnx2 = mysqli_query($phpmyadmin, $checkMeta);			
+				
 				if (mysqli_num_rows($cnx2)>0) {
 					$dowMeta = $cnx2->fetch_array();
 					$query = "UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
