@@ -3,21 +3,19 @@
 $menuAtivo = 'desempenho';
 require('menu.php');
 
-if($_SESSION["permissao"] == 1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
 
 $turno = trim($_POST['turno']);
-$setor= trim($_REQUEST['setor']);
-$dataSetada= trim($_REQUEST['dataSetada']);
+$setor = trim($_REQUEST['setor']);
+$dataSetada = trim($_REQUEST['dataSetada']);
 $contador = 0;
-$totalAlcancado=0;
-$idAtividade=0;
-$idMeta=0;
+$totalAlcancado = 0;
+$idAtividade = 0;
+$idMeta = 0;
 
-?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 <head>
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
@@ -130,8 +128,8 @@ $idMeta=0;
 	</div>
 	</section>	
 	<?php endif; ?>		
-</div>
-<?php
+</div><?php
+
 if ( $turno != "" && $setor != "") {	
 	$ajustes = mysqli_query($phpmyadmin, "set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';");
 	
@@ -144,14 +142,12 @@ if ( $turno != "" && $setor != "") {
 		$x++;
 		$contador = $x;
 	}
-	if (mysqli_num_rows($cnx) == null){
+	if (mysqli_num_rows($cnx) == null) {
 		echo "<script>alert('Nenhum usuário cadastrado no turno e setor selecionado!');	window.location.href=window.location.href; </script>";	
 	}			
 }
-$gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";	
-?>
-<!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if($contador !=0) : ?>
+
+if ($contador != 0 ) : ?>
 <hr/>
 	<form id="form2" action="" method="POST">	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
@@ -166,19 +162,22 @@ $gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";
 		<th>Alcançado</th>		
 		<th>Data</th>
 		<th>Observação</th>  			
-	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :
+	</tr><?php
+ 
+ for( $i = 0; $i < sizeof($vtNome); $i++ ) :
 	$result=0; 
 	//VERIFICA SE É SETOR COM METAS VARIADAS.
-	$_SESSION["metaAdd"]=1;
-	$getMeta="SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
-	$cx= mysqli_query($phpmyadmin, $getMeta);
-	$defMeta= $cx->fetch_array();
-	$result=mysqli_num_rows($cx);
-	if($result>0){			
-		$idAtividade=$defMeta["ATIVIDADE_ID"];
-	}?>
-	<tr>
+	$_SESSION["metaAdd"] = 1;
+	$getMeta = "SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
+	$cx = mysqli_query($phpmyadmin, $getMeta);
+	$defMeta = $cx->fetch_array();
+	$result = mysqli_num_rows($cx);
+	
+	if ($result > 0) {			
+		$idAtividade = $defMeta["ATIVIDADE_ID"];
+	}
+	
+	?><tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
 			<div class="field">				
