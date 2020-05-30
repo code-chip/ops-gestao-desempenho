@@ -1,11 +1,13 @@
 <?php
-$menuAtivo="Desempenho";
-include('menu.php');
-if($_SESSION["permissao"]==1){
+
+$menuAtivo = 'desempenho';
+require('menu.php');
+
+if($_SESSION["permissao"] == 1){
 	echo "<script>alert('Usuário sem permissão')</script>";
 	header("Refresh:1;url=home.php");
 }
-else{
+
 $turno = trim($_POST['turno']);
 $setor= trim($_REQUEST['setor']);
 $dataSetada= trim($_REQUEST['dataSetada']);
@@ -13,6 +15,7 @@ $contador = 0;
 $totalAlcancado=0;
 $idAtividade=0;
 $idMeta=0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,14 +57,10 @@ $idMeta=0;
     </script>   
 </head>
 <body>
-	<?php /*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/	
-	$gdTurno="SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'";
-	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";	
-	?>
 	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if($turno =="" && isset($_POST['salvarDados'])==null): ?>
+	<?php if ($turno == "" && isset($_POST['salvarDados']) == null): ?>
 	<section class="section">
 	<div class="container">		
 	<form id="form1" action="" method="POST" onSubmit="(return(preencheCheckbox())">
@@ -75,13 +74,12 @@ $idMeta=0;
 						<div class="control">
 							<div class="select">
 								<select name="turno">
-								<option selected="selected" value="">Selecione</option>	
-								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
-								$x=0; 
-								while($turno = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $turno["ID"]; ?>"><?php echo $vtNome[$x] = $turno["NOME"]; ?></option>
-								<?php $x;} endwhile;?>	
-							</select>
+									<option selected="selected" value="">Selecione</option><?php	
+									$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
+									while($turno = $con->fetch_array()){
+										echo "<option value=" . $turno["ID"] . ">" . $turno["NOME"] . "</option>";
+									} ?>	
+								</select>
 							</div>&nbsp&nbsp&nbsp
 						</div>
 					</div>
@@ -96,12 +94,11 @@ $idMeta=0;
 						<div class="control">
 							<div class="select">
 								<select name="setor">
-									<option selected="selected" value="">Selecione</option>	
-									<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-									$x=0; 
-									while($setor = $con->fetch_array()):{?>
-										<option value="<?php echo $vtId[$x] = $setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
-									<?php $x;} endwhile;?>	
+									<option selected="selected" value="">Selecione</option><?php	
+									$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'");
+									while($setor = $con->fetch_array()){
+										echo "<option value=" . $setor["ID"] . ">" . $setor["NOME"] . "</option>";
+									}?>	
 								</select>	
 							</div>
 						</div>						
@@ -135,27 +132,24 @@ $idMeta=0;
 	<?php endif; ?>		
 </div>
 <?php
-if( $turno != "" && $setor != ""){	
-	$query="SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME";
-	$ajusteBD="set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';";
-	$ajustes= mysqli_query($phpmyadmin, $ajusteBD);
-	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
-	while($operadores= $cnx->fetch_array()){
-		$vtId[$x]=$operadores["ID"];
-		$vtNome[$x]=$operadores["NOME"];					
+if ( $turno != "" && $setor != "") {	
+	$ajustes = mysqli_query($phpmyadmin, "set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';");
+	
+	$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME");
+
+	$x = 0;
+	while ($operadores = $cnx->fetch_array()) {
+		$vtId[$x] = $operadores["ID"];
+		$vtNome[$x] = $operadores["NOME"];					
 		$x++;
-		$contador=$x;
+		$contador = $x;
 	}
-	if(mysqli_num_rows($cnx)==null){
-		?><script type="text/javascript">
-			alert('Nenhum usuário cadastrado no turno e setor selecionado!');
-			window.location.href=window.location.href;
-		</script> <?php		
+	if (mysqli_num_rows($cnx) == null){
+		echo "<script>alert('Nenhum usuário cadastrado no turno e setor selecionado!');	window.location.href=window.location.href; </script>";	
 	}			
 }
-$gdPresenca="SELECT ID, NOME FROM PRESENCA WHERE SITUACAO='Ativo'";
-$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";	
+$gdPresenca = "SELECT ID, NOME FROM PRESENCA WHERE SITUACAO ='Ativo'";
+$gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
 <?php if($contador !=0) : ?>
@@ -373,5 +367,4 @@ else if(isset($_POST['salvarDados'])!=null){
 		window.location.href=window.location.href;
 	</script><?php
 }
-}//ELSE - caso o usuário não tenha permissão.
 ?>
