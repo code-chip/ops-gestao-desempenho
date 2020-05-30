@@ -148,7 +148,6 @@ if ( $turno != "" && $setor != "") {
 		echo "<script>alert('Nenhum usuário cadastrado no turno e setor selecionado!');	window.location.href=window.location.href; </script>";	
 	}			
 }
-$gdPresenca = "SELECT ID, NOME FROM PRESENCA WHERE SITUACAO ='Ativo'";
 $gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
@@ -207,8 +206,8 @@ $gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="presenca[]">								
-								<?php $con = mysqli_query($phpmyadmin , $gdPresenca);
+							<select name="presenca[]"><?php								
+								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM PRESENCA WHERE SITUACAO ='Ativo'");
 								$x=0; 
 								while($presenca = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = $presenca["NOME"]; ?></option>
@@ -302,69 +301,57 @@ $gdSetor = "SELECT ID, NOME FROM SETOR WHERE SITUACAO ='Ativo'";
 	</form>	
 <?php endif; ?>
 </body>
-</html>
-<?php
-if(isset($_POST['salvarDados']) && $_POST['id']!=null){
-	$ids= array_filter($_POST['id']);
-	$pvt= array_filter($_POST['vetor']);
+</html><?php
+
+if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
+	$ids = array_filter($_POST['id']);
+	$pvt = array_filter($_POST['vetor']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
 	$metas = array_filter($_POST['meta']);
-	$alcancados= array_filter($_POST['alcancado']);	
+	$alcancados = array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
-	$observacoes= $_POST['observacao'];
-	//CHECK TURNO
-	$checkTurno="SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
-	$cnx= mysqli_query($phpmyadmin, $checkTurno);
-	$turnoresult=$cnx->fetch_array();
-	$turno=$turnoresult["TURNO_ID"];
-	$v=0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
-	for( $i = 0; $i < sizeof($presencas); $i++ ){
-		if($pvt[$v]==$i){
-			if($presencas[$i]==3 || $presencas[$i]==5 ){
-				$desempenho=0;
-				$metas[$i]=0;
-				$alcancados[$i]=0;
-			}
-			else if($alcancados[$i]==0 || $alcancados[$i]==null){
-				$desempenho=0;
-				$alcancados[$i]=0;
-			}
-			else{
-				$desempenho=round(($alcancados[$i]/$metas[$i])*100,2);	
+	$observacoes = $_POST['observacao'];
+	
+	$checkTurno = "SELECT TURNO_ID FROM USUARIO WHERE ID=".$ids[0]."";
+	$cnx = mysqli_query($phpmyadmin, $checkTurno);
+	$turnoresult = $cnx->fetch_array();
+	$turno = $turnoresult["TURNO_ID"];
+	$v = 0;//VARIÁVEL USADA PEGAR A REFERÊNCIA DO VETOR SELECIONADO P/ SALVAR A INFORMAÇÃO.
+	
+	for ( $i = 0; $i < sizeof($presencas); $i++ ) {
+		if ($pvt[$v] == $i) {
+			if ($presencas[$i] == 3 || $presencas[$i] == 5 ) {
+				$desempenho = 0;
+				$metas[$i] = 0;
+				$alcancados[$i] = 0;
+			} else if ($alcancados[$i] == 0 || $alcancados[$i] == null) {
+				$desempenho = 0;
+				$alcancados[$i] = 0;
+			} else {
+				$desempenho = round(($alcancados[$i] / $metas[$i]) * 100,2);	
 			}				
-			$inserirDesempenho="INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
-			$cnx=mysqli_query($phpmyadmin, $inserirDesempenho);
+			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turno.",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."','".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
+			$cnx = mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
-			if($_SESSION["metaAdd"]==1){//VERIFICA E DAR BAIXA NA META CADASTRADA.
-				$checkMeta="SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
-				$cnx2= mysqli_query($phpmyadmin, $checkMeta);			
-				if(mysqli_num_rows($cnx2)>0){
-					$dowMeta=$cnx2->fetch_array();
-					$query="UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
-					$cnx3= mysqli_query($phpmyadmin, $query);
+			if ($_SESSION["metaAdd"] == 1) {//VERIFICA E DAR BAIXA NA META CADASTRADA.
+				$checkMeta = "SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
+				$cnx2 = mysqli_query($phpmyadmin, $checkMeta);			
+				if (mysqli_num_rows($cnx2)>0) {
+					$dowMeta = $cnx2->fetch_array();
+					$query = "UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
+					$cnx3 = mysqli_query($phpmyadmin, $query);
 				}
 			}
 		}
 	}	
-	if(mysqli_error($phpmyadmin)==null){
-		$metaAdd=0;
-		?><script type="text/javascript">
-			alert('Desempenho cadastro com sucesso!');
-			window.location.href=window.location.href;		
-		</script><?php
+	if (mysqli_error($phpmyadmin) == null) {
+		$metaAdd = 0;
+		echo "<script>alert('Desempenho cadastro com sucesso!'); window.location.href=window.location.href; </script>";
+	} else{
+		echo "<script>alert('Erro ao cadastrar Desempenho, campo Meta e/ou Alcançado vazio!!'); window.location.href=window.location.href; </script>";
 	}
-	else{
-		?><script type="text/javascript">
-			alert('Erro ao cadastrar Desempenho, campo Meta e/ou Alcançado vazio!!');
-			window.location.href=window.location.href;
-		</script><?php
-	}
-}
-else if(isset($_POST['salvarDados'])!=null){
-	?><script type="text/javascript">
-		alert('Nenhum Checkbox foi selecionado p/ salvar!!');
-		window.location.href=window.location.href;
-	</script><?php
+} else if (isset($_POST['salvarDados']) != null) {
+	echo "<script>alert('Nenhum Checkbox foi selecionado p/ salvar!!'); window.location.href=window.location.href;</script>";
 }
 ?>
