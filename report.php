@@ -160,88 +160,90 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 	$con = mysqli_query($phpmyadmin, $consulta);
 	
 	if (mysqli_num_rows($con) != 0) {
-	$x = 0;
-	$maior = 0;
-	$menor = 1000;
-	$totalFaltas = 0;
-	$totalFolgas = 0;
-	while($dado = $con->fetch_array()){
-		$vtIdUsuario[$x] = $dado["ID"];				
-		$vtNome[$x] = $dado["NOME"];
-		$vtDesempenho[$x] = $dado["DESEMPENHO"];
-		$vtAtividade[$x] = $dado["ATIVIDADE"];
-		$vtFalta[$x] = $dado["FALTA"];
-		$vtFolga[$x] = $dado["FOLGA"];
-		$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
-		$vtRegistro[$x] = $dado["REGISTRO"];
-		$totalFaltas = $totalFaltas + $vtFalta[$x];
-		$totalFolgas = $totalFolgas + $vtFolga[$x];	
-		if ($maior < $vtDesempenho[$x]) {
-			$maior = $vtDesempenho[$x];
+		$x = 0;
+		$maior = 0;
+		$menor = 1000;
+		$totalFaltas = 0;
+		$totalFolgas = 0;
+
+		while ($dado = $con->fetch_array()) {
+			$vtIdUsuario[$x] = $dado["ID"];				
+			$vtNome[$x] = $dado["NOME"];
+			$vtDesempenho[$x] = $dado["DESEMPENHO"];
+			$vtAtividade[$x] = $dado["ATIVIDADE"];
+			$vtFalta[$x] = $dado["FALTA"];
+			$vtFolga[$x] = $dado["FOLGA"];
+			$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
+			$vtRegistro[$x] = $dado["REGISTRO"];
+			$totalFaltas = $totalFaltas + $vtFalta[$x];
+			$totalFolgas = $totalFolgas + $vtFolga[$x];	
+			if ($maior < $vtDesempenho[$x]) {
+				$maior = $vtDesempenho[$x];
+			}
+			if($menor>$vtDesempenho[$x] && $vtDesempenho[$x]!=0){
+				$menor=$vtDesempenho[$x];
+			}			
+			$contador++;
+			$x++;		
 		}
-		if($menor>$vtDesempenho[$x] && $vtDesempenho[$x]!=0){
-			$menor=$vtDesempenho[$x];
-		}			
-		$contador++;
-		$x++;		
-	}
-	$g1="SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
-WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
-UNION ALL
-SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
-WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
-UNION ALL
-SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
-WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
-UNION ALL
-SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
-WHERE REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
-AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5);";
 
-/*DASHABOARD DESEMPENHO POR SEXO*/
-$g3="SELECT U.SEXO, AVG(D.DESEMPENHO) MEDIA, MIN(D.DESEMPENHO) MINIMO FROM DESEMPENHO D 
-INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
-WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ".$turno."
-GROUP BY 1 ORDER BY MEDIA DESC";
+		$g1 = "SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
+		WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 2 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
+		UNION ALL
+		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
+		WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
+		UNION ALL
+		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
+		WHERE REGISTRO >= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5)
+		UNION ALL
+		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20')),2)MENOR FROM DESEMPENHO 
+		WHERE REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
+		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5);";
 
-/*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
-$g4="SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
-INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'
-GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
+		/*DASHABOARD DESEMPENHO POR SEXO*/
+		$g3 = "SELECT U.SEXO, AVG(D.DESEMPENHO) MEDIA, MIN(D.DESEMPENHO) MINIMO FROM DESEMPENHO D 
+		INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
+		WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ".$turno."
+		GROUP BY 1 ORDER BY MEDIA DESC";
 
-	$x=0;
-	$cnxG3= mysqli_query($phpmyadmin, $g3);
-	while($G3 = $cnxG3->fetch_array()){
-		$vtG3sexo[$x]= $G3["SEXO"];
-		$vtG3media[$x]= $G3["MEDIA"];
-		$vtG3minimo[$x]= $G3["MINIMO"];		
-		$x++;				
-	}
-	$x=0;
-	$cnxG4= mysqli_query($phpmyadmin, $g4);
-	while($G4 = $cnxG4->fetch_array()){
-		$vtG4nome[$x]= $G4["NOME"];
-		$vtG4media[$x]= $G4["MEDIA"];
-		$x++;				
-	}	
-	$xg=0;
-	$cnx2=mysqli_query($phpmyadmin, $g1);
-	while($graf1= $cnx2->fetch_array()){
-		$vtMedia[$xg]=$graf1["MEDIA"];
-		$vtMenor[$xg]=$graf1["MENOR"];
-		$xg++;
-	}
+		/*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
+		$g4 = "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
+		INNER JOIN USUARIO U ON U.ID=USUARIO_ID
+		WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20'
+		GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
+
+		$x = 0;
+		$cnxG3 = mysqli_query($phpmyadmin, $g3);
+		while ($G3 = $cnxG3->fetch_array()) {
+			$vtG3sexo[$x] = $G3["SEXO"];
+			$vtG3media[$x] = $G3["MEDIA"];
+			$vtG3minimo[$x] = $G3["MINIMO"];		
+			$x++;				
+		}
+		$x = 0;
+		$cnxG4 = mysqli_query($phpmyadmin, $g4);
+		while ($G4 = $cnxG4->fetch_array()) {
+			$vtG4nome[$x] = $G4["NOME"];
+			$vtG4media[$x] = $G4["MEDIA"];
+			$x++;				
+		}	
+		$xg = 0;
+		$cnx2 = mysqli_query($phpmyadmin, $g1);
+		while($graf1 = $cnx2->fetch_array()){
+			$vtMedia[$xg] = $graf1["MEDIA"];
+			$vtMenor[$xg] = $graf1["MENOR"];
+			$xg++;
+		}
 	}	
 } 
-if($contador !=0): ?>
+if ($contador != 0): ?>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div class="field is-horizontal" id="graficos">		
 		<div class="column is-mobile" id="dash-desempenho"></div>
@@ -251,14 +253,14 @@ if($contador !=0): ?>
 	</div>	
 	<hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
-		<tr class="is-selected">
-			<td>Resultado:<?php echo sizeof($vtNome);?></td>	
-			<td>Falta's: <?php echo $totalFaltas;?></td>
-			<td>Folga's: <?php echo $totalFolgas;?></td>
-			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalAlcancado/$contador, 2)."%"?></td>
-			<td>Maior: <?php echo $maior."%"?></td>
-			<td>Empresa: <?php echo $peso["ALCANCADO"]."%"?></td>			
+		<tr class='is-selected'><?php
+			echo "<td>Resultado: " . sizeof($vtNome) . "</td>	
+			<td>Falta's: " . $totalFaltas . "</td>
+			<td>Folga's: " . $totalFolgas . "</td>
+			<td>Menor: " . $menor."%" . "</td>
+			<td>Media: " . round($totalAlcancado/$contador, 2)."%" . "</td>
+			<td>Maior: " . $maior."%" . "</td>
+			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";	?>		
 		</tr>
 	</table>
 	<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">	
@@ -269,7 +271,7 @@ if($contador !=0): ?>
 		<th width="4">Falta's</th>
 		<th width="4">Folga's</th>
 		<th width="4">Pena</th>
-		<?php if($atividade=="separado") : ?><th width="14">Atividade</th><?php endif; ?>
+		<?php if ($atividade == "separado") { echo "<th width='14'>Atividade</th>"; } ?>
 		<th width="14">Desempenho</th>
 		<th width="4">Final</th>				
 		<th width="40">Período</th>			
@@ -292,8 +294,8 @@ if($contador !=0): ?>
 			<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
 			<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
+			<td></td>
 			<?php if($atividade=="separado"):?><td><?php echo $vtAtividade[$i]?></td><?php endif;?>
-			<td></td>		
 			<td><?php echo $vtDesempenho[$i]."%"?></td>
 			<td><?php echo round((($vtDesempenho[$i] / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2)."%"  ?></td>				
 			<td style="max-width:800px;"><?php echo $vtRegistro[$i]?></td>
