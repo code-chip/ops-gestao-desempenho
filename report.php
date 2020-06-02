@@ -31,7 +31,7 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field-body">
 			<div class="field is-grouped">							
 				<div class="control">
-					<div class="select is-size-7-touch">
+					<div class="select is-size-7-touch" style="max-width: 10em">
 						<select name="periodo">
 							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
@@ -179,12 +179,15 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-01', INTERVAL 1 MONTH),'%d/%m'),' a ".
 			$vtRegistro[$x] = $dado["REGISTRO"];
 			$totalFaltas = $totalFaltas + $vtFalta[$x];
 			$totalFolgas = $totalFolgas + $vtFolga[$x];	
+			
 			if ($maior < $vtDesempenho[$x]) {
 				$maior = $vtDesempenho[$x];
 			}
-			if($menor>$vtDesempenho[$x] && $vtDesempenho[$x]!=0){
-				$menor=$vtDesempenho[$x];
+			
+			if ($menor > $vtDesempenho[$x] && $vtDesempenho[$x] != 0) {
+				$menor = $vtDesempenho[$x];
 			}			
+			
 			$contador++;
 			$x++;		
 		}
@@ -212,11 +215,10 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-01', INTERVAL 1 MONTH),'%d/%m'),' a ".
 			$vtG4media[$x] = $G4["MEDIA"];
 			$x++;				
 		}
-		echo $G4["NOME"];
-		echo $G4["NOME"][0];	
+			
 		$xg = 0;
 		$cnx2 = mysqli_query($phpmyadmin, $g1);
-		while($graf1 = $cnx2->fetch_array()){
+		while ($graf1 = $cnx2->fetch_array()) {
 			$vtMedia[$xg] = $graf1["MEDIA"];
 			$vtMenor[$xg] = $graf1["MENOR"];
 			$xg++;
@@ -237,7 +239,7 @@ if ($contador != 0): ?>
 			<td>Falta's: " . $totalFaltas . "</td>
 			<td>Folga's: " . $totalFolgas . "</td>
 			<td>Menor: " . $menor."%" . "</td>
-			<td>Media: " . round($totalAlcancado/$contador, 2)."%" . "</td>
+			<td>Media: " . round($totalAlcancado / $contador, 2)."%" . "</td>
 			<td>Maior: " . $maior."%" . "</td>
 			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";	?>		
 		</tr>
