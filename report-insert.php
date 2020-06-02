@@ -331,19 +331,10 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 				$desempenho = round(($alcancados[$i] / $metas[$i]) * 100,2);	
 			}
 
-			$limitDay = new DateTime($registros[$i]);
-			$dateInput = $limitDay->format('Y-m');
-			$limitDay = $limitDay->format('Y-m-21');
+			$anoMes = new DateTime($registros[$i]);
+			$anoMes->add(new DateInterval('P1M'));
+			$anoMes = $anoMes->format('Y-m');
 			
-			if ($registros[$i] >= $limitDay){
-				$anoMes = new DateTime($registros[$i]);
-				$anoMes->add(new DateInterval('P1M'));
-				$anoMes = $anoMes->format('Y-m');
-
-			} else {
-				$anoMes = $dateInput;
-			}
-
 			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
 			$cnx = mysqli_query($phpmyadmin, $inserirDesempenho);
 			$v++;
