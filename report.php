@@ -10,9 +10,8 @@ $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado = 0;
 
-if($_SESSION["permissao"] == 1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh: 1;url=report-private.php");
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão') window.locantion.href='report-private.php'; </script>";
 }
 
 ?>
@@ -26,7 +25,7 @@ if($_SESSION["permissao"] == 1){
 	<section class="section">
 	<form id="form1" action="report.php" method="POST" >
 		<div class="field is-horizontal">
-			<div class="field-label is-normal"><!--SELEÇÃO PERÍODO-->
+			<div class="field-label is-normal">
 				<label class="label is-size-7-touch" for="periodo">Período:</label>
 			</div>
 			<div class="field-body">
@@ -154,7 +153,6 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 	}
 
 	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE INICIO='" . $periodo . "-21') AS ALCANCADO FROM META_PESO");
-	echo mysqli_error($phpmyadmin);
 	$peso = $cx->fetch_array();
 
 	$con = mysqli_query($phpmyadmin, $consulta);
@@ -207,12 +205,6 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 		WHERE REGISTRO >= CONCAT(DATE_FORMAT(CURDATE(),'%Y-%m'),'-21') 
 		AND REGISTRO <= CONCAT(DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 1 MONTH),'%Y-%m'),'-20') AND PRESENCA_ID NOT IN(3,5);";
 
-		/*DASHABOARD DESEMPENHO POR SEXO*/
-		$g3 = "SELECT U.SEXO, AVG(D.DESEMPENHO) MEDIA, MIN(D.DESEMPENHO) MINIMO FROM DESEMPENHO D 
-		INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
-		WHERE PRESENCA_ID<>3 AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ".$turno."
-		GROUP BY 1 ORDER BY MEDIA DESC";
-
 		/*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
 		$g4 = "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
 		INNER JOIN USUARIO U ON U.ID=USUARIO_ID
@@ -220,20 +212,14 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH),'%d/%m'),' a 20
 		GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
 
 		$x = 0;
-		$cnxG3 = mysqli_query($phpmyadmin, $g3);
-		while ($G3 = $cnxG3->fetch_array()) {
-			$vtG3sexo[$x] = $G3["SEXO"];
-			$vtG3media[$x] = $G3["MEDIA"];
-			$vtG3minimo[$x] = $G3["MINIMO"];		
-			$x++;				
-		}
-		$x = 0;
 		$cnxG4 = mysqli_query($phpmyadmin, $g4);
 		while ($G4 = $cnxG4->fetch_array()) {
 			$vtG4nome[$x] = $G4["NOME"];
 			$vtG4media[$x] = $G4["MEDIA"];
 			$x++;				
-		}	
+		}
+		echo $G4["NOME"];
+		echo $G4["NOME"][0];	
 		$xg = 0;
 		$cnx2 = mysqli_query($phpmyadmin, $g1);
 		while($graf1 = $cnx2->fetch_array()){
@@ -248,7 +234,6 @@ if ($contador != 0): ?>
 	<div class="field is-horizontal" id="graficos">		
 		<div class="column is-mobile" id="dash-desempenho"></div>
 		<div class="column is-mobile" id="dash-variacao"></div>
-		<!--<div class="column is-mobile" id="dash-ranking"></div>-->
 		<div class="column is-mobile" id="dash-top5"></div>
 	</div>	
 	<hr/>
@@ -384,33 +369,6 @@ if ($contador != 0): ?>
       	chart.draw(data, options);
     }
 </script>	
-<script type="text/javascript">
-	google.charts.load('current', {packages: ['corechart', 'bar']});
-	google.charts.setOnLoadCallback(drawTitleSubtitle);
-	function drawTitleSubtitle() {
-    	var data = google.visualization.arrayToDataTable([
-        ['Sexo', 'avg', 'min'],
-        ['<?php echo $vtG3sexo[0]?>', parseFloat('<?php echo $vtG3media[0]?>'), parseFloat('<?php echo $vtG3minimo[0]?>')],
-        ['<?php echo $vtG3sexo[1]?>', parseFloat('<?php echo $vtG3media[1]?>'), parseFloat('<?php echo $vtG3minimo[1]?>')]        
-      	]);
-      	var materialOptions = {
-        	chart: {
-         		title: 'Diferença de desempenho',
-          		subtitle: 'Masculino/Feminino'
-        	},
-        	hAxis: {
-          		title: 'Total Alcançado',
-          		minValue: 0,
-        	},
-        	vAxis: {
-          		title: 'Ranking'
-        	},
-        	bars: 'horizontal'
-      	};
-      	var materialChart = new google.charts.Bar(document.getElementById('dash-ranking'));
-      	materialChart.draw(data, materialOptions);
-    }
-</script>
 <script type="text/javascript">
     google.charts.load("current", {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
