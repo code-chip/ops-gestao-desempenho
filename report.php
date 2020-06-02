@@ -31,8 +31,8 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field-body">
 			<div class="field is-grouped">							
 				<div class="control">
-					<div class="select is-size-7-touch" style="max-width: 10em">
-						<select name="periodo">
+					<div class="select is-size-7-touch">
+						<select name="periodo" style="width: 10em">
 							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -52,7 +52,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="atividade">
+							<select name="atividade" style="width: 10em">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
 							</select>	
@@ -67,7 +67,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="ordenacao">
+							<select name="ordenacao" style="width: 10em">
 								<option value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
 							</select>	
@@ -102,7 +102,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="turno" id="salvaTurno">
+							<select name="turno" id="salvaTurno" style="width: 10em">
 							<option selected="selected"value="">Todos</option><?php																
 								$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
 								while($turno = $con->fetch_array()){
@@ -120,7 +120,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field is-grouped">							
 						<div class="control">
 							<div class="select is-size-7-touch">
-								<select name='meta'>
+								<select name='meta' style="width: 10em">
 									<option selected="selected"value="">Ambos</option>
 									<option value="AND B.DESEMPENHO>=100">Atingida :D</option>
 									<option value="AND B.DESEMPENHO<100">Perdida ;(</option>
