@@ -12,13 +12,13 @@ else {
 		$desempenho = (trim($_POST['alcancado']) / trim($_POST['meta'])) * 100;
 		$desempenho = round($desempenho, 2);
 		
-		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_EMPRESA WHERE INICIO = '" . trim($_POST['dataInicio']) . "' AND FIM = '" . trim($_POST['dataFim']) . "' ");
+		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_EMPRESA WHERE ANO_MES = '" . trim($_POST['anoMes']) . "';");
 
 		$cd = $checkDuplic->fetch_array();
 
 		if (mysqli_num_rows($checkDuplic) == 0) {
 
-			mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, INICIO, FIM, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['dataInicio']) . "', '" . trim($_POST['dataFim']) . "', '" . date('Y-m-d') . "');");
+			mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, ANO_MES, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['anoMes']) . "', '" . date('Y-m-d') . "');");
 			$erro = mysqli_error($phpmyadmin);
 			
 			if ($erro == "" && $erro == null) {
@@ -28,7 +28,7 @@ else {
 				echo "<script>alert('Erro ao inserir Meta Empresa!');</script>";
 			}
 		} else {
-			echo "<script>alert('Já existe Meta Empresa cadastrada nesta Data Início e Fim.'); window.location.href='goal-company-insert.php';</script>";
+			echo "<script>alert('Já existe Meta Empresa cadastrada neste Ano e Mês.'); window.location.href='goal-company-insert.php';</script>";
 		}
 	}
 	
@@ -103,48 +103,22 @@ else {
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Data inicio*</label>
+						<label class="label">Ano/Mês*</label>
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left has-icons-right" id="dataInicio">
-								<input type="text" class="input required maskDataInicio" name="dataInicio" placeholder="2019-11-21" maxlength="10" onkeypress="addLoadField('dataInicio')" onkeyup="rmvLoadField('dataInicio')" onblur="checkAdress(form1.dataInicio, 'msgDataInicioOk','msgDataInicioNok')" id="inputName">
+							<div class="control has-icons-left has-icons-right" id="anoMes">
+								<input type="text" class="input required maskanoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputName">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
-								<div id="msgDataInicioNok" style="display:none;">
+								<div id="msganoMesNok" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O data início da meta empresa é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgDataInicioOk" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Data fim*</label>
-					</div>
-					<div class="field-body">
-						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left has-icons-right" id="dataFim">
-								<input type="text" class="input required maskDataFim" name="dataFim" placeholder="2019-12-20" maxlength="10" onkeypress="addLoadField('dataFim')" onkeyup="rmvLoadField('dataFim')" onblur="checkAdress(form1.dataFim, 'msgDataFimOk','msgDataFimNok')" id="inputDataFim">
-								<span class="icon is-small is-left">
-							   		<i class="fas fa-calendar-alt"></i>
-							   	</span>
-								<div id="msgDataFimNok" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">O data fim da meta empresa é obrigatório</p>		    	
-							   	</div>
-							   	<div id="msgDataFimOk" style="display:none;">
+							   	<div id="msganoMesOk" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
