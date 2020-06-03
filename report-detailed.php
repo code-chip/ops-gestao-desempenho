@@ -1,19 +1,22 @@
 <?php
-$menuAtivo="Relatórios";
-include('menu.php');
+
+$menuAtivo="relatorios";
+require('menu.php');
+
 $periodo = trim($_REQUEST['periodo']);
 $idUsuario = trim($_REQUEST['idUsuario']);
-$contador=0;
-$totalAlcancado=0;
-if( $_SESSION["permissao"]!=1 ){
-	$consulta="SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D
-	INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
-	INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
-	INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID
-	WHERE D.USUARIO_ID=".$idUsuario." AND REGISTRO>=DATE_SUB('".$periodo."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$periodo."-20' ORDER BY REGISTRO;";
-	$con = mysqli_query($phpmyadmin , $consulta);	
-	$x=0; $menor=1000; $maior=0; $falta=0; $folga=0; $atestado=0; $treinamento=0;
-	while($dado = $con->fetch_array()){
+$contador = 0;
+$totalAlcancado = 0;
+
+if ( $_SESSION["permissao"] == 1 ){
+	echo "<script>alert('Usuário sem permissão para este acesso!!'); window.location.href='home.php'; </script>";
+} else if($periodo != ''){
+	$con = mysqli_query($phpmyadmin , "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID = D.USUARIO_ID
+	INNER JOIN ATIVIDADE A ON A.ID =D.ATIVIDADE_ID 	INNER JOIN PRESENCA P ON P.ID = D.PRESENCA_ID WHERE D.USUARIO_ID=".$idUsuario." AND D.ANO_MES='".$periodo."' ORDER BY REGISTRO;");	
+	
+	$x = 0; $menor = 1000; $maior = 0; $falta = 0; $folga = 0; $atestado = 0; $treinamento = 0;
+
+	while ($dado = $con->fetch_array()) {
 		$vetorNome[$x] = $dado["NOME"];	
 		$vetorAtividade[$x] = $dado["ATIVIDADE"];
 		$vetorIdPresenca[$x] = $dado["PRESENCA_ID"];
@@ -24,35 +27,35 @@ if( $_SESSION["permissao"]!=1 ){
 		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
 		$vetorObservacao[$x] = $dado["OBSERVACAO"];
-		if($vetorIdPresenca[$x]==2){
+
+		if ($vetorIdPresenca[$x] == 2) {
 			$falta++;
-		}
-		else if($vetorIdPresenca[$x]==3){
+		} else if ($vetorIdPresenca[$x] == 3) {
 			$folga++;
-		}
-		else if($vetorIdPresenca[$x]==4){
+		} else if ($vetorIdPresenca[$x] == 4) {
 			$atestado++;
-		}
-		else if($vetorIdPresenca[$x]==5){
+		} else if ($vetorIdPresenca[$x] == 5) {
 			$treinamento++;
 		}						
-		if($maior<$vetorAlcancado[$x]){
-			$maior=$vetorAlcancado[$x];
+		
+		if ($maior < $vetorAlcancado[$x]) {
+			$maior = $vetorAlcancado[$x];
 		}
-		if($menor>$vetorAlcancado[$x] && $vetorAlcancado[$x]>0){
-			$menor=$vetorAlcancado[$x];
+
+		if ($menor > $vetorAlcancado[$x] && $vetorAlcancado[$x] > 0) {
+			$menor = $vetorAlcancado[$x];
 		}
+
 		$contador++;
 		$x++;
-	}	
-	if($contador==0){
-		?><script type="text/javascript">alert('Nenhum resultado encontrado!');</script><?php
 	}
-}
-else{
-	echo "<script>alert('Usuário sem permissão para este acesso!!')</script>";
-}?>
-<?php if( $periodo !='' && $contador !=0) : ?>
+		
+	if ($contador == 0) {
+		echo "<script>alert('Nenhum resultado encontrado!'); </script>";
+	}
+} 
+
+if( $periodo != '' && $contador != 0) : ?>
 <!DOCTYPE html>
 <html>
 <head>
