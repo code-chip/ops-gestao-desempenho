@@ -19,6 +19,26 @@ if ($_SESSION["permissao"] == 1) {
 <html>
 <head>
 	<title>Gestão de Desempenho - Relatório Gestão</title>
+	<script type="text/javascript">
+		$(window).on("load", onPageLoad);
+			function onPageLoad() {
+				initListeners();
+				restoreSavedValues();
+			}
+			function initListeners() {
+				$("#saveDate").on("change", function() {
+					var value = $(this).val();
+					localStorage.setItem("saveDate", value);
+				}); 
+			}
+			function restoreSavedValues() {
+				var storedValue = localStorage.getItem("saveDate");
+				$("#saveDate").val(storedValue);
+			}		
+			$('#submitQuery').button().click(function(){
+				$('#form1').submit();
+		});
+	</script>
 </head>
 <body>
 	<span id="topo"></span>
@@ -32,7 +52,7 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field is-grouped">							
 				<div class="control">
 					<div class="select is-size-7-touch">
-						<select name="periodo" style="width: 10em">
+						<select name="periodo" id="saveDate" style="width: 10em">
 							<option selected="selected" value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -248,7 +268,7 @@ if ($contador != 0): ?>
 	<tr>
 		<th width="1">N°</th>
 		<th width="200">Funcionário</th>
-		<th width="4">Detalhes</th>		
+		<th>Detalhes</th>		
 		<th width="4">Falta's</th>
 		<th width="4">Folga's</th>
 		<th width="4">Pena</th>
@@ -271,7 +291,7 @@ if ($contador != 0): ?>
 			<td><?php echo $i+1;?></td>
 			<td><?php echo $vtNome[$i]?></td>
 			<?php if($registro>1 && $repeat!=0 && $mesclaa==false): ?><td width="1"; rowspan="<?php echo $registro?>"><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=true;endif;?>
-			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td width="5";><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
+			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]): ?><td width="1";><a href="report-detailed.php?periodo=<?php echo $periodo ?>&idUsuario=<?php echo $vtIdUsuario[$i]?>" target="_blank"><button class="button is-primary is-size-7-touch">Consultar</button></a></td><?php $mesclaa=false; endif;?>
 			<?php if($registro>1 && $repeat!=0 && $mescla==false): ?><td width="4" rowspan="<?php echo $registro?>"><?php echo $vtFalta[$i]; $mescla=true;?></td><td rowspan="<?php echo $registro?>"><?php echo $vtFolga[$i]?></td><?php endif;?>	
 			<?php if($repeat==0 && $vtNome[$i-1]!=$vtNome[$i]):?><td><?php echo $vtFalta[$i]; $mescla=false;?>
 			<td width="4";><?php echo $vtFolga[$i]?></td><?php endif;?>
