@@ -3,10 +3,8 @@ $menuAtivo="configuracoes";
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
-}
-else {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
+} else {
 	if (isset($_POST["inserirMeta"]) != null) {
 		
 		$desempenho = (trim($_POST['alcancado']) / trim($_POST['meta'])) * 100;
