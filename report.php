@@ -33,8 +33,8 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="control">
 					<div class="select is-size-7-touch">
 						<select name="periodo" style="width: 10em">
-							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
+							<option selected="selected" value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+							<option value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
 							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
 							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
@@ -144,6 +144,7 @@ if ( $periodo != "") {
 
 	$date = date_create($periodo);
 	date_add($date, date_interval_create_from_date_string('-1 months'));
+	$anoMes = date_format($date, 'Y-m');
 	$date = date_format($date, 't/m');
 
 	if ($atividade == "agrupado") {
@@ -156,9 +157,8 @@ CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-01', INTERVAL 1 MONTH),'%d/%m'),' a ".
 CONCAT(DATE_FORMAT(DATE_SUB('".$periodo."-01', INTERVAL 1 MONTH),'%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$setor." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
 	
-	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE INICIO='" . $periodo . "-21') AS ALCANCADO FROM META_PESO");
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE ANO_MES='" . $anoMes . "') AS ALCANCADO FROM META_PESO");
 	$peso = $cx->fetch_array();
-
 	$con = mysqli_query($phpmyadmin, $consulta);
 	
 	if (mysqli_num_rows($con) != 0) {
