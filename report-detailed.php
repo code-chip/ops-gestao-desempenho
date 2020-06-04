@@ -54,6 +54,15 @@ if ( $_SESSION["permissao"] == 1 ){
 		echo "<script>alert('Nenhum resultado encontrado!'); </script>";
 		exit;
 	}
+
+	if ($totalAlcancado > 0){
+		$media = round($totalAlcancado/($contador-$folga-$treinamento), 2)."%";
+		$menor = $menor."%";
+
+	} else {
+		$media = "0%";
+		$menor = "0%";
+	}
 } 
 
 ?><!DOCTYPE html>
@@ -65,15 +74,15 @@ if ( $_SESSION["permissao"] == 1 ){
 <body>
 <hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-		<tr>
-			<td>Colaborador: <?php echo $vetorNome[0];?></td>
-			<td>Atestado's: <?php echo $atestado;?></td>
-			<td>Falta's: <?php echo $falta;?></td>
-			<td>Folga's: <?php echo $folga;?></td>
-			<td>Menor: <?php if($totalAlcancado>0){echo $menor."%";}else{echo"0%";}?></td>
-			<td>Media: <?php if($totalAlcancado>0){echo round($totalAlcancado/($contador-$folga-$treinamento), 2)."%";}else{echo"0%";} ?></td>
-			<td>Maior: <?php echo $maior."%"?></td>
-		</tr>
+		<tr><?php
+			echo "<td>Colaborador: " . $vetorNome[0] . "</td>";
+			echo "<td>Atestado's: " . $atestado . "</td>";
+			echo "<td>Falta's: " . $falta . "</td>";
+			echo "<td>Folga's: " . $folga . "</td>";
+			echo "<td>Menor: " . $menor . "</td>";
+			echo "<td>Media: " .  $media . "</td>";
+			echo "<td>Maior: " . $maior."%"."</td>";
+		?></tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
 	<tr>
