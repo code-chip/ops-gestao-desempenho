@@ -1,6 +1,6 @@
 <?php
 
-$menuAtivo="relatorios";
+$menuAtivo = "relatorios";
 require('menu.php');
 
 $periodo = trim($_REQUEST['periodo']);
@@ -8,9 +8,9 @@ $idUsuario = trim($_REQUEST['idUsuario']);
 $contador = 0;
 $totalAlcancado = 0;
 
-if ( $_SESSION["permissao"] == 1 ){
+if ( $_SESSION["permissao"] == 1 ) {
 	echo "<script>alert('Usuário sem permissão para este acesso!!'); window.location.href='home.php'; </script>";
-} else if($periodo != ''){
+} else if ($periodo != '') {
 	$con = mysqli_query($phpmyadmin , "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID = D.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID =D.ATIVIDADE_ID 	INNER JOIN PRESENCA P ON P.ID = D.PRESENCA_ID WHERE D.USUARIO_ID=".$idUsuario." AND D.ANO_MES='".$periodo."' ORDER BY REGISTRO;");	
 	
@@ -24,7 +24,7 @@ if ( $_SESSION["permissao"] == 1 ){
 		$vetorDesempenho[$x] = $dado["ALCANCADO"];
 		$vetorMeta[$x] = $dado["META"];
 		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
-		$totalAlcancado=$totalAlcancado+$dado["DESEMPENHO"];
+		$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
 		$vetorObservacao[$x] = $dado["OBSERVACAO"];
 
@@ -81,7 +81,7 @@ if ( $_SESSION["permissao"] == 1 ){
 			echo "<td>Folga's: " . $folga . "</td>";
 			echo "<td>Menor: " . $menor . "</td>";
 			echo "<td>Media: " .  $media . "</td>";
-			echo "<td>Maior: " . $maior."%"."</td>";
+			echo "<td>Maior: " . $maior . "%" . "</td>";
 		?></tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
@@ -97,7 +97,8 @@ if ( $_SESSION["permissao"] == 1 ){
 	</tr><?php
 	
 	for ( $i = 0; $i < sizeof($vetorAtividade); $i++ ) {
-		echo "<tr>"; $registros = 1; $t = $i; 
+		echo "<tr>"; 
+		$registros = 1; $t = $i; 
 		$somaAlcancado = null; $z = $i; $laco = false;
 			
 		while ($vetorRegistro[$z] == $vetorRegistro[$z+1]) {
