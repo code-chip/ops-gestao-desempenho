@@ -63,6 +63,8 @@ if ( $_SESSION["permissao"] == 1 ) {
 		$media = "0%";
 		$menor = "0%";
 	}
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE ANO_MES='" . trim($_REQUEST['anoMes']) . "') AS ALCANCADO FROM META_PESO");
+	$peso = $cx->fetch_array();
 } 
 
 ?><!DOCTYPE html>
@@ -75,13 +77,16 @@ if ( $_SESSION["permissao"] == 1 ) {
 <hr/>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 		<tr><?php
-			echo "<td>Colaborador: " . $vetorNome[0] . "</td>";
-			echo "<td>Atestado's: " . $atestado . "</td>";
-			echo "<td>Falta's: " . $falta . "</td>";
-			echo "<td>Folga's: " . $folga . "</td>";
-			echo "<td>Menor: " . $menor . "</td>";
-			echo "<td>Media: " .  $media . "</td>";
-			echo "<td>Maior: " . $maior . "%" . "</td>";
+			echo "
+				<td>Colaborador: " . $vetorNome[0] . "</td>
+				<td>Atestado's: " . $atestado . "</td>
+				<td>Falta's: " . $falta . "</td>
+				<td>Folga's: " . $folga . "</td>
+				<td>Menor: " . $menor . "</td>
+				<td>Maior: " . $maior . "%" . "</td>
+				<td>Media: " .  $media . "</td>
+				<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2) . "%" . "</td>
+				<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";
 		?></tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
