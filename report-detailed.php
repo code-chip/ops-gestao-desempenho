@@ -49,14 +49,14 @@ if ( $_SESSION["permissao"] == 1 ){
 		$contador++;
 		$x++;
 	}
-		
+
 	if ($contador == 0) {
 		echo "<script>alert('Nenhum resultado encontrado!'); </script>";
+		exit;
 	}
 } 
 
-if( $periodo != '' && $contador != 0) : ?>
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html>
 <head>
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
@@ -79,41 +79,76 @@ if( $periodo != '' && $contador != 0) : ?>
 	<tr>
 		<th>Data</th>
 		<th>Atividade</th>
-		<?php if($folga>0 || $falta>0 || $atestado>0): ?><th>Presença</th><?php endif;?>
+		<?php if ($folga > 0 || $falta>0 || $atestado > 0) { echo "<th>Presença</th>"; } ?>
 		<th>Meta</th>
 		<th>Alcançado</th>
 		<th>Desempenho</th>
 		<th>Media</th>
 		<th>Observação</th>
-	</tr>
-	<?php for( $i = 0; $i < sizeof($vetorAtividade); $i++ ) : ?>
-		<tr <?php $registros=1; $t=$i;?> >
-			<?php $somaAlcancado=null; $z=$i; $laco=false;
-			while($vetorRegistro[$z]==$vetorRegistro[$z+1]){
-				$registros++; 
-				$repeat=$registros;
-				if($laco==false){ $somaAlcancado=$somaAlcancado+$vetorAlcancado[$z]+$vetorAlcancado[$z+1];}
-				else{$somaAlcancado=$somaAlcancado+$vetorAlcancado[$z+1];}
-				$laco=true; $z=$z+1;
+	</tr><?php
+	
+	for ( $i = 0; $i < sizeof($vetorAtividade); $i++ ) {
+		echo "<tr>"; $registros = 1; $t = $i; 
+		$somaAlcancado = null; $z = $i; $laco = false;
+			
+		while ($vetorRegistro[$z] == $vetorRegistro[$z+1]) {
+			$registros++; 
+			$repeat = $registros;
+
+			if ($laco == false) { 
+				$somaAlcancado = $somaAlcancado + $vetorAlcancado[$z] + $vetorAlcancado[$z + 1];
+			} else {
+				$somaAlcancado = $somaAlcancado + $vetorAlcancado[$z + 1];}
+				$laco = true; 
+				$z = $z + 1;
 			}
-			if($repeat>0){ $repeat--;}		 
-			$somaAlcancado=($somaAlcancado/$registros);?>
-			<?php if($registros>1 && $repeat!=0 && $mescla==false) : ?>
-			<td rowspan='<?php echo $registros; ?>'><?php echo $vetorRegistro[$i]?></td>
-			<?php $mescla=true; endif;  if($repeat==0 && $vetorRegistro[$i-1]!=$vetorRegistro[$i]) :?>
-			<td><?php echo $vetorRegistro[$i];?></td><?php $mescla=false; endif;?>
-			<td><?php echo $vetorAtividade[$i]?></td>
-			<?php if($folga>0 || $falta>0 || $atestado>0): ?><td><?php echo $vetorPresenca[$i]?></td><?php endif;?>
-			<td><?php echo $vetorMeta[$i]?></td>
-			<td><?php echo $vetorDesempenho[$i]?></td>
-			<td><?php  echo $vetorAlcancado[$i]."%"?></td>
-			<?php if($registros>1 && $repeat!=0 && $mesclaM==false) : ?><td rowspan='<?php echo $registros; ?>'><?php echo round($somaAlcancado,2)."%"; $mesclaM=true; endif;?></td><?php if($repeat==0 && $vetorRegistro[$i-1]!=$vetorRegistro[$i]) :?>
-				<td></td><?php $mesclaM=false; endif;?>
-			<?php if($vetorRegistro[$i]!=$vetorRegistro[$i+1] && $repeat==0){$mescla=false; $mesclaM=false;}?>
-			<td><?php  echo $vetorObservacao[$i]?></td>	
-		</tr>
-	<?php endfor; ?>
-	</table>	
-<?php endif; ?>
-</body>
+
+			if ($repeat > 0){ 
+				$repeat--;
+			}
+
+			$somaAlcancado = ($somaAlcancado / $registros);
+			
+			if ($registros > 1 && $repeat != 0 && $mescla == false) { 
+				echo "<td rowspan=" . $registros . ">" . $vetorRegistro[$i] . "</td>";	
+				$mescla = true;
+			}  
+
+			if( $repeat == 0 && $vetorRegistro[$i - 1] != $vetorRegistro[$i]) {
+				echo "<td>" . $vetorRegistro[$i] . "</td>";
+				$mescla = false;
+			}
+
+			echo "<td>" . $vetorAtividade[$i] . "</td>";
+
+			if ($folga > 0 || $falta > 0 || $atestado > 0) {
+				echo "<td>" . $vetorPresenca[$i] . "</td>";
+			}
+			
+			echo "<td>" . $vetorMeta[$i] . "</td>";
+			echo "<td>" . $vetorDesempenho[$i] . "</td>";
+			echo "<td>" . $vetorAlcancado[$i] . "%" . "</td>";
+
+			if ($registros > 1 && $repeat != 0 && $mesclaM == false) {
+				echo "<td rowspan=" . $registros . ">" . round($somaAlcancado,2) . "%" . "</td>";
+				$mesclaM = true;
+			}
+
+			if ($repeat == 0 && $vetorRegistro[$i-1] != $vetorRegistro[$i]) {
+				echo "<td></td>"; 
+				$mesclaM = false;
+			}
+				
+			if ($vetorRegistro[$i] != $vetorRegistro[$i + 1] && $repeat == 0){
+				$mescla = false; 
+				$mesclaM = false;
+			}
+			
+			echo "<td>" . $vetorObservacao[$i] . "</td>";	
+		echo "</tr>";
+	}
+
+	echo "</table>";	
+
+?></body>
 </html>
