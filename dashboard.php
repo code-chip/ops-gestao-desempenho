@@ -11,17 +11,18 @@ if ($_SESSION["permissao"] == 1) {
   $cnx = mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO;");
   $ultimoRegistro=$cnx->fetch_array();
   
-  if (date('d') > 22 && $ultimoRegistro["REGISTRO"] > 22) {
-    $anoMes = date('Y-m', strtotime('+1 month'));
-    $mes = date('m', strtotime('+1 month'));
-    $inicioAnoMesDia = date('Y-m-21');
-    $finalAnoMesDia = date('Y-m-20', strtotime('+1 month'));
-  } else {
+  // if (date('d') > 22 && $ultimoRegistro["REGISTRO"] > 22) {
+  //   $anoMes = date('Y-m', strtotime('+1 month'));
+  //   $mes = date('m', strtotime('+1 month'));
+  //   $inicioAnoMesDia = date('Y-m-21');
+  //   $finalAnoMesDia = date('Y-m-20', strtotime('+1 month'));
+  // } else {
     $anoMes = date('Y-m');
+    echo $anoMes;
     $mes = date('m');
     $inicioAnoMesDia = date('Y-m-21', strtotime('-1 month'));
     $finalAnoMesDia = date('Y-m-20');
-  }
+  //}
   //DASH MEDIA GERAL	
 	$cnx= mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO GROUP BY REGISTRO ORDER BY REGISTRO DESC;");
 	$x = 0;
@@ -56,7 +57,7 @@ if ($_SESSION["permissao"] == 1) {
     }
   }
 
-	$cnx=mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
+	$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
 	$x = 0;
 	while ($G6 = $cnx->fetch_array()) {
 		$vtG6Acesso[$x] = $G6["ACESSOS"];
@@ -73,17 +74,17 @@ UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(RE
 UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' 
 UNION ALL SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' ";
   $cnx = mysqli_query($phpmyadmin, $queryFolgasFaltas);
-  $x=0;
-  while($folgasFaltas= $cnx->fetch_array()) {
-    $vtFolgasFaltas[$x]=$folgasFaltas["COUNT(*)"];
+  $x = 0;
+  while($folgasFaltas = $cnx->fetch_array()) {
+    $vtFolgasFaltas[$x] = $folgasFaltas["COUNT(*)"];
     $x++;
   }
   /*DASH SEXO*/
-  $querySexo="SELECT COUNT(*) AS QTD FROM USUARIO WHERE SITUACAO='Ativo' GROUP BY SEXO ORDER BY SEXO DESC;";
-  $cnx= mysqli_query($phpmyadmin, $querySexo);
-  $x=0;
-  while ($sexo= $cnx->fetch_array()) {
-    $vtQtd[$x]=$sexo["QTD"];
+  $querySexo = "SELECT COUNT(*) AS QTD FROM USUARIO WHERE SITUACAO='Ativo' GROUP BY SEXO ORDER BY SEXO DESC;";
+  $cnx = mysqli_query($phpmyadmin, $querySexo);
+  $x = 0;
+  while ($sexo = $cnx->fetch_array()) {
+    $vtQtd[$x] = $sexo["QTD"];
     $x++;
   }
   /*DASH SEXO POR TURNO P04*/
@@ -150,10 +151,8 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
     }
   }
   //DASH RANKING MELHORES DO MÊS - top8
-  $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
-  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
-  GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
+  $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID
+  WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '".$anoMes."' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
   $x=0;
   $cnx= mysqli_query($phpmyadmin, $querytop8);
   while ($top8= $cnx->fetch_array()) {
