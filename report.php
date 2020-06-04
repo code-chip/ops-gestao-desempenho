@@ -53,13 +53,13 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="control">
 					<div class="select is-size-7-touch">
 						<select name="periodo" id="saveDate" style="width: 10em">
-							<option selected="selected" value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-							<option value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
+							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y')?></option>
+							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
 						</select>	
 					</div>
 				</div>
@@ -163,9 +163,12 @@ $setor = trim($_REQUEST['setor']);
 if ( $periodo != "") {
 
 	$date = date_create($periodo);
-	date_add($date, date_interval_create_from_date_string('-1 months'));
+	//date_add($date, date_interval_create_from_date_string('0 months'));
 	$anoMes = date_format($date, 'Y-m');
 	$date = date_format($date, 't/m');
+	echo "<br>".$periodo;
+	echo "<br>".$anoMes;
+	echo "<br>".$date;
 
 	if ($atividade == "agrupado") {
 		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, 
