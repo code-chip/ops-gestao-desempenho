@@ -11,7 +11,7 @@ $contador = 0;
 $totalAlcancado = 0;
 
 if ($_SESSION["permissao"] == 1) {
-	echo "<script>alert('Usuário sem permissão') window.locantion.href='report-private.php'; </script>";
+	echo "<script>alert('Usuário sem permissão'); window.location.href='report-private.php'; </script>";
 }
 
 ?><!DOCTYPE html>
