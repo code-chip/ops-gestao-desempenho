@@ -68,13 +68,16 @@ $totalDesempenho = 0;
 			</div>
 				<div class="field-body">
 					<div class="field is-grouped">							
-						<div class="control">
+						<div class="control has-icons-left">
 							<div class="select">
 								<select name="meta">
 									<option selected="selected"value="">Ambas</option>
 									<option value="AND D.DESEMPENHO>99">Atingida</option>
 									<option value="AND D.DESEMPENHO<100">Não atingida</option>
-								</select>	
+								</select>
+								<span class="icon is-small is-left">
+									<i class="fas fa-bullseye"></i>
+								</span>	
 							</div>
 						</div>
 					<div class="control">
