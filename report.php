@@ -18,6 +18,7 @@ if ($_SESSION["permissao"] == 1) {
 <html>
 <head>
 	<title>Gestão de Desempenho - Relatório Gestão</title>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<script type="text/javascript">
 		$(window).on("load", onPageLoad);
 			function onPageLoad() {
@@ -49,7 +50,7 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 			<div class="field-body">
 			<div class="field is-grouped">							
-				<div class="control">
+				<div class="control has-icons-left">
 					<div class="select is-size-7-touch">
 						<select name="periodo" id="saveDate" style="width: 10em">
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
@@ -59,7 +60,10 @@ if ($_SESSION["permissao"] == 1) {
 							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
 							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
 							<option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						</select>	
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-calendar-alt"></i>
+						</span>	
 					</div>
 				</div>
 			</div>
@@ -69,12 +73,15 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
 							<select name="atividade" style="width: 10em">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
-							</select>	
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-diagnoses"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>						
@@ -84,12 +91,15 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
 							<select name="ordenacao" style="width: 10em">
 								<option value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
-							</select>	
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-chart-line"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>						
@@ -101,7 +111,7 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
 							<select name="setor">
 							<option selected="selected" value="">Todos</option><?php																
@@ -109,7 +119,10 @@ if ($_SESSION["permissao"] == 1) {
 								while($setor = $con->fetch_array()){
 									echo "<option value='AND SETOR_ID=" . $setor["ID"] . "'>" . $setor["NOME"] . "</option>";
 								}?>	
-							</select>	
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-door-open"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>						
@@ -119,7 +132,7 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
-					<div class="control">
+					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
 							<select name="turno" id="salvaTurno" style="width: 10em">
 							<option selected="selected"value="">Todos</option><?php																
@@ -127,7 +140,10 @@ if ($_SESSION["permissao"] == 1) {
 								while($turno = $con->fetch_array()){
 									echo "<option value='AND TURNO_ID=" . $turno["ID"] ."'>" . $turno["NOME"] . "</option>";
 								}?>	
-							</select>	
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-clock"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>						
@@ -137,13 +153,16 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 				<div class="field-body">
 					<div class="field is-grouped">							
-						<div class="control">
+						<div class="control has-icons-left">
 							<div class="select is-size-7-touch">
 								<select name='meta' style="width: 10em">
 									<option selected="selected"value="">Ambos</option>
 									<option value="AND B.DESEMPENHO>=100">Atingida :D</option>
 									<option value="AND B.DESEMPENHO<100">Perdida ;(</option>
-								</select>	
+								</select>
+								<span class="icon is-small is-left">
+							   		<i class="fas fa-bullseye"></i>
+							   	</span>	
 							</div>
 						</div>
 					<div class="control">
