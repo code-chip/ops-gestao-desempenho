@@ -140,22 +140,29 @@ if ( $periodo != "") {
 
 	if ($contador == 0) {
 		echo "<script>alert('Nenhum resultado encontrado!'); </script>";
+		exit;
 	}
+
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE ANO_MES='" . $periodo . "') AS ALCANCADO FROM META_PESO");
+	$peso = $cx->fetch_array();
+	$media = round($totalDesempenho / ($contador - $folga - $treinamento), 2);
 } 
 
 if ( $periodo != "" && $contador != 0) : ?>
 <hr/>
 	<div class="table__wrapper">
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">
-		<tr>
-			<td>Colaborador: <?php echo $nome?></td>
-			<td>Atestado's: <?php echo $atestado;?></td>
-			<td>Falta's: <?php echo $falta;?></td>
-			<td>Folga's: <?php echo $folga;?></td>
-			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Maior: <?php echo $maior."%"?></td>
-			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$treinamento), 2)."%" ?></td>
-		</tr>
+		<tr><?php echo
+			"<td>Colaborador:  " . $nome . "</td>
+			<td>Atestado's: " . $atestado . "</td>
+			<td>Falta's: " . $falta . "</td>
+			<td>Folga's: " . $folga . "</td>
+			<td>Menor: " . $menor . "%" . "</td>
+			<td>Maior: " . $maior . "%" . "</td>
+			<td>Media: " . $media . "%"  . "</td>
+			<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2) . "%" . "</td>
+			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";
+		?></tr>
 	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
 	<tr>
