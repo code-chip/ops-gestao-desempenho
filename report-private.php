@@ -48,12 +48,11 @@ $totalDesempenho = 0;
 					<div class="control has-icons-left">
 						<div class="select">
 							<select name="atividade">
-								<option selected="selected" value="">Todas</option>	
-								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"; 
-								$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
-								while($atividade = $con->fetch_array()):{ $vtId[$x] = $atividade["ID"];?>
-									<option value="AND A.ID=<?php echo $vtId[$x]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
-								<?php $x;} endwhile;?>								
+								<option selected="selected" value="">Todas</option><?php	
+								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo'"); 
+								while ($atividade = $con->fetch_array()) { 
+									echo "<option value='AND A.ID=" . $atividade["ID"] . "'>" . $atividade["NOME"] . "</option>";
+								} ?>								
 							</select>
 							<span class="icon is-small is-left">
 								<i class="fas fa-diagnoses"></i>
@@ -154,8 +153,8 @@ if ( $periodo != "" && $contador != 0) : ?>
 			<td>Falta's: <?php echo $falta;?></td>
 			<td>Folga's: <?php echo $folga;?></td>
 			<td>Menor: <?php echo $menor."%"?></td>
-			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$treinamento), 2)."%" ?></td>
 			<td>Maior: <?php echo $maior."%"?></td>
+			<td>Media: <?php echo round($totalDesempenho/($contador-$folga-$treinamento), 2)."%" ?></td>
 		</tr>
 	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
