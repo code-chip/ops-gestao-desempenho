@@ -1,35 +1,33 @@
 <?php 
-$menuAtivo="Relatórios";
-include('menu.php');
-$sql=trim($_POST['sql']);
 
-if(isset($_POST["executar"])!=null && $_SESSION["permissao"]==4){
-	if($sql!=""){				
-		$cnx= mysqli_query($phpmyadmin, $sql);
-		$erro=mysqli_error($phpmyadmin);
-		$x=0;
-		if($erro==null){
-			while ($row=mysqli_fetch_array($cnx)) { 
+$menuAtivo = "relatorios";
+require('menu.php');
+$sql = trim($_POST['sql']);
+
+if (isset($_POST["executar"]) != null && $_SESSION["permissao"] == 4) {
+	if ($sql != "") {				
+		$cnx = mysqli_query($phpmyadmin, $sql);
+		$erro = mysqli_error($phpmyadmin);
+		$x = 0;
+
+		if ($erro == null) {
+			while ($row = mysqli_fetch_array($cnx)) { 
 				foreach ($cnx as $result) { 
-					$vt[$x]=preg_replace("/[^\p{L}\p{N}\s_]/", " ", str_replace("Array", "", print_r($result,true)));
+					$vt[$x] = preg_replace("/[^\p{L}\p{N}\s_]/", " ", str_replace("Array", "", print_r($result,true)));
 					$x++;
 				} 
 			}				
-		}
-		else{
+		} else {
 			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
 		}
-	}	
-	else{
+	} else {
 		echo "<script>alert('O campo não pode está vazio!!')</script>";
 	}
+} else if (isset($_POST["executar"]) != null) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
-else if(isset($_POST["executar"])!=null){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
-}
-?>
-<!DOCTYPE html>
+
+?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">	
@@ -54,16 +52,18 @@ else if(isset($_POST["executar"])!=null){
 					<button name="executar" type="submit" class="button is-primary">Executar</button>
 				</div>	
 	     	</form>	     	
-	   	</div>
-	<?php if($x>0): ?>   		
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch"><?php	
-		for($y=0 ;$y<sizeof($vt) ;$y++):?>
-			<tr>
-				<td class="is-size-7"><?php echo $vt[$y]; ?></td>
-			</tr>	
-		<?php endfor?>		
-	</table>
-	<?php endif; ?>
+	   	</div><?php
+		
+		if ($x > 0) {  		
+			echo "<table class='table is-bordered pricing__table is-fullwidth is-size-7-touch'>";	
+			for ($y = 0 ; $y < sizeof($vt) ; $y++) {
+				echo "<tr>
+					<td class='is-size-7'>" . $vt[$y] . "</td>
+				</tr>";	
+			}		
+			echo "</table>";
+		}	
+	?></section>
 	<script type="text/javascript">
 		$("#buscar").on("blur", function(e) {
 	  		verify(e);
@@ -81,7 +81,6 @@ else if(isset($_POST["executar"])!=null){
 		    $('p').html('');
 		  }
 		}	
-	</script>
-	</section>	 	
+	</script>	 	
 </body>
 </html>
