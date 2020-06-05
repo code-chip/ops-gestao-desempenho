@@ -1,79 +1,70 @@
 <?php 
-$menuAtivo="dashboard";
-include('menu.php');
+
+$menuAtivo = "dashboard";
+require('menu.php');
 require("query.php");
-  $queryReg="SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"];
-  $cnx=mysqli_query($phpmyadmin, $queryReg);
-  $ultimoRegistro=$cnx->fetch_array();
-  if(date('d')>22 && $ultimoRegistro["REGISTRO"]>22){
-    $anoMes=date('Y-m', strtotime('+1 month'));
-    $mes=date('m', strtotime('+1 month'));
-    $inicioAnoMesDia=date('Y-m-21');
-    $finalAnoMesDia=date('Y-m-20', strtotime('+1 month'));
+
+$cnx=mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]);
+$ultimoRegistro = $cnx->fetch_array();
+  
+$anoMes=date('Y-m');
+$mes=date('m');
+
+//DASH DISTRIBUIÇÃO POR ATIVIDADES -- dash-atividades
+$x3=0;
+$idsAtiv="";
+$cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE ANO_MES='" . $anoMes . "' AND USUARIO_ID=".$_SESSION["userId"]." GROUP BY ATIVIDADE_ID");
+  
+while ($G4 = $cnx->fetch_array()) {
+  $vtG4nome[$x3] = $G4["NOME"];
+  $vtG4vezes[$x3] = $G4["VEZES"];
+  
+  if ($x3 == 0) {
+    $idsAtiv = $idsAtiv. "" . $G4["ATIVIDADE_ID"];
+  } else {
+      $idsAtiv = $idsAtiv.",".$G4["ATIVIDADE_ID"];
   }
-  else{
-    $anoMes=date('Y-m');
-    $mes=date('m');
-    $inicioAnoMesDia=date('Y-m-21', strtotime('-1 month'));
-    $finalAnoMesDia=date('Y-m-20');
-  }
-  //DASH DISTRIBUIÇÃO POR ATIVIDADES -- dash-atividades
-  $g4="SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D
-INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID
-WHERE REGISTRO>='".$inicioAnoMesDia."' AND REGISTRO<='".$finalAnoMesDia."' AND USUARIO_ID=".$_SESSION["userId"]."
-GROUP BY ATIVIDADE_ID";
-  $x3=0;
-  $idsAtiv="";
-  $cnx= mysqli_query($phpmyadmin, $g4);
-  echo mysqli_error($phpmyadmin);
-  while($G4 = $cnx->fetch_array()){
-    $vtG4nome[$x3]= $G4["NOME"];
-    $vtG4vezes[$x3]= $G4["VEZES"];
-    if($x3==0){
-      $idsAtiv=$idsAtiv."".$G4["ATIVIDADE_ID"];
-    }
-    else{
-      $idsAtiv=$idsAtiv.",".$G4["ATIVIDADE_ID"];
-    }    
+
+  $x3++;        
+}
+//DASH DESEMPENHO NA EMPRESA -- dash-mediageral
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC;");
+  
+while ($mediaGeral = $cnx->fetch_array()) {
+  $vtmediaGeral[$x] = $mediaGeral["MEDIA"];
+  $x++;       
+}
+
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");");
+if (mysqli_error($phpmyadmin) == null) {
+  while ($G41 = $cnx->fetch_array()) {
+    $vtG4nome[$x3] = $G41["NOME"];
+    $vtG4vezes[$x3] = $G41["VEZES"];
     $x3++;        
   }
-  //DASH DESEMPENHO NA EMPRESA -- dash-mediageral
-  $queryMediaGeral="SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC;";
+} else {
+  $vtG4nome[0] = "Nenhuma";
+  $vtG4vezes[0] = 20;
+}
+
+//DASH ACESSOS NO MÊS
+$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
   $x=0;
-  $cnx= mysqli_query($phpmyadmin, $queryMediaGeral);
-  while($mediaGeral = $cnx->fetch_array()){
-    $vtmediaGeral[$x]= $mediaGeral["MEDIA"];
-    $x++;       
-  }  
-  $g41="SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");";
-  $cnx= mysqli_query($phpmyadmin, $g41);
-  if(mysqli_error($phpmyadmin)==null){
-    while($G41 = $cnx->fetch_array()){
-      $vtG4nome[$x3]= $G41["NOME"];
-      $vtG4vezes[$x3]= $G41["VEZES"];
-      $x3++;        
-    }
-  }
-  else{
-    $vtG4nome[0]= "Nenhuma";
-    $vtG4vezes[0]= 20;
-  }
-  //DASH ACESSOS NO MÊS
-  $g6="SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;";
-  $cnx=mysqli_query($phpmyadmin, $g6);
-  $x=0;
-  while ($G6= $cnx->fetch_array()) {
-    $vtG6Acesso[$x]=$G6["ACESSOS"];
-    $vtG6Mes[$x]=$G6["MES"];
-    $x++;
-  }
-  while($x<5){//PREENCHE OS MESES ANTERIORES COM ZERO P/ GERAR O GRÁFICO.
-    $vtG6Acesso[$x]=0;
-    $vtG6Mes[$x]=$vtG6Mes[$x-1]-1;
-    $x++;
-  }
-  /*DASH RELAÇÃO FOLGAS E FALTAS*/
-  $queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
+while ($G6= $cnx->fetch_array()) {
+  $vtG6Acesso[$x] = $G6["ACESSOS"];
+  $vtG6Mes[$x] = $G6["MES"];
+  $x++;
+}
+
+while($x < 5){//PREENCHE OS MESES ANTERIORES COM ZERO P/ GERAR O GRÁFICO.
+  $vtG6Acesso[$x] = 0;
+  $vtG6Mes[$x] = $vtG6Mes[$x-1]-1;
+  $x++;
+}
+
+/*DASH RELAÇÃO FOLGAS E FALTAS*/
+$queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
 UNION ALL
 SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]." AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
 UNION ALL
@@ -88,76 +79,86 @@ UNION ALL
 SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]." AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' 
 UNION ALL
 SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]." AND DATE_FORMAT(REGISTRO,'%m')='".date('m')."' ";
-  $cnx= mysqli_query($phpmyadmin, $queryFolgasFaltas);
-  $x=0;
-  while($folgasFaltas= $cnx->fetch_array()) {
-    $vtFolgasFaltas[$x]=$folgasFaltas["COUNT(*)"];
-    $x++;
-  }
-  /*DASH META ATINGIDA PERDIDA NO MÊS meta-atingida-perdida-mes */
-  $queryAtingPerd="SELECT IFNULL(COUNT(*),0) AS ATINGIDA,(SELECT IFNULL(COUNT(*),0) FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO<100 AND REGISTRO>='".$inicioAnoMesDia."' AND REGISTRO<='".$finalAnoMesDia."') AS PERDIDA FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO>=100 AND REGISTRO>='".$inicioAnoMesDia."' AND REGISTRO<='".$finalAnoMesDia."';";
-  $cnx= mysqli_query($phpmyadmin, $queryAtingPerd);
-  $x=0;
-  $atinPerd= $cnx->fetch_array(); 
-  /*DASH DISTRIBUIÇÃO AUSÊNCIA distribuicao-ausencia */
-  $queryDistAus="SELECT IFNULL(COUNT(*),0) as QTD, 'Folga' FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]."
+
+$cnx = mysqli_query($phpmyadmin, $queryFolgasFaltas);
+$x = 0;
+
+while ($folgasFaltas= $cnx->fetch_array()) {
+  $vtFolgasFaltas[$x] = $folgasFaltas["COUNT(*)"];
+  $x++;
+}
+
+/*DASH META ATINGIDA PERDIDA NO MÊS meta-atingida-perdida-mes */
+$cnx = mysqli_query($phpmyadmin, "SELECT IFNULL(COUNT(*),0) AS ATINGIDA,(SELECT IFNULL(COUNT(*),0) FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO<100 AND ANO_MES='" . $anoMes . "') AS PERDIDA FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]." AND DESEMPENHO>=100 AND ANO_MES='" . $anoMes . "';");
+
+$x = 0;
+$atinPerd = $cnx->fetch_array(); 
+
+/*DASH DISTRIBUIÇÃO AUSÊNCIA distribuicao-ausencia */
+$queryDistAus="SELECT IFNULL(COUNT(*),0) as QTD, 'Folga' FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Falta' FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Atestado' FROM DESEMPENHO WHERE PRESENCA_ID=4 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRESENCA_ID=5 AND USUARIO_ID=".$_SESSION["userId"].";";
-  $cnx= mysqli_query($phpmyadmin, $queryDistAus);
-  $x=0;
-  while ($DistAus= $cnx->fetch_array()) {
-    $vtDistAusNome[$x]=$DistAus["Folga"];
-    $vtDistAusQtd[$x]=$DistAus["QTD"];
-    $x++;
-  }
-  //DASH RANKING MELHORES DO MÊS - top8
-  $querytop8="SELECT USUARIO_ID, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
-  GROUP BY USUARIO_ID ORDER BY 2 DESC;";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querytop8);
-  while ($top8= $cnx->fetch_array()) {
-    $vtIdTop8[$x]=$top8["USUARIO_ID"];
-    $vtMediaTop8[$x]=$top8["MEDIA"];
-    $x++;
-  }
-  $x=0;
-  $totalPosicoes= mysqli_num_rows($cnx);
-  while ($x<sizeof($vtIdTop8)) {
-    if($vtIdTop8[$x]==$_SESSION["userId"] && $x< $totalPosicoes-9){//COMPARA O ID DO USUÁRIO DO VETOR COM USUÁRIO DA SESSÃO.
-      $posTop8=$x+1; $z=0;//SALVA A POSIÇÃO DO USUÁRIO.
-      while ($z <= 7) {
-        $pos=$x+1;
-        $vtPosTop8[0]=$_SESSION["nameUser"];
-        $vtPosTop8[$z]="Anônimo posição ".$pos;
-        $vtMedTop8[$z]=$vtMediaTop8[$x];
-        $z++; $x++;
-      }
-      break;
-    }
-    else if($x> $totalPosicoes-9){//VERIFICA SE A POSIÇÃO DO USUÁRIO ESTÁ EMTRE AS ÚLTIMAS.
-       $z=0;
-      while ($z <= 7) {
-        if($vtIdTop8[$x]==$_SESSION["userId"]){
-            $posTop8=$x+1;//SALVA A POSIÇÃO DO USUÁRIO.
-            $vtPosTop8[$z]=$_SESSION["nameUser"];
-            $vtMedTop8[$z]=$vtMediaTop8[$x];
-            $z++; $x++;
-          }
-          else{
-            $pos=$x+1;          
-            $vtPosTop8[$z]="Anônimo posição ".$pos;
-            $vtMedTop8[$z]=$vtMediaTop8[$x];
-            $z++; $x++;
-          }
-      }
-    }
-    else{
+
+$cnx = mysqli_query($phpmyadmin, $queryDistAus);
+$x = 0;
+
+while ($DistAus= $cnx->fetch_array()) {
+  $vtDistAusNome[$x] = $DistAus["Folga"];
+  $vtDistAusQtd[$x] = $DistAus["QTD"];
+  $x++;
+}
+
+//DASH RANKING MELHORES DO MÊS - top8
+$querytop8="SELECT USUARIO_ID, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO WHERE ANO_MES='" . $anoMes . "' GROUP BY USUARIO_ID ORDER BY 2 DESC;";
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, $querytop8);
+
+while ($top8 = $cnx->fetch_array()) {
+  $vtIdTop8[$x]=$top8["USUARIO_ID"];
+  $vtMediaTop8[$x]=$top8["MEDIA"];
+  $x++;
+}
+
+$x=0;
+$totalPosicoes = mysqli_num_rows($cnx);
+
+while ($x<sizeof($vtIdTop8)) {
+  if($vtIdTop8[$x]==$_SESSION["userId"] && $x< $totalPosicoes-9){//COMPARA O ID DO USUÁRIO DO VETOR COM USUÁRIO DA SESSÃO.
+    $posTop8=$x+1; $z=0;//SALVA A POSIÇÃO DO USUÁRIO.
+    while ($z <= 7) {
+      $pos = $x+1;
+      $vtPosTop8[0] = $_SESSION["nameUser"];
+      $vtPosTop8[$z] = "Anônimo posição ".$pos;
+      $vtMedTop8[$z] = $vtMediaTop8[$x];
+      $z++; 
       $x++;
     }
+    break;
+  } else if ($x > $totalPosicoes-9) {//VERIFICA SE A POSIÇÃO DO USUÁRIO ESTÁ EMTRE AS ÚLTIMAS.
+    $z = 0;
+    while ($z <= 7) {
+      if($vtIdTop8[$x] == $_SESSION["userId"]){
+        $posTop8 = $x+1;//SALVA A POSIÇÃO DO USUÁRIO.
+        $vtPosTop8[$z] = $_SESSION["nameUser"];
+        $vtMedTop8[$z] = $vtMediaTop8[$x];
+        $z++; 
+        $x++;
+      } else {
+        $pos = $x+1;          
+        $vtPosTop8[$z] = "Anônimo posição " . $pos;
+        $vtMedTop8[$z] = $vtMediaTop8[$x];
+        $z++; $x++;
+      }
+    }
+  } else {
+    $x++;
   }
-  //DASH MEDIA POR ATIVIDADE
-  $queryMedAtiv="SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout,  ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=1 GROUP BY 3 
+}
+
+//DASH MEDIA POR ATIVIDADE
+$queryMedAtiv="SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout,  ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=1 GROUP BY 3 
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Separação', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=2 GROUP BY 3 
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Embalagem', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=3 GROUP BY 3 
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'PBL', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=4 GROUP BY 3 
@@ -165,38 +166,38 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Recebimento', DATE_FORMAT(REGIS
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Devolução', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=6 GROUP BY 3 
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Avarias', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=7 GROUP BY 3
 UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE USUARIO_ID=50 AND ATIVIDADE_ID=8 GROUP BY 2) ATIVIDADES ORDER BY REGISTRO DESC, ID";
-  $x=0;
-  $cnx=mysqli_query($phpmyadmin, $queryMedAtiv);
-  while ($medAtiv=$cnx->fetch_array()) {
-    $vtmedAtivMedia[$x]=$medAtiv["MEDIA"];
-    $vtmedAtivAtividade[$x]=$medAtiv["Chechout"];
-    $vtmedAtivId[$x]=$medAtiv["ID"];
-    $vtmedAtivData[$x]=$medAtiv["REGISTRO"];
-    $x++;
-  }
-  $yz=0;
-  for($y=0;$y< 2; $y++){
-    for($z=0;$z<8;$z++){
-      $md[$y][$z]=0;
-      if($vtmedAtivId[$z]==$z+1){
-        $md[$y][$z]=$vtmedAtivMedia[$yz];
-        $mdData[$y][$z]=$vtmedAtivData[$yz];
-        $yz++;  
-      }
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, $queryMedAtiv);
+while ($medAtiv = $cnx->fetch_array()) {
+  $vtmedAtivMedia[$x] = $medAtiv["MEDIA"];
+  $vtmedAtivAtividade[$x] = $medAtiv["Chechout"];
+  $vtmedAtivId[$x] = $medAtiv["ID"];
+  $vtmedAtivData[$x] = $medAtiv["REGISTRO"];
+  $x++;
+}
+
+$yz=0;
+for ($y = 0; $y < 2; $y++) {
+  for ($z = 0; $z < 8; $z++){
+    $md[$y][$z] = 0;
+    
+    if( $vtmedAtivId[$z] == $z+1) {
+      $md[$y][$z] = $vtmedAtivMedia[$yz];
+      $mdData[$y][$z] = $vtmedAtivData[$yz];
+      $yz++;  
     }
   }
-?>
-<!DOCTYPE html>
+}
+
+?><!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=device-widht, initial-scale=1">
   <title>Gestão de Desempenho - Dashboard</title>
   <link rel="stylesheet" href="css/login.css" />
-  <link rel="stylesheet" href="css/personal.css" />
-  <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">-->
   <link rel="stylesheet" href="css/bulma.min.css"/>
   <link rel="stylesheet" href="css/animate.css" />
-  <script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
@@ -218,7 +219,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
         ]);
 
         var options = {
-          title: 'Suas atividades <?php $m=$mes-1; echo "21/".$m." a 20/".$mes;?>',
+          title: 'Suas atividades <?php echo "01/".$mes." a ".date('t/m'); ?>',
           is3D: true,
         };
 
@@ -316,7 +317,7 @@ UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGIS
         ]);
 
         var options = {
-          title: 'Meta atingida/perdida <?php $m=$mes-1; echo "21/".$m." a 20/".$mes;?>',
+          title: 'Meta atingida/perdida <?php echo "01/".$mes." a ".date('t/m'); ?>',
           pieHole: 0.7,
         };
 
