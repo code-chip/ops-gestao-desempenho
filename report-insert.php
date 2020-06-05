@@ -21,6 +21,7 @@ $idMeta = 0;
 	<title>Gestão de Desempenho - Inserir Desempenho</title>
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
@@ -69,7 +70,7 @@ $idMeta = 0;
 				</div>
 				<div class="field-body">
 					<div class="field" style="max-width:17em;">							
-						<div class="control">
+						<div class="control has-icons-left">
 							<div class="select">
 								<select name="turno">
 									<option selected="selected" value="">Selecione</option><?php	
@@ -78,6 +79,9 @@ $idMeta = 0;
 										echo "<option value=" . $turno["ID"] . ">" . $turno["NOME"] . "</option>";
 									} ?>	
 								</select>
+								<span class="icon is-small is-left">
+									<i class="fas fa-clock"></i>
+								</span>
 							</div>&nbsp&nbsp&nbsp
 						</div>
 					</div>
@@ -89,7 +93,7 @@ $idMeta = 0;
 				</div>
 				<div class="field-body">
 					<div class="field">							
-						<div class="control">
+						<div class="control has-icons-left">
 							<div class="select">
 								<select name="setor">
 									<option selected="selected" value="">Selecione</option><?php	
@@ -97,7 +101,10 @@ $idMeta = 0;
 									while($setor = $con->fetch_array()){
 										echo "<option value=" . $setor["ID"] . ">" . $setor["NOME"] . "</option>";
 									}?>	
-								</select>	
+								</select>
+								<span class="icon is-small is-left">
+									<i class="fas fa-door-open"></i>
+								</span>	
 							</div>
 						</div>						
 					</div>
@@ -107,8 +114,11 @@ $idMeta = 0;
 				<div class="field-label"></div>
 				<div class="field-body">
 					<div class="field">
-						<div class="control">
-							<input type="text" style="max-width:8.0em;" class="input registro" name="dataSetada" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
+						<div class="control has-icons-left">
+							<input type="text" style="max-width:12.0em;" class="input registro" name="dataSetada" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
+							<span class="icon is-small is-left">
+								<i class="fas fa-calendar-alt"></i>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -332,7 +342,6 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 			}
 
 			$anoMes = new DateTime($registros[$i]);
-			$anoMes->add(new DateInterval('P1M'));
 			$anoMes = $anoMes->format('Y-m');
 			
 			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
