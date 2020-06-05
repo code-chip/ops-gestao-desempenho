@@ -52,7 +52,7 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field is-grouped">							
 				<div class="control has-icons-left">
 					<div class="select is-size-7-touch">
-						<select name="periodo" id="saveDate" style="width: 10em">
+						<select name="periodo" id="saveDate" style="width: 12em">
 							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y')?></option>
 							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -75,7 +75,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
-							<select name="atividade" style="width: 10em">
+							<select name="atividade" style="width: 11.7em">
 								<option selected="selected" value="agrupado">Agrupado</option>	
 								<option value="separado">Separado</option>	
 							</select>
@@ -87,13 +87,13 @@ if ($_SESSION["permissao"] == 1) {
 				</div>						
 			</div>
 			<div class="field-label is-normal"><!--SELEÇÃO ORDENAÇÃO-->
-				<label for="ordenacao" class="label is-size-7-touch">Ordenação:</label>
+				<label for="ordenacao" class="label is-size-7-touch">Ordem:</label>
 			</div>
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
-							<select name="ordenacao" style="width: 10em">
+							<select name="ordenacao" style="width: 11.8em">
 								<option value="NOME">Nome</option>	
 								<option value="DESEMPENHO DESC, NOME">Desempenho</option>	
 							</select>
@@ -113,7 +113,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
-							<select name="setor">
+							<select name="setor" style="width: 12em">
 							<option selected="selected" value="">Todos</option><?php																
 								$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
 								while($setor = $con->fetch_array()){
@@ -134,7 +134,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="field is-grouped">							
 					<div class="control has-icons-left">
 						<div class="select is-size-7-touch">
-							<select name="turno" id="salvaTurno" style="width: 10em">
+							<select name="turno" id="salvaTurno" style="width: 12em">
 							<option selected="selected"value="">Todos</option><?php																
 								$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
 								while($turno = $con->fetch_array()){
@@ -155,7 +155,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field is-grouped">							
 						<div class="control has-icons-left">
 							<div class="select is-size-7-touch">
-								<select name='meta' style="width: 10em">
+								<select name='meta' style="width: 12em">
 									<option selected="selected"value="">Ambos</option>
 									<option value="AND B.DESEMPENHO>=100">Atingida :D</option>
 									<option value="AND B.DESEMPENHO<100">Perdida ;(</option>
@@ -364,15 +364,15 @@ if ($contador != 0): ?>
 	<script type="text/javascript">
     	google.charts.load('current', {'packages':['corechart']});
       	google.charts.setOnLoadCallback(drawChart);
-      	var t='<?php echo $teste; ?>';
-      	var p=parseFloat('<?php echo $fava?>');
+      	var t = '<?php echo $teste; ?>';
+      	var p = parseFloat('<?php echo $fava?>');
       	function drawChart() {
 	        var data = google.visualization.arrayToDataTable([
 		        ['Mês', 'avg', 'min'],
-		        ['<?php echo strftime('%h', strtotime("-2 months"))?>',  parseFloat('<?php echo $vtMedia[0]?>'), parseFloat('<?php echo $vtMenor[0]?>')],
-		        ['<?php echo strftime('%h', strtotime("-1 months"))?>',  parseFloat('<?php echo $vtMedia[1]?>'), parseFloat('<?php echo $vtMenor[1]?>')],
-		        ['<?php echo strftime('%h')?>',  parseFloat('<?php echo $vtMedia[2]?>'), parseFloat('<?php echo $vtMenor[2]?>')],
-		        ['<?php echo strftime('%h', strtotime("+1 months"))?>',  parseFloat('<?php echo $vtMedia[3]?>'), parseFloat('<?php echo $vtMenor[3]?>')]
+		        ['<?php echo strftime('%h', strtotime("-3 months"))?>',  parseFloat('<?php echo $vtMedia[0]?>'), parseFloat('<?php echo $vtMenor[0]?>')],
+		        ['<?php echo strftime('%h', strtotime("-2 months"))?>',  parseFloat('<?php echo $vtMedia[1]?>'), parseFloat('<?php echo $vtMenor[1]?>')],
+		        ['<?php echo strftime('%h', strtotime("-1 months"))?>',  parseFloat('<?php echo $vtMedia[2]?>'), parseFloat('<?php echo $vtMenor[2]?>')],
+		        ['<?php echo strftime('%h')?>',  parseFloat('<?php echo $vtMedia[3]?>'), parseFloat('<?php echo $vtMenor[3]?>')]
 	        ]);
 	        var options = {
 	          	title: 'Desempenho da Empresa',
@@ -463,11 +463,13 @@ if ($contador != 0): ?>
 		    var chart = new google.visualization.ColumnChart(document.getElementById("dash-top5"));
 		    chart.draw(view, options);
 		}
-	</script>
-<?php endif;
-	if ($contador == 0 && isset($_GET["filtro"]) != null) {
-		echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";		
-	}
-  ?>
-</body>
+	</script><?php
+
+endif;
+	
+if ($contador == 0 && isset($_GET["filtro"]) != null) {
+	echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";		
+}
+  
+?></body>
 </html>
