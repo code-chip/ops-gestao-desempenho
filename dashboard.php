@@ -4,7 +4,7 @@ require('menu.php');
 require("query.php");
 
 if ($_SESSION["permissao"] == 1) {
-  echo "<script>alert('Usuário sem permissão'); window.location.href='dashboard-private.php'; <script>";
+  echo "<script>alert('Usuário sem permissão'); window.location.href='dashboard-private.php'; </script>";
 }
 
 //SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
