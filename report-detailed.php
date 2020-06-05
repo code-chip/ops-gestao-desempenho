@@ -63,7 +63,7 @@ if ( $_SESSION["permissao"] == 1 ) {
 		$media = "0%";
 		$menor = "0%";
 	}
-	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE ANO_MES='" . trim($_REQUEST['anoMes']) . "') AS ALCANCADO FROM META_PESO");
+	$cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT DESEMPENHO FROM META_EMPRESA WHERE ANO_MES='" . $periodo . "') AS ALCANCADO FROM META_PESO");
 	$peso = $cx->fetch_array();
 } 
 
