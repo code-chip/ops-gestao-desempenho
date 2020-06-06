@@ -1,11 +1,10 @@
 <?php 
-$menuAtivo = 'configuracoes';
 
+$menuAtivo = 'configuracoes';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 } else {
 	if (isset($_POST["inserirempresa"]) != null) {
 		
@@ -29,8 +28,8 @@ if ($_SESSION["permissao"] == 1) {
 		}
 	}
 }
-?>
-<!DOCTYPE html>
+
+?><!DOCTYPE html>
 <html>
 <head>
 	<empresa charset="UTF-8">	
@@ -107,7 +106,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputName">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputAnoMes">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
@@ -155,7 +154,7 @@ if ($_SESSION["permissao"] == 1) {
 								<button name="inserirempresa" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="submit" class="button is-primary is-size-7-touch" value="Filtrar" onclick="addAgain()">Limpar</button>
+								<button name="limpar" type="reset" class="button is-primary is-size-7-touch" onclick="clearFormGoalWeight()">Limpar</button>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary is-size-7-touch">Voltar</a>
