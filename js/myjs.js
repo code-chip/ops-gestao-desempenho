@@ -186,3 +186,15 @@ function check() {
 	
 	return true;
 }
+
+//GOAL-WEIGHT
+function clearFormGoalWeight(){
+	document.getElementById("msgempresaOk").style.display = "none";
+	document.getElementById("inputempresa").classList.remove("is-success");
+
+	document.getElementById("msgfuncionarioOk").style.display="none";
+	document.getElementById("inputfuncionario").classList.remove("is-success");
+
+	document.getElementById("msganoMesOk").style.display="none";
+	document.getElementById("inputAnoMes").classList.remove("is-success");
+}
