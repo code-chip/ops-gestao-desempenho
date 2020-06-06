@@ -15,7 +15,7 @@ if ($_SESSION["permissao"] == 1) {
 
 		if (mysqli_num_rows($checkDuplic) == 0) {
 
-			mysqli_query($phpmyadmin, "INSERT INTO META_PESO (EMPRESA, OPERADOR, SITUACAO) VALUES (" . trim($_POST['empresa']) . ", " . trim($_POST['funcionario']) . ", '" . trim($_POST['situacao']) . "');");
+			mysqli_query($phpmyadmin, "INSERT INTO META_PESO (EMPRESA, OPERADOR, ANO_MES, SITUACAO) VALUES (" . trim($_POST['empresa']) . ", " . trim($_POST['funcionario']) . ", '" . trim($_POST['anoMes']) . "','" . trim($_POST['situacao']) . "');");
 			$erro = mysqli_error($phpmyadmin);
 			
 			if ($erro == "" && $erro == null) {
@@ -60,7 +60,7 @@ if ($_SESSION["permissao"] == 1) {
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O empresa da empresa empresa é obrigatório</p>		    	
+						    	<p class="help is-danger">Peso da empresa é obrigatório</p>		    	
 							   	</div>
 							   	<div id="msgempresaOk" style="display:none;">
 							    	<span class="icon is-small is-right">
@@ -86,9 +86,35 @@ if ($_SESSION["permissao"] == 1) {
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O empresa da empresa funcionário é obrigatório</p>		
+						    	<p class="help is-danger">Peso do funcionário é obrigatório</p>		
 							   	</div>
 							   	<div id="msgfuncionarioOk" style="display:none;">
+							    	<span class="icon is-small is-right">
+							      		<i class="fas fa-check"></i>
+							    	</span>
+							   	</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Ano/Mês*</label>
+					</div>
+					<div class="field-body">
+						<div class="field" style="max-width:24.2em;">							
+							<div class="control has-icons-left has-icons-right" id="anoMes">
+								<input type="text" class="input required maskanoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputName">
+								<span class="icon is-small is-left">
+							   		<i class="fas fa-calendar-alt"></i>
+							   	</span>
+								<div id="msganoMesNok" style="display:none;">
+						    	<span class="icon is-small is-right">
+						      		<i class="fas fa-fw"></i>
+						    	</span>
+						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
+							   	</div>
+							   	<div id="msganoMesOk" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
