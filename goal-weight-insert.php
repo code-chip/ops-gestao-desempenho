@@ -40,6 +40,9 @@ if ($_SESSION["permissao"] == 1) {
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.button{ width: 121px; }
+	</style>
 </head>
 <body>
 	<section class="section">
@@ -149,13 +152,13 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="inserirempresa" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirempresa" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="submit" class="button is-primary" value="Filtrar" onclick="addAgain()">Limpar</button>
+								<button name="limpar" type="submit" class="button is-primary is-size-7-touch" value="Filtrar" onclick="addAgain()">Limpar</button>
 							</div>
 							<div class="control">
-								<a href="metric.php" class="button is-primary">Voltar</a>
+								<a href="metric.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>						
 						</div>
 					</div>
