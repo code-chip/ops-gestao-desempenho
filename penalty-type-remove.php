@@ -83,17 +83,6 @@ if ($_SESSION["permissao"] == 1) {
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-book-reader"></i>
 							   	</span>
-								<div id="msgNok1" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">O tipo da penalidade é obrigatório</p>		    	
-							   	</div>
-							   	<div id="msgOk1" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>
 						</div>
 					</div>
@@ -109,17 +98,6 @@ if ($_SESSION["permissao"] == 1) {
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-angle-double-down"></i>
 							   	</span>
-								<div id="msgNok2" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">O valor da penalidade é obrigatório</p>		
-							   	</div>
-							   	<div id="msgOk2" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>
 						</div>
 					</div>
@@ -132,17 +110,6 @@ if ($_SESSION["permissao"] == 1) {
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-right">
 								<textarea name="descricao" class="textarea required" disabled><?php echo $penalty["DESCRICAO"]; ?></textarea>
-								<div id="msgNok3" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">A descrição é obrigatória</p>		
-							   	</div>
-							   	<div id="msgOk3" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>						
 						</div>
 					</div>
