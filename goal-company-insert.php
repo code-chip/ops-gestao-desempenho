@@ -66,7 +66,7 @@ if ($_SESSION["permissao"] == 1) {
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O valor da meta é obrigatório</p>		    	
+						    	<p class="help is-danger">O valor da Meta é obrigatório.</p>		    	
 							   	</div>
 							   	<div id="msgOk1" style="display:none;">
 							    	<span class="icon is-small is-right">
@@ -92,7 +92,7 @@ if ($_SESSION["permissao"] == 1) {
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O valor do alcançado é obrigatório, pode ser zero</p>		
+						    	<p class="help is-danger">O valor do Alcançado é obrigatório, pode ser zero.</p>		
 							   	</div>
 							   	<div id="msgOk2" style="display:none;">
 							    	<span class="icon is-small is-right">
@@ -118,7 +118,7 @@ if ($_SESSION["permissao"] == 1) {
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
-						    	<p class="help is-danger">O data início da meta empresa é obrigatório</p>		    	
+						    	<p class="help is-danger">Ano/Mês da meta empresa é obrigatório.</p>		    	
 							   	</div>
 							   	<div id="msgOk3" style="display:none;">
 							    	<span class="icon is-small is-right">
