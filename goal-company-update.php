@@ -67,10 +67,11 @@ if ($_SESSION["permissao"] == 1) {
 
 			if (isset($_POST['anoMes']) != null ) :
 				$cx = mysqli_query($phpmyadmin , "SELECT * FROM META_EMPRESA WHERE ANO_MES ='" . trim($_POST['anoMes']) . "';");
-				$weight = $cx->fetch_array();
+				$company = $cx->fetch_array();
 
 	  		?>
-	   		<form enctype="multipart/form-data" action="goal-company-insert.php" method="POST" id="form2" onsubmit="return check()">
+	   		<form enctype="multipart/form-data" action="goal-company-update.php" method="POST" id="form2" onsubmit="return check()">
+	   			<input type="input" name="id" value="<?php echo $company["ID"]; ?>" hidden>
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Meta*</label>
@@ -78,7 +79,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="meta">
-								<input type="text" class="input required maskMetaEmpresa" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgOk1','msgNok1')" id="input1" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgOk1','msgNok1')" id="input1" value="<?php echo $company["META"]; ?>" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
@@ -104,7 +105,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="alcancado">
-								<input type="text" class="input required maskMetaEmpresa" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgOk2','msgNok2')" id="input2" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgOk2','msgNok2')" id="input2" value="<?php echo $company["ALCANCADO"]; ?>">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
@@ -130,7 +131,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3" value="<?php echo $company["ANO_MES"]; ?>" readonly>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
@@ -155,10 +156,10 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="atualizarMeta" type="submit" class="button is-primary" value="Filtrar">Atualizar</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="reset" class="button is-primary" value="Filtrar" onclick="clearForm()">Limpar</button>
+								<a href="goal-company-update.php" class="button is-primary">Voltar</a>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary">Cancelar</a>
@@ -174,28 +175,19 @@ if ($_SESSION["permissao"] == 1) {
 </html>
 <?php
 
-	if (isset($_POST["inserirMeta"]) != null) {
-		
-		$desempenho = round((trim($_POST['alcancado']) / trim($_POST['meta'])) * 100, 2);
-		
-		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_EMPRESA WHERE ANO_MES = '" . trim($_POST['anoMes']) . "';");
+if (isset($_POST["atualizarMeta"]) != null) {
+	$desempenho = round((trim($_POST['alcancado']) / trim($_POST['meta'])) * 100, 2);
 
-		$cd = $checkDuplic->fetch_array();
-
-		if (mysqli_num_rows($checkDuplic) == 0) {
-
-			mysqli_query($phpmyadmin, "INSERT INTO META_EMPRESA (META, ALCANCADO, DESEMPENHO, ANO_MES, REGISTRO) VALUES (" . trim($_POST['meta']) . ", " . trim($_POST['alcancado']) . ", " . $desempenho . ", '" . trim($_POST['anoMes']) . "', '" . date('Y-m-d') . "');");
-			$erro = mysqli_error($phpmyadmin);
+	mysqli_query($phpmyadmin, "UPDATE META_EMPRESA SET META = " . trim($_POST['meta']) . ", ALCANCADO = " . trim($_POST['alcancado']) . ", DESEMPENHO = " . $desempenho . ", ANO_MES = '" . trim($_POST['anoMes']) . "', ATUALIZADO_EM = '" . date('Y-m-d') . "' WHERE ID = " . $_POST['id']);
+	$erro = mysqli_error($phpmyadmin);
 			
-			if ($erro == "" && $erro == null) {
-				echo "<script>alert('Meta Empresa cadastrada com sucesso!'); window.location.href='metric.php';</script>";
-			} else {
-				echo $erro;
-				echo "<script>alert('Erro ao inserir Meta Empresa!');</script>";
-			}
-		} else {
-			echo "<script>alert('Já existe Meta Empresa cadastrada neste Ano e Mês.'); window.location.href='goal-company-insert.php';</script>";
-		}
+	if ($erro == "" && $erro == null) {
+		echo "<script>alert('Meta Empresa atualizada com sucesso!'); window.location.href='metric.php';</script>";
+	} else {
+		echo $erro;
+		echo "<script>alert('Erro ao atualizar Meta Empresa!');</script>";
 	}
+
+}
 	
 ?>
