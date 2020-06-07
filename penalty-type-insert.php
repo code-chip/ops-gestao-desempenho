@@ -8,7 +8,7 @@ if ($_SESSION["permissao"] == 1) {
 } else {
 	if (isset($_POST['inserirPenalidade']) != null) {
 		
-			mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE_TIPO (TIPO, PENALIDADE, SITUACAO) VALUES ('" . trim($_POST['tipo']) . "', " . trim($_POST['penalidade']) . ", '" . trim($_POST['situacao']) . "');");
+			mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE_TIPO (TIPO, PENALIDADE, DESCRICAO, SITUACAO) VALUES ('" . trim($_POST['tipo']) . "', " . trim($_POST['penalidade']) . ", '" . trim($_POST['descricao']) . "', '" . trim($_POST['situacao']) . "');");
 			$erro = mysqli_error($phpmyadmin);
 			
 			if ($erro == "" && $erro == null) {
@@ -87,6 +87,29 @@ if ($_SESSION["permissao"] == 1) {
 							    	</span>
 							   	</div>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Descrição*</label>
+					</div>
+					<div class="field-body">
+						<div class="field" style="max-width:24.2em;">							
+							<div class="control has-icons-right">
+								<textarea name="descricao" class="textarea required" placeholder="Para cada atraso, será descontado 2% do desempenho final do funcionário." maxlenght="200" onkeypress="addLoadField('descricao')" onkeyup="rmvLoadField('descricao')" onblur="checkAdress(form1.descricao, 'msgOk3','msgNok3')" id="input3"></textarea>
+								<div id="msgNok3" style="display:none;">
+						    	<span class="icon is-small is-right">
+						      		<i class="fas fa-fw"></i>
+						    	</span>
+						    	<p class="help is-danger">A descrição é obrigatória</p>		
+							   	</div>
+							   	<div id="msgOk3" style="display:none;">
+							    	<span class="icon is-small is-right">
+							      		<i class="fas fa-check"></i>
+							    	</span>
+							   	</div>
+							</div>						
 						</div>
 					</div>
 				</div>
