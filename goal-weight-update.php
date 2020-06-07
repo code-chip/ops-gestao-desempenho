@@ -31,10 +31,10 @@ if ($_SESSION["permissao"] == 1) {
 					<label class="label">Ano/Mês:</label>
 				</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field" >							
 						<div class="control has-icons-left">
 							<div class="select">
-								<select name="anoMes"><?php								
+								<select name="anoMes" style="width:15.9em;"><?php								
 								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES;");
 								while($am = $con->fetch_array()){
 									echo "<option value=" . $am["ANO_MES"] . ">" . $am["ANO_MES"] . "</option>";
@@ -51,9 +51,12 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field is-horizontal">
 				<div class="field-label"></div>
 					<div class="field-body">
-						<div class="field">
+						<div class="field is-grouped">
 							<div class="control">
 								<button name="consultar" type="submit" class="button is-primary" onClick="" value="Filtrar">Filtrar</button>
+							</div>
+							<div class="control">
+								<a href="metric.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>
 						</div>
 					</div>
@@ -179,7 +182,7 @@ if ($_SESSION["permissao"] == 1) {
 								<button name="atualizarPeso" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Atualizar</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="reset" class="button is-primary is-size-7-touch" onclick="clearFormGoalWeight()">Limpar</button>
+								<a href="goal-weight-update.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary is-size-7-touch">Cancelar</a>
