@@ -34,7 +34,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field" style="max-width:17em;">							
 						<div class="control has-icons-left">
 							<div class="select">
-								<select name="anoMes"><?php								
+								<select name="anoMes" style="width:15.9em;"><?php								
 								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES;");
 								while($am = $con->fetch_array()){
 									echo "<option value=" . $am["ANO_MES"] . ">" . $am["ANO_MES"] . "</option>";
@@ -51,9 +51,12 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="field is-horizontal">
 				<div class="field-label"></div>
 					<div class="field-body">
-						<div class="field">
+						<div class="field is-grouped">
 							<div class="control">
 								<button name="consultar" type="submit" class="button is-primary" onClick="" value="Filtrar">Filtrar</button>
+							</div>
+							<div class="control">
+								<a href="metric.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>
 						</div>
 					</div>
@@ -74,21 +77,10 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="empresa">
-								<input type="text" class="input required maskPeso" name="empresa" placeholder="30%" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgempresaOk','msgempresaNok')" id="inputempresa" value="<?php echo $weight["EMPRESA"]; ?>" autofocus>
+								<input type="text" class="input required maskPeso" name="empresa" placeholder="30%" maxlength="2" value="<?php echo $weight["EMPRESA"]; ?>" disabled>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-balance-scale"></i>
 							   	</span>
-								<div id="msgempresaNok" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">Peso da empresa é obrigatório</p>		    	
-							   	</div>
-							   	<div id="msgempresaOk" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>
 						</div>
 					</div>
@@ -100,21 +92,10 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="funcionario">
-								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70%" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgfuncionarioOk','msgfuncionarioNok')" id="inputfuncionario" value="<?php echo $weight["OPERADOR"]; ?>">
+								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70%" maxlength="2" value="<?php echo $weight["OPERADOR"]; ?>" disabled>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-weight-hanging"></i>
 							   	</span>
-								<div id="msgfuncionarioNok" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">Peso do funcionário é obrigatório</p>		
-							   	</div>
-							   	<div id="msgfuncionarioOk" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>
 						</div>
 					</div>
@@ -126,21 +107,10 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputAnoMes" value="<?php echo $weight["ANO_MES"]; ?>">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" value="<?php echo $weight["ANO_MES"]; ?>" disabled>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
-								<div id="msganoMesNok" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
-							   	</div>
-							   	<div id="msganoMesOk" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
 							</div>
 						</div>
 					</div>
@@ -153,7 +123,7 @@ if ($_SESSION["permissao"] == 1) {
 						<div class="field is-grouped">							
 							<div class="control has-icons-left">
 								<div class="select">
-									<select name="situacao" style="width:24.2em;"><?php
+									<select name="situacao" style="width:24.2em;" disabled><?php
 										if($weight["SITUACAO"] == 's' ) { 
 											echo "<option selected='selected' value='s'>Ativo</option>";
 											echo "<option value='n'>Inativo</option>";
