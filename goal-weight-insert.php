@@ -8,7 +8,7 @@ if ($_SESSION["permissao"] == 1) {
 } else {
 	if (isset($_POST["inserirempresa"]) != null) {
 		
-		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_PESO;");
+		$checkDuplic = mysqli_query($phpmyadmin, "SELECT ID FROM META_PESO WHERE ANO_MES = '" . trim($_POST['anoMes']) . "';");
 
 		$cd = $checkDuplic->fetch_array();
 
@@ -24,7 +24,7 @@ if ($_SESSION["permissao"] == 1) {
 				echo "<script>alert('Erro ao inserir Peso!');</script>";
 			}
 		} else {
-			echo "<script>alert('Já existe Peso cadastrado.'); window.location.href='metric.php';</script>";
+			echo "<script>alert('Já existe Peso cadastrado neste ano e mês.'); window.location.href='metric.php';</script>";
 		}
 	}
 }
