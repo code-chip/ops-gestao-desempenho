@@ -13,7 +13,7 @@ if ($_SESSION["permissao"] == 1) {
 <head>
 	<tipo charset="UTF-8">	
 	<tipo name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Remover Tipo de Penalidade</title>
+	<title>Gestão de Desempenho - Atualizar Tipo de Penalidade</title>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
