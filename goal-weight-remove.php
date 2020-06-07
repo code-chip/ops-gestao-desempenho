@@ -12,7 +12,7 @@ if ($_SESSION["permissao"] == 1) {
 <head>
 	<empresa charset="UTF-8">	
 	<empresa name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Consultar Peso da Meta</title>
+	<title>Gestão de Desempenho - Remover Peso da Meta</title>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
@@ -24,8 +24,8 @@ if ($_SESSION["permissao"] == 1) {
 <body>
 	<section class="section">
 	  	<div class="container">
-	  		<?php if (isset($_POST['consultar']) == null && isset($_POST['atualizarPeso']) == null) : ?>
-	  		<form enctype="multipart/form-data" action="goal-weight-query.php" method="POST" id="form1">
+	  		<?php if (isset($_POST['consultar']) == null && isset($_POST['removerPeso']) == null) : ?>
+	  		<form enctype="multipart/form-data" action="goal-weight-remove.php" method="POST" id="form1">
 	  		<div class="field is-horizontal">
 				<div class="field-label is-normal">
 					<label class="label">Ano/Mês:</label>
@@ -35,7 +35,7 @@ if ($_SESSION["permissao"] == 1) {
 						<div class="control has-icons-left">
 							<div class="select">
 								<select name="anoMes" style="width:15.9em;"><?php								
-								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES;");
+								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES LIMIT 10;");
 								while($am = $con->fetch_array()){
 									echo "<option value=" . $am["ANO_MES"] . ">" . $am["ANO_MES"] . "</option>";
 								} ?>	
@@ -69,7 +69,8 @@ if ($_SESSION["permissao"] == 1) {
 				$weight = $cx->fetch_array();
 
 	  		?></form>	
-	   		<form enctype="multipart/form-data" action="goal-weight-query.php" method="POST" id="form2" onsubmit="return check()">
+	   		<form enctype="multipart/form-data" action="goal-weight-remove.php" method="POST" id="form2" onsubmit="return check()">
+	   			<input type="input" name="id" value="<?php echo $weight["ID"]; ?>" hidden>
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Empresa*</label>
@@ -146,7 +147,10 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="atualizarPeso" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Voltar</button>
+								<button name="removerPeso" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Remover</button>
+							</div>
+							<div class="control">
+								<a href="goal-weight-remove.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary is-size-7-touch">Cancelar</a>
@@ -161,16 +165,15 @@ if ($_SESSION["permissao"] == 1) {
 </body>
 </html><?php
 
-if (isset($_POST["atualizarPeso"]) != null) {
-		
-	mysqli_query($phpmyadmin, "UPDATE META_PESO SET EMPRESA = " . trim($_POST['empresa']) . ", OPERADOR = " . trim($_POST['funcionario']) . ", ANO_MES = '" . trim($_POST['anoMes']) . "', SITUACAO = '" . trim($_POST['situacao']) . "' WHERE ID = " . $weight["ID"]);
+if (isset($_POST["removerPeso"]) != null) {
+	mysqli_query($phpmyadmin, "DELETE FROM META_PESO WHERE ID = " . $_POST['id']);
 	$erro = mysqli_error($phpmyadmin);
 			
 	if ($erro == "" && $erro == null) {
-		echo "<script>alert('Peso da Meta atualizado com sucesso!'); window.location.href='metric.php';</script>";
+		echo "<script>alert('Peso da Meta removido com sucesso!'); window.location.href='metric.php';</script>";
 	} else {
 		echo $erro;
-		echo "<script>alert('Erro ao atualizar Peso da Meta!');</script>";
+		echo "<script>alert('Erro ao remover Peso da Meta!'); window.location.href='metric.php'; </script>";
 	}
 }
 
