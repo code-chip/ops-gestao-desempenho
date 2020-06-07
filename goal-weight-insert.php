@@ -157,7 +157,7 @@ if ($_SESSION["permissao"] == 1) {
 								<button name="limpar" type="reset" class="button is-primary is-size-7-touch" onclick="clearFormGoalWeight()">Limpar</button>
 							</div>
 							<div class="control">
-								<a href="metric.php" class="button is-primary is-size-7-touch">Voltar</a>
+								<a href="metric.php" class="button is-primary is-size-7-touch">Cancelar</a>
 							</div>						
 						</div>
 					</div>
