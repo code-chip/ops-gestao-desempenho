@@ -146,7 +146,7 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="atualizarPeso" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Voltar</button>
+								<a href="goal-weight-query.php" class="button is-primary is-size-7-touch">Voltar</a>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary is-size-7-touch">Cancelar</a>
@@ -159,19 +159,4 @@ if ($_SESSION["permissao"] == 1) {
 	   	</div>	   	
 	</section>
 </body>
-</html><?php
-
-if (isset($_POST["atualizarPeso"]) != null) {
-		
-	mysqli_query($phpmyadmin, "UPDATE META_PESO SET EMPRESA = " . trim($_POST['empresa']) . ", OPERADOR = " . trim($_POST['funcionario']) . ", ANO_MES = '" . trim($_POST['anoMes']) . "', SITUACAO = '" . trim($_POST['situacao']) . "' WHERE ID = " . $weight["ID"]);
-	$erro = mysqli_error($phpmyadmin);
-			
-	if ($erro == "" && $erro == null) {
-		echo "<script>alert('Peso da Meta atualizado com sucesso!'); window.location.href='metric.php';</script>";
-	} else {
-		echo $erro;
-		echo "<script>alert('Erro ao atualizar Peso da Meta!');</script>";
-	}
-}
-
-?>	
+</html>	
