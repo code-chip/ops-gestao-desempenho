@@ -35,7 +35,7 @@ if ($_SESSION["permissao"] == 1) {
 						<div class="control has-icons-left">
 							<div class="select">
 								<select name="anoMes" style="width:15.9em;"><?php								
-								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES;");
+								$con = mysqli_query($phpmyadmin , "SELECT ANO_MES FROM META_PESO ORDER BY ANO_MES DESC LIMIT 12;");
 								while($am = $con->fetch_array()){
 									echo "<option value=" . $am["ANO_MES"] . ">" . $am["ANO_MES"] . "</option>";
 								} ?>	
