@@ -1,12 +1,10 @@
-<?php 
-$menuAtivo = 'configuracoes';
+<?php
 
+$menuAtivo = 'configuracoes';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
-	echo "<script>alert('Usuário sem permissão')</script>";
-
-	header("Refresh:1;url=home.php");
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 } else {
 	if (isset($_POST['inserirPenalidade']) != null) {
 		
@@ -32,18 +30,9 @@ if ($_SESSION["permissao"] == 1) {
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<script type="text/javascript" src="js/myjs.js"></script>
-	<script type="text/javascript">
-		function check() {
-			var inputs = document.getElementsByClassName('required');
-			
-			for (var x = 0 ; x < inputs.length; x++) {
-				if(!inputs[x].value){
-					alert('Preencha todos os campos * obrigatórios');
-					return false;
-				}
-			}
-		}
-	</script>
+	<style type="text/css">
+		.button{ width: 121px; }
+	</style>
 </head>
 <body>
 	<section class="section">
@@ -56,17 +45,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="tipo">
-								<input type="text" class="input required" name="tipo" placeholder="Atraso" maxlength="20" onkeypress="addLoadField('tipo')" onkeyup="rmvLoadField('tipo')" onblur="checkAdress(form1.tipo, 'msgtipoOk','msgtipoNok')" id="inputtipo" autofocus>
+								<input type="text" class="input required" name="tipo" placeholder="Atraso" maxlength="20" onkeypress="addLoadField('tipo')" onkeyup="rmvLoadField('tipo')" onblur="checkAdress(form1.tipo, 'msgOk1','msgNok1')" id="input1" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-book-reader"></i>
 							   	</span>
-								<div id="msgtipoNok" style="display:none;">
+								<div id="msgNok1" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O tipo da penalidade é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgtipoOk" style="display:none;">
+							   	<div id="msgOk1" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -82,17 +71,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="penalidade">
-								<input type="text" class="input required maskPeso" name="penalidade" placeholder="2%" maxlength="2" onkeypress="addLoadField('penalidade')" onkeyup="rmvLoadField('penalidade')" onblur="checkAdress(form1.penalidade, 'msgpenalidadeOk','msgpenalidadeNok')" id="inputpenalidade" autofocus>
+								<input type="text" class="input required maskPeso" name="penalidade" placeholder="2%" maxlength="2" onkeypress="addLoadField('penalidade')" onkeyup="rmvLoadField('penalidade')" onblur="checkAdress(form1.penalidade, 'msgOk2','msgNok2')" id="input2">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-angle-double-down"></i>
 							   	</span>
-								<div id="msgpenalidadeNok" style="display:none;">
+								<div id="msgNok2" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O valor da penalidade é obrigatório</p>		
 							   	</div>
-							   	<div id="msgpenalidadeOk" style="display:none;">
+							   	<div id="msgOk2" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -127,13 +116,13 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field is-grouped">							
 							<div class="control">
-								<button name="inserirPenalidade" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="submit" class="button is-primary" value="Filtrar" onclick="addAgain()">Limpar</button>
+								<button name="limpar" type="reset" class="button is-primary" onclick="clearForm()">Limpar</button>
 							</div>
 							<div class="control">
-								<a href="metric.php" class="button is-primary">Voltar</a>
+								<a href="metric.php" class="button is-primary">Cancelar</a>
 							</div>						
 						</div>
 					</div>
