@@ -1,5 +1,6 @@
-<?php 
-$menuAtivo="configuracoes";
+<?php
+
+$menuAtivo = 'configuracoes';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
@@ -30,6 +31,7 @@ if ($_SESSION["permissao"] == 1) {
 	}
 	
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,6 +43,9 @@ if ($_SESSION["permissao"] == 1) {
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.button{ width: 121px; }
+	</style>
 </head>
 <body>
 	<section class="section">
@@ -53,17 +58,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="meta">
-								<input type="text" class="input required maskMetaEmpresa" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgMetaOk','msgMetaNok')" id="inputMeta" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="meta" placeholder="823900" maxlength="20" onkeypress="addLoadField('meta')" onkeyup="rmvLoadField('meta')" onblur="checkAdress(form1.meta, 'msgOk1','msgNok1')" id="input1" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
-								<div id="msgMetaNok" style="display:none;">
+								<div id="msgNok1" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O valor da meta é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgMetaOk" style="display:none;">
+							   	<div id="msgOk1" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -79,17 +84,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="alcancado">
-								<input type="text" class="input required maskMetaEmpresa" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgAlcancadoOk','msgAlcancadoNok')" id="inputAlcancado" autofocus>
+								<input type="text" class="input required maskMetaEmpresa" name="alcancado" placeholder="0" maxlength="20" onkeypress="addLoadField('alcancado')" onkeyup="rmvLoadField('alcancado')" onblur="checkAdress(form1.alcancado, 'msgOk2','msgNok2')" id="input2" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-bullseye"></i>
 							   	</span>
-								<div id="msgAlcancadoNok" style="display:none;">
+								<div id="msgNok2" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O valor do alcançado é obrigatório, pode ser zero</p>		
 							   	</div>
-							   	<div id="msgAlcancadoOk" style="display:none;">
+							   	<div id="msgOk2" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -105,17 +110,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputName">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
-								<div id="msganoMesNok" style="display:none;">
+								<div id="msgNok3" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">O data início da meta empresa é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msganoMesOk" style="display:none;">
+							   	<div id="msgOk3" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -133,10 +138,10 @@ if ($_SESSION["permissao"] == 1) {
 								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="submit" class="button is-primary" value="Filtrar" onclick="addAgain()">Limpar</button>
+								<button name="limpar" type="reset" class="button is-primary" value="Filtrar" onclick="clearForm()">Limpar</button>
 							</div>
 							<div class="control">
-								<a href="metric.php" class="button is-primary">Voltar</a>
+								<a href="metric.php" class="button is-primary">Cancelar</a>
 							</div>						
 						</div>
 					</div>

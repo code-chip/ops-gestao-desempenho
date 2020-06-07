@@ -54,17 +54,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="empresa">
-								<input type="text" class="input required maskPeso" name="empresa" placeholder="30%" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgempresaOk','msgempresaNok')" id="inputempresa" autofocus>
+								<input type="text" class="input required maskPeso" name="empresa" placeholder="30%" maxlength="2" onkeypress="addLoadField('empresa')" onkeyup="rmvLoadField('empresa')" onblur="checkAdress(form1.empresa, 'msgOk1','msgNok1')" id="input1" autofocus>
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-balance-scale"></i>
 							   	</span>
-								<div id="msgempresaNok" style="display:none;">
+								<div id="msgNok1" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">Peso da empresa é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgempresaOk" style="display:none;">
+							   	<div id="msgOk1" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -80,17 +80,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="funcionario">
-								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70%" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgfuncionarioOk','msgfuncionarioNok')" id="inputfuncionario" autofocus>
+								<input type="text" class="input required maskPeso" name="funcionario" placeholder="70%" maxlength="2" onkeypress="addLoadField('funcionario')" onkeyup="rmvLoadField('funcionario')" onblur="checkAdress(form1.funcionario, 'msgOk2','msgNok2')" id="input2">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-weight-hanging"></i>
 							   	</span>
-								<div id="msgfuncionarioNok" style="display:none;">
+								<div id="msgNok2" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">Peso do funcionário é obrigatório</p>		
 							   	</div>
-							   	<div id="msgfuncionarioOk" style="display:none;">
+							   	<div id="msgOk2" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -106,17 +106,17 @@ if ($_SESSION["permissao"] == 1) {
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msganoMesOk','msganoMesNok')" id="inputAnoMes">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-06" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
-								<div id="msganoMesNok" style="display:none;">
+								<div id="msgNok3" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msganoMesOk" style="display:none;">
+							   	<div id="msgOk3" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -154,7 +154,7 @@ if ($_SESSION["permissao"] == 1) {
 								<button name="inserirempresa" type="submit" class="button is-primary is-size-7-touch" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="reset" class="button is-primary is-size-7-touch" onclick="clearFormGoalWeight()">Limpar</button>
+								<button name="limpar" type="reset" class="button is-primary is-size-7-touch" onclick="clearForm()">Limpar</button>
 							</div>
 							<div class="control">
 								<a href="metric.php" class="button is-primary is-size-7-touch">Cancelar</a>

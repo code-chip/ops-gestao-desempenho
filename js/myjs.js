@@ -187,14 +187,13 @@ function check() {
 	return true;
 }
 
-//GOAL-WEIGHT
-function clearFormGoalWeight(){
-	document.getElementById("msgempresaOk").style.display = "none";
-	document.getElementById("inputempresa").classList.remove("is-success");
-
-	document.getElementById("msgfuncionarioOk").style.display="none";
-	document.getElementById("inputfuncionario").classList.remove("is-success");
-
-	document.getElementById("msganoMesOk").style.display="none";
-	document.getElementById("inputAnoMes").classList.remove("is-success");
+//GOAL-COMPANY
+function clearForm(){
+	var inputs = document.getElementsByClassName('required').length;
+	for (var x = 1; x < inputs+1 ; x++) {
+		document.getElementById("msgOk"+x).style.display = "none";		
+		document.getElementById("input"+x).classList.remove("is-success");
+		document.getElementById("msgNok"+x).style.display = "none";
+		document.getElementById("input"+x).classList.remove("is-danger");
+	}
 }
