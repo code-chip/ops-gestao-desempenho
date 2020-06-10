@@ -1,4 +1,5 @@
-<?php 
+<?php
+ 
 $menuAtivo = 'ocorrencia';
 require('menu.php');
 
@@ -53,6 +54,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 	<ocorrencia charset="UTF-8">	
 	<ocorrencia name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Inserir Penalidade</title>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<style type="text/css">
 		.carregando{
 			color:#ff0000;
@@ -73,14 +75,17 @@ if(isset($_POST["inserirocorrencia"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control">
+							<div class="control has-icons-left">
 								<div class="select is-size-7-touch">
 									<select name="penalidade" style="width:24.2em;"><?php
 									$con = mysqli_query($phpmyadmin ,"SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO = 's' ORDER BY TIPO"); $x=0; 
 									while($penalidade = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $penalidade["ID"]; ?>"><?php echo $vtNome[$x] = $penalidade["TIPO"]; ?></option>
 									<?php $x;} endwhile;?>
-									</select>	
+									</select>
+									<span class="icon is-small is-left">
+							   		<i class="fas fa-angle-double-down"></i>
+								   	</span>
 								</div>
 							</div>						
 						</div>
@@ -92,7 +97,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control">
+							<div class="control has-icons-left">
 								<div class="select is-size-7-touch">
 									<select name="setor" id="setor" style="width:24.2em;">
 									<option value="">Selecione</option>
@@ -101,7 +106,10 @@ if(isset($_POST["inserirocorrencia"])!=null){
 										while($reSetor = mysqli_fetch_assoc($cnx)) {
 											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
 										}?>
-									</select>	
+									</select>
+									<span class="icon is-small is-left">
+										<i class="fas fa-door-open"></i>
+									</span>	
 								</div>
 							</div>						
 						</div>
@@ -114,12 +122,15 @@ if(isset($_POST["inserirocorrencia"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field is-grouped">							
-							<div class="control">
+							<div class="control has-icons-left">
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
 									<select name="usuario" id="usuario" style="width:24.2em;">
 										<option selected="selected" value="Todos">Todos do Setor</option>
-									</select>	
+									</select>
+									<span class="icon is-small is-left">
+										<i class="fas fa-user-alt"></i>
+									</span>	
 								</div>
 							</div>
 						</div>
@@ -131,8 +142,11 @@ if(isset($_POST["inserirocorrencia"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
-							<div class="control">
+							<div class="control has-icons-left">
 								<input type="text" class="input desempenho" name="ocorrencia" placeholder="2">
+								<span class="icon is-small is-left">
+									<i class="fas fa-sort-numeric-up"></i>
+								</span>
 							</div>
 						</div>
 					</div>
