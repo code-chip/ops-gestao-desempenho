@@ -7,46 +7,6 @@ if ($_SESSION["permissao"] == 1){
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
 
-
-$penalidade=trim($_POST['penalidade']);
-$usuario=trim($_POST['usuario']);
-$ocorrencia=trim($_POST['ocorrencia']);
-$descricao=trim($_POST['descricao']);
-
-if(isset($_POST["inserirocorrencia"])!=null){
-	if($ocorrencia!="" && $descricao!="" && $execucao!=""){
-		if($usuario=="Todos"){
-			$listIds="SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor." AND SITUACAO<>'Desligado';";
-			$cnx= mysqli_query($phpmyadmin, $listIds);
-			while ($idUsuario= $cnx->fetch_array()) {
-				$inserirocorrencia="INSERT INTO ocorrencia(ocorrencia, penalidade_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$ocorrencia.",".$penalidade.",".$setor.",'".$descricao."',".$idUsuario["ID"].",'".$execucao."','".date('Y-m-d')."',0);";
-				$cx= mysqli_query($phpmyadmin, $inserirocorrencia);
-			}
-		}
-		else{
-			$inserirocorrencia="INSERT INTO ocorrencia(ocorrencia, penalidade_ID, SETOR_ID, DESCRICAO, USUARIO_ID, EXECUCAO, CADASTRO_EM, DESEMPENHO) VALUES(".$ocorrencia.",".$penalidade.",".$setor.",'".$descricao."',".$usuario.",'".$execucao."','".date('Y-m-d')."',0);";			
-			$cnx= mysqli_query($phpmyadmin, $inserirocorrencia);
-			echo "<script>alert('ocorrencia's cadastrada com sucesso!!')</script>";
-		}
-		$erro=mysqli_error($phpmyadmin);
-		if($erro==null){
-			echo "<script>alert('ocorrencia cadastrada com sucesso!!')</script>";	
-		}
-		else{
-			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
-		}
-	}
-	else if($ocorrencia==""){
-		echo "<script>alert('Preencher o campo ocorrencia é obrigatório!!')</script>";
-	}
-	else if($descricao==""){
-		echo "<script>alert('Preencher o campo Descricao é obrigatório!!')</script>";
-	}
-	else{
-		echo "<script>alert('Preencher o campo Expiração é obrigatório!!')</script>";
-	}	
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,7 +29,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="goal-insert.php" method="POST">	    			
+	   		<form action="penalty-insert.php" method="POST" onsubmit="return checkForm()">	    			
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Penalidade:</label>
@@ -234,4 +194,17 @@ if(isset($_POST["inserirocorrencia"])!=null){
 	   	</div>
 	</section>	 	
 </body>
-</html>
+</html><?php
+
+if (isset($_POST["inserirPenalidade"]) != null) {
+	$cnx= mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE(PENALIDADE_TIPO_ID, USUARIO_ID, OCORRENCIA, PENALIDADE_TOTAL, ANO_MES, OBSERVACAO, REGISTRO) VALUES(" . $_POST['penalidade'] . ", " . $_POST['usuario'] . "," . $_POST['ocorrencia'] . ",(SELECT PENALIDADE*" . $_POST['ocorrencia'] . " FROM PENALIDADE_TIPO WHERE ID=" . $_POST['penalidade'] . " ), '" . $_POST['anoMes'] . "', '" . $_POST['descricao'] . "', '" . date('Y-m-d') . "');");
+		
+	$erro = mysqli_error($phpmyadmin);
+	if ($erro == null) {
+		echo "<script>alert('Ocorrência inserida com sucesso!')</script>";	
+	} else {
+		?><script>var erro="<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
+	}
+}
+
+?>
