@@ -55,8 +55,11 @@ if(isset($_POST["inserirocorrencia"])!=null){
 	<title>Gestão de Desempenho - Inserir Penalidade</title>
 	<style type="text/css">
 		.carregando{
-		color:#ff0000;
-		display:none;
+			color:#ff0000;
+			display:none;
+		}
+		.button{ 
+			width: 121px;
 		}
 	</style>
 </head>
@@ -72,7 +75,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 						<div class="field" >							
 							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="penalidade" style="width:17em;"><?php
+									<select name="penalidade" style="width:24.2em;"><?php
 									$con = mysqli_query($phpmyadmin ,"SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO = 's' ORDER BY TIPO"); $x=0; 
 									while($penalidade = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x] = $penalidade["ID"]; ?>"><?php echo $vtNome[$x] = $penalidade["TIPO"]; ?></option>
@@ -91,7 +94,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 						<div class="field" >							
 							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="setor" id="setor" style="width:17em;">
+									<select name="setor" id="setor" style="width:24.2em;">
 									<option value="">Selecione</option>
 									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
 										$cnx = mysqli_query($phpmyadmin, $query);
@@ -114,7 +117,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 							<div class="control">
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
-									<select name="usuario" id="usuario" style="width:17em;">
+									<select name="usuario" id="usuario" style="width:24.2em;">
 										<option selected="selected" value="Todos">Todos do Setor</option>
 									</select>	
 								</div>
@@ -127,7 +130,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 						<label class="label">Ocorrência's:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
+						<div class="field" style="max-width:24.2em;">							
 							<div class="control">
 								<input type="text" class="input desempenho" name="ocorrencia" placeholder="2">
 							</div>
@@ -139,7 +142,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 						<label class="label">Observação:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
+						<div class="field" style="max-width:24.2em;">							
 							<div class="control">
 								<textarea name="descricao" class="textarea" maxlenght="200" placeholder="Se atrasou nos dias 10 e 22 de Maio."></textarea>
 							</div>						
@@ -147,14 +150,21 @@ if(isset($_POST["inserirocorrencia"])!=null){
 					</div>
 				</div>
 				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+					</div>
 					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							
+						<div class="field is-grouped">							
 							<div class="control">
-								<button name="inserirocorrencia" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+								<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Inserir</button>
+							</div>
+							<div class="control">
+								<button name="limpar" type="reset" class="button is-primary" onclick="clearForm()">Limpar</button>
+							</div>
+							<div class="control">
+								<a href="metric.php" class="button is-primary">Cancelar</a>
 							</div>						
 						</div>
-					</div>					
+					</div>
 				</div>
 	     	</form>
 	     	<script type="text/javascript" scr="https://www.google.com/jsapi"></script>
