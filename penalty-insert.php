@@ -1,11 +1,10 @@
 <?php
- 
+
 $menuAtivo = 'ocorrencia';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
 
 
@@ -47,6 +46,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 		echo "<script>alert('Preencher o campo Expiração é obrigatório!!')</script>";
 	}	
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,6 +55,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 	<ocorrencia name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Inserir Penalidade</title>
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
+	<script type="text/javascript" src="js/myjs.js"></script>
 	<style type="text/css">
 		.carregando{
 			color:#ff0000;
@@ -78,10 +79,10 @@ if(isset($_POST["inserirocorrencia"])!=null){
 							<div class="control has-icons-left">
 								<div class="select is-size-7-touch">
 									<select name="penalidade" style="width:24.2em;"><?php
-									$con = mysqli_query($phpmyadmin ,"SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO = 's' ORDER BY TIPO"); $x=0; 
-									while($penalidade = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $penalidade["ID"]; ?>"><?php echo $vtNome[$x] = $penalidade["TIPO"]; ?></option>
-									<?php $x;} endwhile;?>
+									$con = mysqli_query($phpmyadmin ,"SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO = 's' ORDER BY TIPO");  
+									while($penalidade = $con->fetch_array()){
+										echo "<option value=" . $penalidade["ID"] . ">" . $penalidade["TIPO"] . "</option>";
+									} ?>
 									</select>
 									<span class="icon is-small is-left">
 							   		<i class="fas fa-angle-double-down"></i>
@@ -100,12 +101,11 @@ if(isset($_POST["inserirocorrencia"])!=null){
 							<div class="control has-icons-left">
 								<div class="select is-size-7-touch">
 									<select name="setor" id="setor" style="width:24.2em;">
-									<option value="">Selecione</option>
-									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
-										$cnx = mysqli_query($phpmyadmin, $query);
+									<option value="">Selecione</option><?php
+										$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME");
 										while($reSetor = mysqli_fetch_assoc($cnx)) {
 											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
-										}?>
+										} ?>
 									</select>
 									<span class="icon is-small is-left">
 										<i class="fas fa-door-open"></i>
@@ -135,6 +135,32 @@ if(isset($_POST["inserirocorrencia"])!=null){
 							</div>
 						</div>
 					</div>					
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Ano/Mês*</label>
+					</div>
+					<div class="field-body">
+						<div class="field" style="max-width:24.2em;">							
+							<div class="control has-icons-left has-icons-right" id="anoMes">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-05" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3">
+								<span class="icon is-small is-left">
+							   		<i class="fas fa-calendar-alt"></i>
+							   	</span>
+								<div id="msgNok3" style="display:none;">
+						    	<span class="icon is-small is-right">
+						      		<i class="fas fa-fw"></i>
+						    	</span>
+						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
+							   	</div>
+							   	<div id="msgOk3" style="display:none;">
+							    	<span class="icon is-small is-right">
+							      		<i class="fas fa-check"></i>
+							    	</span>
+							   	</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
@@ -175,7 +201,7 @@ if(isset($_POST["inserirocorrencia"])!=null){
 								<button name="limpar" type="reset" class="button is-primary" onclick="clearForm()">Limpar</button>
 							</div>
 							<div class="control">
-								<a href="metric.php" class="button is-primary">Cancelar</a>
+								<a href="home.php" class="button is-primary">Cancelar</a>
 							</div>						
 						</div>
 					</div>
