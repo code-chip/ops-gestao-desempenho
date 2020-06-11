@@ -29,7 +29,7 @@ if ($_SESSION["permissao"] == 1){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="penalty-insert.php" method="POST" onsubmit="return checkForm()">	    			
+	   		<form action="penalty-insert.php" method="POST" onsubmit="return check()" id="form1">	    			
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Penalidade:</label>
@@ -85,8 +85,8 @@ if ($_SESSION["permissao"] == 1){
 							<div class="control has-icons-left">
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
-									<select name="usuario" id="usuario" style="width:24.2em;">
-										<option selected="selected" value="Todos">Todos do Setor</option>
+									<select name="usuario" id="usuario" class="required" style="width:24.2em;">
+										<option selected="selected" value="">Selecione</option>
 									</select>
 									<span class="icon is-small is-left">
 										<i class="fas fa-user-alt"></i>
@@ -103,17 +103,17 @@ if ($_SESSION["permissao"] == 1){
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
 							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-05" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk3','msgNok3')" id="input3">
+								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-05" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk1','msgNok1')" id="input1">
 								<span class="icon is-small is-left">
 							   		<i class="fas fa-calendar-alt"></i>
 							   	</span>
-								<div id="msgNok3" style="display:none;">
+								<div id="msgNok1" style="display:none;">
 						    	<span class="icon is-small is-right">
 						      		<i class="fas fa-fw"></i>
 						    	</span>
 						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
 							   	</div>
-							   	<div id="msgOk3" style="display:none;">
+							   	<div id="msgOk1" style="display:none;">
 							    	<span class="icon is-small is-right">
 							      		<i class="fas fa-check"></i>
 							    	</span>
@@ -128,11 +128,22 @@ if ($_SESSION["permissao"] == 1){
 					</div>
 					<div class="field-body">
 						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left">
-								<input type="text" class="input desempenho" name="ocorrencia" placeholder="2">
+							<div class="control has-icons-left has-icons-right">
+								<input type="text" class="input desempenho required" name="ocorrencia" placeholder="2" maxlength="2" onkeypress="addLoadField('ocorrencia')" onkeyup="rmvLoadField('ocorrencia')" onblur="checkAdress(form1.ocorrencia, 'msgOk2','msgNok2')" id="input2">
 								<span class="icon is-small is-left">
 									<i class="fas fa-sort-numeric-up"></i>
 								</span>
+								<div id="msgNok2" style="display:none;">
+						    	<span class="icon is-small is-right">
+						      		<i class="fas fa-fw"></i>
+						    	</span>
+						    	<p class="help is-danger">O número de Ocorrências é obrigatório</p>		    	
+							   	</div>
+							   	<div id="msgOk2" style="display:none;">
+							    	<span class="icon is-small is-right">
+							      		<i class="fas fa-check"></i>
+							    	</span>
+							   	</div>
 							</div>
 						</div>
 					</div>
@@ -201,7 +212,7 @@ if (isset($_POST["inserirPenalidade"]) != null) {
 		
 	$erro = mysqli_error($phpmyadmin);
 	if ($erro == null) {
-		echo "<script>alert('Ocorrência inserida com sucesso!')</script>";	
+		echo "<script>alert('Penalidade inserida com sucesso!')</script>";	
 	} else {
 		?><script>var erro="<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
 	}
