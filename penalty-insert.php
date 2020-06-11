@@ -1,6 +1,6 @@
 <?php
 
-$menuAtivo = 'ocorrencia';
+$menuAtivo = 'penalidade';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1){
