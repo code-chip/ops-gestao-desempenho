@@ -1,19 +1,20 @@
 <?php
-$menuAtivo="configuracoes";
+$menuAtivo = 'configuracoes';
 require('menu.php');
-$checkAdress="SELECT E.*, B.BAIRRO, C.CIDADE FROM ENDERECO E INNER JOIN BAIRRO B ON B.ID=E.BAIRRO_ID INNER JOIN CIDADE C ON C.ID=B.CIDADE_ID WHERE USUARIO_ID=".$_SESSION["filter"][3];
-$cnx=mysqli_query($phpmyadmin, $checkAdress);
-$endereco= $cnx->fetch_array();
-$checkVehicle="SELECT V.*, T.TIPO, C.COR FROM VEICULO V INNER JOIN VEICULO_TIPO T ON T.ID=V.VEICULO_TIPO_ID INNER JOIN COR C ON C.ID=V.COR_ID WHERE USUARIO_ID=".$_SESSION["filter"][3];
-$cnx2=mysqli_query($phpmyadmin, $checkVehicle);
-$veiculo= $cnx2->fetch_array();
-$car=mysqli_num_rows($cnx2);
-if($car==0){
-	$display="display: none;";
+
+$cnx =mysqli_query($phpmyadmin, "SELECT E.*, B.BAIRRO, C.CIDADE FROM ENDERECO E INNER JOIN BAIRRO B ON B.ID=E.BAIRRO_ID INNER JOIN CIDADE C ON C.ID=B.CIDADE_ID WHERE USUARIO_ID=".$_SESSION["filter"][3]);
+$endereco = $cnx->fetch_array();
+
+$cnx2 = mysqli_query($phpmyadmin, "SELECT V.*, T.TIPO, C.COR FROM VEICULO V INNER JOIN VEICULO_TIPO T ON T.ID=V.VEICULO_TIPO_ID INNER JOIN COR C ON C.ID=V.COR_ID WHERE USUARIO_ID=".$_SESSION["filter"][3]);
+$veiculo = $cnx2->fetch_array();
+$car = mysqli_num_rows($cnx2);
+
+if ($car == 0) {
+	$display = "display: none;";
+} else {
+	$display = "display: block;";
 }
-else{
-	$display="display: block;";
-}
+
 ?>
 <!DOCTYPE html>
 <html>
