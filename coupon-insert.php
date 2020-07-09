@@ -93,6 +93,9 @@ if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "tex
 								<button name="inserirCupom" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
 							</div>
 							<div class="control">
+								<button class="button is-primary" onclick="clearForm()">Limpar</button>
+							</div>
+							<div class="control">
 								<a href="register.php" class="button is-primary">Voltar</a>
 							</div>						
 						</div>
@@ -102,13 +105,18 @@ if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "tex
 	   	</div>	   	
 	</section>
 	<script>
-  	const fileInput = document.querySelector('#file-js-example input[type=file]');
-  	fileInput.onchange = () => {
-    	if (fileInput.files.length > 0) {
-      		const fileName = document.querySelector('#file-js-example .file-name');
-      	fileName.textContent = fileInput.files[0].name;
-    	}
-  	}
-</script>	 	
+	  	const fileInput = document.querySelector('#file-js-example input[type=file]');
+	  	
+	  	fileInput.onchange = () => {
+	    	if (fileInput.files.length > 0) {
+	      		const fileName = document.querySelector('#file-js-example .file-name');
+	      		fileName.textContent = fileInput.files[0].name;
+	    	}
+	  	}
+	  	
+	  	function clearForm(){
+	  		document.getElementById('form1').reset();
+	  	}
+	</script>	 	
 </body>
 </html>
