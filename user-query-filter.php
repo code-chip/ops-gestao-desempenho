@@ -1,38 +1,36 @@
 <?php
-$menuAtivo="configuracoes";
+$menuAtivo = 'configuracoes';
 require('menu.php');
 //array_push($_SESSION["filter"],null);
 
-if($_SESSION["permissao"]==1){
-	$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"];
-	$cnx2=mysqli_query($phpmyadmin, $checkAdress);
-	$endereco= $cnx2->fetch_array();
-	$cadastrado=mysqli_num_rows($cnx2);
-	list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
-	if($_SESSION["filter"][1]=="adress-insert.php"){//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.		
-		if($cadastrado==0){
-			$_SESSION["filter"][3]=$_SESSION["userId"];
+if ($_SESSION["permissao"] == 1) {
+	$checkAdress = "SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID = ".$_SESSION["userId"];
+	$cnx = mysqli_query($phpmyadmin, $checkAdress);
+	$endereco = $cnx->fetch_array();
+	$hasAdress = mysqli_num_rows($cnx);
+	list($nome, $sobrenome) = explode(' ', $_SESSION["nameUser"],2);
+	
+	if ($_SESSION["filter"][1] == "adress-insert.php") {//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.		
+		if ($hasAdress == 0) {
+			$_SESSION["filter"][3] = $_SESSION["userId"];
 			array_push($_SESSION["filter"],$_SESSION["nameUser"]);
 			echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
-		}
-		else{			
+		} else {			
 			echo "<script>alert('".$nome." seu endereço já está cadastrado!'); window.location.href='register.php';</script>";
 		}
-	}
-	else{//Caso seja opções de consultar e atualizar.
-		if($cadastrado>0){
-			$_SESSION["filter"][3]=$_SESSION["userId"];
+	} else {//Caso seja opções de consultar e atualizar.
+		if ($hasAdress > 0) {
+			$_SESSION["filter"][3] = $_SESSION["userId"];
 			array_push($_SESSION["filter"],$_SESSION["nameUser"]);
-			header("Refresh:0;url=".$_SESSION["filter"][1]);
-		}	
-		else{
+			echo "<script>window.location.href='" . $_SESSION["filter"][1] . "'; </script>";
+		} else {
 			echo "<script>alert('".$nome." seu endereço não foi cadastrado!'); window.location.href='register.php';</script>";
 		}	
 	}
-}
-else{
-$filtro = trim($_REQUEST['filtro']);
-$busca= trim($_REQUEST['busca']);
+} else {
+	$filtro = trim($_REQUEST['filtro']);
+	$busca= trim($_REQUEST['busca']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -103,47 +101,43 @@ $busca= trim($_REQUEST['busca']);
 <?php
 if( $busca != ""){
 	function checkQuery($cx){
-		if(mysqli_error($cx)!=null){
+		if(mysqli_error($cx) != null){
 			echo "<script>alert('Erro, o valor inserido no campo buscar é inválido!'); window.location.href=window.location.href;</script>";
 		}
 	}
-	if($filtro=="MATRICULA="){
-		$f="U.".$filtro."".$busca." LIMIT 1;";
+	if ($filtro == "MATRICULA=") {
+		$f = "U." . $filtro . "" . $busca . " LIMIT 1;";
+	} else {
+		$f = "U." . $filtro . "'" . $busca . "' LIMIT 1;";
 	}	
-	else{
-		$f="U.".$filtro."'".$busca."' LIMIT 1;";
-	}	
-	$query="SELECT ID, NOME FROM USUARIO U WHERE ".$f;
-	$cnx=mysqli_query($phpmyadmin, $query);
+	
+	$cnx2 = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO U WHERE ".$f);
 	checkQuery($phpmyadmin);
-	$dados= $cnx->fetch_array();
-	$checkAdress="SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"];
-	$cnx2=mysqli_query($phpmyadmin, $checkAdress);
+	$dados = $cnx2->fetch_array();
+	
+	$cnx3 = mysqli_query($phpmyadmin, "SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"]);
 	checkQuery($phpmyadmin);
-	$endereco= $cnx2->fetch_array();
-	$cadastrado=mysqli_num_rows($cnx2);
-	if(mysqli_num_rows($cnx)==0){		
+	$endereco = $cnx3->fetch_array();
+	$cadastrado = mysqli_num_rows($cnx3);
+	
+	if (mysqli_num_rows($cnx) == 0) {		
 		mysqli_error($phpmyadmin);		
 		echo "<script>alert('Nenhum usuário encontrado com o filtro aplicado!'); window.location.href=window.location.href;</script>";			
-	}
-	else{		
-		if($_SESSION["filter"][1]=="adress-insert.php"){//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.
-			if($cadastrado==0){//verifica se não tem endereço.
-				$_SESSION["filter"][3]=$dados["ID"];
-				$_SESSION["filter"][2]=$dados["NOME"];
+	} else {		
+		if ($_SESSION["filter"][1] == "adress-insert.php") {//CASO SEJA INSERIR, VERIFICA SE JÁ EXISTE CADASTRO.
+			if ($cadastrado == 0) {//verifica se não tem endereço.
+				$_SESSION["filter"][3] = $dados["ID"];
+				$_SESSION["filter"][2] = $dados["NOME"];
 				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
-			}
-			else{
+			} else {
 				echo "<script>alert('Já existe endereço cadastrado para ".$dados["NOME"]."!'); window.location.href=window.location.href;</script>";
 			}
-		}
-		else{//Caso seja consultar, atualizar e remover endereço.
-			if($cadastrado==1){//verifica se existe endereço.
-				$_SESSION["filter"][2]=$dados["NOME"];
-				$_SESSION["filter"][3]=$dados["ID"];				
+		} else {//Caso seja consultar, atualizar e remover endereço.
+			if ($cadastrado == 1) {//verifica se existe endereço.
+				$_SESSION["filter"][2] = $dados["NOME"];
+				$_SESSION["filter"][3] = $dados["ID"];				
 				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
-			}
-			else{
+			} else {
 				echo "<script>alert('Não existe endereço cadastrado para ".$dados["NOME"]."!'); window.location.href='user-query-filter.php';</script>";;
 			}
 		}
