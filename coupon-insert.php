@@ -1,43 +1,40 @@
 <?php 
-$menuAtivo="configuracoes";
+$menuAtivo = 'configuracoes';
 require('menu.php');
-require('connection.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
-else{
-	if(!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type']=="text/xml"){
-		$registro=date('Y-m-d');
-		$arquivo = new DomDocument();
-		$arquivo->load($_FILES['arquivo']['tmp_name']);
-		//var_dump($arquivo);
-		$linhas = $arquivo->getElementsByTagName("Row");
-		//var_dump($linhas);		
-		$primeira_linha = true;		
-		foreach($linhas as $linha){
-			if($primeira_linha == false){
-				$matricula = $linha->getElementsByTagName("Data")->item(0)->nodeValue;						
-				$cupom = $linha->getElementsByTagName("Data")->item(2)->nodeValue;				
-				$insertCoupon = "INSERT INTO CUPOM(MATRICULA_ID, CODIGO, REGISTRO) VALUES($matricula, '$cupom', '$registro');";
-				mysqli_query($phpmyadmin, $insertCoupon);
-			}
-			$primeira_linha = false;
+
+if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "text/xml") {
+	$registro = date('Y-m-d');
+	$arquivo = new DomDocument();
+	$arquivo->load($_FILES['arquivo']['tmp_name']);
+	$linhas = $arquivo->getElementsByTagName("Row");
+	$primeira_linha = true;		
+		
+	foreach ($linhas as $linha) {
+		if ($primeira_linha == false) {
+			$matricula = $linha->getElementsByTagName("Data")->item(0)->nodeValue;						
+			$cupom = $linha->getElementsByTagName("Data")->item(2)->nodeValue;				
+			$insertCoupon = "INSERT INTO CUPOM(MATRICULA_ID, CODIGO, REGISTRO) VALUES($matricula, '$cupom', '$registro');";
+			mysqli_query($phpmyadmin, $insertCoupon);
 		}
-		if(mysqli_error($phpmyadmin)!=""){
-			echo "<script>alert('Erro:".mysqli_error($phpmyadmin)."')</script>";
-			
-		}
-		else{
-			echo "<script>alert('Cupons importados com sucesso')</script>";
-		}
+		$primeira_linha = false;
 	}
-	else if(!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type']!="text/xml"){
-		echo "<script>alert('O arquivo precisa está no formato XML.')</script>";
+
+	if (mysqli_error($phpmyadmin) != "") {
+		echo "<script>alert('Erro:".mysqli_error($phpmyadmin)."')</script>";
+	} else {
+		echo "<script>alert('Cupons importados com sucesso')</script>";
 	}
-	else if(isset($_POST['inserirCupom'])!=null){
+
+} else if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type']!="text/xml") {
+	echo "<script>alert('O arquivo precisa está no formato XML.')</script>";
+} else if (isset($_POST['inserirCupom']) != null) {
 		echo "<script>alert('Nenhum arquivo foi anexado!')</script>";
-	}				
+}				
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,6 +46,11 @@ else{
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.button{
+			width: 121px;
+		}
+	</style>
 </head>
 <body>
 	<section class="section">
@@ -109,4 +111,4 @@ else{
   	}
 </script>	 	
 </body>
-</html><?php }//ELSE - caso o usuário tenha permissão.?>
+</html>
