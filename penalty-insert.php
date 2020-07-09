@@ -169,7 +169,7 @@ if ($_SESSION["permissao"] == 1){
 								<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Inserir</button>
 							</div>
 							<div class="control">
-								<button name="limpar" type="reset" class="button is-primary" onclick="clearForm()">Limpar</button>
+								<button name="limpar" type="reset" class="button is-primary">Limpar</button>
 							</div>
 							<div class="control">
 								<a href="home.php" class="button is-primary">Cancelar</a>
