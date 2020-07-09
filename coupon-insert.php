@@ -50,6 +50,10 @@ if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "tex
 		.button{
 			width: 121px;
 		}
+		.p{
+			padding-top: 8px;
+			width: 6px;
+		}
 	</style>
 </head>
 <body>
@@ -82,7 +86,7 @@ if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "tex
 							</div>
 						</div>						
 					</div>
-				</div>	
+				</div>
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label" ><hidden>Cupons</hidden></label>
@@ -99,6 +103,14 @@ if (!empty($_FILES['arquivo']['tmp_name']) && $_FILES['arquivo']['type'] == "tex
 								<a href="register.php" class="button is-primary">Voltar</a>
 							</div>						
 						</div>
+					</div>
+				</div>
+				<div class="field is-horizontal is-left">
+					<div class="field-label is-normal">
+						<label class="label">Instruções</label>
+					</div>
+					<div class="field-body">
+						<p>1-Formate em uma planilha Excel com as seguintes sequências de colunas, Matrícula, Nome, Cupom. <br>2-Copie e cole no bloco de notas, salve o arquivo, feche e abra novamente. <br>3-Copie o texto do bloco de notas salvo, abra uma nova planilha Excel, cole e salve como formato XML.</p>
 					</div>
 				</div>
 	     	</form>
