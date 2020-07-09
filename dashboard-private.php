@@ -1,19 +1,18 @@
 <?php 
-
-$menuAtivo = "dashboard";
+$menuAtivo = 'dashboard';
 require('menu.php');
-require("query.php");
+require('query.php');
 
-$cnx=mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]);
+$cnx = mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$_SESSION["userId"]);
 $ultimoRegistro = $cnx->fetch_array();
   
-$anoMes=date('Y-m');
-$mes=date('m');
+$anoMes = date('Y-m');
+$mes = date('m');
 
 //DASH DISTRIBUIÇÃO POR ATIVIDADES -- dash-atividades
-$x3=0;
-$idsAtiv="";
-$cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE ANO_MES='" . $anoMes . "' AND USUARIO_ID=".$_SESSION["userId"]." GROUP BY ATIVIDADE_ID");
+$x3 = 0;
+$idsAtiv = "";
+$cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID = D.ATIVIDADE_ID WHERE ANO_MES = '" . $anoMes . "' AND USUARIO_ID = ".$_SESSION["userId"]." GROUP BY ATIVIDADE_ID");
   
 while ($G4 = $cnx->fetch_array()) {
   $vtG4nome[$x3] = $G4["NOME"];
@@ -49,22 +48,22 @@ if (mysqli_error($phpmyadmin) == null) {
 }
 
 //DASH ACESSOS NO MÊS
-$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
-  $x=0;
-while ($G6= $cnx->fetch_array()) {
+$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO WHERE USUARIO_ID = ".$_SESSION["userId"]." GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
+  $x = 0;
+while ($G6 = $cnx->fetch_array()) {
   $vtG6Acesso[$x] = $G6["ACESSOS"];
   $vtG6Mes[$x] = $G6["MES"];
   $x++;
 }
 
-while($x < 5){//PREENCHE OS MESES ANTERIORES COM ZERO P/ GERAR O GRÁFICO.
+while ($x < 5) {//PREENCHE OS MESES ANTERIORES COM ZERO P/ GERAR O GRÁFICO.
   $vtG6Acesso[$x] = 0;
   $vtG6Mes[$x] = $vtG6Mes[$x-1]-1;
   $x++;
 }
 
 /*DASH RELAÇÃO FOLGAS E FALTAS*/
-$queryFolgasFaltas="SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
+$queryFolgasFaltas = "SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."' 
 UNION ALL
 SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]." AND DATE_FORMAT(REGISTRO,'%m')='".date('m', strtotime('-3 month'))."'
 UNION ALL
@@ -83,7 +82,7 @@ SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["
 $cnx = mysqli_query($phpmyadmin, $queryFolgasFaltas);
 $x = 0;
 
-while ($folgasFaltas= $cnx->fetch_array()) {
+while ($folgasFaltas = $cnx->fetch_array()) {
   $vtFolgasFaltas[$x] = $folgasFaltas["COUNT(*)"];
   $x++;
 }
@@ -95,7 +94,7 @@ $x = 0;
 $atinPerd = $cnx->fetch_array(); 
 
 /*DASH DISTRIBUIÇÃO AUSÊNCIA distribuicao-ausencia */
-$queryDistAus="SELECT IFNULL(COUNT(*),0) as QTD, 'Folga' FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]."
+$queryDistAus = "SELECT IFNULL(COUNT(*),0) as QTD, 'Folga' FROM DESEMPENHO WHERE PRESENCA_ID=3 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Falta' FROM DESEMPENHO WHERE PRESENCA_ID=2 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Atestado' FROM DESEMPENHO WHERE PRESENCA_ID=4 AND USUARIO_ID=".$_SESSION["userId"]."
 UNION SELECT IFNULL(COUNT(*),0) AS QTD, 'Treinamento' FROM DESEMPENHO WHERE PRESENCA_ID=5 AND USUARIO_ID=".$_SESSION["userId"].";";
@@ -177,12 +176,12 @@ while ($medAtiv = $cnx->fetch_array()) {
   $x++;
 }
 
-$yz=0;
+$yz = 0;
 for ($y = 0; $y < 2; $y++) {
-  for ($z = 0; $z < 8; $z++){
+  for ($z = 0; $z < 8; $z++) {
     $md[$y][$z] = 0;
     
-    if( $vtmedAtivId[$z] == $z+1) {
+    if ( $vtmedAtivId[$z] == $z+1) {
       $md[$y][$z] = $vtmedAtivMedia[$yz];
       $mdData[$y][$z] = $vtmedAtivData[$yz];
       $yz++;  
