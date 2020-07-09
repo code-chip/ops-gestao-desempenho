@@ -1,32 +1,31 @@
 <?php 
-$menuAtivo="Feedback";
+$menuAtivo = 'rh';
 include('menu.php');
-$n=rand(1,1);
-$img="img/wallpaper/coupon".$n."-min.png";
+$n = rand(1,1);
+$img = "img/wallpaper/coupon".$n."-min.png";
+
 /*Verifica se existe celular e endereço cadastrado*/
-$checkAdress="SELECT CELULAR, (SELECT COUNT(*) FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ENDERECO FROM USUARIO WHERE ID=".$_SESSION["userId"];
-$cnx=mysqli_query($phpmyadmin, $checkAdress);
-$validate= $cnx->fetch_array();
-if($validate["CELULAR"]!=NULL && $validate["ENDERECO"]==1){
-	$cupom= $cnx->fetch_array();
-	$checkCupom="SELECT CODIGO, UTILIZADO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;";
-	$cnx2=mysqli_query($phpmyadmin, $checkCupom);
-	$cupom= $cnx2->fetch_array();
-	if(mysqli_num_rows($cnx2)==0){
+$cnx = mysqli_query($phpmyadmin, "SELECT CELULAR, (SELECT COUNT(*) FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ENDERECO FROM USUARIO WHERE ID=".$_SESSION["userId"]);
+$validate = $cnx->fetch_array();
+
+if ($validate["CELULAR"] != NULL && $validate["ENDERECO"] == 1) {
+	$cupom = $cnx->fetch_array();
+	$cnx2 = mysqli_query($phpmyadmin, "SELECT CODIGO, UTILIZADO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;");
+	$cupom = $cnx2->fetch_array();
+	if (mysqli_num_rows($cnx2) == 0) {
 		echo "<script>alert('Não foi liberado nenhum cupom p/ o seu usuário.'); window.history.back(); </script>";
 	}
-}
-else if($validate["CELULAR"]==NULL){
+} else if ($validate["CELULAR"] == NULL) {
 	echo "<script>alert('Para acessar o seu cupom, o preenchimendo do campo Celular em Configurações->Atualizar Usuário é obrigatório!'); window.history.back();</script>";
-}
-else{
+} else {
 	echo "<script>alert('Para acessar o seu cupom, o cadastro do endereço em Configurações->Inserir Endereçõ é obrigatório!'); window.history.back();</script>";
 }
-if(isset($_POST["utilizado"])){
-	$upCoupon="UPDATE CUPOM SET UTILIZADO='s' WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"];
-	mysqli_query($phpmyadmin, $upCoupon);
+
+if (isset($_POST["utilizado"])) {
+	mysqli_query($phpmyadmin, "UPDATE CUPOM SET UTILIZADO='s' WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]);
 	echo "<script>alert('Utilização do cupom registrado com sucesso!'); window.location.href=window.location.href;</script>";
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,16 +43,21 @@ if(isset($_POST["utilizado"])){
 	    	document.getElementById("demo").select();
 	    	document.execCommand('copy');
 		}
-		function checkForm(){
-			var clique= document.getElementById("utilizado").checked;
-			if(clique==false){
-				alert('Marque o checkbox Cupom utilizado!');
-			}
-			return clique;
+		function checkForm() {
+			var clique = document.getElementById("utilizado").checked;
 			
+			if (clique == false) {
+				alert('Marque o checkbox "Cupom utilizado"!');
+			}
+
+			return clique;
 		}
-</script>
-	
+	</script>
+	<style type="text/css">
+		.button{
+			width: 121px;
+		}
+	</style>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -83,7 +87,7 @@ if(isset($_POST["utilizado"])){
 				    	<button class="button is-link" name="utilizado" id="utilizadoBotao">Utilizado</button>
 				  	</div>
 				  	<div class="control">
-				    	<a href="home.php"><button class="button is-link is-light">Voltar</button></a>
+				    	<a href="home.php" class="button is-link is-light">Voltar</a>
 				  	</div>
 				</div>				 
 				</div>
