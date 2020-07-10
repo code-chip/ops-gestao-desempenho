@@ -1,6 +1,6 @@
 <?php 
 $menuAtivo = 'rh';
-include('menu.php');
+require('menu.php');
 $n = rand(1,1);
 $img = "img/wallpaper/coupon".$n."-min.png";
 
@@ -8,7 +8,7 @@ $img = "img/wallpaper/coupon".$n."-min.png";
 $cnx = mysqli_query($phpmyadmin, "SELECT CELULAR, (SELECT COUNT(*) FROM ENDERECO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ENDERECO FROM USUARIO WHERE ID=".$_SESSION["userId"]);
 $validate = $cnx->fetch_array();
 
-if ($validate["CELULAR"] != NULL && $validate["ENDERECO"] == 1) {
+if ($validate["CELULAR"] != NULL && $validate["ENDERECO"] > 0) {
 	$cupom = $cnx->fetch_array();
 	$cnx2 = mysqli_query($phpmyadmin, "SELECT CODIGO, UTILIZADO FROM CUPOM WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]." ORDER BY REGISTRO DESC LIMIT 1;");
 	$cupom = $cnx2->fetch_array();
@@ -22,7 +22,7 @@ if ($validate["CELULAR"] != NULL && $validate["ENDERECO"] == 1) {
 }
 
 if (isset($_POST["utilizado"])) {
-	mysqli_query($phpmyadmin, "UPDATE CUPOM SET UTILIZADO='s' WHERE MATRICULA_ID=".$_SESSION["matriculaLogada"]);
+	mysqli_query($phpmyadmin, "UPDATE CUPOM SET UTILIZADO = 's' WHERE MATRICULA_ID = " . $_SESSION["matriculaLogada"]);
 	echo "<script>alert('Utilização do cupom registrado com sucesso!'); window.location.href=window.location.href;</script>";
 }
 
@@ -43,6 +43,7 @@ if (isset($_POST["utilizado"])) {
 	    	document.getElementById("demo").select();
 	    	document.execCommand('copy');
 		}
+
 		function checkForm() {
 			var clique = document.getElementById("utilizado").checked;
 			
@@ -70,27 +71,26 @@ if (isset($_POST["utilizado"])) {
 	    			<div class="box antitransparencia">
 	    				Olá eviner <?php echo $_SESSION["nameUser"] ?>, aproveite o seu cupom:<br><h6 class="is-size-1" id="cupom" value=""><?php echo $cupom["CODIGO"]?></h6> 
 	    			</div>	
-		    	<div class="field">
-				<div class="control">
-				    <label class="checkbox">
-					    <input type="checkbox" id="utilizado" name="utilizado" <?php if($cupom["UTILIZADO"]=="s"){ echo "checked";}?>>					    
-				      Cupom utilizado
-				    </label>
-				</div>				
-				</div>
-				<textarea id="demo" style="position: absolute; margin-top: -2000px;"><?php echo $cupom["CODIGO"]?></textarea>
-				<div class="field is-grouped">
-				  	<div class="control">
-				    	<button type="button" class="button is-link" name="iniciar" onclick="copyText()">Copiar cupom</button>
-				  	</div>
-				  	<div class="control">
-				    	<button class="button is-link" name="utilizado" id="utilizadoBotao">Utilizado</button>
-				  	</div>
-				  	<div class="control">
-				    	<a href="home.php" class="button is-link is-light">Voltar</a>
-				  	</div>
-				</div>				 
-				</div>
+			    	<div class="field">
+						<div class="control">
+						    <label class="checkbox">
+							    <input type="checkbox" id="utilizado" name="utilizado" <?php if($cupom["UTILIZADO"] == 's'){ echo "checked";}?> > Cupom utilizado
+						    </label>
+						</div>				
+					</div>
+					<textarea id="demo" style="position: absolute; margin-top: -2000px;"><?php echo $cupom["CODIGO"]?></textarea>
+					<div class="field is-grouped">
+					  	<div class="control">
+					    	<button type="button" class="button is-link" name="iniciar" onclick="copyText()">Copiar cupom</button>
+					  	</div>
+					  	<div class="control">
+					    	<button class="button is-link" name="utilizado" id="utilizadoBotao">Utilizado</button>
+					  	</div>
+					  	<div class="control">
+					    	<a href="home.php" class="button is-link is-light">Voltar</a>
+					  	</div>
+					</div>
+				</div>					 
 				</form>
 	    	</div>
 	  	</div>
