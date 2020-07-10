@@ -27,9 +27,10 @@ if ($_SESSION["permissao"] == 1) {
 			echo "<script>alert('".$nome." seu endereço não foi cadastrado!'); window.location.href='register.php';</script>";
 		}	
 	}
-} else {
-	$filtro = trim($_REQUEST['filtro']);
-	$busca= trim($_REQUEST['busca']);
+} 
+
+$filtro = trim($_REQUEST['filtro']);
+$busca= trim($_REQUEST['busca']);
 
 ?>
 <!DOCTYPE html>
@@ -38,6 +39,11 @@ if ($_SESSION["permissao"] == 1) {
 	<title>Gestão de Desempenho - <?php echo $_SESSION["filter"][0];?></title>
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.button{
+			width: 128px;
+		}
+	</style>
 </head>
 <body>
 </br>
@@ -51,10 +57,10 @@ if ($_SESSION["permissao"] == 1) {
 				<label class="label">Filtro:</label>
 			</div>
 			<div class="field-body">
-				<div class="field" style="max-width:17em;">							
+				<div class="field" >							
 					<div class="control">
-						<div class="select">
-							<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
+						<div class="select" >
+							<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo" style="width:16.7em;">
 								<option value="MATRICULA=">Matricula</option>
 								<option value="LOGIN=">Login</option>
 								<option value="NOME LIKE">Nome</option>
@@ -96,22 +102,24 @@ if ($_SESSION["permissao"] == 1) {
 	</form>
 	</div>
 </section>	
-<?php endif;?>
-</div>	
-<?php
-if( $busca != ""){
-	function checkQuery($cx){
-		if(mysqli_error($cx) != null){
+<?php 
+endif;
+echo "</div>";	
+
+if ( $busca != "") {
+	function checkQuery($cx) {
+		if (mysqli_error($cx) != null) {
 			echo "<script>alert('Erro, o valor inserido no campo buscar é inválido!'); window.location.href=window.location.href;</script>";
 		}
 	}
+
 	if ($filtro == "MATRICULA=") {
 		$f = "U." . $filtro . "" . $busca . " LIMIT 1;";
 	} else {
 		$f = "U." . $filtro . "'" . $busca . "' LIMIT 1;";
 	}	
 	
-	$cnx2 = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO U WHERE ".$f);
+	$cnx2 = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO U WHERE " . $f);
 	checkQuery($phpmyadmin);
 	$dados = $cnx2->fetch_array();
 	
@@ -128,17 +136,17 @@ if( $busca != ""){
 			if ($cadastrado == 0) {//verifica se não tem endereço.
 				$_SESSION["filter"][3] = $dados["ID"];
 				$_SESSION["filter"][2] = $dados["NOME"];
-				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
+				echo "<script>window.location.href='" . $_SESSION["filter"][1] . "';</script>";
 			} else {
-				echo "<script>alert('Já existe endereço cadastrado para ".$dados["NOME"]."!'); window.location.href=window.location.href;</script>";
+				echo "<script>alert('Já existe endereço cadastrado para " . $dados["NOME"] . "!'); window.location.href=window.location.href;</script>";
 			}
 		} else {//Caso seja consultar, atualizar e remover endereço.
-			if ($cadastrado == 1) {//verifica se existe endereço.
+			if ($cadastrado >= 1) {//verifica se existe endereço.
 				$_SESSION["filter"][2] = $dados["NOME"];
 				$_SESSION["filter"][3] = $dados["ID"];				
-				echo "<script>window.location.href='".$_SESSION["filter"][1]."';</script>";
+				echo "<script>window.location.href='" . $_SESSION["filter"][1] . "';</script>";
 			} else {
-				echo "<script>alert('Não existe endereço cadastrado para ".$dados["NOME"]."!'); window.location.href='user-query-filter.php';</script>";;
+				echo "<script>alert('Não existe endereço cadastrado para " . $dados["NOME"] . "!'); window.location.href='user-query-filter.php';</script>";
 			}
 		}
 		
@@ -146,6 +154,4 @@ if( $busca != ""){
 } else if (isset($_POST['consultar']) != null) {
 	echo "<script>alert('O Preenchimento do campo busca é obrigatório.!'); window.location.href=window.location.href;</script>";	
 }	
-}//Chaves final ELSE;
-?><!--FINAL DO FORM FILTRAR CONSULTA-->
-<!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
+?>
