@@ -115,7 +115,7 @@ if( $busca != ""){
 	checkQuery($phpmyadmin);
 	$dados = $cnx2->fetch_array();
 	
-	$cnx3 = mysqli_query($phpmyadmin, "SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID=".$dados["ID"]);
+	$cnx3 = mysqli_query($phpmyadmin, "SELECT USUARIO_ID FROM ENDERECO WHERE USUARIO_ID = " . $dados["ID"]);
 	checkQuery($phpmyadmin);
 	$endereco = $cnx3->fetch_array();
 	$cadastrado = mysqli_num_rows($cnx3);
@@ -143,8 +143,7 @@ if( $busca != ""){
 		}
 		
 	}	
-}
-else if(isset($_POST['consultar'])!=null){
+} else if (isset($_POST['consultar']) != null) {
 	echo "<script>alert('O Preenchimento do campo busca é obrigatório.!'); window.location.href=window.location.href;</script>";	
 }	
 }//Chaves final ELSE;
