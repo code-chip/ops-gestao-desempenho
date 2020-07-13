@@ -1,5 +1,4 @@
 <?php
-
 $menuAtivo = 'penalidade';
 require('menu.php');
 
@@ -25,6 +24,21 @@ if ($_SESSION["permissao"] == 1){
 			width: 121px;
 		}
 	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+	    	$(window).scroll(function(){
+	        	if ($(this).scrollTop() > 100) {
+	            	$('a[href="#topo"]').fadeIn();
+	        	}else {
+	            	$('a[href="#topo"]').fadeOut();
+	        	}
+	    	});
+	    	$('a[href="#topo"]').click(function(){
+	        	$('html, body').animate({scrollTop : 0},800);
+	        	return false;
+	    	});
+		});
+	</script>
 </head>
 <body>
 	<section class="section">
@@ -65,7 +79,7 @@ if ($_SESSION["permissao"] == 1){
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
 									<select name="usuario" id="usuario" class="required" style="width:24.2em;">
-										<option selected="selected" value="">Selecione</option>
+										<option selected="selected" value="Todos">Selecione</option>
 									</select>
 									<span class="icon is-small is-left">
 										<i class="fas fa-user-alt"></i>
@@ -138,7 +152,7 @@ if ($_SESSION["permissao"] == 1){
 								$('.carregando').hide();
 							});
 						} else {
-							$('#usuario').html('<option value="">Todos do Setor</option>');
+							$('#usuario').html('<option value="Todos">Todos do Setor</option>');
 						}
 					});
 				});
@@ -149,10 +163,10 @@ if ($_SESSION["permissao"] == 1){
 	endif;
 
 	if (isset($_POST['pesquisar'])) {
-		if($_POST['usuario'] != null) {
+		if($_POST['usuario'] != 'Todos') {
 			$filter = "SELECT P.*, PT.TIPO, PT.PENALIDADE, U.NOME FROM PENALIDADE P INNER JOIN PENALIDADE_TIPO PT ON PT.ID = P.PENALIDADE_TIPO_ID INNER JOIN USUARIO U ON U.ID = P.USUARIO_ID WHERE USUARIO_ID = " . $_POST['usuario'] . " AND ANO_MES = '" . $_POST['anoMes'] . "';";
 		} else {
-			$filter = "SELECT P.*, PT.TIPO, PT.PENALIDADE, U.NOME FROM PENALIDADE P INNER JOIN PENALIDADE_TIPO PT ON PT.ID = P.PENALIDADE_TIPO_ID WHERE USUARIO_ID IN (SELECT ID FROM USUARIO INNER JOIN USUARIO U ON U.ID = P.USUARIO_ID WHERE SETOR_ID = " . $_POST['setor'] . ") AND ANO_MES = '" . $_POST['anoMes'] . "';";
+			$filter = "SELECT P.*, PT.TIPO, PT.PENALIDADE, U.NOME FROM PENALIDADE P INNER JOIN PENALIDADE_TIPO PT ON PT.ID = P.PENALIDADE_TIPO_ID INNER JOIN USUARIO U ON U.ID = P.USUARIO_ID WHERE USUARIO_ID IN (SELECT ID FROM USUARIO WHERE SETOR_ID = " . $_POST['setor'] . ") AND ANO_MES = '" . $_POST['anoMes'] . "';";
 		}
 		
 		$cnx = mysqli_query($phpmyadmin, $filter);
@@ -177,63 +191,138 @@ if ($_SESSION["permissao"] == 1){
 			$x++;
 		}
 	}
+
 	$cnx2 = mysqli_query($phpmyadmin, "SELECT ID, TIPO FROM PENALIDADE_TIPO");
+	$y = 0;
+
 	while ($dice = $cnx2->fetch_array()) {
-		$idType[$y] = $dice['ID'];
-		$nameType[$y] = $dice['TIPO'];
+		$listIdType[$y] = $dice['ID'];
+		$listNameType[$y] = $dice['TIPO'];
+		$y++;
 	}
 
 	if ($x > 0) : { ?>
 		<form action="penalty-update.php" method="POST" onsubmit="return check()" id="form2">
-			<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper">
-				<tr><td>N°</td>
-				<td>Nome</td>
-				<td>Tipo</td>
-				<td>Penalidade</td>
-				<td>Ocorrencia's</td>
-				<td>Total</td>
-				<td>Registro</td>
-				<td>Observação</td></tr>
-				<?php
+		<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper">
+			<tr><td>N°</td>
+			<td>+</td>
+			<td>Nome</td>
+			<td>Tipo</td>
+			<td>Penalidade</td>
+			<td>Ocorrencia's</td>
+			<td>Total</td>
+			<td>Registro</td>
+			<td>Observação</td></tr>
+			<?php
 
-				$i = 0;
-				$z = 0;
-				while ( $i < $x) {
-					if ($type[$i] == $idType[$z]) {
-						echo "<tr><td>" . $idUser[$i] . "</td>
-						<td>" . $name[$i] . "</td>
-						<td>" . $type[$i] . "</td>
-						<td>" . $penalty[$i] . "</td>
-						<td>" . $penaltyTotal[$i] . "</td>
-						<td>" . $occurence[$i] . "</td>
-						<td>" . $register[$i] . "</td>
-						<td>" . $observation[$i] . "</td></tr>";
-						$i++;
-						$z = 0;
-					} else {
-						$z++;
-					}	
-				}
+			$i = 0;
+			$z = 0;
+
+		while ( $i < $x) {
+		if ($idType[$i] == $listIdType[$z]): { ?>
+			<tr><td><?php echo $i+1;?></td>
+			<td class="field"><!--COLUNA VETOR-->
+			<div class="field">				
+				<div class="control">					
+					<input name="vetor[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $id[$i]?>">
+				</div>
+			</div>
+			</td>		
+			<td class="field"><!--COLUNA NOME-->
+			<div class="field">				
+				<div class="control">
+					<?php echo $name[$i]?>
+				</div>				
+			</div>
+			</td>		
+			<td><!--SELEÇÃO PRESENÇA-->						
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<div class="select is-size-7-touch">
+							<select name="tipo[]"><?php								
+								$con = mysqli_query($phpmyadmin , "SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO ='s' AND ID<> " . $idType[$i]);
+								echo "<option value=" . $idType[$i] . ">" . $type[$i] . "</option>"; 
+								while($loadType = $con->fetch_array()){
+									echo "<option value=" . $loadType["ID"] . ">" . $loadType["TIPO"] . "</option>";
+								} ?>																		
+							</select>	
+						</div>
+					</div>					
+				</div>						
+			</div>
+			</td>		
+			<td><!--COLUNA META-->
+			<div class="field">				
+				<div class="control">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $penalty[$i]; ?>">
+				</div>				
+			</div>
+			</td>
+			<td><!--COLUNA META-->
+			<div class="field">				
+				<div class="control">
+					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $occurence[$i]; ?>">
+				</div>				
+			</div>
+			</td>
+			<td><!--COLUNA ALCANÇADO-->	
+			<div class="field">				
+				<div class="control">
+					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $penaltyTotal[$i];?>">
+				</div>				
+			</div>
+			</td>
+			<td><!--COLUNA DATA-->
+			<div class="field">				
+				<div class="control">
+					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo $register[$i];?>" maxlength="10">
+				</div>				
+			</div>
+			</td>
+			<td><!--COLUNA OBSERVAÇÃO-->	
+			<div class="field">				
+				<div class="control">
+					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php echo $observation[$i]; ?>">
+				</div>				
+			</div>
+			</td></tr>						
+			<?php 
+
+			$i++;
+			$z = 0;
+		} endif;
+
+		if ( $idType[$i] != $listIdType[$z]) {
+			$z++;
+		}	
+	}
 					
-			?>
-			</table>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-				</div>
-				<div class="field-body">
-					<div class="field is-grouped">							
-						<div class="control">
-							<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Atualizar</button>
-						</div>
-						<div class="control">
-							<button name="limpar" type="reset" class="button is-primary">Limpar</button>
-						</div>
-						<div class="control">
-							<a href="home.php" class="button is-primary">Cancelar</a>
-						</div>						
+		?>
+		</table>
+		<a href="#topo">
+			<div class="field is-grouped is-grouped-right">
+				<button class="button is-primary is-fullwidth is-size-7-touch">Ir Ao Topo</button>		
+			</div>
+		</a>
+		<br/>
+		<div class="field is-horizontal">
+			<div class="field-label is-normal">
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">							
+					<div class="control">
+						<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Atualizar</button>
 					</div>
+					<div class="control">
+						<a href="penalty-update.php" class="button is-primary">Voltar</a>
+					</div>
+					<div class="control">
+						<a href="home.php" class="button is-primary">Cancelar</a>
+					</div>						
 				</div>
-			</div>	
+			</div>
+		</div>	
 	    </form>
 	    <?php
 	
