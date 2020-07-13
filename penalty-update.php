@@ -210,7 +210,6 @@ if ($_SESSION["permissao"] == 1){
 			<td>Tipo</td>
 			<td>Penalidade</td>
 			<td>Ocorrencia's</td>
-			<td>Total</td>
 			<td>Registro</td>
 			<td>Observação</td></tr>
 			<?php
@@ -224,7 +223,7 @@ if ($_SESSION["permissao"] == 1){
 			<td class="field"><!--COLUNA VETOR-->
 			<div class="field">				
 				<div class="control">					
-					<input name="vetor[]" id="teste3" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $id[$i]?>">
+					<input name="vetor[]" type="checkbox" class="checkbox is-size-7-touch" checkbox="checked" value="<?php echo $id[$i]?>">
 				</div>
 			</div>
 			</td>		
@@ -235,12 +234,12 @@ if ($_SESSION["permissao"] == 1){
 				</div>				
 			</div>
 			</td>		
-			<td><!--SELEÇÃO PRESENÇA-->						
+			<td><!--SELEÇÃO TIPO-->						
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
 						<div class="select is-size-7-touch">
-							<select name="tipo[]"><?php								
+							<select name="tipo[]" disabled><?php								
 								$con = mysqli_query($phpmyadmin , "SELECT ID, TIPO FROM PENALIDADE_TIPO WHERE SITUACAO ='s' AND ID<> " . $idType[$i]);
 								echo "<option value=" . $idType[$i] . ">" . $type[$i] . "</option>"; 
 								while($loadType = $con->fetch_array()){
@@ -252,38 +251,31 @@ if ($_SESSION["permissao"] == 1){
 				</div>						
 			</div>
 			</td>		
-			<td><!--COLUNA META-->
+			<td><!--COLUNA PENALIDADE-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $penalty[$i]; ?>">
+					<input name="penalty[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $penalty[$i]; ?>" readonly>
 				</div>				
 			</div>
 			</td>
-			<td><!--COLUNA META-->
+			<td><!--COLUNA OCORRENCIA-->
 			<div class="field">				
 				<div class="control">
-					<input name="meta[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $occurence[$i]; ?>">
-				</div>				
-			</div>
-			</td>
-			<td><!--COLUNA ALCANÇADO-->	
-			<div class="field">				
-				<div class="control">
-					<input name="alcancado[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $penaltyTotal[$i];?>">
+					<input name="occurence[]" style="max-width:5.5em;" type="text" class="input desempenho is-size-7-touch" placeholder="Obrigatório" maxlength="4" value="<?php echo $occurence[$i]; ?>">
 				</div>				
 			</div>
 			</td>
 			<td><!--COLUNA DATA-->
 			<div class="field">				
 				<div class="control">
-					<input name="registro[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo $register[$i];?>" maxlength="10">
+					<input name="register[]" style="max-width:6.5em;" type="text" class="input registro is-size-7-touch" value="<?php echo $register[$i];?>" maxlength="10">
 				</div>				
 			</div>
 			</td>
 			<td><!--COLUNA OBSERVAÇÃO-->	
 			<div class="field">				
 				<div class="control">
-					<input name="observacao[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php echo $observation[$i]; ?>">
+					<input name="observation[]" type="text" class="input is-size-7-touch" placeholder="Máximo 200 caracteres." maxlength="200" value="<?php echo $observation[$i]; ?>">
 				</div>				
 			</div>
 			</td></tr>						
@@ -312,7 +304,7 @@ if ($_SESSION["permissao"] == 1){
 			<div class="field-body">
 				<div class="field is-grouped">							
 					<div class="control">
-						<button name="inserirPenalidade" type="submit" class="button is-primary" value="inserir">Atualizar</button>
+						<button name="updatePenalty" type="submit" class="button is-primary" value="update">Atualizar</button>
 					</div>
 					<div class="control">
 						<a href="penalty-update.php" class="button is-primary">Voltar</a>
@@ -333,15 +325,28 @@ if ($_SESSION["permissao"] == 1){
 </html>
 <?php
 
-if (isset($_POST["inserirPenalidade"]) != null) {
-	$cnx = mysqli_query($phpmyadmin, "INSERT INTO PENALIDADE(PENALIDADE_TIPO_ID, USUARIO_ID, OCORRENCIA, PENALIDADE_TOTAL, ANO_MES, OBSERVACAO, REGISTRO) VALUES(" . $_POST['penalidade'] . ", " . $_POST['usuario'] . "," . $_POST['ocorrencia'] . ",(SELECT PENALIDADE*" . $_POST['ocorrencia'] . " FROM PENALIDADE_TIPO WHERE ID = " . $_POST['penalidade'] . " ), '" . $_POST['anoMes'] . "', '" . $_POST['descricao'] . "', '" . date('Y-m-d') . "');");
-		
-	$erro = mysqli_error($phpmyadmin);
-	if ($erro == null) {
-		echo "<script>alert('Penalidade inserida com sucesso!')</script>";	
-	} else {
-		?><script>var erro = "<?php echo $erro;?>";  alert('Erro ao cadastrar: '+erro)</script><?php
+if (isset($_POST["updatePenalty"]) != null && isset($_POST["vetor"])) {
+	$id = array_filter($_POST['vetor']);
+	$observation = array_filter($_POST['observation']);
+	$penalty = array_filter($_POST['penalty']);
+	$occurence = array_filter($_POST['occurence']);
+	$register = array_filter($_POST['register']);
+	
+	for ( $i = 0; $i < sizeof($id); $i++ ) {
+		$yearMonth = new DateTime($register[$i]);
+		$yearMonth = $yearMonth->format('Y-m');
+
+		$update = "UPDATE PENALIDADE SET OCORRENCIA = " . $occurence[$i] . ", PENALIDADE_TOTAL = " . $penalty[$i] * $occurence[$i] . ", ANO_MES = '" . $yearMonth . "', REGISTRO = '" . $register[$i] . "', OBSERVACAO = '" . $observation[$i] . "' WHERE ID = " . $id[$i];
+		$cnx = mysqli_query($phpmyadmin, $update);
 	}
+	
+	if (mysqli_error($phpmyadmin) == null) {
+		echo "<script>alert('Penalidade atualizada com sucesso!'); window.location.href=window.location.href; </script>";
+	} else {
+		echo "<script>alert('Erro ao atualizar penalidade!!'); window.location.href=window.location.href; </script>";
+	}
+} else if (isset($_POST["updatePenalty"]) != null) {
+	echo "<script>alert('Nenhum registro selecionado na coluna + p/ ser atualizado!'); window.location.href=window.location.href; </script>";
 }
 
 ?>
