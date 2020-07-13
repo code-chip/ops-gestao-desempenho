@@ -184,12 +184,10 @@ if ( $periodo != "") {
 	$date = date_format($date, 't/m');
 
 	if ($atividade == "agrupado") {
-		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, 
-(SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
-CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." ".$turno." ".$setor." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
+		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT SUM(OCORRENCIA) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT SUM(PENALIDADE_TOTAL) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO, CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." ".$turno." ".$setor." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
 	} else {
 		$consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, 
-(SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
+(SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT SUM(OCORRENCIA) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT SUM(PENALIDADE_TOTAL) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
 CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$setor." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
 	}
 	
@@ -212,6 +210,8 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 			$vtAtividade[$x] = $dado["ATIVIDADE"];
 			$vtFalta[$x] = $dado["FALTA"];
 			$vtFolga[$x] = $dado["FOLGA"];
+			$ocurrence[$x] = $dado["OCORRENCIA"];
+			$penaltyTotal[$x] = $dado["TOTAL"];
 			$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
 			$vtRegistro[$x] = $dado["REGISTRO"];
 			$totalFaltas = $totalFaltas + $vtFalta[$x];
@@ -327,6 +327,7 @@ if ($contador != 0): ?>
 			if ($registro > 1 && $repeat != 0 && $mescla == false) {
 				echo "<td width='4' rowspan=" . $registro . ">" . $vtFalta[$i] . "</td>";
 				echo "<td rowspan=" . $registro . ">" . $vtFolga[$i] . "</td>";
+				echo "<td rowspan=" . $registro . ">" . $ocurrence[$i] . "</td>";
 				$mescla = true;
 			}	
 			
@@ -334,16 +335,15 @@ if ($contador != 0): ?>
 				echo "<td>" . $vtFalta[$i] . "</td>";
 				$mescla = false;
 				echo "<td width='4'>" . $vtFolga[$i] . "</td>";
+				echo "<td>" . $ocurrence[$i] . "</td>";
 			}
-
-			echo "<td></td>";
 
 			if ($atividade == "separado"){
 				echo "<td>" . $vtAtividade[$i] . "</td>";
 			}
 		
 			echo "<td>" . $vtDesempenho[$i] . "%" . "</td>";
-			echo "<td>" . round((($vtDesempenho[$i] / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2)."%" . "</td>";				
+			echo "<td>" . round((($vtDesempenho[$i] / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"])-$penaltyTotal[$i], 2)."%" . "</td>";				
 			echo "<td style='max-width:800px;'>" . $vtRegistro[$i] . "</td>";
 			
 			if ($vtNome[$i] != $vtNome[$i+1] && $repeat == 0 && $mescla == true) { 
