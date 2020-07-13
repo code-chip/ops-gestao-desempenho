@@ -93,7 +93,7 @@ if ( $_SESSION["permissao"] == 1 ) {
 	<tr>
 		<th>Data</th>
 		<th>Atividade</th>
-		<?php if ($folga > 0 || $falta>0 || $atestado > 0) { echo "<th>Presença</th>"; } ?>
+		<?php if ($folga > 0 || $falta>0 || $atestado > 0 || $treinamento > 0) { echo "<th>Presença</th>"; } ?>
 		<th>Meta</th>
 		<th>Alcançado</th>
 		<th>Desempenho</th>
@@ -136,7 +136,7 @@ if ( $_SESSION["permissao"] == 1 ) {
 
 			echo "<td>" . $vetorAtividade[$i] . "</td>";
 
-			if ($folga > 0 || $falta > 0 || $atestado > 0) {
+			if ($folga > 0 || $falta > 0 || $atestado > 0 || $treinamento > 0) {
 				echo "<td>" . $vetorPresenca[$i] . "</td>";
 			}
 			
