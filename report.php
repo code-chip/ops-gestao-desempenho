@@ -315,7 +315,7 @@ if ($contador != 0): ?>
 			echo "<td>" . $vtNome[$i] . "</td>";
 			
 			if ($registro > 1 && $repeat != 0 && $mesclaa == false) {
-				echo "<td rowspan='" . $registro . "'><a href='report-detailed.php?periodo=" . $periodo . "&idUsuario=" . $vtIdUsuario[$i] . " target='_blank'><button class='button is-primary is-size-7-touch'>Consultar</button></a></td>";
+				echo "<td rowspan='" . $registro . "'><a href='report-detailed.php?periodo=" . $periodo . "&idUsuario=" . $vtIdUsuario[$i] . "' target='_blank'><button class='button is-primary is-size-7-touch'>Consultar</button></a></td>";
 				$mesclaa = true;
 			}
 
