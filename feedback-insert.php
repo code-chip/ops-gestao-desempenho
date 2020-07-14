@@ -1,29 +1,31 @@
 <?php 
-$menuAtivo="Feedback";
-include('menu.php');
-$colaborador=trim($_POST['colaborador']);
-$profissional=trim($_POST['profissional']);
-$comportamental=trim($_POST['comportamental']);
-$desempenho=trim($_POST['desempenho']);
-$tipo=trim($_POST['tipo']);
-$feedback=trim($_POST['feedback']);
-$exibicao=trim($_POST['exibicao']);
-if(isset($_POST["inserirFeedback"])!=null){
-	if($colaborador!="" && $feedback!=""){
-		$inserirFeedback="INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',".$exibicao.",'".date('Y-m-d')."');";			
-			$cnx= mysqli_query($phpmyadmin, $inserirFeedback);
-		$erro=mysqli_error($phpmyadmin);
-		if($erro==null){
+$menuAtivo = 'feedback';
+require('menu.php');
+
+$colaborador = trim($_POST['colaborador']);
+$profissional = trim($_POST['profissional']);
+$comportamental = trim($_POST['comportamental']);
+$desempenho = trim($_POST['desempenho']);
+$tipo = trim($_POST['tipo']);
+$feedback = trim($_POST['feedback']);
+$exibicao = trim($_POST['exibicao']);
+
+if (isset($_POST["inserirFeedback"]) != null) {
+	if ($colaborador != "" && $feedback != "") {
+		$inserirFeedback = "INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',".$exibicao.",'".date('Y-m-d')."');";			
+		
+		$cnx = mysqli_query($phpmyadmin, $inserirFeedback);
+		
+		$erro = mysqli_error($phpmyadmin);
+		
+		if ($erro == null) {
 			echo "<script>alert('Feedback enviado com sucesso!!')</script>";	
-		}
-		else{
+		} else {
 			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
 		}
-	}
-	else if($colaborador==""){
+	} else if ($colaborador == "") {
 		echo "<script>alert('Selecionar o campo Colaborador é obrigatório!!')</script>";
-	}
-	else{
+	} else {
 		echo "<script>alert('Preencher do feedback é obrigatório!!')</script>";
 	}	
 }
@@ -39,6 +41,12 @@ if(isset($_POST["inserirFeedback"])!=null){
 		color:#ff0000;
 		display:none;
 		}
+		.button{
+			width: 128px;
+		}
+		.largura{
+			width:273px;
+		}
 	</style>
 </head>
 <body>
@@ -51,9 +59,9 @@ if(isset($_POST["inserirFeedback"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="setor" id="setor">
+									<select name="setor" id="setor" class="largura">
 									<option value="">Selecione</option>
 									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
 										$cnx = mysqli_query($phpmyadmin, $query);
@@ -75,7 +83,7 @@ if(isset($_POST["inserirFeedback"])!=null){
 							<div class="control">
 								<div class="select">
 									<span class="carregando">Aguarde, carregando...</span>
-									<select name="colaborador" id="usuario">
+									<select name="colaborador" id="usuario" class="largura">
 										<option selected="selected" value="Todos">Selecione</option>
 									</select>	
 								</div>
@@ -89,14 +97,14 @@ if(isset($_POST["inserirFeedback"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="profissional" id="profissional">
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
+									<select name="profissional" id="profissional" class="largura">
+										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
+										$cnx = mysqli_query($phpmyadmin, $query);
+										while($resquet = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+										}?>
 									</select>	
 								</div>
 							</div>						
@@ -109,14 +117,14 @@ if(isset($_POST["inserirFeedback"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="comportamental" id="comportamental">
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
+									<select name="comportamental" id="comportamental" class="largura">
+										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
+										$cnx = mysqli_query($phpmyadmin, $query);
+										while($resquet = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+										}?>
 									</select>	
 								</div>
 							</div>						
@@ -129,14 +137,14 @@ if(isset($_POST["inserirFeedback"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="desempenho" id="desempenho">
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
+									<select name="desempenho" id="desempenho" class="largura">
+										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
+										$cnx = mysqli_query($phpmyadmin, $query);
+										while($resquet = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+										}?>
 									</select>	
 								</div>
 							</div>						
@@ -149,9 +157,9 @@ if(isset($_POST["inserirFeedback"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="tipo">
+									<select name="tipo" class="largura">
 										<option value="Positivo">Positivo</option>
 										<option value="Construtivo">Construtivo</option>
 									</select>	
