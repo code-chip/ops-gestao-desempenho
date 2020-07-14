@@ -1,6 +1,6 @@
 <?php
 
-$menuAtivo = "relatorios";
+$menuAtivo = 'relatorios';
 require('menu.php');
 $contador = 0;
 $totalDesempenho = 0;
@@ -95,7 +95,7 @@ $meta = trim($_REQUEST['meta']);
 
 if ( $periodo != "") {
 	
-	$con = mysqli_query($phpmyadmin, "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID WHERE D.USUARIO_ID =" . $_SESSION["userId"] . " AND ANO_MES = '" . $periodo . "'" . $atividade . "" . $meta . " ORDER BY REGISTRO;");
+	$con = mysqli_query($phpmyadmin, "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META, D.ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO, D.PRESENCA_ID, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID WHERE D.USUARIO_ID =" . $_SESSION["userId"] . " AND ANO_MES = '" . $periodo . "'" . $atividade . "" . $meta . " ORDER BY REGISTRO;");
 	$x = 0; 
 	$falta = 0; 
 	$folga = 0; 
@@ -115,6 +115,8 @@ if ( $periodo != "") {
 		$totalDesempenho=$totalDesempenho+$dado["DESEMPENHO"];
 		$vetorRegistro[$x] = $dado["REGISTRO"];
 		$vetorObservacao[$x] = $dado["OBSERVACAO"];
+		$ocurrence = $dado['OCORRENCIA'];
+		$penaltyTotal = $dado['TOTAL'];
 		
 		if ($vetorIdPresenca[$x] == 2) {
 			$falta++;
@@ -157,11 +159,12 @@ if ( $periodo != "" && $contador != 0) : ?>
 			<td>Atestado's: " . $atestado . "</td>
 			<td>Falta's: " . $falta . "</td>
 			<td>Folga's: " . $folga . "</td>
+			<td>Pena: " . $ocurrence . "</td>
 			<td>Menor: " . $menor . "%" . "</td>
 			<td>Maior: " . $maior . "%" . "</td>
-			<td>Media: " . $media . "%"  . "</td>
-			<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2) . "%" . "</td>
-			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";
+			<td>Media: " .  $media . "</td>
+			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>
+			<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"])-$penaltyTotal, 2) . "%" . "</td>";
 		?></tr>
 	</table>
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch table__wrapper .scrollWrapper">	
