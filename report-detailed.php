@@ -11,22 +11,24 @@ $totalAlcancado = 0;
 if ( $_SESSION["permissao"] == 1 ) {
 	echo "<script>alert('Usuário sem permissão para este acesso!!'); window.location.href='home.php'; </script>";
 } else if ($periodo != '') {
-	$con = mysqli_query($phpmyadmin , "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID = D.USUARIO_ID
+	$con = mysqli_query($phpmyadmin , "SELECT U.NOME AS NOME, A.NOME AS ATIVIDADE, P.NOME AS PRESENCA, D.META AS META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO AS DESEMPENHO, D.REGISTRO AS REGISTRO, D.OBSERVACAO, D.PRESENCA_ID, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID = D.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID =D.ATIVIDADE_ID 	INNER JOIN PRESENCA P ON P.ID = D.PRESENCA_ID WHERE D.USUARIO_ID=".$idUsuario." AND D.ANO_MES='".$periodo."' ORDER BY REGISTRO;");	
 	
 	$x = 0; $menor = 1000; $maior = 0; $falta = 0; $folga = 0; $atestado = 0; $treinamento = 0;
 
 	while ($dado = $con->fetch_array()) {
-		$vetorNome[$x] = $dado["NOME"];	
-		$vetorAtividade[$x] = $dado["ATIVIDADE"];
-		$vetorIdPresenca[$x] = $dado["PRESENCA_ID"];
-		$vetorPresenca[$x] = $dado["PRESENCA"];
-		$vetorDesempenho[$x] = $dado["ALCANCADO"];
-		$vetorMeta[$x] = $dado["META"];
-		$vetorAlcancado[$x] = $dado["DESEMPENHO"];
-		$totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
-		$vetorRegistro[$x] = $dado["REGISTRO"];
-		$vetorObservacao[$x] = $dado["OBSERVACAO"];
+		$vetorNome[$x] = $dado['NOME'];	
+		$vetorAtividade[$x] = $dado['ATIVIDADE'];
+		$vetorIdPresenca[$x] = $dado['PRESENCA_ID'];
+		$vetorPresenca[$x] = $dado['PRESENCA'];
+		$vetorDesempenho[$x] = $dado['ALCANCADO'];
+		$vetorMeta[$x] = $dado['META'];
+		$vetorAlcancado[$x] = $dado['DESEMPENHO'];
+		$totalAlcancado = $totalAlcancado + $dado['DESEMPENHO'];
+		$vetorRegistro[$x] = $dado['REGISTRO'];
+		$vetorObservacao[$x] = $dado['OBSERVACAO'];
+		$ocurrence = $dado['OCORRENCIA'];
+		$penaltyTotal = $dado['TOTAL'];
 
 		if ($vetorIdPresenca[$x] == 2) {
 			$falta++;
@@ -82,11 +84,12 @@ if ( $_SESSION["permissao"] == 1 ) {
 				<td>Atestado's: " . $atestado . "</td>
 				<td>Falta's: " . $falta . "</td>
 				<td>Folga's: " . $folga . "</td>
+				<td>Pena: " . $ocurrence . "</td>
 				<td>Menor: " . $menor . "</td>
 				<td>Maior: " . $maior . "%" . "</td>
 				<td>Media: " .  $media . "</td>
-				<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"]), 2) . "%" . "</td>
-				<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";
+				<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>
+				<td>Final: " . round((($media / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"])-$penaltyTotal, 2) . "%" . "</td>";
 		?></tr>
 	</table>	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">	
@@ -163,7 +166,7 @@ if ( $_SESSION["permissao"] == 1 ) {
 		echo "</tr>";
 	}
 
-	echo "</table>";	
+	echo "</tablte>";	
 
 ?></body>
 </html>
