@@ -334,7 +334,7 @@ if ($contador != 0): ?>
 			if ( $repeat == 0 && $vtNome[$i-1] != $vtNome[$i]) {
 				echo "<td>" . $vtFalta[$i] . "</td>";
 				$mescla = false;
-				echo "<td width='4'" . $vtFolga[$i] . "</td>";
+				echo "<td width='4'>" . $vtFolga[$i] . "</td>";
 				echo "<td>" . $ocurrence[$i] . "</td>";
 			}
 
