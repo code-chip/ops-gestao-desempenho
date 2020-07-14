@@ -242,11 +242,8 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 		WHERE ANO_MES = DATE_FORMAT(CURDATE(), '%Y-%m') AND PRESENCA_ID NOT IN(3,5);";
 
 		/*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
-		$g4 = "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO 
-		INNER JOIN USUARIO U ON U.ID=USUARIO_ID	WHERE PRESENCA_ID NOT IN (3,5) AND ANO_MES='".$periodo."'	GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 6;";
-		
 		$x = 0;
-		$cnxG4 = mysqli_query($phpmyadmin, $g4);
+		$cnxG4 = mysqli_query($phpmyadmin, "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID	WHERE PRESENCA_ID NOT IN (3,5) AND ANO_MES ='".$periodo."' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 5;");
 		while ($G4 = $cnxG4->fetch_array()) {
 			$vtG4nome[$x] = $G4["NOME"];
 			$vtG4media[$x] = $G4["MEDIA"];
@@ -445,9 +442,9 @@ if ($contador != 0): ?>
 		        ["Element", "Density", { role: "style" } ],
 		        ['<?php echo $vtG4nome[0]?>', parseFloat('<?php echo $vtG4media[0]?>'), "gold"],
 		        ['<?php echo $vtG4nome[1]?>', parseFloat('<?php echo $vtG4media[1]?>'), "silver"],
+		        ['<?php echo $vtG4nome[2]?>', parseFloat('<?php echo $vtG4media[2]?>'), "#b87333"],
 		        ['<?php echo $vtG4nome[3]?>', parseFloat('<?php echo $vtG4media[3]?>'), "#b87333"],
-		        ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "#b87333"],
-		        ['<?php echo $vtG4nome[5]?>', parseFloat('<?php echo $vtG4media[5]?>'), "color: #e5e4e2"]
+		        ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "color: #e5e4e2"]
 		    ]);
 		    var view = new google.visualization.DataView(data);
 		    view.setColumns([0, 1,
