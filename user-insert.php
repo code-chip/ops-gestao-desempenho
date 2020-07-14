@@ -13,7 +13,12 @@ else{
 	<title>Gestão de Desempenho - Inserir Usuário</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script type="text/javascript" src="js/myjs.js"></script>	
+    <script type="text/javascript" src="js/myjs.js"></script>
+    <style type="text/css">
+		.button{
+			width: 128px;
+		}
+	</style>	
 </head>
 <body>
 <div>	

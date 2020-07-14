@@ -15,6 +15,11 @@ else{
 	<title>Gestão de Desempenho - Remover Usuário</title>
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<style type="text/css">
+		.button{
+			width: 128px;
+		}
+	</style>
 </head>
 <body>
 </br>
@@ -31,7 +36,7 @@ else{
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select onchange="upPlaceholder(this.value)" name="filtro">
+								<select onchange="upPlaceholder(this.value)" name="filtro" style="width:16.7em;">
 									<option value="MATRICULA=">Matricula</option>
 									<option value="LOGIN=">Login</option>
 									<option value="NOME LIKE">Nome</option>
