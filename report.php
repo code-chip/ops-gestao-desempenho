@@ -39,6 +39,12 @@ if ($_SESSION["permissao"] == 1) {
 				$('#form1').submit();
 		});
 	</script>
+	<style type="text/css">
+		.joinLines{
+			vertical-align:center; 
+			line-height:500%;
+		}
+	</style>
 </head>
 <body>
 	<span id="topo"></span>
@@ -322,9 +328,9 @@ if ($contador != 0): ?>
 			}
 			
 			if ($registro > 1 && $repeat != 0 && $mescla == false) {
-				echo "<td width='4' rowspan=" . $registro . ">" . $vtFalta[$i] . "</td>";
-				echo "<td rowspan=" . $registro . ">" . $vtFolga[$i] . "</td>";
-				echo "<td rowspan=" . $registro . ">" . $ocurrence[$i] . "</td>";
+				echo "<td class='joinLines' rowspan=" . $registro . ">" . $vtFalta[$i] . "</td>";
+				echo "<td class='joinLines' rowspan=" . $registro . ">" . $vtFolga[$i] . "</td>";
+				echo "<td class='joinLines' rowspan=" . $registro . ">" . $ocurrence[$i] . "</td>";
 				$mescla = true;
 			}	
 			
