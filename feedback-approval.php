@@ -1,37 +1,35 @@
 <?php
-$menuAtivo="feedback";
-include('menu.php');
-$situacao= trim($_POST["situacao"]);
+$menuAtivo = 'feedback';
+require('menu.php');
+
+$situacao = trim($_POST['situacao']);
 $contador = 0;
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh: 1;url=home.php");
-}
-else{
-if(isset($_POST['consultar'])){
-	if($situacao=="'Enviado'"){
-		$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE F.SITUACAO=".$situacao;
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php';</script>";
+} 
+
+if (isset($_POST['consultar'])) {
+	if ($situacao == "'Enviado'") {
+		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, F.TIPO, F.FEEDBACK FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE F.SITUACAO=" . $situacao;
+	} else {
+		$query ="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK, U3.NOME AS ATUALIZADO_POR FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.ATUALIZADO_POR WHERE F.SITUACAO=" . $situacao;
 	}
-	else{
-		$query="SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, TIPO, FEEDBACK, U3.NOME AS ATUALIZADO_POR FROM FEEDBACK F INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID
-INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.ATUALIZADO_POR WHERE F.SITUACAO=".$situacao;
-	}
-	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
-	while($feed= $cnx->fetch_array()){
-		$vtId[$x]=$feed["ID"];
-		$vtRemetente[$x]=$feed["REMETENTE"];
-		$vtDestinatario[$x]=$feed["DESTINATARIO"];
-		$vtTipo[$x]=$feed["TIPO"];
-		$vtFeedback[$x]=$feed["FEEDBACK"];
-		$vtAprovadoPor[$x]=$feed["ATUALIZADO_POR"];				
+	$x = 0;
+	$cnx = mysqli_query($phpmyadmin, $query);
+	while ($feed = $cnx->fetch_array()) {
+		$vtId[$x] = $feed['ID'];
+		$vtRemetente[$x] = $feed['REMETENTE'];
+		$vtDestinatario[$x] = $feed['DESTINATARIO'];
+		$vtTipo[$x] = $feed['TIPO'];
+		$vtFeedback[$x] = $feed['FEEDBACK'];
+		$vtAprovadoPor[$x] = $feed['ATUALIZADO_POR'];				
 		$x++;
-		$contador=$x;
-	}
-	if(mysqli_num_rows($cnx)==0){
+		$contador = $x;
+	} if (mysqli_num_rows($cnx) == 0) {
 		?><script type="text/javascript">			
 			alert('Nenhum feedback encontrado nesta consulta!');
-			window.location.href=window.location.href;
+			window.location.href = window.location.href;
 		</script> <?php		
 	}	
 }
@@ -41,12 +39,17 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 <head>
 	<title>Gestão de Desempenho - Aprovação Feedback</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <style type="text/css">
+    	.button{
+    		width: 121px;
+    	}
+    </style>   
 </head>
 <body>	
 <hr/>
 <section class="section" id="topo">
-<?php if($situacao =="" && isset($_POST['consultar'])==null ): ?>	
+<?php if ($situacao == "" && isset($_POST['consultar']) == null ): ?>	
 	<form id="form1" action="feedback-approval.php" method="POST">
 		<div class="field is-horizontal">
 			<div class="field is-horizontal">
@@ -79,8 +82,9 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 			</div>
 		</div>						
 	</form>
-<?php endif; ?>
-<?php if(isset($_POST['consultar']) && $contador!=0) : ?>	
+<?php endif;
+ 
+if (isset($_POST['consultar']) && $contador != 0) : ?>	
 <form method="POST" action="feedback-approval.php" id="form2">	
 	<div class="table__wrapper">
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
@@ -91,13 +95,21 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		<th>Destinatário</th>
 		<th>Tipo</th>
 		<th>Feedback</th>
-		<?php if($situacao=="'Enviado'"):?><th>Aprovar</th><?php endif;?>
-		<?php if($situacao=="'Aprovado'"):?><th>Aprovado por</th><?php endif;?>
-		<?php if($situacao=="'Reprovado'"):?><th>Reprovado por</th><?php endif;?>
-		<?php if($situacao!="'Enviado'"):?><th>Aprovar</th><?php endif;?>    			
-	</tr>
-	<?php
- 	for( $i = 0; $i < sizeof($vtRemetente); $i++ ) : ?>
+		<?php 
+
+		if ($situacao == "'Enviado'") {
+			echo '<th>Aprovar</th>';
+		} else if ($situacao == "'Aprovado'") {
+			echo '<th>Aprovado por</th>
+		    <th>Aprovar</th>';
+		} else if ($situacao == "'Reprovado'") {
+			echo '<th>Reprovado por</th>
+			<th>Aprovar</th>';
+		} else if ($situacao != "'Enviado'") {
+			echo '<th>Aprovar</th>';   			
+		}
+	echo '</tr>';
+ 	for ( $i = 0; $i < sizeof($vtRemetente); $i++ ) : ?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA VETOR-->
@@ -107,38 +119,53 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		  		</div>
 		  	</div>
 		</td>
-		<td><?php echo $vtRemetente[$i]?></td>
-		<td><?php echo $vtDestinatario[$i]?></td>
-		<td><?php echo $vtTipo[$i]?></td>
-		<td><?php echo $vtFeedback[$i]?></td>		
-  		<?php if($situacao!="'Enviado'"):?><td><?php echo $vtAprovadoPor[$i]?></td><?php endif;?>
-  		<?php if($situacao=="'Enviado'"):?><td>
-  			<div class="select">
-  				<select name="upSituacao[]">
-  					<option value="Enviado">...</option>
-  					<option value="Aprovado">Sim</option>
-  					<option value="Reprovado">Não</option>
+		<?php
+		echo "<td>" . $vtRemetente[$i] . "</td>
+		<td>" . $vtDestinatario[$i] . "</td>
+		<td>" . $vtTipo[$i] . "</td>
+		<td>" . $vtFeedback[$i] . "</td>";
+
+  		if ($situacao != "'Enviado'") {
+  			echo "<td>" . $vtAprovadoPor[$i] . "</td>";
+  		}
+  		
+  		if ($situacao == "'Enviado'") {
+  			echo "<td>
+  			<div class='select'>
+  				<select name='upSituacao[]''>
+  					<option value='Enviado'>...</option>
+  					<option value='Aprovado'>Sim</option>
+  					<option value='Reprovado'>Não</option>
   				</select>					
 			</div>	
-  		</td><?php endif;?>
-  		<?php if($situacao=="'Aprovado'"):?><td>
-  			<div class="select">
-  				<select name="upSituacao[]">
-  					<option value="Aprovado">Sim</option>
-  					<option value="Reprovado">Não</option>
+  			</td>";
+  		}
+
+  		if ($situacao == "'Aprovado'") {
+  			echo "<td>
+  			<div class='select'>
+  				<select name='upSituacao[]'>
+  					<option value='Aprovado'>Sim</option>
+  					<option value='Reprovado'>Não</option>
   				</select>					
 			</div>	
-  		</td><?php endif;?>
-  		<?php if($situacao=="'Reprovado'"):?><td>
-  			<div class="select">
-  				<select name="upSituacao[]">
-  					<option value="Reprovado">Não</option>
-  					<option value="Aprovado">Sim</option>
+  			</td>";
+  		}
+  		
+  		if ($situacao == "'Reprovado'") {
+  			echo "<td>
+  			<div class='select'>
+  				<select name='upSituacao[]'>
+  					<option value='Reprovado'>Não</option>
+  					<option value='Aprovado'>Sim</option>
   				</select>					
 			</div>	
-  		</td><?php endif;?>
-	</tr>
-<?php endfor;?>
+  			</td>";
+  		}
+		echo "</tr>";
+	endfor; 
+
+	?>
 	</table>	
 	<a href="#topo">		
 		<div class=".scrollWrapper">
@@ -150,11 +177,15 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 		<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<a href="feedback-approval.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+					<input name="aprovar" type="submit" class="button is-primary" value="Atualizar"/>
 				</div>
 				<div class="control">
-					<input name="aprovar" type="submit" class="button is-primary" value="Atualizar"/>
-				</div>					
+					<a href="feedback-approval.php"><input name="Limpar" type="submit" class="button is-primary" value="Voltar"/></a>
+				</div>
+				<div class="control">
+					<a href="home.php" class="button is-primary">Cancelar</a>
+				</div>
+									
 			</div>						
 		</div>
 	</div>
@@ -163,29 +194,26 @@ INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=
 <?php endif;?>	
 </body>
 </html>
-<?php 
-if(isset($_POST["aprovar"])){
-	$ids=array_filter($_POST["id"]);
-	$situacoes=array_filter($_POST["upSituacao"]);
-	$x=0;
-	while ($x< sizeof($ids)) {
-		$upFeedback="UPDATE FEEDBACK SET ATUALIZADO_POR=".$_SESSION["userId"].", SITUACAO='".$situacoes[$x]."' WHERE ID=".$ids[$x];
-		$cnx= mysqli_query($phpmyadmin, $upFeedback);
+<?php
+
+if (isset($_POST['aprovar'])) {
+	$ids = array_filter($_POST['id']);
+	$situacoes = array_filter($_POST['upSituacao']);
+	$x = 0;
+	while ($x < sizeof($ids)) {
+		$cnx = mysqli_query($phpmyadmin, "UPDATE FEEDBACK SET ATUALIZADO_POR = " . $_SESSION["userId"] . ", SITUACAO = '" . $situacoes[$x] . "' WHERE ID = " . $ids[$x]);
 		$x++;
 	}
-	if($x>0){
-		$x=$x+1;
+
+	if ($x > 0) {
+		$x = $x + 1;
 		?><script type="text/javascript">			
-			alert('Foi atualizado(s) '<?php echo $x;?>' feedback(s)!');
-			//window.location.href=window.location.href;
+			alert('Foi atualizado(s) "<?php echo $x; ?>" feedback(s)!');
 		</script> <?php		
-	}
-	else{
+	} else {
 		?><script type="text/javascript">			
 			alert('Nenhum feedback foi atualizado!');
-			//window.location.href=window.location.href;
 		</script> <?php	
 	}
 }
-}//ELSE - caso tenha permissão.
 ?>
