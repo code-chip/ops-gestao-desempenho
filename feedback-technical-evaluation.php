@@ -183,6 +183,7 @@ if(isset($_POST['enviar'])){
 		$upInd="UPDATE AVAL_INDICE SET SITUACAO='Lider' WHERE ID=".$idInd;
 		mysqli_query($phpmyadmin, $upInd);
 	}//VERIFICAÇÃO DO COMENTÁRIO.
+	
 	$checkComentario="SELECT ID FROM AVAL_COMENTARIO WHERE AVAL_PERGUNTA_COM_ID=(SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=2 AND SITUACAO='Ativo') AND AVAL_INDICE_ID=".$idInd;
 	$cnx6=mysqli_query($phpmyadmin, $checkComentario);
 	if(mysqli_num_rows($cnx6)==0 && $comentario!=null){
