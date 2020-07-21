@@ -9,6 +9,19 @@ if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
 	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 }
 
+if (3 == $_SESSION['userId']) {
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (57 == $_SESSION['userId']) {
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (58 == $_SESSION['userId']) {
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (99 == $_SESSION['userId']) {
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else {
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,6 +56,27 @@ A primeira página contém a sua autoavaliação e a segunda página você fará
 No segundo momento de sua avaliação, lembre-se de avaliar o seu líder considerando todo o período de sua sugestão, não considere somente os acontecimentos atuais ou pontos negativos.  
 	    			</div>	
 		    	<div class="field">
+		    	<div class="field is-horizontal">
+					<div class="field-label is-normal">
+						<label class="label">Colaborador:</label>
+					</div>
+					<div class="field-body">
+						<div class="field" >							
+							<div class="control" style="max-width:17em;">
+								<div class="select is-size-7-touch">
+									<select name="setor" id="setor">
+									<option value="">Selecione</option>
+									<?php $query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+										$cnx = mysqli_query($phpmyadmin, $query);
+										while($reSetor = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
+										}?>
+									</select>	
+								</div>
+							</div>						
+						</div>
+					</div>
+				</div>	
 				<div class="control">
 				    <label class="checkbox">
 					    <input type="checkbox" name="concordo">
