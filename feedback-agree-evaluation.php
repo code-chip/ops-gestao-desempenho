@@ -1,11 +1,14 @@
 <?php 
-$menuAtivo="Feedback";
-include('menu.php');
-$n=rand(1,13);
-$img="img/wallpaper/evaluation".$n."-min.jpg";
-if(isset($_POST["iniciar"]) && $_POST["concordo"]!=null){
+$menuAtivo = 'Feedback';
+require('menu.php');
+
+$n = rand(1,13);
+$img = "img/wallpaper/evaluation" . $n . "-min.jpg";
+
+if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
 	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 }
+
 ?>
 <!DOCTYPE html>
 <html>
