@@ -1,5 +1,5 @@
 <?php 
-$menuAtivo = 'Feedback';
+$menuAtivo = 'feedback';
 require('menu.php');
 
 $n = rand(1,13);
@@ -21,6 +21,11 @@ if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
 	<link rel="stylesheet" href="css/personal.css"/>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<style type="text/css">
+		.button{
+			width: 121px;
+		}
+	</style>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
