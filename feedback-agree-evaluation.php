@@ -102,9 +102,9 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 
 if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
 	if ($query == 'subordinado') {
-		$_SESSION['user'] = $_POST['usuario'];
-	} else {
 		$_SESSION['user'] = $_SESSION['userId'];
+	} else {
+		$_SESSION['user'] = $_POST['usuario'];
 	}
 
 	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
