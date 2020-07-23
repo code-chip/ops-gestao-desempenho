@@ -4,7 +4,7 @@ require('menu.php');
 
 $data = date('Y-m-d');
 
-$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO, (SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ".$_SESSION["userId"] . ") AS CARGO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION["userId"]." AND REGISTRO='" . $data . "';");
+$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO, C.CARGO, C.CARGO_ID FROM AVAL_INDICE, (SELECT C.NOME AS CARGO, C.ID AS CARGO_ID FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ". $_SESSION['user'] . ") AS C WHERE USUARIO_ID = ".$_SESSION['user']." AND REGISTRO='" . $data . "';");
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
@@ -73,7 +73,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 
 	$y = 1;		
 	//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
-	$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 3 AND CARGO_ID=".$_SESSION["cargo"]." ORDER BY ORDEM;");
+	$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 3 AND CARGO_ID=" . $index['CARGO_ID'] . " ORDER BY ORDEM;");
 	while ($pergunta=$cnx->fetch_array()){ 
 		$questao = "questao".$y; 
 		$idPergunta[$y-1] = $pergunta["ID"];
@@ -106,7 +106,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 
 	//<!--PERGUNTA COMPORTAMENTAL-->
 	echo "<div class='box'>Comportamentais</div>";
-	$getPergunta = "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 4 AND CARGO_ID = ".$_SESSION["cargo"]." ORDER BY ORDEM;";
+	$getPergunta = "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 4 AND CARGO_ID = " . $index['CARGO_ID'] . " ORDER BY ORDEM;";
 	$cnx = mysqli_query($phpmyadmin, $getPergunta);
 	
 	while ($pergunta = $cnx->fetch_array()) { 
