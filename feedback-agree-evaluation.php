@@ -4,17 +4,17 @@ require('menu.php');
 
 $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
-
+$yearMonther= date('Y-m');
 
 
 if (3 == $_SESSION['userId']) {//Monara
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN (4,5) AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN (4,5) AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
 } else if (57 == $_SESSION['userId']) {//Marivalda
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
 } else if (58 == $_SESSION['userId']) {//Ataíde
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
 } else if (99 == $_SESSION['userId']) {//Thiago
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND TURNO_ID = 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
 } else {//Todos
 	$query = 'subordinado';
 }
@@ -100,14 +100,22 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 </html>
 <?php
 
-if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
+if (isset($_POST['iniciar']) && $_POST['concordo'] != null) {
 	if ($query == 'subordinado') {
 		$_SESSION['user'] = $_SESSION['userId'];
+
+		echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 	} else {
-		$_SESSION['user'] = $_POST['usuario'];
+		if ($_POST['usuario'] == null) {
+			echo "<script>alert('Selecione o funcionário a ser avaliado!');</script>";
+		} else {
+			$_SESSION['user'] = $_POST['usuario'];
+
+			echo "<script>window.location.href='feedback-self-evaluation.php';</script>";	
+		}
 	}
 
-	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
+	
 }
 
 ?>
