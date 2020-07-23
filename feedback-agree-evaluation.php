@@ -5,22 +5,21 @@ require('menu.php');
 $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 
-if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
-	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
+
+
+if (3 == $_SESSION['userId']) {//Monara
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN (4,5) AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (57 == $_SESSION['userId']) {//Marivalda
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (58 == $_SESSION['userId']) {//Ataíde
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else if (99 == $_SESSION['userId']) {//Thiago
+	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND TURNO_ID = 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+} else {//Todos
+	$query = 'subordinado';
 }
 
-if (3 == $_SESSION['userId']) {
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-} else if (57 == $_SESSION['userId']) {
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-} else if (58 == $_SESSION['userId']) {
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-} else if (99 == $_SESSION['userId']) {
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-} else {
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-}
-
+echo $query;
 
 ?>
 <!DOCTYPE html>
@@ -45,7 +44,7 @@ if (3 == $_SESSION['userId']) {
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
-	    		<form method="POST">
+	    		<form method="POST" action="feedback-agree-evaluation.php">
 	    		<div class="box transparencia bloco">
 	    			<strong>Orientações da Avaliação</strong>
 	    			<div class="box antitransparencia">
@@ -54,8 +53,9 @@ Essa é a sua Avaliação de Desempenho, o preenchimento correto e fidedigno ser
 A primeira página contém a sua autoavaliação e a segunda página você fará a avaliação da sua liderança.
 <br><br>Todas as respostas são obrigatórias, aproveite o campo comentário para enriquecer e evidenciar com fatos ou exemplos da sua avaliação.
 No segundo momento de sua avaliação, lembre-se de avaliar o seu líder considerando todo o período de sua sugestão, não considere somente os acontecimentos atuais ou pontos negativos.  
-	    			</div>	
+	    			</div>
 		    	<div class="field">
+		    	<?php if ($query != 'subordinado'): { ?>	
 		    	<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Colaborador:</label>
@@ -64,19 +64,20 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
-									<select name="setor" id="setor">
+									<select name="usuario">
 									<option value="">Selecione</option>
-									<?php $query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID= 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+									<?php
 										$cnx = mysqli_query($phpmyadmin, $query);
-										while($reSetor = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
+										while($user = mysqli_fetch_assoc($cnx)) {
+											echo '<option value="' . $user['ID'] . '">' . $user['NOME'] . '</option>';
 										}?>
 									</select>	
 								</div>
 							</div>						
 						</div>
 					</div>
-				</div>	
+				</div>
+				<?php } endif; ?>	
 				<div class="control">
 				    <label class="checkbox">
 					    <input type="checkbox" name="concordo">
@@ -99,3 +100,16 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 	</div>
 </body>
 </html>
+<?php
+
+if (isset($_POST["iniciar"]) && $_POST["concordo"] != null) {
+	if ($query == 'subordinado') {
+		$_SESSION['user'] = $_POST['usuario'];
+	} else {
+		$_SESSION['user'] = $_SESSION['userId'];
+	}
+
+	echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
+}
+
+?>
