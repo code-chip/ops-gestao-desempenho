@@ -15,8 +15,6 @@ if (3 == $_SESSION['userId']) {//Monara
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
 } else if (99 == $_SESSION['userId']) {//Thiago
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
-} else {//Todos
-	$query = 'subordinado';
 }
 
 ?>
@@ -53,7 +51,7 @@ A primeira página contém a sua autoavaliação e a segunda página você fará
 No segundo momento de sua avaliação, lembre-se de avaliar o seu líder considerando todo o período de sua sugestão, não considere somente os acontecimentos atuais ou pontos negativos.  
 	    			</div>
 		    	<div class="field">
-		    	<?php if ($query != 'subordinado'): { ?>	
+		    	<?php if ($_SESSION['permissao'] > 1): { ?>	
 		    	<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Colaborador:</label>
@@ -68,7 +66,10 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 										$cnx = mysqli_query($phpmyadmin, $query);
 										while($user = mysqli_fetch_assoc($cnx)) {
 											echo '<option value="' . $user['ID'] . '">' . $user['NOME'] . '</option>';
-										}?>
+										}
+										
+										echo '<option value="' . $_SESSION['userId'] . '">' . $_SESSION['nameUser'] . '</option>';
+									?>
 									</select>	
 								</div>
 							</div>						
