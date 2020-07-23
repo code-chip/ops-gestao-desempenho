@@ -49,7 +49,7 @@ if (mysqli_error($phpmyadmin) == null) {
   }
 }
 
-$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 4;");
+$cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 6;");
 $x = 0;
 
 while ($G6 = $cnx->fetch_array()) {
@@ -152,40 +152,34 @@ $x = 0;
       }
     }
   }
-  //DASH RANKING MELHORES DO MÊS - top8
-  $querytop8="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '".$anoMes."' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 9;";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querytop8);
-  while ($top8= $cnx->fetch_array()) {
-    $vtNomeTop8[$x]=$top8["NOME"];
-    $vtMediaTop8[$x]=$top8["MEDIA"];
+  
+  $x = 0;//DASH RANKING MELHORES DO MÊS - top8
+  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $anoMes . "' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 8;");
+  while ($top8 = $cnx->fetch_array()) {
+    $vtNomeTop8[$x] = $top8["NOME"];
+    $vtMediaTop8[$x] = $top8["MEDIA"];
     $x++;
   }
-  //DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
-  $querytop10="SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO 
-  INNER JOIN USUARIO U ON U.ID=USUARIO_ID
-  WHERE PRESENCA_ID NOT IN(3,5) AND REGISTRO>=DATE_SUB('".$anoMes."-21', INTERVAL 1 MONTH) AND REGISTRO<='".$anoMes."-20'
-  GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 11;";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querytop10);
-  while ($top10= $cnx->fetch_array()) {
-    $vtNomeTop10[$x]=$top10["NOME"];
-    $vtMediaTop10[$x]=$top10["MEDIA"];
+  
+  $x = 0;//DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
+  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID = USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $anoMes . "' GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 10;");
+  while ($top10 = $cnx->fetch_array()) {
+    $vtNomeTop10[$x] = $top10["NOME"];
+    $vtMediaTop10[$x] = $top10["MEDIA"];
     $x++;
   }
   //DASH FAIXA ETÁRIA POR IDADE
-  $queryFaixaEtaria="SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=18 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=21 AND SITUACAO<>'Desligado' UNION ALL
+  $queryFaixaEtaria = "SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=18 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=21 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=22 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=22 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=26 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=28 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=29 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=31 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=32 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=35 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=36 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=40 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=41 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=44 AND SITUACAO<>'Desligado';";
-  $x=0;
-  $cnx=mysqli_query($phpmyadmin, $queryFaixaEtaria);
-  while ($faiEta=$cnx->fetch_array()) {
-    $vtFaixaEtaria[$x]=$faiEta["COUNT(ID)"];
+  $x = 0;
+  $cnx = mysqli_query($phpmyadmin, $queryFaixaEtaria);
+  while ($faiEta = $cnx->fetch_array()) {
+    $vtFaixaEtaria[$x] = $faiEta["COUNT(ID)"];
     $x++;
   }
   //DASH META ATINGIDA PERDIDA - meta-pacman
@@ -719,6 +713,8 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Mês', 'Acessos'],
+          ['<?php echo $vtG6Mes[5]?>',  <?php echo $vtG6Acesso[5]?>],
+          ['<?php echo $vtG6Mes[4]?>',  <?php echo $vtG6Acesso[4]?>],
           ['<?php echo $vtG6Mes[3]?>',  <?php echo $vtG6Acesso[3]?>],
           ['<?php echo $vtG6Mes[2]?>',  <?php echo $vtG6Acesso[2]?>],
           ['<?php echo $vtG6Mes[1]?>',  <?php echo $vtG6Acesso[1]?>],
