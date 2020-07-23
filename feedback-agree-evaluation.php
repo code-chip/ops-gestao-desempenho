@@ -19,8 +19,6 @@ if (3 == $_SESSION['userId']) {//Monara
 	$query = 'subordinado';
 }
 
-echo $query;
-
 ?>
 <!DOCTYPE html>
 <html>
