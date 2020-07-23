@@ -96,24 +96,25 @@ while ($sexoTurno = $cnx->fetch_array()) {
 }
 
 //DASH COMPARATIVO ENTRE TURNOS - dash-turnos. P05
-$cnx= mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d') AS DIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID;");
+$cnx= mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d') AS MESDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID LIMIT 44;");
 $x = 0;
 
 while ($compTurno = $cnx->fetch_array()) {
   $vtcompTurMed[$x] = $compTurno["MEDIA"];
   $vtcompTurReg[$x] = $compTurno["REGISTRO"];
-  $vtcompTurDia[$x] = $compTurno["DIA"];
+  $vtcompTurDia[$x] = $compTurno["MESDIA"];
   $x++;
 }
 
 $x = 0;
 $y = 0;
-
+$countDay;
 while ($x < sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS NO MESMO DIA P/ F.
   if ($vtcompTurReg[$x] == $vtcompTurReg[$x+1]) {
     $turMat[$y] = $vtcompTurMed[$x];
     $turVes[$y] = $vtcompTurMed[$x+1];
     $turDia[$y] = $vtcompTurDia[$x];
+    echo "Mat: ".$turMat[$y]."-> Ves: ".$turVes[$y]."Data: ".$turDia[$y]."<br>";
     $x++; 
     $y++;
   }
@@ -387,6 +388,71 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
       }
     </script>
     <script type="text/javascript">
+            google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'Day');
+      data.addColumn('number', 'Mat');
+      data.addColumn('number', 'Vesp');
+
+      data.addRows([
+        [1,  37.8, 80.8],
+        [2,  30.9, 69.5],
+        [3,  25.4,   57],
+        [4,  11.7, 18.8],
+        [5,  11.9, 17.6],
+        [6,   8.8, 13.6],
+        [7,   7.6, 12.3],
+        [8,  12.3, 29.2],
+        [9,  16.9, 42.9],
+        [10, 12.8, 30.9]        
+      ]);
+
+      var options = {
+        chart: {
+          title: 'Box Office Earnings in First Two Weeks of Opening',
+          subtitle: 'in millions of dollars (USD)'
+        },
+      };
+
+      var chart = new google.charts.Line(document.getElementById('dash-turnos3'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+
+    </script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Dia', 'Matutino', 'Vespertino'],
+          ['<?php echo $turDia[6]?>',  <?php echo $turMat[6]?>, <?php echo $turVes[6]?>],
+          ['<?php echo $turDia[5]?>',  <?php echo $turMat[5]?>, <?php echo $turVes[5]?>],
+          ['<?php echo $turDia[4]?>',  <?php echo $turMat[4]?>, <?php echo $turVes[4]?>],
+          ['<?php echo $turDia[3]?>',  <?php echo $turMat[3]?>, <?php echo $turVes[3]?>],
+          ['<?php echo $turDia[2]?>',  <?php echo $turMat[2]?>, <?php echo $turVes[2]?>],
+          ['<?php echo $turDia[1]?>',  <?php echo $turMat[1]?>, <?php echo $turVes[1]?>],
+          ['<?php echo $turDia[0]?>',  <?php echo $turMat[0]?>, <?php echo $turVes[0]?>]
+        ]);
+
+        var options = {
+          title: 'Performance entre turnos',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('dash-turnos'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    <script type="text/javascript">
     	google.charts.load('current', {packages: ['corechart', 'line']});
 		google.charts.setOnLoadCallback(drawLineColors);
 
@@ -397,13 +463,18 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 		    data.addColumn('number', 'Vespertino');
 
 		    data.addRows([
-          [<?php echo $turDia[10]?>, <?php echo $turMat[10]?>, <?php echo $turVes[10]?>],
-          [<?php echo $turDia[9]?>, <?php echo $turMat[9]?>, <?php echo $turVes[9]?>], [<?php echo $turDia[8]?> ,<?php echo $turMat[8]?>, <?php echo $turVes[8]?>],
-          [<?php echo $turDia[7]?>, <?php echo $turMat[7]?>, <?php echo $turVes[7]?>],   [<?php echo $turDia[6]?>, <?php echo $turMat[6]?>, <?php echo $turVes[6]?>],
-          [<?php echo $turDia[5]?>, <?php echo $turMat[5]?>, <?php echo $turVes[5]?>],  [<?php echo $turDia[4]?>, <?php echo $turMat[4]?>, <?php echo $turVes[4]?>],
-          [<?php echo $turDia[3]?>, <?php echo $turMat[3]?>, <?php echo $turVes[3]?>],  [<?php echo $turDia[2]?>, <?php echo $turMat[2]?>, <?php echo $turVes[2]?>],
-		      [<?php echo $turDia[1]?>, <?php echo $turMat[1]?>, <?php echo $turVes[1]?>], [<?php echo $turDia[0]?>, <?php echo $turMat[0]?>, <?php echo $turVes[0]?>]
-		    ]);
+          [<?php echo $turDia[0]?>, <?php echo $turMat[0]?>, <?php echo $turVes[0]?>],
+          [<?php echo $turDia[1]?>, <?php echo $turMat[1]?>, <?php echo $turVes[1]?>], 
+          [<?php echo $turDia[2]?> ,<?php echo $turMat[2]?>, <?php echo $turVes[2]?>],
+          [<?php echo $turDia[3]?>, <?php echo $turMat[3]?>, <?php echo $turVes[3]?>],   
+          [<?php echo $turDia[4]?>, <?php echo $turMat[4]?>, <?php echo $turVes[4]?>],
+          [<?php echo $turDia[5]?>, <?php echo $turMat[5]?>, <?php echo $turVes[5]?>],  
+          [<?php echo $turDia[6]?>, <?php echo $turMat[6]?>, <?php echo $turVes[6]?>],
+          [<?php echo $turDia[7]?>, <?php echo $turMat[7]?>, <?php echo $turVes[7]?>],  
+          [<?php echo $turDia[8]?>, <?php echo $turMat[8]?>, <?php echo $turVes[8]?>],
+          [<?php echo $turDia[9]?>, <?php echo $turMat[9]?>, <?php echo $turVes[9]?>], 
+          [<?php echo $turDia[10]?>, <?php echo $turMat[10]?>, <?php echo $turVes[10]?>]
+        ]);
 
 		    var options = {
 		    	hAxis: {
@@ -414,7 +485,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 		        },
 		        colors: ['#a52714', '#097138']
 		    };
-		    	var chart = new google.visualization.LineChart(document.getElementById('dash-turnos'));
+		    	var chart = new google.visualization.LineChart(document.getElementById('dash-turnos2'));
 		      	chart.draw(data, options);
 		    }
     </script>
