@@ -4,7 +4,7 @@ require('menu.php');
 
 $data = date('Y-m');
 
-$cx = mysqli_query($phpmyadmin, "SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ".$_SESSION['user']);
+$cx = mysqli_query($phpmyadmin, "SELECT C.ID AS ID, C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ".$_SESSION['user']);
 $cargo = $cx->fetch_array();
 
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
@@ -77,7 +77,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 
 	$y = 1;		
 	//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
-	$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 1 AND CARGO_ID=".$_SESSION["cargo"]." ORDER BY ORDEM;");
+	$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 1 AND CARGO_ID = " . $cargo['ID'] . " ORDER BY ORDEM;");
 	while ($pergunta=$cnx->fetch_array()){ 
 		$questao = "questao".$y; 
 		$idPergunta[$y-1] = $pergunta["ID"];
@@ -121,7 +121,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 
 	//<!--PERGUNTA COMPORTAMENTAL-->
 	echo "<div class='box'>Comportamentais</div>";
-	$getPergunta = "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 2 AND CARGO_ID = ".$_SESSION["cargo"]." ORDER BY ORDEM;";
+	$getPergunta = "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 2 AND CARGO_ID = " . $cargo['ID'] . " ORDER BY ORDEM;";
 	$cnx = mysqli_query($phpmyadmin, $getPergunta);
 	
 	while ($pergunta = $cnx->fetch_array()) { 
@@ -182,7 +182,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 		</div>
 		<div class="field is-grouped">
 		  	<div class="control">
-		    	<a href="home.php"><button class="button is-link">Cancelar</button></a>
+		    	<a href="feedback-agree-evaluation.php" class="button is-link">Cancelar</a>
 		  	</div>
 		  	<div class="control">
 		    	<input type="submit" name="proxima" class="button is-link is-light" value="Próxima">
