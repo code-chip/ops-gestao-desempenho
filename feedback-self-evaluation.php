@@ -2,18 +2,18 @@
 $menuAtivo = 'feedback';
 require('menu.php');
 
-$data = date('Y-m-d');
+$data = date('Y-m');
 
 $cx = mysqli_query($phpmyadmin, "SELECT C.NOME AS CARGO FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ".$_SESSION["userId"]);
 $cargo = $cx->fetch_array();
 
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION["userId"]." AND REGISTRO='" . $data . "';");
+$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION["userId"]." AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
 if ($index["SITUACAO"] == "Finalizado") {
-	echo "<script>alert('Avaliação já realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
+	echo "<script>alert('Avaliação realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
 }
 
 ?>
@@ -208,9 +208,9 @@ if (isset($_POST['proxima'])) {
 	}//CONSULTA SE HÁ REGISTRO DE AVALIAÇÃO NESTE DIA.
 	
 	if ( $answer == 0) {//Criar o indice do registro
-		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID,REGISTRO,SITUACAO) VALUES(".$_SESSION["userId"].",'".$data."','Iniciado')");
+		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID,REGISTRO,SITUACAO) VALUES(".$_SESSION["userId"].",'" . date('Y-m-d') . "','Iniciado')");
 		
-		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION["userId"] . " AND REGISTRO='" . $data . "' AND SITUACAO<>'Finalizado';");//SALVA CHAVE DO INDICE.
+		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION["userId"] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "' AND SITUACAO<>'Finalizado';");//SALVA CHAVE DO INDICE.
 		$index = $cnx5->fetch_array();
 
 		for ($i = 0 ;$i < sizeof($resposta) - 1; $i++) {//PERCORRE PELAS QUESTÕES.			
