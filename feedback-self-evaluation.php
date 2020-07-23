@@ -16,6 +16,14 @@ if ($index["SITUACAO"] == "Finalizado") {
 	echo "<script>alert('Avaliação realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
 }
 
+if ($_SESSION['userId'] == $_SESSION['user']) {
+	$button = 'Próxima';
+	$redirect = "<script> window.location.href='feedback-technical-evaluation.php'; </script>";
+} else {
+	$button = 'Enviar';
+	$redirect = "<script>alert('Avaliação realizada com sucesso!'); window.location.href='feedback-agree-evaluation.php'; </script>";
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -185,7 +193,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 		    	<a href="feedback-agree-evaluation.php" class="button is-link">Cancelar</a>
 		  	</div>
 		  	<div class="control">
-		    	<input type="submit" name="proxima" class="button is-link is-light" value="Próxima">
+		    	<input type="submit" name="proxima" class="button is-link is-light" value="<?php echo $button;?>">
 		  	</div>
 		</div>
 	</div>									
@@ -219,7 +227,7 @@ if (isset($_POST['proxima'])) {
 
 		mysqli_query($phpmyadmin, "INSERT INTO AVAL_COMENTARIO(AVAL_INDICE_ID, AVAL_PERGUNTA_COM_ID, COMENTARIO) VALUES(" . $index["ID"] . ", (SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=1 AND SITUACAO='Ativo'),'" . $comentario . "')");
 
-		echo "<script> window.location.href='feedback-technical-evaluation.php'; </script>";
+		echo $redirect;
 
 	} else {//SALVA CHAVE DO INDICE.
 		for ($i = 0; $i < sizeof($resposta) - 1; $i++) {//PERCORRE AS QUESTÕES.
