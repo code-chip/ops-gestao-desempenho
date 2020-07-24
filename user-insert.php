@@ -163,7 +163,7 @@ else{
 					<div class="control">
 						<div class="select">
 							<select name="gestor">								
-								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo'"; 
+								<?php $gdGestor="SELECT ID, NOME FROM USUARIO WHERE PERMISSAO_ID>1 AND SITUACAO='Ativo' ORDER BY 2"; 
 								$con = mysqli_query($phpmyadmin , $gdGestor); $x=0; 
 								while($gestor = $con->fetch_array()):{?>
 									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=$gestor["NOME"];?></option>
