@@ -12,15 +12,17 @@ $cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUA
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
-if ($index["SITUACAO"] == "Finalizado") {
+if ($index["SITUACAO"] == 'Finalizado') {
 	echo "<script>alert('Avaliação realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
 }
 
 if ($_SESSION['userId'] == $_SESSION['user']) {
 	$button = 'Próxima';
+	$situation = 'Iniciado';
 	$redirect = "<script> window.location.href='feedback-technical-evaluation.php'; </script>";
 } else {
 	$button = 'Enviar';
+	$situation = 'Finalizado';
 	$redirect = "<script>alert('Avaliação realizada com sucesso!'); window.location.href='feedback-agree-evaluation.php'; </script>";
 }
 
@@ -216,9 +218,9 @@ if (isset($_POST['proxima'])) {
 	}//CONSULTA SE HÁ REGISTRO DE AVALIAÇÃO NESTE DIA.
 	
 	if ( $answer == 0) {//Criar o indice do registro
-		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID,REGISTRO,SITUACAO) VALUES(".$_SESSION['user'].",'" . date('Y-m-d') . "','Iniciado')");
+		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID, AVALIACAO_POR, REGISTRO, SITUACAO) VALUES(" . $_SESSION['user'] . ", " . $_SESSION['userId'] . ",'" . date('Y-m-d') . "','" . $situation . "')");
 		
-		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION['user'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "' AND SITUACAO<>'Finalizado';");//SALVA CHAVE DO INDICE.
+		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION['user'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");//SALVA CHAVE DO INDICE.
 		$index = $cnx5->fetch_array();
 
 		for ($i = 0 ;$i < sizeof($resposta) - 1; $i++) {//PERCORRE PELAS QUESTÕES.			
