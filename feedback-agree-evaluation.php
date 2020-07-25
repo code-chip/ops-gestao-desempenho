@@ -4,17 +4,27 @@ require('menu.php');
 
 $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
-$yearMonther= date('Y-m');
+$yearMonther = date('Y-m');
 
 
 if (3 == $_SESSION['userId']) {//Monara
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN (4,5) AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+
+	$_SESSION['leader'] = true;
 } else if (57 == $_SESSION['userId']) {//Marivalda
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
+
+	$_SESSION['leader'] = true;
 } else if (58 == $_SESSION['userId']) {//Ataíde
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
+
+	$_SESSION['leader'] = true;
 } else if (99 == $_SESSION['userId']) {//Thiago
 	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
+
+	$_SESSION['leader'] = true;
+} else {
+	$_SESSION['leader'] = false;
 }
 
 ?>

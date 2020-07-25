@@ -75,8 +75,8 @@ if ($index["SITUACAO"] == "Finalizado") {
 	//VERIFICA SE HÁ PERGUNTA P/ CARGO DO USUÁRIO.
 	$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERGUNTA FROM AVAL_PERGUNTA WHERE AVAL_TIPO_PERGUNTA_ID = 3 AND CARGO_ID=" . $index['CARGO_ID'] . " ORDER BY ORDEM;");
 	while ($pergunta=$cnx->fetch_array()){ 
-		$questao = "questao".$y; 
-		$idPergunta[$y-1] = $pergunta["ID"];
+		$questao = 'questao' . $y; 
+		$idPergunta[$y-1] = $pergunta['ID'];
 		
 		echo "
 		<div class='box'>	
