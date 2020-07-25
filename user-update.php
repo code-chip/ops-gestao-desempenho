@@ -261,7 +261,7 @@ else if(isset($_POST['consultar'])!=null){
 						<div class="select">
 							<select name="gestor">								
 								<option selected="selected" value="<?php echo $dados["GESTOR_ID"];?>"><?php echo $dados["GESTOR"];?></option>	
-								<?php $gdGestor="SELECT ID, NOME FROM USUARIO WHERE SITUACAO='Ativo' AND PERMISSAO_ID>1 AND ID<>".$dados["GESTOR_ID"]; 
+								<?php $gdGestor="SELECT ID, NOME FROM USUARIO WHERE SITUACAO='Ativo' AND PERMISSAO_ID>1 AND ID<>".$dados["GESTOR_ID"]." ORDER BY 2"; 
 								$con = mysqli_query($phpmyadmin , $gdGestor);
 								$x=0; while($gestor = $con->fetch_array()):{ ?>
 									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=$gestor["NOME"]; ?></option>
