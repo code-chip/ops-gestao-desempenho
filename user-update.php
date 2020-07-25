@@ -87,9 +87,9 @@ if( $busca != ""){
 		$f="U.".$filtro."'".$busca."' LIMIT 1;";
 	}	
 	$query="SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.CELULAR, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, 
-U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, G.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.OBSERVACAO, U.SITUACAO  FROM USUARIO U
+U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, UG.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.OBSERVACAO, U.SITUACAO  FROM USUARIO U
 INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID 
-INNER JOIN GESTOR G ON G.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID 
+INNER JOIN USUARIO UG ON UG.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID 
 INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 	$x=0;	
 	$cnx=mysqli_query($phpmyadmin, $query);
@@ -261,7 +261,7 @@ else if(isset($_POST['consultar'])!=null){
 						<div class="select">
 							<select name="gestor">								
 								<option selected="selected" value="<?php echo $dados["GESTOR_ID"];?>"><?php echo $dados["GESTOR"];?></option>	
-								<?php $gdGestor="SELECT ID, NOME FROM GESTOR WHERE SITUACAO='Ativo' AND ID<>".$dados["GESTOR_ID"]; 
+								<?php $gdGestor="SELECT ID, NOME FROM USUARIO WHERE SITUACAO='Ativo' AND PERMISSAO_ID>1 AND ID<>".$dados["GESTOR_ID"]; 
 								$con = mysqli_query($phpmyadmin , $gdGestor);
 								$x=0; while($gestor = $con->fetch_array()):{ ?>
 									<option value="<?php echo $vtId[$x]=$gestor["ID"];?>"><?php echo $vtNome[$x]=$gestor["NOME"]; ?></option>
