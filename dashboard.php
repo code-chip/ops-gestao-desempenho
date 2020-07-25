@@ -96,7 +96,7 @@ while ($sexoTurno = $cnx->fetch_array()) {
 }
 
 //DASH COMPARATIVO ENTRE TURNOS - dash-turnos. P05
-$cnx= mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d') AS MESDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID LIMIT 44;");
+$cnx= mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d/%m') AS MESDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID LIMIT 44;");
 $x = 0;
 
 while ($compTurno = $cnx->fetch_array()) {
@@ -114,7 +114,6 @@ while ($x < sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS 
     $turMat[$y] = $vtcompTurMed[$x];
     $turVes[$y] = $vtcompTurMed[$x+1];
     $turDia[$y] = $vtcompTurDia[$x];
-    echo "Mat: ".$turMat[$y]."-> Ves: ".$turVes[$y]."Data: ".$turDia[$y]."<br>";
     $x++; 
     $y++;
   }
