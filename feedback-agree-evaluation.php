@@ -21,18 +21,14 @@ $query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId']
 	<link rel="stylesheet" href="css/personal.css"/>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-	<style type="text/css">
-		.button{
-			width: 121px;
-		}
-	</style>
+	<script type="text/javascript" src="js/myjs.js"></script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
 	  	<img alt="Fill Murray" class="hero-background is-transparent" src="<?php echo $img;?>" />
 	  	<div class="hero-body">
 	    	<div class="container">
-	    		<form method="POST" action="feedback-agree-evaluation.php">
+	    		<form method="POST" action="feedback-agree-evaluation.php" onsubmit="return check()">
 	    		<div class="box transparencia bloco">
 	    			<strong>Orientações da Avaliação</strong>
 	    			<div class="box antitransparencia">
@@ -46,13 +42,13 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 		    	<?php if ($_SESSION['permissao'] > 1): { ?>	
 		    	<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Colaborador:</label>
+						<label class="label">Colaborador*:</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
 							<div class="control" style="max-width:17em;">
 								<div class="select is-size-7-touch">
-									<select name="usuario">
+									<select name="usuario" class="required">
 									<option value="">Selecione</option>
 									<?php
 										$cnx = mysqli_query($phpmyadmin, $query);
@@ -71,17 +67,17 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 				<?php } endif; ?>	
 				<div class="control">
 				    <label class="checkbox">
-					    <input type="checkbox" name="concordo">
-				      Eu li e concordo com as orientações
+					    <input type="checkbox" name="concordo" class="required">
+				      Eu li e concordo com as orientações*
 				    </label>
 				</div>
 				</div>
 				<div class="field is-grouped">
 				  	<div class="control">
-				    	<button class="button is-link" name="iniciar">Iniciar</button>
+				    	<button class="button is-link btn128" name="iniciar">Iniciar</button>
 				  	</div>
 				  	<div class="control">
-				    	<a href="home.php"><button class="button is-link is-light">Cancelar</button></a>
+				    	<a href="home.php"><button class="button is-link is-light btn128">Cancelar</button></a>
 				  	</div>
 				</div> 
 				</div>
@@ -99,15 +95,10 @@ if (isset($_POST['iniciar']) && $_POST['concordo'] != null) {
 
 		echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 	} else {
-		if ($_SESSION['permissao'] > 1 && $_POST['usuario'] == null) {
-			echo "<script>alert('Selecione o funcionário a ser avaliado!');</script>";
-		} else {
-			$_SESSION['user'] = $_SESSION['userId'];
+		$_SESSION['user'] = $_SESSION['userId'];
 
-			echo "<script>window.location.href='feedback-self-evaluation.php';</script>";	
-		}
+		echo "<script>window.location.href='feedback-self-evaluation.php';</script>";	
 	}
-
 	
 }
 
