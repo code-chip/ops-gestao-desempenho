@@ -7,7 +7,7 @@ $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 $yearMonther = date('Y-m');
 
 
-$query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' ORDER BY NOME";
+$query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' ORDER BY NOME";
 
 ?>
 <!DOCTYPE html>
