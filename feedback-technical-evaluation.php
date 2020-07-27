@@ -4,7 +4,7 @@ require('menu.php');
 
 $data = date('Y-m-d');
 
-$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO, C.CARGO, C.CARGO_ID FROM AVAL_INDICE, (SELECT C.NOME AS CARGO, C.ID AS CARGO_ID FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ". $_SESSION['user'] . ") AS C WHERE USUARIO_ID = ".$_SESSION['user']." AND REGISTRO='" . $data . "';");
+$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO, C.CARGO, C.CARGO_ID FROM AVAL_INDICE, (SELECT C.NOME AS CARGO, C.ID AS CARGO_ID FROM USUARIO U JOIN CARGO C ON C.ID=U.CARGO_ID WHERE U.ID = ". $_SESSION['user'] . ") AS C WHERE USUARIO_ID = ".$_SESSION['user']." AND AVALIACAO_POR = " . $_SESSION['userId'] . " AND REGISTRO='" . $data . "';");
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
