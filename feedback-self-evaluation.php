@@ -8,7 +8,7 @@ $cx = mysqli_query($phpmyadmin, "SELECT C.ID AS ID, C.NOME AS CARGO FROM USUARIO
 $cargo = $cx->fetch_array();
 
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION['user']." AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");
+$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION['user'].", AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
@@ -198,11 +198,11 @@ if ($index["SITUACAO"] == 'Finalizado') {
 		  	</div>
 		</div>
 		<div class="field is-grouped">
-		  	<div class="control">
-		    	<a href="feedback-agree-evaluation.php" class="button is-link">Cancelar</a>
+			<div class="control">
+		    	<input type="submit" name="proxima" class="button is-link is-light" value="<?php echo $button;?>">
 		  	</div>
 		  	<div class="control">
-		    	<input type="submit" name="proxima" class="button is-link is-light" value="<?php echo $button;?>">
+		    	<a href="feedback-agree-evaluation.php" class="button is-link">Cancelar</a>
 		  	</div>
 		</div>
 	</div>									
