@@ -7,25 +7,7 @@ $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 $yearMonther = date('Y-m');
 
 
-if (3 == $_SESSION['userId']) {//Monara
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID IN (4,5) AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
-
-	$_SESSION['leader'] = true;
-} else if (57 == $_SESSION['userId']) {//Marivalda
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 1 AND SITUACAO<>'Desligado' ORDER BY NOME";
-
-	$_SESSION['leader'] = true;
-} else if (58 == $_SESSION['userId']) {//Ataíde
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 3 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID IN (1,2,3) AND SITUACAO<>'Desligado' ORDER BY NOME";
-
-	$_SESSION['leader'] = true;
-} else if (99 == $_SESSION['userId']) {//Thiago
-	$query = "SELECT ID, NOME FROM USUARIO WHERE SETOR_ID = 1 AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND TURNO_ID = 2 AND SITUACAO<>'Desligado' ORDER BY NOME";
-
-	$_SESSION['leader'] = true;
-} else {
-	$_SESSION['leader'] = false;
-}
+$query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' ORDER BY NOME";
 
 ?>
 <!DOCTYPE html>
@@ -112,15 +94,15 @@ No segundo momento de sua avaliação, lembre-se de avaliar o seu líder conside
 <?php
 
 if (isset($_POST['iniciar']) && $_POST['concordo'] != null) {
-	if ($query == 'subordinado') {
-		$_SESSION['user'] = $_SESSION['userId'];
+	if ($_SESSION['permissao'] > 1) {
+		$_SESSION['user'] = $_POST['usuario'];
 
 		echo "<script>window.location.href='feedback-self-evaluation.php';</script>";
 	} else {
-		if ($_POST['usuario'] == null) {
+		if ($_SESSION['permissao'] > 1 && $_POST['usuario'] == null) {
 			echo "<script>alert('Selecione o funcionário a ser avaliado!');</script>";
 		} else {
-			$_SESSION['user'] = $_POST['usuario'];
+			$_SESSION['user'] = $_SESSION['userId'];
 
 			echo "<script>window.location.href='feedback-self-evaluation.php';</script>";	
 		}
