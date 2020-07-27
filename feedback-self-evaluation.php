@@ -8,7 +8,7 @@ $cx = mysqli_query($phpmyadmin, "SELECT C.ID AS ID, C.NOME AS CARGO FROM USUARIO
 $cargo = $cx->fetch_array();
 
 //CHECK SE JÁ HOUVE ALGUMA PERGUNTA RESPONDIDA;
-$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION['user'].", AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");
+$cy = mysqli_query($phpmyadmin, "SELECT ID, SITUACAO FROM AVAL_INDICE WHERE USUARIO_ID = ".$_SESSION['user']." AND AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");
 $index = $cy->fetch_array();
 $answer = mysqli_num_rows($cy);
 
@@ -227,7 +227,7 @@ if (isset($_POST['proxima'])) {
 	if ( $answer == 0) {//Criar o indice do registro
 		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID, AVALIACAO_POR, REGISTRO, SITUACAO) VALUES(" . $_SESSION['user'] . ", " . $_SESSION['userId'] . ",'" . date('Y-m-d') . "','" . $situation . "')");
 		
-		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION['user'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");//SALVA CHAVE DO INDICE.
+		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION['user'] . " AND AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");//SALVA CHAVE DO INDICE.
 		$index = $cnx5->fetch_array();
 
 		for ($i = 0 ;$i < sizeof($resposta) - 1; $i++) {//PERCORRE PELAS QUESTÕES.			
