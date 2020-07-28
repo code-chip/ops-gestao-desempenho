@@ -1,3 +1,38 @@
+/*USER IN REGISTER USER AND ADRESS*/
+function check() {
+	var inputs = document.getElementsByClassName('required');
+	
+	for (var x = 0 ; x < inputs.length; x++) {
+		if(!inputs[x].value){
+			alert('Preencha todos os campos * obrigatórios');
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+function change(select) {// traz o valor selecionado.
+	$.each( $( '.loadId' ), function() {//ler todos id's da classe.
+    	if (select == this.id) {//habilita a div que tem o id e valor igual.
+    		document.getElementById(this.id).style.display = 'block';
+    	} else {
+    		document.getElementById(this.id).style.display = 'none';
+    	}
+	});
+}
+
+//GOAL-COMPANY
+function clearForm(){
+	var inputs = document.getElementsByClassName('required').length;
+	for (var x = 1; x < inputs+1 ; x++) {
+		document.getElementById("msgOk"+x).style.display = "none";		
+		document.getElementById("input"+x).classList.remove("is-success");
+		document.getElementById("msgNok"+x).style.display = "none";
+		document.getElementById("input"+x).classList.remove("is-danger");
+	}
+}
+
 function upPlaceholder(selecao){//função usada no cadastro de usuário.
 	if(selecao=="MATRICULA="){
 		document.getElementById("filtro").placeholder="629";
@@ -173,27 +208,3 @@ function menuInsertcheckForm(){
   		return true; 
   	}
 }//FINAL MENU-INSERT;//
-
-function check() {
-	var inputs = document.getElementsByClassName('required');
-	
-	for (var x = 0 ; x < inputs.length; x++) {
-		if(!inputs[x].value){
-			alert('Preencha todos os campos * obrigatórios');
-			return false;
-		}
-	}
-	
-	return true;
-}
-
-//GOAL-COMPANY
-function clearForm(){
-	var inputs = document.getElementsByClassName('required').length;
-	for (var x = 1; x < inputs+1 ; x++) {
-		document.getElementById("msgOk"+x).style.display = "none";		
-		document.getElementById("input"+x).classList.remove("is-success");
-		document.getElementById("msgNok"+x).style.display = "none";
-		document.getElementById("input"+x).classList.remove("is-danger");
-	}
-}
