@@ -147,22 +147,27 @@ if ($_SESSION['permissao'] == 1) {
 				   	</div>
 				</div>
 			</div>
-			<div class="field srf20" id="vehicleType"><!--Seleção sexo-->
+			<div class="field srf20" ><!--Seleção sexo-->
 				<label class="label is-size-7-touch" for="textInput">Sexo*</label>
 				<div class="control has-icons-left">
 					<div class="select">
-					  	<select name="sex" class="sf23-15 required" onchange="upIconVehicle(this.value)">
+					  	<select name="sex" class="sf23-15 required " onchange="change(this.value)">
 					  		<option value="">Selecione</option>								
 							<option value="m">Masculino</option>
 							<option value="f">Feminino</option>
 						</select>
 					</div>
-					<div id="carVehicle">
+					<div class='loadId'>
+						<span class="icon is-small is-left" >
+						  	<i class="fas fa-street-view"></i>
+						</span>
+					</div>
+					<div class='loadId' id="m" style="display: none;">
 						<span class="icon is-small is-left" >
 						  	<i class="fas fa-male"></i>
 						</span>
 					</div>
-					<div id="motoVehicle" style="display: none;">
+					<div class='loadId' id="f" style="display: none;">
 						<span class="icon is-small is-left"  >
 						  	<i class="fas fa-female"></i>
 						</span>
