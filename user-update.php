@@ -477,9 +477,13 @@ if(isset($_POST['search']) && $row != 0 || $_SESSION['permissao'] == 1 && $row!=
 				<div class="control">
 					<input name="update" type="submit" class="button is-primary btn128" value="Atualizar"/>
 				</div>
-				<div class="control">
-					<input name="clear" type="reset" class="button is-primary btn128" value="Limpar"/>
-				</div>
+				<?php 
+				if ( $_SESSION["permissao"] > 1){
+					echo "<div class='control'>
+						<a href='user-update.php' class='button is-primary btn128'>Voltar</a>
+					</div>";
+				}
+				?>
 				<div class="control">
 					<a href="register.php" class="button is-primary btn128">Cancelar</a>										
 				</div>									
