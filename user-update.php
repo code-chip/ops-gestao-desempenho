@@ -515,10 +515,16 @@ if(isset($_POST['update'])){
 			$desligadoEm = ", DESLIGADO_EM = NULL";
 		}
 		
-		if (mysqli_num_rows($cx) == 0 || mysqli_num_rows($cx) == "") {
-			$upUser = "UPDATE USUARIO SET NOME = '" . $_POST['name'] . "', LOGIN='" . $_POST['login'] . "', SENHA=MD5('" . $_POST['password'] . "'), EMAIL='" . $_POST['email'] . "', SEXO='" . $_POST['sex'] . "', CELULAR='" . $_POST['phone'] . "', NASCIMENTO='" . $_POST['birth'] . "', CARGO_ID=" . $_POST['role'] . ", TURNO_ID=" . $_POST['shift'] . ",GESTOR_ID=" . $_POST['leader'] . ", SETOR_ID=" . $_POST['sector'] . ", MATRICULA=" . $_POST['registration'] . ", EFETIVACAO='" . $_POST['admission'] . "', PERMISSAO_ID=" . $_POST['permission'] . ",OBSERVACAO='" . $_POST['note'] . "', SITUACAO='" . $_POST['situation'] . "'" . $desligadoEm . " WHERE ID=".$_SESSION["upUser"].";";				
+		if ($_POST['wardrobe'] == "" || $_POST['wardrobe'] == null) {				
+			$wardrobe = 0;
 		} else {
-			$upUser = "UPDATE USUARIO SET NOME='" . $_POST['name'] . "', LOGIN='" . $_POST['login'] . "', EMAIL='" . $_POST['email'] . "', SEXO='" . $_POST['sex'] . "', CELULAR='" . $_POST['phone'] . "', NASCIMENTO='" . $_POST['birth'] . "', CARGO_ID=" . $_POST['role'] . ", TURNO_ID=" . $_POST['shift'] . ",GESTOR_ID=" . $_POST['leader'] . ", SETOR_ID=" . $_POST['sector'] . ", MATRICULA=" . $_POST['registration'] . ", EFETIVACAO='" . $_POST['admission'] . "', PERMISSAO_ID=" . $_POST['permission'] . ",OBSERVACAO='" . $_POST['note'] . "', SITUACAO='" . $_POST['situation'] . "'" . $desligadoEm . " WHERE ID=" . $_SESSION["upUser"] . ";";
+			$wardrobe = $_POST['wardrobe'];
+		}	
+
+		if (mysqli_num_rows($cx) == 0 || mysqli_num_rows($cx) == "") {
+			$upUser = "UPDATE USUARIO SET NOME = '" . $_POST['name'] . "', LOGIN='" . $_POST['login'] . "', SENHA=MD5('" . $_POST['password'] . "'), EMAIL='" . $_POST['email'] . "', SEXO='" . $_POST['sex'] . "', CELULAR='" . $_POST['phone'] . "', NASCIMENTO='" . $_POST['birth'] . "', CARGO_ID=" . $_POST['role'] . ", TURNO_ID=" . $_POST['shift'] . ",GESTOR_ID=" . $_POST['leader'] . ", SETOR_ID=" . $_POST['sector'] . ", ARMARIO=" . $wardrobe . ",MATRICULA=" . $_POST['registration'] . ", EFETIVACAO='" . $_POST['admission'] . "', PERMISSAO_ID=" . $_POST['permission'] . ",OBSERVACAO='" . $_POST['note'] . "', SITUACAO='" . $_POST['situation'] . "'" . $desligadoEm . " WHERE ID=".$_SESSION["upUser"].";";				
+		} else {
+			$upUser = "UPDATE USUARIO SET NOME='" . $_POST['name'] . "', LOGIN='" . $_POST['login'] . "', EMAIL='" . $_POST['email'] . "', SEXO='" . $_POST['sex'] . "', CELULAR='" . $_POST['phone'] . "', NASCIMENTO='" . $_POST['birth'] . "', CARGO_ID=" . $_POST['role'] . ", TURNO_ID=" . $_POST['shift'] . ",GESTOR_ID=" . $_POST['leader'] . ", SETOR_ID=" . $_POST['sector'] . ", ARMARIO=" . $wardrobe . ", MATRICULA=" . $_POST['registration'] . ", EFETIVACAO='" . $_POST['admission'] . "', PERMISSAO_ID=" . $_POST['permission'] . ",OBSERVACAO='" . $_POST['note'] . "', SITUACAO='" . $_POST['situation'] . "'" . $desligadoEm . " WHERE ID=" . $_SESSION["upUser"] . ";";
 		}
 		
 		$cnx = mysqli_query($phpmyadmin, $upUser);					

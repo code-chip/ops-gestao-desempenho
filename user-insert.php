@@ -387,7 +387,9 @@ if (isset($_POST['insert'])) {//VALIDAÇÃO SE LOGIN É ÚNICO.
 		echo "<script> alert('Já existe usuário com o mesmo Login!'); </script>";
 	} else {		
 		if ($_POST['wardrobe'] == "" || $_POST['wardrobe'] == null) {				
-				$wardrobe = '0';
+			$wardrobe = 0;
+		} else {
+			$wardrobe = $_POST['wardrobe'];
 		}	
 		
 		$user = "INSERT INTO USUARIO(NOME, LOGIN, SENHA, EMAIL, SEXO, CELULAR, NASCIMENTO, CARGO_ID, TURNO_ID, GESTOR_ID, SETOR_ID, ARMARIO, MATRICULA, EFETIVACAO, PERMISSAO_ID, CADASTRADOEM, OBSERVACAO, SITUACAO) VALUES('".$_POST['name']."','".$_POST['login']."',MD5('".$_POST['password']."'),'".$_POST['email']."','".$_POST['sex']."','".$_POST['phone']."','".$_POST['birth']."',".$_POST['role'].",".$_POST['shift'].",".$_POST['leader'].",".$_POST['sector'].", ".$wardrobe.",".$_POST['registration'].",'".$_POST['admission']."',".$_POST['permission'].",'".date('Y-m-d H:i:s')."', '".$_POST['note']."','".$_POST['situation']."')";
