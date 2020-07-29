@@ -279,7 +279,7 @@ if ($_SESSION['permissao'] == 1) {
 			<div class="field srf20"><!--Campo armário-->
 				<label class="label is-size-7-touch" for="textInput">Nº Armário</label>
 				<div class="control has-icons-left has-icons-right" id="wardrobe">
-					<input name="wardrobe" onkeypress="addLoadField('wardrobe')" onkeyup="rmvLoadField('wardrobe')" type="text" class="input numero sf17" placeholder="125"  maxlength="3" onblur="checkAdress(form.wardrobe, 'msgOk12','msgNok12')" id="input12">
+					<input name="wardrobe" onkeypress="addLoadField('wardrobe')" onkeyup="rmvLoadField('wardrobe')" type="text" class="input numero sf17" placeholder="162"  maxlength="3" onblur="checkAdress(form.wardrobe, 'msgOk12','msgNok12')" id="input12">
 					<span class="icon is-small is-left">
 				   		<i class="fas fa-briefcase"></i>
 				   	</span>

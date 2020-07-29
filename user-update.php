@@ -89,7 +89,7 @@ if ( $search != "" || $_SESSION["permissao"] == 1) {
 		$f = "U." . $filter . "'" . $search . "' LIMIT 1;";
 	}	
 	
-	$query = "SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.CELULAR, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, UG.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.OBSERVACAO, U.SITUACAO  FROM USUARIO U INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID INNER JOIN USUARIO UG ON UG.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
+	$query = "SELECT U.ID AS ID, U.NOME AS NOME, U.LOGIN,U.SENHA AS SENHA, U.EMAIL, U.SEXO, U.CELULAR, U.NASCIMENTO, U.EFETIVACAO, U.CARGO_ID,C.NOME AS CARGO, U.TURNO_ID, T.NOME AS TURNO, U.GESTOR_ID, UG.NOME AS GESTOR, U.SETOR_ID, S.NOME AS SETOR, U.ARMARIO, U.MATRICULA, U.PERMISSAO_ID, P.NOME AS PERMISSAO, U.OBSERVACAO, U.SITUACAO  FROM USUARIO U INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID INNER JOIN USUARIO UG ON UG.ID=U.GESTOR_ID INNER JOIN SETOR S ON S.ID=U.SETOR_ID INNER JOIN CARGO C ON C.ID=U.CARGO_ID WHERE ".$f;
 	$x = 0;	
 	$cnx = mysqli_query($phpmyadmin, $query);
 	$dados = $cnx->fetch_array();
@@ -376,7 +376,7 @@ if(isset($_POST['search']) && $row != 0 || $_SESSION['permissao'] == 1 && $row!=
 			<div class="field srf20"><!--Campo armário-->
 				<label class="label is-size-7-touch" for="textInput">Nº Armário</label>
 				<div class="control has-icons-left has-icons-right" id="wardrobe">
-					<input name="wardrobe" onkeypress="addLoadField('wardrobe')" onkeyup="rmvLoadField('wardrobe')" type="text" class="input numero sf17" placeholder="125"  maxlength="3" onblur="checkAdress(form.wardrobe, 'msgOk12','msgNok12')" id="input12" value="<?php echo $dados["ARMARIO"];?>">
+					<input name="wardrobe" onkeypress="addLoadField('wardrobe')" onkeyup="rmvLoadField('wardrobe')" type="text" class="input numero sf17" placeholder="162"  maxlength="3" onblur="checkAdress(form.wardrobe, 'msgOk12','msgNok12')" id="input12" value="<?php echo $dados["ARMARIO"];?>">
 					<span class="icon is-small is-left">
 				   		<i class="fas fa-briefcase"></i>
 				   	</span>
