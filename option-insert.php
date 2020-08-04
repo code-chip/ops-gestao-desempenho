@@ -1,41 +1,12 @@
-<?php 
-$menuConfiguracoes="is-active";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
-}
-else{
-$opcao=trim($_POST['opcao']);
-$nome=trim($_POST['nome']);
-$situacao=trim($_POST['situacao']);
+<?php
 
-if(isset($_POST["inserirOpcao"])!=null){
-	if($opcao!="" && $nome!=""){
-		$checkOpcao="SELECT NOME FROM ".$opcao." WHERE NOME='".$nome."';";
-		$cnx= mysqli_query($phpmyadmin, $checkOpcao);
-		if(mysqli_num_rows($cnx)==0){
-			$inserirOpcao="INSERT INTO ".$opcao."(NOME, SITUACAO) VALUES('".$nome."','".$situacao."');";
-			$cnx= mysqli_query($phpmyadmin, $inserirOpcao);
-			if(mysqli_error($phpmyadmin)==null){
-				echo "<script>alert('Opção cadastrada com sucesso!!')</script>";
-			}
-			else{
-				$erro=mysqli_error($phpmyadmin);
-				echo "<script>alert('Erro ".$erro."!!')</script>";
-			}
-		}
-		else{
-			echo "<script>alert('Já existe este nome cadastrado nesta opção!!')</script>";
-		}	
-	}
-	else if($nome==""){
-		echo "<script>alert('Preencher o campo nome é obrigatório!!')</script>";
-	}
-	else{
-		echo "<script>alert('Selecionar a opção é obrigatório!!')</script>";
-	}	
+$menuAtivo = 'configuracoes';
+require('menu.php');
+
+if ($_SESSION['permissao'] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='register.php'</script>";
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,6 +17,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<script type="text/javascript" src="js/myjs.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/personal.css">
     <style type="text/css">
     	.w24-2{
@@ -56,7 +28,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 <body>
 	<section class="section">
 	  	<div class="container">
-	   		<form action="option-insert.php" method="POST">
+	   		<form action="option-insert.php" method="POST" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
@@ -64,7 +36,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input" name="nome">
+								<input type="text" class="input required" name="nome" autofocus>
 							</div>
 						</div>
 					</div>
@@ -77,7 +49,7 @@ if(isset($_POST["inserirOpcao"])!=null){
 						<div class="field" >							
 							<div class="control">
 								<div class="select">
-									<select name="opcao" class="w24-2">
+									<select name="opcao" class="w24-2 required">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
@@ -113,7 +85,10 @@ if(isset($_POST["inserirOpcao"])!=null){
 						<div class="field-body">
 							<div class="field is-grouped">
 								<div class="control">
-									<button name="inserirOpcao" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
+									<button name="insertOption" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
+								</div>
+								<div class="control">
+									<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
 								</div>
 								<div class="control">
 									<a href="register.php" class="button is-primary btn128">Cancelar</a>
@@ -126,4 +101,25 @@ if(isset($_POST["inserirOpcao"])!=null){
 	   	</div>
 	</section>	 	
 </body>
-</html><?php }//ELSE - caso o usuário tenha permissão.?>
+</html>
+<?php 
+
+if (isset($_POST["insertOption"]) != null) {
+	
+	$cnx = mysqli_query($phpmyadmin, "SELECT NOME FROM " . $_POST['opcao'] . " WHERE NOME='" . $_POST['nome'] . "';");
+	
+	if (mysqli_num_rows($cnx) == 0) {
+		
+		$cnx = mysqli_query($phpmyadmin, "INSERT INTO " . $_POST['opcao'] . "(NOME, SITUACAO) VALUES('" . $_POST['nome'] . "','" . $_POST['situacao'] . "');");
+		
+		if (mysqli_error($phpmyadmin) == null) {
+			echo "<script>alert('Opção cadastrada com sucesso!!')</script>";
+		} else {
+			$erro = mysqli_error($phpmyadmin);
+			echo "<script>alert('Erro " . $erro . "!!')</script>";
+		}
+	} else {
+		echo "<script>alert('Já existe este nome cadastrado nesta opção!!')</script>";
+	}	
+}
+?>
