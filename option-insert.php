@@ -46,6 +46,12 @@ if(isset($_POST["inserirOpcao"])!=null){
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
 </head>
 <body>
 	<section class="section">
@@ -56,8 +62,8 @@ if(isset($_POST["inserirOpcao"])!=null){
 						<label class="label">Nome:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
+						<div class="field">							
+							<div class="control w24-2">
 								<input type="text" class="input" name="nome">
 							</div>
 						</div>
@@ -69,13 +75,12 @@ if(isset($_POST["inserirOpcao"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select">
-									<select name="opcao">
+									<select name="opcao" class="w24-2">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
-										<option value="GESTOR">Gestor</option>
 										<option value="PERMISSAO">Permissao</option>
 										<option value="PRESENCA">Presença</option>
 										<option value="SETOR">Setor</option>
@@ -91,10 +96,10 @@ if(isset($_POST["inserirOpcao"])!=null){
 						<label class="label">Status:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
+						<div class="field">							
 							<div class="control">
 								<div class="select">
-									<select name="situacao">
+									<select name="situacao" class="w24-2">
 										<option selected="selected" value="Ativo">Ativo</option>
 										<option value="Inativo">Inativo</option>																			
 									</select>	
@@ -106,9 +111,12 @@ if(isset($_POST["inserirOpcao"])!=null){
 				<div class="field is-horizontal">
 					<div class="field-label"></div>
 						<div class="field-body">
-							<div class="field">
+							<div class="field is-grouped">
 								<div class="control">
-									<button name="inserirOpcao" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
+									<button name="inserirOpcao" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
+								</div>
+								<div class="control">
+									<a href="register.php" class="button is-primary btn128">Cancelar</a>
 								</div>
 							</div>
 						</div>
