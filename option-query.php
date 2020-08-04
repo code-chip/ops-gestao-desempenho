@@ -1,13 +1,12 @@
-<?php 
-$menuConfiguracoes="is-active";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+<?php
+
+$menuAtivo = 'configuracoes';
+require('menu.php');
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='register.php'</script>";
 }
-else{
-$opcao=trim($_POST['opcao']);
-$nome=trim($_POST['nome']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,29 +28,29 @@ $nome=trim($_POST['nome']);
 <body>
 	<section class="section">
 	  	<div class="container">
-	  		<?php if(isset($_POST["consultarOpcao"])==null):{?>
-	   		<form id="form1" action="option-query.php" method="POST">
+	  	<?php if (isset($_POST["consultarOpcao"]) == null) : {?>
+	   		<form id="form1" action="option-query.php" method="POST" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
+						<label class="label">Nome*</label>
 					</div>
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input" name="nome">
+								<input type="text" class="input required" name="name">
 							</div>
 						</div>
 					</div>
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
+						<label class="label">Opção*</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
 							<div class="control">
 								<div class="select">
-									<select name="opcao" class="w24-2">
+									<select name="option" class="w24-2 required">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
@@ -84,14 +83,16 @@ $nome=trim($_POST['nome']);
 					</div>
 				</div>		
 	     	</form>
-	     <?php }endif;?>
-<?php if(isset($_POST["consultarOpcao"])!=null){
-	if($opcao!="" && $nome!=""){
-		$consulta="SELECT * FROM ".$opcao." WHERE NOME LIKE '".$nome."%' LIMIT 1;";
-		$cnx= mysqli_query($phpmyadmin, $consulta);
-		if(mysqli_num_rows($cnx)==1){
-			$dado= $cnx->fetch_array();
-			$_SESSION["idUpOpcao"]=$dado["ID"];
+	     <?php 
+	 	} endif;
+		
+		if (isset($_POST["consultarOpcao"]) != null) {
+			$cnx = mysqli_query($phpmyadmin, "SELECT * FROM " . $_POST['option'] . " WHERE NOME LIKE '" . $_POST['name'] . "%' LIMIT 1;");
+			
+			if(mysqli_num_rows($cnx) == 1) {
+				$dado = $cnx->fetch_array();
+				$_SESSION["idUpOpcao"] = $dado["ID"];
+			
 			?>
 			<form id="form2" action="option-query.php" method="POST">
 	    		<div class="field is-horizontal">
@@ -101,7 +102,7 @@ $nome=trim($_POST['nome']);
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input" name="upNome" value="<?php echo $dado["NOME"]?>" disabled>
+								<input type="text" class="input" name="upNome" value="<?php echo $_POST['name']?>" disabled>
 							</div>
 						</div>
 					</div>
@@ -113,7 +114,7 @@ $nome=trim($_POST['nome']);
 					<div class="field-body">
 						<div class="field" >							
 							<div class="control w24-2">
-								<input type="text" class="input" name="opcao" value="<?php echo mb_convert_case($opcao, MB_CASE_TITLE, 'UTF-8');?>" disabled>
+								<input type="text" class="input" name="opcao" value="<?php echo mb_convert_case($_POST['option'], MB_CASE_TITLE, 'UTF-8');?>" disabled>
 							</div>						
 						</div>
 					</div>
@@ -146,23 +147,15 @@ $nome=trim($_POST['nome']);
 				</div>		
 	     	</form>
 			<?php			
+			
+			}
+			else{			
+				echo "<script>alert('Nenhum resultado encontrado!!'); window.location.href='option-query.php'; </script>";
+			}	
 		}
-		else{			
-			?><script>alert('Nenhum resultado encontrado!!')
-			window.location.href ="option-query.php"</script><?php
-		}	
-	}
-	else if($nome==""){
-		?><script>alert('Preencher o campo nome é obrigatório!!')
-			window.location.href ="option-query.php"</script><?php
-	}
-	else{
-		?><script>alert('Selecionar a opção é obrigatório!!')
-			window.location.href ="option-query.php"</script><?php
-	}	
-}
-?>  	
+		
+		?>  	
 	   	</div>	
 	</section>	 	
 </body>
-</html><?php }//ELSE - caso o usuário tenha permissão.?>
+</html>
