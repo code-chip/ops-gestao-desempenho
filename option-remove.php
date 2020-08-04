@@ -1,13 +1,12 @@
 <?php 
-$menuConfiguracoes="is-active";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+
+$menuAtivo = 'configuracoes';
+require('menu.php');
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='register.php'; </script>";
 }
-else{
-$opcao=trim($_POST['opcao']);
-$nome=trim($_POST['nome']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,29 +28,29 @@ $nome=trim($_POST['nome']);
 <body>
 	<section class="section">
 	  	<div class="container">
-	  		<?php if(isset($_POST["consultarOpcao"])==null):{?>
+	  	<?php if(isset($_POST["queryOption"]) == null) :{?>
 	   		<form id="form1" action="option-remove.php" method="POST">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
+						<label class="label">Nome*</label>
 					</div>
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input" name="nome">
+								<input type="text" class="input required" name="name">
 							</div>
 						</div>
 					</div>
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
+						<label class="label">Opção*</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
 							<div class="control">
 								<div class="select">
-									<select name="opcao" class="w24-2">
+									<select name="option" class="w24-2 required">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
@@ -71,7 +70,7 @@ $nome=trim($_POST['nome']);
 						<div class="field-body">
 							<div class="field is-grouped">
 								<div class="control">
-									<button name="consultarOpcao" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
+									<button name="queryOption" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
 								</div>
 								<div class="control">
 									<button name="voltar" type="submit" class="button is-primary btn128">Voltar</button>
@@ -84,14 +83,15 @@ $nome=trim($_POST['nome']);
 					</div>
 				</div>		
 	     	</form>
-	     <?php }endif;?>
-<?php if(isset($_POST["consultarOpcao"])!=null){
-	if($opcao!="" && $nome!=""){
-		$consulta="SELECT * FROM ".$opcao." WHERE NOME LIKE '".$nome."%' LIMIT 1;";
-		$cnx= mysqli_query($phpmyadmin, $consulta);
-		if(mysqli_num_rows($cnx)==1){
-			$dado= $cnx->fetch_array();
-			$_SESSION["idUpOpcao"]=$dado["ID"];
+	     <?php } endif;
+
+		if(isset($_POST["queryOption"]) != null) {
+			$cnx = mysqli_query($phpmyadmin, "SELECT * FROM ".$_POST['option']." WHERE NOME LIKE '".$_POST['name']."%' LIMIT 1;");
+			
+			if (mysqli_num_rows($cnx) == 1) {
+				$dado = $cnx->fetch_array();
+				$_SESSION["idUpOpcao"] = $dado["ID"];
+			
 			?>
 			<form id="form2" action="option-remove.php" method="POST">
 	    		<div class="field is-horizontal">
@@ -115,7 +115,7 @@ $nome=trim($_POST['nome']);
 							<div class="control">
 								<div class="select">
 									<select name="upOpcao" class="w24-2">
-										<option selected="selected" value="<?php echo $opcao?>"><?php echo mb_convert_case($opcao, MB_CASE_TITLE, 'UTF-8');?></option>
+										<option selected="selected" value="<?php echo $_POST['option'];?>"><?php echo mb_convert_case($_POST['option'], MB_CASE_TITLE, 'UTF-8');?></option>
 									</select>	
 								</div>
 							</div>						
@@ -130,13 +130,14 @@ $nome=trim($_POST['nome']);
 						<div class="field">							
 							<div class="control">
 								<div class="select">
-									<select name="upSituacao" class="w24-2">
-										<option selected="selected" value="<?php echo $dado["SITUACAO"]?>"><?php echo $dado["SITUACAO"]?></option>
-										<?php if($dado["SITUACAO"]=="Ativo"):?>
-										<option value="Inativo">Inativo</option>
-										<?php endif; if($dado["SITUACAO"]=="Inativo"):?>
-										<option value="Ativo">Ativo</option>
-										<?php endif;?>																			
+									<select name="upSituacao" class="w24-2"><?php 
+										echo "<option selected='selected' value=" . $dado["SITUACAO"] . ">" . $dado["SITUACAO"] . "</option>";
+										if ($dado["SITUACAO"] == "Ativo") {
+											echo "<option value='Inativo'>Inativo</option>";	
+										} else { 
+											echo "<option value='Ativo'>Ativo</option>";
+										}
+										?>																			
 									</select>	
 								</div>
 							</div>						
@@ -148,10 +149,10 @@ $nome=trim($_POST['nome']);
 						<div class="field-body">
 							<div class="field is-grouped">
 								<div class="control">
-									<button name="removerOpcao" type="submit" class="button is-primary btn128" value="Remover">Remover</button>
+									<button name="removeOption" type="submit" class="button is-primary btn128" value="Remover">Remover</button>
 								</div>
 								<div class="control">
-									<button name="voltar" type="submit" class="button is-primary btn128">Voltar</button>
+									<button name="back" type="submit" class="button is-primary btn128">Voltar</button>
 								</div>
 								<div class="control">
 									<a href="register.php" class="button is-primary btn128" >Cancelar</a>
@@ -162,38 +163,28 @@ $nome=trim($_POST['nome']);
 				</div>		
 	     	</form>
 			<?php			
+			}
+			else{			
+				echo "<script>alert('Nenhum resultado encontrado!!'); window.location.href ='option-remove.php'</script>";
+			}	
 		}
-		else{			
-			?><script>alert('Nenhum resultado encontrado!!')
-			window.location.href ="option-remove.php"</script><?php
-		}	
-	}
-	else if($nome==""){
-		?><script>alert('Preencher o campo nome é obrigatório!!')
-			window.location.href ="option-remove.php"</script><?php
-	}
-	else{
-		?><script>alert('Selecionar a opção é obrigatório!!')
-			window.location.href ="option-remove.php"</script><?php
-	}	
-}
-?>  	
+
+		?>  	
 	   	</div>	
 	</section>	 	
 </body>
 </html>
-<?php 
-if(isset($_POST["removerOpcao"])=="Remover"){
-	$upOpcao=trim($_POST['upOpcao']);	
-	$removerOpcao="DELETE FROM  ".$upOpcao." WHERE ID=".$_SESSION["idUpOpcao"];
-	$cnx=mysqli_query($phpmyadmin, $removerOpcao);
-	if(mysqli_error($phpmyadmin)==null){
+<?php
+
+if (isset($_POST["removeOption"]) == "Remover") {
+	$cnx = mysqli_query($phpmyadmin, "DELETE FROM  ".$_POST['upOpcao']." WHERE ID=".$_SESSION["idUpOpcao"]);
+	
+	if (mysqli_error($phpmyadmin) == null) {
 		echo "<script>alert('Opção removida com sucesso!!')</script>";
-		$_SESSION["idUpOpcao"]=null;	
-	}
-	else{
+		$_SESSION["idUpOpcao"] = null;	
+	} else {
 		echo mysqli_error($phpmyadmin);
 	}
 }
-}//ELSE - caso o usuário tenha permissão.
+
 ?>			
