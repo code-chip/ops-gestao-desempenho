@@ -18,6 +18,12 @@ $totalAlcancado=0;
 	<title>Gestão de Desempenho - Remover Meta</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -51,10 +57,10 @@ $totalAlcancado=0;
 				<label class="label">Mês:</label>
 			</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field">							
 						<div class="control">
 							<div class="select">
-								<select name="periodo">
+								<select name="periodo" class="w24-2">
 									<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 									<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 									<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -73,10 +79,10 @@ $totalAlcancado=0;
 					<label class="label">Setor:</label>
 				</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field">							
 						<div class="control">
 							<div class="select">
-								<select name="setor">								
+								<select name="setor" class="w24-2">								
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
@@ -95,7 +101,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">							
 						<div class="control">
-							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
+							<div class="select w24-2"><!--SELEÇÃO OU PESQUISA DE NOME-->
 							<input name="nome" type="text" class="input" placeholder="Ana Clara">
 						</div>
 						</div>
@@ -107,7 +113,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary">Consultar</button>
+							<button name="consultar" type="submit" class="button is-primary btn128">Consultar</button>
 						</div>
 					</div>
 				</div>
@@ -201,13 +207,13 @@ if(isset($_POST['consultar'])){
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
+					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 				<div class="control">
 					<a href="goal-remove.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
 				<div class="control">
-					<input name="removerDados" type="submit" class="button is-primary" value="Deletar Dados"/>
+					<input name="removerDados" type="submit" class="button is-primary btn128" value="Deletar Dados"/>
 				</div>					
 			</div>						
 		</div>

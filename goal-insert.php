@@ -53,10 +53,14 @@ if(isset($_POST["inserirMeta"])!=null){
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<title>Gestão de Desempenho - Inserir Meta</title>
-	<style type="text/css">
+	<link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
 		.carregando{
-		color:#ff0000;
-		display:none;
+			color:#ff0000;
+			display:none;
 		}
 	</style>
 </head>
@@ -69,8 +73,8 @@ if(isset($_POST["inserirMeta"])!=null){
 						<label class="label">Meta:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
+						<div class="field">							
+							<div class="control w24-2">
 								<input type="text" class="input desempenho" name="meta">
 							</div>
 						</div>
@@ -82,9 +86,9 @@ if(isset($_POST["inserirMeta"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="atividade">
+									<select name="atividade" class="w24-2">
 									<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' ORDER BY NOME";
 									$con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
 									while($atividade = $con->fetch_array()):{?>
@@ -102,9 +106,9 @@ if(isset($_POST["inserirMeta"])!=null){
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select is-size-7-touch">
-									<select name="setor" id="setor">
+									<select name="setor" id="setor" class="w24-2">
 									<option value="">Selecione</option>
 									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
 										$cnx = mysqli_query($phpmyadmin, $query);
@@ -122,8 +126,8 @@ if(isset($_POST["inserirMeta"])!=null){
 						<label class="label">Descrição:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
+						<div class="field">							
+							<div class="control w24-2">
 								<textarea name="descricao" class="textarea" maxlenght="200"></textarea>
 							</div>						
 						</div>
@@ -134,11 +138,11 @@ if(isset($_POST["inserirMeta"])!=null){
 						<label class="label">Colaborador:</label>
 					</div>
 					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
+						<div class="field is-grouped">							
 							<div class="control">
-								<div class="select">
+								<div class="select w24-2">
 									<span class="carregando">Aguarde, carregando...</span>
-									<select name="usuario" id="usuario">
+									<select name="usuario" id="usuario" class="w24-2">
 										<option selected="selected" value="Todos">Todos do Setor</option>
 									</select>	
 								</div>
@@ -151,15 +155,23 @@ if(isset($_POST["inserirMeta"])!=null){
 						<label class="label">Execução:</label>
 					</div>
 					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							<div class="control">
-								<input style="max-width:12.5em;" class="input registro" type="text" name="execucao" value="<?php echo date('Y-m-d',strtotime('+1 day'))?>">
+						<div class="field is-grouped">							
+							<div class="control w24-2">
+								<input class="input registro" type="text" name="execucao" value="<?php echo date('Y-m-d',strtotime('+1 day'))?>">
 							</div>
-							<div class="control">
-								<button name="inserirMeta" type="submit" class="button is-primary" value="Filtrar">Inserir</button>
-							</div>						
+													
 						</div>
 					</div>					
+				</div>
+				<div class="field is-horizontal">
+					<div class="field-label"></div>
+					<div class="field-body">
+						<div class="field">
+							<div class="control">
+								<button name="inserirMeta" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
+							</div>
+						</div>
+					</div>
 				</div>
 	     	</form>
 	     	<script type="text/javascript" scr="https://www.google.com/jsapi"></script>
