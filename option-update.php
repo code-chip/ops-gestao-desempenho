@@ -18,33 +18,40 @@ $nome=trim($_POST['nome']);
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
 </head>
 <body>
 	<section class="section">
 	  	<div class="container">
-	  		<?php if(isset($_POST["consultarOpcao"])==null):{?>
-	   		<form id="form1" action="option-update.php" method="POST">
+	  		<?php if (isset($_POST["consultarOpcao"]) == null) :{?>
+	   		<form id="form1" action="option-update.php" method="POST" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
+						<label class="label">Nome*</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
-								<input type="text" class="input" name="nome">
+						<div class="field">							
+							<div class="control w24-2">
+								<input type="text" class="input required" name="nome">
 							</div>
 						</div>
 					</div>
 				</div>	
 				<div class="field is-horizontal">
 					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
+						<label class="label">Opção*</label>
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select">
-									<select name="opcao">
+									<select name="opcao" class="w24-2 required">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
@@ -62,10 +69,15 @@ $nome=trim($_POST['nome']);
 				<div class="field is-horizontal">
 					<div class="field-label"></div>
 						<div class="field-body">
-							<div class="field">
+							<div class="field is-grouped">
 								<div class="control">
-									<button name="voltar" class="button is-primary" value="Voltar"><a href="register.php">Voltar</a></button>
-									<button name="consultarOpcao" type="submit" class="button is-primary" value="Filtrar">Consultar</button>
+									<button name="insertOption" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
+								</div>
+								<div class="control">
+									<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
+								</div>
+								<div class="control">
+									<a href="register.php" class="button is-primary btn128">Cancelar</a>
 								</div>
 							</div>
 						</div>
@@ -87,9 +99,9 @@ $nome=trim($_POST['nome']);
 						<label class="label">Nome:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
-								<input type="text" class="input" name="upNome" value="<?php echo $dado["NOME"]?>">
+						<div class="field">							
+							<div class="control w24-2">
+								<input type="text" class="input required" name="upNome" value="<?php echo $dado["NOME"]?>">
 							</div>
 						</div>
 					</div>
@@ -100,9 +112,9 @@ $nome=trim($_POST['nome']);
 					</div>
 					<div class="field-body">
 						<div class="field" >							
-							<div class="control" style="max-width:17em;">
+							<div class="control">
 								<div class="select">
-									<select name="upOpcao">
+									<select name="upOpcao" class="w24-2 required">
 										<option selected="selected" value="<?php echo $opcao?>"><?php echo mb_convert_case($opcao, MB_CASE_TITLE, 'UTF-8');?></option>
 									</select>	
 								</div>
@@ -115,10 +127,10 @@ $nome=trim($_POST['nome']);
 						<label class="label">Status:</label>
 					</div>
 					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
+						<div class="field">							
 							<div class="control">
 								<div class="select">
-									<select name="upSituacao">
+									<select name="upSituacao" class="w24-2 required">
 										<option selected="selected" value="<?php echo $dado["SITUACAO"]?>"><?php echo $dado["SITUACAO"]?></option>
 										<?php if($dado["SITUACAO"]=="Ativo"):?>
 										<option value="Inativo">Inativo</option>
@@ -135,11 +147,14 @@ $nome=trim($_POST['nome']);
 					<div class="field-label"></div>
 						<div class="field-body">
 							<div class="field is-grouped">
+								<div class="control">	
+									<button name="updateOption" type="submit" class="button is-primary btn128" value="Filtrar">Atualizar</button>
+								</div>
 								<div class="control">
-									<button name="voltar" class="button is-primary" value="Voltar">Voltar</button>
+									<button name="voltar" class="button is-primary btn128" value="Voltar">Voltar</button>
 								</div>
 								<div class="control">	
-									<button name="inserirOpcao" type="submit" class="button is-primary" value="Filtrar">Atualizar</button>
+									<button name="updateOption" type="submit" class="button is-primary btn128" value="Filtrar">Cancelar</button>
 								</div>
 							</div>
 						</div>
@@ -168,7 +183,7 @@ $nome=trim($_POST['nome']);
 </body>
 </html>
 <?php 
-if(isset($_POST["inserirOpcao"])=="Filtrar"){	
+if(isset($_POST["updateOption"])=="Filtrar"){	
 	$upOpcao=trim($_POST['upOpcao']);
 	$upNome=trim($_POST['upNome']);
 	$upSituacao=trim($_POST["upSituacao"]);
