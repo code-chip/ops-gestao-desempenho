@@ -22,6 +22,12 @@ $idMeta = 0;
 	<meta charset="UTF-8">
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
     <script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
@@ -128,7 +134,7 @@ $idMeta = 0;
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary" onClick=""value="Filtrar">Filtrar</button>
+							<button name="consultar" type="submit" class="button is-primary btn128" onClick=""value="Filtrar">Filtrar</button>
 						</div>
 					</div>
 				</div>

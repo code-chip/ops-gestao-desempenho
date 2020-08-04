@@ -18,6 +18,12 @@ $totalAlcancado=0;
 	<title>Gestão de Desempenho - Desempenho Pedentes</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -70,10 +76,10 @@ $totalAlcancado=0;
 				<label class="label">Turno:</label>
 			</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field">							
 						<div class="control">
 							<div class="select">
-								<select name="turno" id="salvaTurno">
+								<select name="turno" id="salvaTurno" class="w24-2">
 								<option selected="selected" value="">Selecione</option>	
 								<?php $con = mysqli_query($phpmyadmin , $gdTurno);
 								$x=0; 
@@ -94,7 +100,7 @@ $totalAlcancado=0;
 					<div class="field" style="max-width:17em;">							
 						<div class="control">
 							<div class="select">
-								<select name="setor" id="salvaAtividade">								
+								<select name="setor" id="salvaAtividade" class="w24-2">								
 								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
 								$x=0; 
 								while($setor = $con->fetch_array()):{?>
@@ -113,7 +119,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">							
 						<div class="control">
-							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
+							<div class="select w24-2"><!--SELEÇÃO OU PESQUISA DE NOME-->
 							<input name="data" type="text" class="input" placeholder="Ana Clara" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
 						</div>
 						</div>
@@ -125,7 +131,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary">Consultar</button>
+							<button name="consultar" type="submit" class="button is-primary btn128">Consultar</button>
 						</div>
 					</div>
 				</div>
@@ -218,7 +224,7 @@ else if(isset($_POST['consultar'])!=null){
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
+					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 			<div class="control">
 				<a href="report-pedant.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
