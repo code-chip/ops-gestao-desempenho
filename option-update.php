@@ -1,13 +1,12 @@
 <?php 
-$menuAtivo="configuracoes";
+
+$menuAtivo ='configuracoes';
 require('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='register.php'; </script>";
 }
-else{
-$opcao=trim($_POST['opcao']);
-$nome=trim($_POST['nome']);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,7 +28,7 @@ $nome=trim($_POST['nome']);
 <body>
 	<section class="section">
 	  	<div class="container">
-	  		<?php if (isset($_POST["consultarOpcao"]) == null) :{?>
+	  	<?php if (isset($_POST["queryOption"]) == null) :{?>
 	   		<form id="form1" action="option-update.php" method="POST" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
@@ -38,7 +37,7 @@ $nome=trim($_POST['nome']);
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input required" name="nome">
+								<input type="text" class="input required" name="name">
 							</div>
 						</div>
 					</div>
@@ -51,7 +50,7 @@ $nome=trim($_POST['nome']);
 						<div class="field" >							
 							<div class="control">
 								<div class="select">
-									<select name="opcao" class="w24-2 required">
+									<select name="option" class="w24-2 required">
 										<option selected="selected" value="">Selecione</option>
 										<option value="ATIVIDADE">Atividade</option>
 										<option value="CARGO">Cargo</option>
@@ -71,7 +70,7 @@ $nome=trim($_POST['nome']);
 						<div class="field-body">
 							<div class="field is-grouped">
 								<div class="control">
-									<button name="insertOption" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
+									<button name="queryOption" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
 								</div>
 								<div class="control">
 									<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
@@ -84,16 +83,18 @@ $nome=trim($_POST['nome']);
 					</div>
 				</div>		
 	     	</form>
-	     <?php }endif;?>
-<?php if(isset($_POST["consultarOpcao"])!=null){
-	if($opcao!="" && $nome!=""){
-		$consulta="SELECT * FROM ".$opcao." WHERE NOME LIKE '".$nome."%' LIMIT 1;";
-		$cnx= mysqli_query($phpmyadmin, $consulta);
-		if(mysqli_num_rows($cnx)==1){
-			$dado= $cnx->fetch_array();
-			$_SESSION["idUpOpcao"]=$dado["ID"];
+	    <?php 
+	 	} endif;
+
+	if (isset($_POST["queryOption"]) != null) {
+		$cnx = mysqli_query($phpmyadmin, "SELECT * FROM " . $_POST['option'] . " WHERE NOME LIKE '" . $_POST['name'] . "%' LIMIT 1;");
+		
+		if (mysqli_num_rows($cnx) == 1) { 
+			$dado = $cnx->fetch_array();
+			$_SESSION["idUpOption"] = $dado["ID"];
+			
 			?>
-			<form id="form2" action="option-update.php" method="POST">
+			<form id="form2" action="option-update.php" method="POST" onsubmit="return check()">
 	    		<div class="field is-horizontal">
 					<div class="field-label is-normal">
 						<label class="label">Nome:</label>
@@ -101,7 +102,7 @@ $nome=trim($_POST['nome']);
 					<div class="field-body">
 						<div class="field">							
 							<div class="control w24-2">
-								<input type="text" class="input required" name="upNome" value="<?php echo $dado["NOME"]?>">
+								<input type="text" class="input" name="upName" value="<?php echo $dado["NOME"]?>">
 							</div>
 						</div>
 					</div>
@@ -114,8 +115,8 @@ $nome=trim($_POST['nome']);
 						<div class="field" >							
 							<div class="control">
 								<div class="select">
-									<select name="upOpcao" class="w24-2 required">
-										<option selected="selected" value="<?php echo $opcao?>"><?php echo mb_convert_case($opcao, MB_CASE_TITLE, 'UTF-8');?></option>
+									<select name="upOption" class="w24-2">
+										<option selected="selected" value="<?php echo $_POST['option']?>"><?php echo mb_convert_case($_POST['option'], MB_CASE_TITLE, 'UTF-8');?></option>
 									</select>	
 								</div>
 							</div>						
@@ -130,13 +131,14 @@ $nome=trim($_POST['nome']);
 						<div class="field">							
 							<div class="control">
 								<div class="select">
-									<select name="upSituacao" class="w24-2 required">
-										<option selected="selected" value="<?php echo $dado["SITUACAO"]?>"><?php echo $dado["SITUACAO"]?></option>
-										<?php if($dado["SITUACAO"]=="Ativo"):?>
-										<option value="Inativo">Inativo</option>
-										<?php endif; if($dado["SITUACAO"]=="Inativo"):?>
-										<option value="Ativo">Ativo</option>
-										<?php endif;?>																			
+									<select name="upSituation" class="w24-2"><?php 
+										echo "<option selected='selected' value=" . $dado["SITUACAO"] . ">" . $dado["SITUACAO"] . "</option>";
+										if ($dado["SITUACAO"] == "Ativo") {
+											echo "<option value='Inativo'>Inativo</option>";	
+										} else { 
+											echo "<option value='Ativo'>Ativo</option>";
+										}
+										?>																			
 									</select>	
 								</div>
 							</div>						
@@ -148,13 +150,13 @@ $nome=trim($_POST['nome']);
 						<div class="field-body">
 							<div class="field is-grouped">
 								<div class="control">	
-									<button name="updateOption" type="submit" class="button is-primary btn128" value="Filtrar">Atualizar</button>
+									<button name="updateOption" type="submit" class="button is-primary btn128" value="Update">Atualizar</button>
 								</div>
 								<div class="control">
-									<button name="voltar" class="button is-primary btn128" value="Voltar">Voltar</button>
+									<a href="register.php" class="button is-primary btn128">Voltar</a>
 								</div>
 								<div class="control">	
-									<button name="updateOption" type="submit" class="button is-primary btn128" value="Filtrar">Cancelar</button>
+									<button name="updateOption" type="submit" class="button is-primary btn128">Cancelar</button>
 								</div>
 							</div>
 						</div>
@@ -162,39 +164,26 @@ $nome=trim($_POST['nome']);
 				</div>		
 	     	</form>
 			<?php			
-		}
-		else{			
-			?><script>alert('Nenhum resultado encontrado!!')
-			window.location.href ="option-update.php"</script><?php
+		} else {			
+			echo "<script>alert('Nenhum resultado encontrado!!'); window.location.href ='option-update.php'</script>";
 		}	
 	}
-	else if($nome==""){
-		?><script>alert('Preencher o campo nome é obrigatório!!')
-			window.location.href ="option-update.php"</script><?php
-	}
-	else{
-		?><script>alert('Selecionar a opção é obrigatório!!')
-			window.location.href ="option-update.php"</script><?php
-	}		
-}
-?>  	
+	
+	?>  	
 	   	</div>	
 	</section>	 	
 </body>
 </html>
-<?php 
-if(isset($_POST["updateOption"])=="Filtrar"){	
-	$upOpcao=trim($_POST['upOpcao']);
-	$upNome=trim($_POST['upNome']);
-	$upSituacao=trim($_POST["upSituacao"]);
-	$updateOpcao="UPDATE ".$upOpcao." SET NOME='".$upNome."', SITUACAO='".$upSituacao."' WHERE ID=".$_SESSION["idUpOpcao"];
-	$cnx=mysqli_query($phpmyadmin, $updateOpcao);
-	if(mysqli_error($phpmyadmin)==null){
+<?php
+
+if (isset($_POST["updateOption"]) == "Update") {	
+	$cnx = mysqli_query($phpmyadmin, "UPDATE " . $_POST['upOption'] . " SET NOME='" . $_POST['upName'] . "', SITUACAO='" . $_POST["upSituation"] . "' WHERE ID=".$_SESSION["idUpOption"]);
+	
+	if (mysqli_error($phpmyadmin) == null) {
 		echo "<script>alert('Opção atualizada com sucesso!!')</script>";	
-	}
-	else{
+	} else {
 		echo mysqli_error($phpmyadmin);
 	}
 }
-}//ELSE - caso o usuário tenha permissão.
+
 ?>			
