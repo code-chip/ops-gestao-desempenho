@@ -1,12 +1,13 @@
 <?php
-$menuAtivo="meta";
-include('menu.php');
-//<!--- DECLARAÇÃO DAS VARIAVEIS -->
-$periodo= trim($_REQUEST['periodo']);
-$setor= trim($_REQUEST['setor']);
-$nome= trim($_REQUEST['nome']);
-$contador = 0;
-$totalAlcancado=0;
+$menuAtivo = 'meta';
+require('menu.php');
+
+$periodo = trim($_REQUEST['periodo']);
+$sector = trim($_REQUEST['setor']);
+$name = trim($_REQUEST['nome']);
+$count = 0;
+$totalReached = 0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,6 +15,12 @@ $totalAlcancado=0;
 	<title>Gestão de Desempenho - Consultar Meta</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <link rel="stylesheet" type="text/css" href="/css/personal.css">
+    <style type="text/css">
+    	.w24-2{
+    		width:24.2em;
+    	}
+    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -31,13 +38,10 @@ $totalAlcancado=0;
     </script>   
 </head>
 <body>
-	<?php /*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
-	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
-	?>
 	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if($setor =="" && isset($_POST['consultar'])==null ): ?>
+	<?php if($sector =="" && isset($_POST['consultar'])==null ): ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="" method="POST">
@@ -46,10 +50,10 @@ $totalAlcancado=0;
 				<label class="label">Mês:</label>
 			</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field">							
 						<div class="control">
 							<div class="select">
-								<select name="periodo">
+								<select name="periodo" class="w24-2">
 									<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
 									<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
 									<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
@@ -68,16 +72,15 @@ $totalAlcancado=0;
 					<label class="label">Setor:</label>
 				</div>
 				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
+					<div class="field">							
 						<div class="control">
 							<div class="select">
-								<select name="setor">								
-								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; 
-								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
-								<?php $x;} endwhile;?>	
-								</select>
+								<select name="setor" class="w24-2"><?php 								
+								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
+								while($sector = $con->fetch_array()){
+									echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
+								 }
+								?></select>
 							</div>
 						</div>
 					</div>
@@ -90,7 +93,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">							
 						<div class="control">
-							<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
+							<div class="select w24-2"><!--SELEÇÃO OU PESQUISA DE NOME-->
 							<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
 						</div>
 						</div>
@@ -102,7 +105,7 @@ $totalAlcancado=0;
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary">Consultar</button>
+							<button name="consultar" type="submit" class="button is-primary btn128">Consultar</button>
 						</div>
 					</div>
 				</div>
@@ -115,43 +118,38 @@ $totalAlcancado=0;
 </div>
 <?php
 if(isset($_POST['consultar'])){
-	if( $nome != ""){		
-		$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%' AND SETOR_ID=".$setor.")
-		AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+	if ( $name != "") {		
+		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
+	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
 	}	
-	else{	
-		$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
+	else {	
+		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20') ORDER BY 1;";
+	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20') ORDER BY 1;";
 	}
-	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
-	if(mysqli_num_rows($cnx)>0){
-		while($meta= $cnx->fetch_array()){
-			$vtNome[$x]=$meta["NOME"];
-			$vtAtividade[$x]=$meta["ATIVIDADE"];
-			$vtMeta[$x]=$meta["META"];
-			$vtExecucao[$x]=$meta["EXECUCAO"];
-			$vtDesempenho[$x]=$meta["DESEMPENHO"];
-			$vtDescricao[$x]=$meta["DESCRICAO"];					
+
+	$x = 0;
+	$cnx = mysqli_query($phpmyadmin, $query);
+	if (mysqli_num_rows($cnx) > 0) {
+		while($goal = $cnx->fetch_array()){
+			$vName[$x] = $goal["NOME"];
+			$vActivity[$x] = $goal["ATIVIDADE"];
+			$vGoal[$x] = $goal["META"];
+			$vExecution[$x] = $goal["EXECUCAO"];
+			$vPerformance[$x] = $goal["DESEMPENHO"];
+			$vDescription[$x] = $goal["DESCRICAO"];					
 			$x++;
-			$contador=$x;
+			$count = $x;
 		}
 	}
-	else{
-		?><script type="text/javascript">			
-			alert('Nenhum registrado encontrado nesta consulta!');
-			window.location.href=window.location.href;
-		</script> <?php		
+	else {
+		echo "<script>alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";		
 	}	
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['consultar']) && $contador!=0) : ?>
+<?php if(isset($_POST['consultar']) && $count != 0) : ?>
 <hr/>
 	<section class="section">
 	<div class="table__wrapper">
@@ -165,17 +163,26 @@ if(isset($_POST['consultar'])){
 		<th>Execução</th>			
 		<th>Feita</th>
 	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) :?>
-	<tr>
-		<td><?php echo $i+1;?></td>
-		<td><?php echo $vtNome[$i]?></td>
-		<td><?php echo $vtAtividade[$i]?></td>
-		<td><?php echo $vtMeta[$i]?></td>
-		<td><?php echo $vtDescricao[$i]?></td>
-		<td><?php echo $vtExecucao[$i]?></td>
-		<td><?php if($vtDesempenho[$i]==0){ echo "Não";}else{ echo "Sim";}?></td>
+	<?php 
+
+	for( $i = 0; $i < sizeof($vName); $i++ ) {
+		echo "<tr>
+		<td>" . $i+1 . "</td>
+		<td>" .  $vName[$i] . "</td>
+		<td>" .  $vActivity[$i] . "</td>
+		<td>" .  $vGoal[$i] . "</td>
+		<td>" .  $vDescription[$i] . "</td>
+		<td>" .  $vExecution[$i] . "</td>";
+		
+		if ($vPerformance[$i] == 0) { 
+			echo "<td>Não</td>";
+		} else { 
+			echo "<td>Sim</td>";
+		}
+	}
+
+	?>
 	</tr>
-<?php endfor;?>
 	</table>
 	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
 	<a href="#topo">		
