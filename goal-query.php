@@ -167,7 +167,7 @@ if(isset($_POST['consultar'])){
 
 	for( $i = 0; $i < sizeof($vName); $i++ ) {
 		echo "<tr>
-		<td>" . $i+1 . "</td>
+		<td>" . $i . "</td>
 		<td>" .  $vName[$i] . "</td>
 		<td>" .  $vActivity[$i] . "</td>
 		<td>" .  $vGoal[$i] . "</td>
