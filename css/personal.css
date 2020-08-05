@@ -134,7 +134,9 @@ img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost
   margin-left: 30px;
   background-color: #8ce196;
 }
-
+.w24-2e{
+  width:24.2em;
+}
 /*CCS FOR USER*/
 .btn128{/*Button*/
   width: 128px;

@@ -1,88 +1,94 @@
 <?php
-$menuAtivo="configuracoes";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+
+$menuAtivo = 'configuracoes';
+require('menu.php');
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.locantion.href='register.php'; </script>";
 }
-else{
-$contador = 0;
-$query1="SELECT NOME, SITUACAO FROM CARGO;";
-$query2="SELECT NOME, SITUACAO FROM GESTOR;";
-$query3="SELECT NOME, SITUACAO FROM SETOR;";
-$query4="SELECT NOME, SITUACAO FROM PERMISSAO;";
-$x=0;
-$cnx=mysqli_query($phpmyadmin, $query1);
-while($cargo= $cnx->fetch_array()){
-	$vtCNome[$x]=$cargo["NOME"];		
-	$vtCSituacao[$x]=$cargo["SITUACAO"];
+
+$count = 0;
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, SITUACAO FROM CARGO;");
+
+while ($r = $cnx->fetch_array()) {
+	$role[$x] = $r["NOME"];		
+	$rSituation[$x] = $r["SITUACAO"];
 	$x++;
-	$contador=$x;
+	$count = $x;
 }
-$x=0;
-$cnx=mysqli_query($phpmyadmin, $query2);
-while($gestor= $cnx->fetch_array()){
-	$vtGNome[$x]=$gestor["NOME"];		
-	$vtGSituacao[$x]=$gestor["SITUACAO"];
-	$x++;
-}
-$x=0;
-$cnx=mysqli_query($phpmyadmin, $query3);
-while($setor= $cnx->fetch_array()){
-	$vtSNome[$x]=$setor["NOME"];		
-	$vtSSituacao[$x]=$setor["SITUACAO"];
-	$x++;
-}
-$x=0;
-$cnx=mysqli_query($phpmyadmin, $query4);
-while($permissao= $cnx->fetch_array()){
-	$vtPNome[$x]=$permissao["NOME"];		
-	$vtPSituacao[$x]=$permissao["SITUACAO"];
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, SITUACAO FROM SETOR;");
+
+while ($s = $cnx->fetch_array()) {
+	$sector[$x] = $s["NOME"];		
+	$sSituation[$x] = $s["SITUACAO"];
 	$x++;
 }
 
-if(mysqli_num_rows($cnx)==0){
-	?><script type="text/javascript">			
-		alert('Nenhum registrado encontrado nesta consulta!');
-		window.location.href=window.location.href;
-	</script> <?php		
-}	
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, SITUACAO FROM ATIVIDADE;");
+
+while($a = $cnx->fetch_array()){
+	$activity[$x] = $a["NOME"];		
+	$aSituation[$x] = $a["SITUACAO"];
+	$x++;
+}
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, SITUACAO FROM PERMISSAO;");
+
+while($p = $cnx->fetch_array()){
+	$permession[$x] = $p["NOME"];		
+	$pSituation[$x] = $p["SITUACAO"];
+	$x++;
+}
+
+if (mysqli_num_rows($cnx) == 0 ) {
+	echo "<script>alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";		
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Gestão de Desempenho - Lista de Opções</title>
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">   
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <link rel="stylesheet" type="text/css" href="/css/personal.css">     
 </head>
 <body>	
 <hr/>
 	<section class="section" id="topo">
-	<div class="table__wrapper">
-	<table class="table is-bordered is-fullwidth is-size-7-touch">	
+	<div class="table__wrapper table">
+	<table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper">	
 	<tr>
 		<th>Cargo</th>
 		<th>Situação</th>
-		<th>Gestor</th>
+		<th>Atividade</th>
 		<th>Situação</th>
 		<th>Setor</th>
-		<th>Situação</th>		
+		<th>Situação</th>
 		<th>Permissão</th>
 		<th>Situação</th>		 			
 	</tr>
 	<?php
- 	for( $i = 0; $i < sizeof($vtCNome); $i++ ) : ?>
- 	<tr>	
-		<td><?php echo $vtCNome[$i]?></td>
-		<td><?php echo $vtCSituacao[$i]?></td>
-		<td><?php echo $vtGNome[$i]?></td>
-		<td><?php echo $vtGSituacao[$i]?></td>
-		<td><?php echo $vtSNome[$i]?></td>
-		<td><?php echo $vtSSituacao[$i]?></td>
-		<td><?php echo $vtPNome[$i]?></td>
-		<td><?php echo $vtPSituacao[$i]?></td>
-	</tr>	
-<?php endfor;?>	
+
+ 	for( $i = 0; $i < sizeof($role); $i++ ) {
+	 	echo "
+	 	<tr>	
+			<td>" . $role[$i] . "</td>
+			<td>" . $rSituation[$i] . "</td>
+			<td>" . $activity[$i] . "</td>
+			<td>" . $aSituation[$i] . "</td>
+			<td>" . $sector[$i] . "</td>
+			<td>" . $sSituation[$i] . "</td>
+			<td>" . $permession[$i] . "</td>
+			<td>" . $pSituation[$i] . "</td>
+		</tr>";	
+	} 
+	?>	
 	</table>	
 	<a href="#topo">	
 		<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
@@ -91,10 +97,10 @@ if(mysqli_num_rows($cnx)==0){
 	<div class="field-body">
 		<div class="field">
 			<div class="control">
-				<a href="register.php"><input name="Voltar" type="submit" class="button is-primary" value="Voltar"/></a>
+				<a href="register.php" class="button is-primary btn128">Voltar</a>
 			</div>					
 		</div>						
 	</div>	
 </section>	
 </body>
-</html><?php }//ELSE - caso o usuário tenha permissão.?>
+</html>
