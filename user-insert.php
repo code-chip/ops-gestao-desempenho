@@ -152,17 +152,11 @@ if ($_SESSION['permissao'] == 1) {
 				<div class="control has-icons-left">
 					<div class="select">
 					  	<select name="sex" class="sf23-15 required " onchange="change(this.value)">
-					  		<option value="">Selecione</option>								
 							<option value="m">Masculino</option>
 							<option value="f">Feminino</option>
 						</select>
 					</div>
-					<div class='loadId'>
-						<span class="icon is-small is-left" >
-						  	<i class="fas fa-street-view"></i>
-						</span>
-					</div>
-					<div class='loadId' id="m" style="display: none;">
+					<div class='loadId' id="m">
 						<span class="icon is-small is-left" >
 						  	<i class="fas fa-male"></i>
 						</span>

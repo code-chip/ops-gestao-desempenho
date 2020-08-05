@@ -13,7 +13,7 @@ function check() {
 }
 
 function change(select) {// traz o valor selecionado.
-	$.each( $( '.loadId' ), function() {//ler todos id's da classe.
+	$.each( $( ".loadId" ), function() {//ler todos id's da classe.
     	if (select == this.id) {//habilita a div que tem o id e valor igual.
     		document.getElementById(this.id).style.display = 'block';
     	} else {
