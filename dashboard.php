@@ -1,7 +1,6 @@
 <?php 
-$menuAtivo = "dashboard";
+$menuAtivo = 'dashboard';
 require('menu.php');
-require("query.php");
 
 if ($_SESSION["permissao"] == 1) {
   echo "<script>alert('Usuário sem permissão'); window.location.href='dashboard-private.php'; </script>";
@@ -11,11 +10,11 @@ if ($_SESSION["permissao"] == 1) {
 $cnx = mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO;");
 $ultimoRegistro=$cnx->fetch_array();
   
-$anoMes = date('Y-m');
+$yearMonth = date('Y-m');
 $mes = date('m');
 
 //DASH MEDIA GERAL	
-$cnx= mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO GROUP BY REGISTRO ORDER BY REGISTRO DESC;");
+$cnx = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO GROUP BY REGISTRO ORDER BY REGISTRO DESC;");
 $x = 0;
 
 while ($mediaGeral = $cnx->fetch_array()) {
@@ -25,7 +24,7 @@ while ($mediaGeral = $cnx->fetch_array()) {
 
 $x3 = 0;
 $idsAtiv = "";
-$cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE ANO_MES='" . $anoMes . "' GROUP BY ATIVIDADE_ID");
+$cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE ANO_MES='" . $yearMonth . "' GROUP BY ATIVIDADE_ID");
 	
 while ($G4 = $cnx->fetch_array()) {
 	$vtG4nome[$x3] = $G4["NOME"];
@@ -122,39 +121,43 @@ while ($x < sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS 
   }
 }
 
-//DASH MEDIA POR ATIVIDADES NO MÊS P06//
-$queryMedAtiv = "SELECT ATIVIDADES.MEDIA, ATIVIDADES.Checkout, ATIVIDADES.ATIVIDADE_ID AS ID, ATIVIDADES.REGISTRO FROM (SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 'Checkout', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=1 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Separação', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=2 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Embalagem', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=3 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'PBL', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=4 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Recebimento', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=5 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Devolução', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=6 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Avarias', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=7 GROUP BY 3 
-UNION SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, 'Expedição', DATE_FORMAT(REGISTRO,'%m/%y') AS REGISTRO, ATIVIDADE_ID FROM DESEMPENHO WHERE ATIVIDADE_ID=8 GROUP BY 3) ATIVIDADES ORDER BY REGISTRO DESC, ID ";
-
+//Média de desempenho por atividade --b2//
 $x = 0;
-  $cnx=mysqli_query($phpmyadmin, $queryMedAtiv);
-  while ($medAtiv=$cnx->fetch_array()) {
-    $vtmedAtivMedia[$x]=$medAtiv["MEDIA"];
-    $vtmedAtivAtividade[$x]=$medAtiv["Chechout"];
-    $vtmedAtivId[$x]=$medAtiv["ID"];
-    $vtmedAtivData[$x]=$medAtiv["REGISTRO"];
-    $x++;
-  }
-  $yz=0;
-  for($y=0;$y< 2; $y++){//LAÇO P/ PREENCHER INFORMAÇÕES DE 2 MESES.
-    for($z=0;$z<8;$z++){//LAÇO P/ PREENCHER ATÉ 8 ATIVIDADES.
-      $md[$y][$z]=0;//INICIA MATRIZ COM ZERO.
-      if($vtmedAtivId[$z]==$z+1){//VERIFICA SE O ID DA ATIVIDADE É O MESMO DA POSIÇÃO A SER ARMAZENADA.
-        $md[$y][$z]=$vtmedAtivMedia[$yz];
-        $mdData[$y][$z]=$vtmedAtivData[$yz];
-        $yz++;  
-      }
-    }
-  }
-  
-  $x = 0;//DASH RANKING MELHORES DO MÊS - top8
-  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $anoMes . "' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 8;");
+$queryB2;
+
+function query($date) {
+  global $queryB2;
+  $queryB2 = "SELECT 'Checkout', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND ANO_MES='".$date."' UNION
+  SELECT 'Separação', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=2 AND ANO_MES='".$date."' UNION
+  SELECT 'Embalagem', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=3 AND ANO_MES='".$date."' UNION
+  SELECT 'PBL', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=4 AND ANO_MES='".$date."' UNION
+  SELECT 'Recebimento', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=5 AND ANO_MES='".$date."' UNION
+  SELECT 'Devolução', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=6 AND ANO_MES='".$date."' UNION
+  SELECT 'Avarias', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=7 AND ANO_MES='".$date."' UNION 
+  SELECT 'Expedição', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=8 AND ANO_MES='".$date."'";
+} 
+
+query($yearMonth);
+
+$cnx = mysqli_query($phpmyadmin, $queryB2);
+while ($b2 = $cnx->fetch_array()) {
+  $activityB2[$x] = $b2["Checkout"];
+  $avgB2[$x] = $b2["MEDIA"];
+  $x++;
+}
+
+query(date('Y-m', strtotime('-1 month')));
+
+$cnx = mysqli_query($phpmyadmin, $queryB2);
+while ($b2 = $cnx->fetch_array()) {
+  $activityB2[$x] = $b2["Checkout"];
+  $avgB2[$x] = $b2["MEDIA"];
+  $x++;
+}
+
+//DASH RANKING MELHORES DO MÊS - top8//
+$x = 0;
+  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 8;");
   while ($top8 = $cnx->fetch_array()) {
     $vtNomeTop8[$x] = $top8["NOME"];
     $vtMediaTop8[$x] = $top8["MEDIA"];
@@ -162,7 +165,7 @@ $x = 0;
   }
   
   $x = 0;//DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
-  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID = USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $anoMes . "' GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 10;");
+  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID = USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 10;");
   while ($top10 = $cnx->fetch_array()) {
     $vtNomeTop10[$x] = $top10["NOME"];
     $vtMediaTop10[$x] = $top10["MEDIA"];
@@ -326,7 +329,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           is3D: true,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('dash-atividades'));
+        var chart = new google.visualization.PieChart(document.getElementById('a1'));
         chart.draw(data, options);
       }
     </script>
@@ -357,7 +360,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
               title: 'Desempenho da empresa'
           }
         };
-        var chart = new google.visualization.LineChart(document.getElementById('dash-mediageral'));
+        var chart = new google.visualization.LineChart(document.getElementById('a2'));
         chart.draw(data, options);
     }
 </script>
@@ -381,47 +384,10 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           }
         };
 
-        var chart = new google.charts.Bar(document.getElementById('dash-faltas'));
+        var chart = new google.charts.Bar(document.getElementById('a3'));
 
         chart.draw(data, google.charts.Bar.convertOptions(options));
       }
-    </script>
-    <script type="text/javascript">
-            google.charts.load('current', {'packages':['line']});
-      google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Day');
-      data.addColumn('number', 'Mat');
-      data.addColumn('number', 'Vesp');
-
-      data.addRows([
-        [1,  37.8, 80.8],
-        [2,  30.9, 69.5],
-        [3,  25.4,   57],
-        [4,  11.7, 18.8],
-        [5,  11.9, 17.6],
-        [6,   8.8, 13.6],
-        [7,   7.6, 12.3],
-        [8,  12.3, 29.2],
-        [9,  16.9, 42.9],
-        [10, 12.8, 30.9]        
-      ]);
-
-      var options = {
-        chart: {
-          title: 'Box Office Earnings in First Two Weeks of Opening',
-          subtitle: 'in millions of dollars (USD)'
-        },
-      };
-
-      var chart = new google.charts.Line(document.getElementById('dash-turnos3'));
-
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
-
     </script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -446,47 +412,10 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           legend: { position: 'bottom' }
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('dash-turnos'));
+        var chart = new google.visualization.LineChart(document.getElementById('b1'));
 
         chart.draw(data, options);
       }
-    </script>
-    <script type="text/javascript">
-    	google.charts.load('current', {packages: ['corechart', 'line']});
-		google.charts.setOnLoadCallback(drawLineColors);
-
-		function drawLineColors() {
-		    var data = new google.visualization.DataTable();
-		    data.addColumn('number', 'X');
-		    data.addColumn('number', 'Matutino');
-		    data.addColumn('number', 'Vespertino');
-
-		    data.addRows([
-          [<?php echo $turDia[0]?>, <?php echo $turMat[0]?>, <?php echo $turVes[0]?>],
-          [<?php echo $turDia[1]?>, <?php echo $turMat[1]?>, <?php echo $turVes[1]?>], 
-          [<?php echo $turDia[2]?> ,<?php echo $turMat[2]?>, <?php echo $turVes[2]?>],
-          [<?php echo $turDia[3]?>, <?php echo $turMat[3]?>, <?php echo $turVes[3]?>],   
-          [<?php echo $turDia[4]?>, <?php echo $turMat[4]?>, <?php echo $turVes[4]?>],
-          [<?php echo $turDia[5]?>, <?php echo $turMat[5]?>, <?php echo $turVes[5]?>],  
-          [<?php echo $turDia[6]?>, <?php echo $turMat[6]?>, <?php echo $turVes[6]?>],
-          [<?php echo $turDia[7]?>, <?php echo $turMat[7]?>, <?php echo $turVes[7]?>],  
-          [<?php echo $turDia[8]?>, <?php echo $turMat[8]?>, <?php echo $turVes[8]?>],
-          [<?php echo $turDia[9]?>, <?php echo $turMat[9]?>, <?php echo $turVes[9]?>], 
-          [<?php echo $turDia[10]?>, <?php echo $turMat[10]?>, <?php echo $turVes[10]?>]
-        ]);
-
-		    var options = {
-		    	hAxis: {
-		        	title: 'Comparativo entre turnos, últimos 11 registros no mesmo dia.'
-		        },
-		        vAxis: {
-		        	title: 'Média de Desempenho'
-		        },
-		        colors: ['#a52714', '#097138']
-		    };
-		    	var chart = new google.visualization.LineChart(document.getElementById('dash-turnos2'));
-		      	chart.draw(data, options);
-		    }
     </script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -495,46 +424,20 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
       function drawVisualization() {
         // Some raw data (not necessarily accurate)
         var data = google.visualization.arrayToDataTable([
-          ['Mês', 'Checkout', 'Separação', 'Caixas', 'PBL', 'Recebimento','Devolução'],
-          ['<?php echo $mdData[1][0]?>', <?php echo $md[1][0];?>, <?php echo $md[1][1];?>, <?php echo $md[1][2];?>, <?php echo $md[1][3];?>, <?php echo $md[1][4];?>, <?php echo $md[1][5];?>],
-          ['<?php echo $mdData[0][0]?>', <?php echo $md[0][0];?>, <?php echo $md[0][1];?>, <?php echo $md[0][2];?>, <?php echo $md[0][3];?>, <?php echo $md[0][4];?>, <?php echo $md[0][5];?>]          
+          ['Mês', 'Checkout', 'Separação', 'Caixas', 'PBL', 'Recebimento','Devolução', 'Avarias'],
+          ['<?php echo date('m/y',strtotime('-1 month')); ?>', <?php echo $avgB2[8];?>, <?php echo $avgB2[9];?>, <?php echo $avgB2[10];?>, <?php echo $avgB2[11];?>, <?php echo $avgB2[12];?>, <?php echo $avgB2[13];?>, <?php echo $avgB2[14];?>],
+          ['<?php echo date('m/y'); ?>', <?php echo $avgB2[0];?>, <?php echo $avgB2[1];?>, <?php echo $avgB2[2];?>, <?php echo $avgB2[3];?>, <?php echo $avgB2[4];?>, <?php echo $avgB2[5];?>, <?php echo $avgB2[6];?>]        
+
         ]);
 
         var options = {
           title : 'Média de desempenho por atividade',
           vAxis: {title: 'Desempenho'},
-          hAxis: {title: 'Mês'},
+          hAxis: {title: 'Mês/Ano'},
           seriesType: 'bars',
           series: {6: {type: 'line'}}
         };
-        var chart = new google.visualization.ComboChart(document.getElementById('dash-med-desem-ativ'));
-        chart.draw(data, options);
-      }
-    </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawVisualization);
-
-      function drawVisualization() {
-        // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable([
-          ['Mês', 'Avarias', 'Separação', 'Caixas', 'Checkout', 'PBL', 'Recebimento'],
-          ['<?php echo $vtData3PrincAtiv[0][4]?>',  165,      138,         122,             99,           105,      114.6],
-          ['<?php echo $vtData3PrincAtiv[0][3]?>',  135,      120,        99,             128,          88,      108],
-          ['<?php echo $vtData3PrincAtiv[0][2]?>',  157,      167,        87,             107,           97,      123],
-          ['<?php echo $vtData3PrincAtiv[0][1]?>',  139,      110,        115,             128,           115,      109.4],
-          ['<?php echo $vtData3PrincAtiv[0][0]?>',  136,      101,         114,             126,          106,      109.6]
-        ]);
-
-        var options = {
-          title : 'Média de desempenho por atividade',
-          vAxis: {title: 'Desempenho'},
-          hAxis: {title: 'Mês'},
-          seriesType: 'bars',
-          series: {5: {type: 'line'}}
-        };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('dash-comp-atividades'));
+        var chart = new google.visualization.ComboChart(document.getElementById('b2'));
         chart.draw(data, options);
       }
     </script>
@@ -553,7 +456,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           pieHole: 0.8,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('sexo'));
+        var chart = new google.visualization.PieChart(document.getElementById('b3'));
         chart.draw(data, options);
       }
     </script>
@@ -574,7 +477,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           pieHole: 0.3,
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('sexo-turno'));
+        var chart = new google.visualization.PieChart(document.getElementById('a4'));
         chart.draw(data, options);
       }
     </script>
@@ -607,7 +510,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
-      var chart = new google.visualization.ColumnChart(document.getElementById("top8"));
+      var chart = new google.visualization.ColumnChart(document.getElementById("b4"));
       chart.draw(view, options);
 	  }
 	  </script>
@@ -633,7 +536,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           },
         };
 
-        var chart = new google.visualization.PieChart(document.getElementById('div-desempenho'));
+        var chart = new google.visualization.PieChart(document.getElementById('c1'));
         chart.draw(data, options);
       }
     </script>
@@ -657,7 +560,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
             1: { color: 'transparent' }
           }
         };
-        var chart = new google.visualization.PieChart(document.getElementById('meta-pacman'));
+        var chart = new google.visualization.PieChart(document.getElementById('c2'));
         chart.draw(data, options);
       }
     </script>
@@ -683,7 +586,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           //height: 400,
           colors: ['#FF0000', '#800000']
         };
-        var chart = new google.charts.Bar(document.getElementById('caixas-vinhos'));
+        var chart = new google.charts.Bar(document.getElementById('c3'));
         chart.draw(data, google.charts.Bar.convertOptions(options));
         var btns = document.getElementById('btn-group');
         btns.onclick = function (e) {
@@ -718,7 +621,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
         };
     
 
-        var chart = new google.visualization.AreaChart(document.getElementById('3atividades-principais'));
+        var chart = new google.visualization.AreaChart(document.getElementById('c4'));
         chart.draw(data, options_stacked);
       }
     </script>
@@ -742,7 +645,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('numero-registros'));
+        var chart = new google.visualization.AreaChart(document.getElementById('d1'));
         chart.draw(data, options);
       }
     </script>
@@ -771,7 +674,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           }
         };
 
-        var chart = new google.charts.Bar(document.getElementById('dash-tempo-de-casa'));
+        var chart = new google.charts.Bar(document.getElementById('d2'));
 
         chart.draw(data, google.charts.Bar.convertOptions(options));
       }
@@ -797,7 +700,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('dash-acessos-no-mes'));
+        var chart = new google.visualization.AreaChart(document.getElementById('d3'));
         chart.draw(data, options);
       }
     </script>
@@ -832,7 +735,7 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
-      var chart = new google.visualization.ColumnChart(document.getElementById("top10-piores"));
+      var chart = new google.visualization.ColumnChart(document.getElementById("d4"));
       chart.draw(view, options);
 	  }
 	  </script>
@@ -842,28 +745,28 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 	  	<img alt="Fill Murray" class="hero-background is-transparent animated bounceInDown" src="img/wallpaper/data-science17-min.jpg" />
 	  	<div class="section transparencia has-addons is-centered .scrollWrapper" style="margin-left: 10px;">
      		<div class="columns bloco" id="graficos">		
-				<div class="column is-mobile hvr-grow-shadow" id="dash-atividades"></div>
-				<div class="column is-mobile hvr-grow-shadow" id="dash-mediageral"></div>
-				<div class="column is-mobile hvr-grow-shadow" id="dash-faltas"></div>
-				<div class="column is-mobile hvr-grow-shadow" id="sexo-turno"></div>				
+				<div class="column is-mobile hvr-grow-shadow" id="a1"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="a2"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="a3"></div>
+				<div class="column is-mobile hvr-grow-shadow" id="a4"></div>				
 			</div>
 			<div class="field is-horizontal columns" id="graficos">	<!--<div class="field is-horizontal" id="graficos">-->
-				<div class="column bloco is-mobile hvr-wobble-skew" id="dash-turnos"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="dash-med-desem-ativ"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="sexo"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="top8"></div>
+				<div class="column bloco is-mobile hvr-wobble-skew" id="b1"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="b2"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="b3"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="b4"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
-				<div class="column bloco is-mobile hvr-grow-shadow" id="div-desempenho"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="meta-pacman"></div>
-				<div class="column bloco is-mobile hvr-float" id="caixas-vinhos"></div>
-				<div class="column bloco is-mobile hvr-grow-shadow" id="3atividades-principais"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="c1"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="c2"></div>
+				<div class="column bloco is-mobile hvr-float" id="c3"></div>
+				<div class="column bloco is-mobile hvr-grow-shadow" id="c4"></div>
 			</div>
 			<div class="field is-horizontal columns" id="graficos">
-				<div class="column bloco is-mobile hvr-bounce-in" id="numero-registros"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="dash-tempo-de-casa"></div>
-				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="dash-acessos-no-mes"></div>
-				<div class="column bloco is-mobile hvr-bounce-in" id="top10-piores"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="d1"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="d2"></div>
+				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="d3"></div>
+				<div class="column bloco is-mobile hvr-bounce-in" id="d4"></div>
 			</div>	
 	  	</div>	  		  	
 	</div>	
