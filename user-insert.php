@@ -356,7 +356,7 @@ if ($_SESSION['permissao'] == 1) {
 					<input name="insert" type="submit" class="button is-primary btn128" value="Inserir"/>
 				</div>
 				<div class="control">
-					<input name="clear" type="reset" class="button is-primary btn128" value="Limpar"/>
+					<input name="clear" type="reset" class="button is-primary btn128" value="Limpar" onclick="clearForm()" />
 				</div>
 				<div class="control">
 					<a href="register.php" class="button is-primary btn128">Cancelar</a>										
