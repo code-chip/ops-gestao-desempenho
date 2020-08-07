@@ -22,6 +22,9 @@ if ($_SESSION['permissao'] == 1) {
 			if (value == "comentario") {
 				document.getElementById("role").style.display = "none";
 				document.getElementById("classification").style.display = "none";
+			} else {
+				document.getElementById("role").style.display = "block";
+				document.getElementById("classification").style.display = "block";
 			}
 		}
 	</script>
@@ -73,7 +76,7 @@ if ($_SESSION['permissao'] == 1) {
 			<label class="label is-size-7-touch">Resposta por*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-			  		<select name="answer" class="is-fullwidth" onchange="change(this.value), disable(this.value)">
+			  		<select name="answer" class="is-fullwidth" onchange="disable(this.value), change(this.value)">
 						<option value="checkbox">Checkbox</option>
 						<option value="comentario">Comentário</option>
 					</select>
@@ -152,7 +155,7 @@ if ($_SESSION['permissao'] == 1) {
 					<button name="insert" type="submit" class="button is-primary btn128" value="Inserir">Inserir</button>
 				</div>
 				<div class="control">
-					<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
+					<button name="clear" type="reset" class="button is-primary btn128" onclick="clearForm();">Limpar</button>
 				</div>
 				<div class="control">
 					<a href="register.php" class="button is-primary btn128">Cancelar</a>										
