@@ -3,7 +3,7 @@
 $menuAtivo = 'configuracoes';
 require('menu.php');
 
-if($_SESSION['permissao'] == 1){
+if ($_SESSION['permissao'] == 1) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='register.php'; </script>";
 }
 
@@ -25,21 +25,21 @@ if($_SESSION['permissao'] == 1){
 			<h3 class="title"><i class="fas fa-calendar-plus"></i> Inserir Menu</h3>
 		<hr>
 		<main>
-	   		<form enctype="multipart/form-data" action="menu-insert.php" method="POST" id="form1" onsubmit="return menuInsertcheckForm()">
+	   		<form enctype="multipart/form-data" action="menu-insert.php" method="POST" id="form" onsubmit="return menuInsertcheckForm()">
 	    		<div class="field">
 					<label class="label is-size-7-touch">Nome*</label>
 					<div class="control has-icons-left has-icons-right" id="nome">
-						<input type="text" class="input required" name="nome" placeholder="RH" maxlength="20" onkeypress="addLoadField('nome')" onkeyup="rmvLoadField('nome')" onblur="checkAdress(form1.nome, 'msgNameOk','msgNameNok')" id="inputName" autofocus>
+						<input type="text" class="input required" name="nome" placeholder="RH" maxlength="20" onkeypress="addLoadField('nome')" onkeyup="rmvLoadField('nome')" onblur="checkAdress(form.nome, 'msgOk1','msgNok1')" id="input1" autofocus>
 						<span class="icon is-small is-left">
 							<i class="fas fa-file-signature"></i>
 						</span>
-						<div id="msgNameNok" style="display:none;">
+						<div id="msgNok1" style="display:none;">
 						  	<span class="icon is-small is-right">
 						  		<i class="fas fa-fw"></i>
 						  	</span>
 						   	<p class="help is-danger">O nome do menu é obrigatório</p>		    	
 						</div>
-						<div id="msgNameOk" style="display:none;">
+						<div id="msgOk1" style="display:none;">
 						   	<span class="icon is-small is-right">
 						   		<i class="fas fa-check"></i>
 						   	</span>
@@ -75,7 +75,7 @@ if($_SESSION['permissao'] == 1){
 					</div>
 				</div>
 				<div class="field" id="menu" style="display: none;">
-					<label class="label is-size-7-touch">Menu</label>
+					<label class="label is-size-7-touch">Menu*</label>
 					<div class="control has-icons-left">
 						<div class="select is-fullwidth">
 							<select name="menu"><?php
@@ -91,18 +91,18 @@ if($_SESSION['permissao'] == 1){
 					</div>
 				</div>
 				<div class="field">
-					<label class="label is-size-7-touch">Link*</label>
+					<label class="label is-size-7-touch">Link</label>
 					<div class="control has-icons-left has-icons-right" id="link">
-						<input type="text" class="input" name="link" placeholder="informativo.pdf ou rh-relatorio.php" maxlength="50" onkeypress="addLoadField('link')" onkeyup="rmvLoadField('link')" onblur="checkAdress(form1.link, 'msgLinkOk','msgLinkNok')" id="inputLink">
+						<input type="text" class="input norequired" name="link" placeholder="informativo.pdf ou rh-relatorio.php" maxlength="50" onkeypress="addLoadField('link')" onkeyup="rmvLoadField('link')" onblur="checkAdress(form.link, 'msgOk2','msgNok2')" id="input2">
 						<span class="icon is-small is-left">
 							<i class="fas fa-link"></i>
 						</span>
-						<div id="msgLinkNok" style="display:none;">
+						<div id="msgNok2" style="display:none;">
 						   	<span class="icon is-small is-right">
 						   		<i class="fas fa-fw"></i>
 						   	</span>
 						</div>
-						<div id="msgLinkOk" style="display:none;">
+						<div id="msgOk2" style="display:none;">
 						   	<span class="icon is-small is-right">
 						   		<i class="fas fa-check"></i>
 						  	</span>
@@ -153,7 +153,7 @@ if($_SESSION['permissao'] == 1){
 							<button name="insert" type="submit" class="button is-primary btn128" value="Inserir">Inserir</button>
 						</div>
 						<div class="control">
-							<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
+							<button name="clear" type="reset" class="button is-primary btn128" onclick="clearForm()">Limpar</button>
 						</div>
 						<div class="control">
 							<a href="register.php" class="button is-primary btn128">Cancelar</a>										
@@ -165,33 +165,31 @@ if($_SESSION['permissao'] == 1){
 	   	</div>	   	
 	</section>
 	<script>
-  	const fileInput = document.querySelector('#file-js-example input[type=file]');
-  	fileInput.onchange = () => {
-    	if (fileInput.files.length > 0) {
-      		const fileName = document.querySelector('#file-js-example .file-name');
-      	fileName.textContent = fileInput.files[0].name;
-    	}
-  	}
-</script>	 	
+  		const fileInput = document.querySelector('#file-js-example input[type=file]');
+  		fileInput.onchange = () => {
+    		if (fileInput.files.length > 0) {
+      			const fileName = document.querySelector('#file-js-example .file-name');
+	      		fileName.textContent = fileInput.files[0].name;
+	    	}
+  		}
+	</script>	 	
 </body>
-</html><?php 
+</html>
+<?php
 
-if(isset($_POST["insert"])!=null){
-	$nome=trim($_POST['nome']);
-	$tipo=trim($_POST['tipoMenu']);
-	$target=trim($_POST['clique']);
-	$link=trim($_POST['link']);
-	$menu=trim($_POST['menu']);
-	$situacao=trim($_POST['situacao']);
-	$upFile=trim($_POST['userfile']);
-	function cleanString($text) {
+if (isset($_POST["insert"]) != null) {
+	$nome = trim($_POST['nome']);
+	$link = trim($_POST['link']);
+
+	function formatString($text) {
     	$utf8 = array('/[áàâãªä]/u'=>'a', '/[ÁÀÂÃÄ]/u'=>'A', '/[ÍÌÎÏ]/u'=>'I', '/[íìîï]/u'=>'i', '/[éèêë]/u'=>'e','/[ÉÈÊË]/u'=>'E', '/[óòôõºö]/u'=>'o',
         '/[ÓÒÔÕÖ]/u'=>'O', '/[úùûü]/u'=>'u','/[ÚÙÛÜ]/u'=>'U', '/ç/'=>'c', '/Ç/'=>'C', '/ñ/'=>'n','/Ñ/'=>'N', '/@/u'=>'a','/–/'=>'-',
         '/[’‘‹›‚]/u'=>' ', '/[“”«»„]/u'=>' ', '/ /'=>' ',);
+    	
     	return preg_replace(array_keys($utf8), array_values($utf8), $text);
 	}
-	$tag= strtolower(cleanString($nome));
-	if($_FILES['userfile']['name']!=""){
+
+	if ($_FILES['userfile']['name'] != "") {
 		$uploaddir = 'up/';
 		$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 		//echo '<pre>';
@@ -200,33 +198,36 @@ if(isset($_POST["insert"])!=null){
 		} else {
 		    //echo "Possível ataque de upload de arquivo!\n";
 		}/*echo 'Aqui está mais informações de debug:'; print_r($_FILES); print "</pre>";*/
-		if($link!=""){
-			$link="up/".$link;
+		
+		if ($link != "") {
+			$link = "up/" . $link;
 		}			
-	}	
-	if($tipo=="MENU"){
-		$checkPermissoes="SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;";
-		$cnx= mysqli_query($phpmyadmin, $checkPermissoes);
-	    while($permissao= $cnx->fetch_array()){
-			$insMenu="INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, TARGET, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$target."','".$link."','s','n','".$situacao."');";
-			mysqli_query($phpmyadmin, $insMenu);
-		}
 	}
-	else{
-		$checkMenu="SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$menu."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$menu."';";
-		$cnx= mysqli_query($phpmyadmin, $checkMenu);		
-	    while($loadMenu= $cnx->fetch_array()){
-	    	$insMenu="INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', '".$target."','".$link."','n','".$situacao."');";
-			mysqli_query($phpmyadmin, $insMenu);
+
+	if ($_POST['tipoMenu'] == "MENU") {
+		$tag = strtolower(formatString($nome));
+		$tag = str_replace(' ', '', $tag);
+
+		$cnx = mysqli_query($phpmyadmin, "SELECT ID, (SELECT 1+MAX(POSICAO) FROM MENU WHERE TAG NOT IN('configuracoes','sair')) AS POSICAO FROM PERMISSAO;");
+	    
+	    while ($permissao = $cnx->fetch_array()) {
+			mysqli_query($phpmyadmin, "INSERT INTO MENU(PERMISSAO_ID, MENU, TAG, POSICAO, TARGET, LINK, SUBMENU, LIBERADO, ATIVO) VALUES(".$permissao["ID"].",'".$nome."','".$tag."',".$permissao["POSICAO"].",'".$_POST['clique']."','".$link."','s','n','".$_POST['situacao']."');");
+		}
+	} else {
+		$cnx = mysqli_query($phpmyadmin, "SELECT ID, PERMISSAO_ID, (SELECT 1+MAX(POSICAO) FROM MENU_ITEM WHERE MENU_ID=(SELECT ID FROM MENU WHERE TAG='".$_POST['menu']."' LIMIT 1)) AS POSICAO FROM MENU WHERE TAG='".$_POST['menu']."';");		
+	    
+	    while ($loadMenu = $cnx->fetch_array()) {
+			mysqli_query($phpmyadmin, "INSERT INTO MENU_ITEM(MENU_ID, PERMISSAO_ID, ITEM, TARGET, LINK, LIBERADO, ATIVO) VALUES(".$loadMenu["ID"].",".$loadMenu["PERMISSAO_ID"].",'".$nome."', '".$_POST['clique']."','".$link."','n','".$_POST['situacao']."');");
 		}		
 	}
-	if(mysqli_error($phpmyadmin)==null){
+
+	if (mysqli_error($phpmyadmin) == null) {
 		echo "<script>alert('Menu cadastrado com sucesso, libere as permissões p/ usar!!'); window.location.href='menu-insert.php';</script>";
-	}
-	else{
-		$erro=mysqli_error($phpmyadmin);
+	} else {
+		$erro = mysqli_error($phpmyadmin);
 		echo "<script>alert('Erro ".$erro."!!')</script>";
-	}			
+	}
+
 }//Final if.
 
 ?>
