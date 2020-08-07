@@ -23,8 +23,10 @@ function change(select) {// traz o valor selecionado.
 }
 
 //GOAL-COMPANY
-function clearForm(){
+function clearForm() {
 	var inputs = document.getElementsByClassName('required').length;
+	inputs = inputs+document.getElementsByClassName('norequired').length;
+	
 	for (var x = 1; x < inputs+1 ; x++) {
 		document.getElementById("msgOk"+x).style.display = "none";		
 		document.getElementById("input"+x).classList.remove("is-success");
