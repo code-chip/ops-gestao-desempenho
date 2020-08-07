@@ -67,7 +67,7 @@ if (isset($_POST["utilizado"])) {
 	    	<div class="container">
 	    		<form method="POST" action="coupon-query.php" onsubmit="return checkForm(form1.usado)" id="form1">
 	    		<div class="box transparencia bloco">
-	    			<strong>Cupom eviner, desconto de até R$50!</strong>
+	    			<strong>Cupom eviner, desconto de até R$100!</strong>
 	    			<div class="box antitransparencia">
 	    				Olá eviner <?php echo $_SESSION["nameUser"] ?>, aproveite o seu cupom:<br><h6 class="is-size-1" id="cupom" value=""><?php echo $cupom["CODIGO"]?></h6> 
 	    			</div>	
