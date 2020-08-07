@@ -134,20 +134,6 @@ if($_SESSION['permissao'] == 1){
 					</div>
 				</div>
 				<div class="field">
-					<label class="label is-size-7-touch">Clique*</label>
-					<div class="control has-icons-left">
-						<div class="select is-fullwidth" id="exibeMenu">
-							<select name="clique">
-								<option value="_self">Abrir na mesma aba</option>
-								<option value="_blank">Abrir em nova aba</option>										
-							</select>	
-							<span class="icon is-small is-left">
-								<i class="fas fa-mouse-pointer"></i>
-							</span>
-						</div>
-					</div>
-				</div>	
-				<div class="field">
 					<label class="label is-size-7-touch">Status*</label>
 					<div class="control has-icons-left">
 						<div class="select is-fullwidth">
