@@ -17,7 +17,6 @@ require('menu.php');
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<style type="text/css" src="css/personal.css"></style>
 	<title>Gestão de Desempenho - Consultar Desempenho</title>
-
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -110,7 +109,7 @@ if (isset($_POST['query'])) {
 	$count = 0;
 	$totalAlcancado = 0;
 
-	if ( $name != "") {	
+	if ( $_REQUEST['name'] != "") {	
 		$query = "SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE SETOR_ID=".$_REQUEST['sector']." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$_REQUEST['name']."%') AND ANO_MES='".$_REQUEST['month']."'";
 	} else {	
 		$query = "SELECT U.NOME AS USUARIO, P.NOME AS PRESENCA, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE SETOR_ID=".$_REQUEST['sector']." AND USUARIO_ID IN(SELECT ID FROM USUARIO) AND ANO_MES= '".$_REQUEST['month']."' ORDER BY REGISTRO, U.NOME;";
