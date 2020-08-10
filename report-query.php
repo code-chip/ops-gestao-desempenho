@@ -80,8 +80,8 @@ require('menu.php');
 		<div class="field">
 			<label class="label is-size-7-touch">Nome</label>
 			<div class="control has-icons-left">
-				<div class="select is-fullwidth">
-					<input name="name" type="text" onkeypress="addLoadField('name')" onkeyup="rmvLoadField('name')" class="input norequired" placeholder="Ana Clara ou deixe em branco p/ consultar todos.">
+				<div class="select is-fullwidth" id="name">
+					<input name="name" type="text" onkeypress="addLoadField('name')" onkeyup="rmvLoadField('name')" class="input norequired" placeholder="Ana Clara ou deixe em branco p/ consultar todos." id="input3">
 					<span class="icon is-left">
 						<i class="fas fa-user-circle"></i>
 					</span>
