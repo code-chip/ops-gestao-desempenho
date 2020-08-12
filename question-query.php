@@ -22,7 +22,7 @@ if ($_SESSION["permissao"] == 1) {
 	<section class="section">
 	  	<div class="container">
 	  	<?php if (isset($_POST["query"]) == null) :?>
-	   		<form action="question-query-b.php" method="POST" id="form" onsubmit="return check()">
+	   		<form action="question-query.php" method="POST" id="form" onsubmit="return check()">
 	   			<div class="field">
 					<label class="label is-size-7-touch">Tipo*</label>
 					<div class="control has-icons-left">
@@ -159,7 +159,7 @@ if ($_SESSION["permissao"] == 1) {
 				}
 											
 				if (mysqli_num_rows($cnx) == 0 && mysqli_num_rows($cnx2) == 0 && mysqli_num_rows($cnx3) == 0) {					
-					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query-b.php';</script>";
+					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query.php';</script>";
 
 				} else if (mysqli_num_rows($cnx) == 0 && mysqli_num_rows($cnx2) == 0 && mysqli_num_rows($cnx3) > 0) {					
 					echo "<script>alert('Nenhuma pergunta Técnica ou Comportamental encontrada com o filtro aplicado!');</script>";
