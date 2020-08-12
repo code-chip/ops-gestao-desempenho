@@ -1,6 +1,6 @@
 <?php
 
-$menuAtivo="desempenho";
+$menuAtivo = 'desempenho';
 require('menu.php');
 
 if ($_SESSION["permissao"] == 1) {
@@ -37,7 +37,7 @@ if ($_SESSION["permissao"] == 1) {
 	<?php if ($setor == "" && isset($_POST['query']) == null ): ?>
 	<section class="section">
 	<div class="container">	
-	<form id="form1" action="report-update.php" method="POST">
+	<form id="form1" action="report-update.php" method="POST" onsubmit="return check()">
 		<div class="field">
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
@@ -75,10 +75,10 @@ if ($_SESSION["permissao"] == 1) {
 			</div>
 		</div>								
 		<div class="field">
-			<label class="label is-size-7-touch">Nome</label>
+			<label class="label is-size-7-touch">Nome*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth" id="name">
-					<input name="name" type="text" onkeypress="addLoadField('name')" onkeyup="rmvLoadField('name')" class="input norequired" placeholder="Ana Clara" id="input3">
+					<input name="name" type="text" onkeypress="addLoadField('name')" onkeyup="rmvLoadField('name')" class="input required" placeholder="Ana Clara" id="input3">
 					<span class="icon is-left">
 						<i class="fas fa-user-circle"></i>
 					</span>
@@ -103,7 +103,7 @@ if ($_SESSION["permissao"] == 1) {
 </div>
 <?php
 
-if( isset($_POST['query'])){
+if ( isset($_POST['query'])) {
 
 	$count = 0;
 	$totalAlcancado = 0;	
@@ -135,17 +135,16 @@ if( isset($_POST['query'])){
 	}	
 }
 	
-?>
-<!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['query']) && $count != 0) : ?>
+if (isset($_POST['query']) && $count != 0) : { ?>
 <hr/>
 <section class="section">
 <form id="form2" action="report-update.php" method="POST">	
 <div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch is-striped is-narrow is-hoverable">	
 	<tr>
 		<th>N°</th>
 		<th class="ocultaColunaId">ID</th>
+		<th>*</th>
 		<th style="border-left: -25px;">Funcionário</th>
 		<th>Presença</th>
 		<th>Atividade</th>		
@@ -155,27 +154,35 @@ if( isset($_POST['query'])){
 		<th>Observação</th> 			
 	</tr><?php 
 	
-	for( $i = 0; $i < sizeof($name); $i++ ) :
+	for ( $i = 0; $i < sizeof($name); $i++ ) : {
 		$z = $i; 
 		$registro = 1; 
 
-		while($name[$z] == $name[$z+1]) {
+		while ($name[$z] == $name[$z+1]) {
 			$registro++;
 			$repeat = $registro;
 			$z++;
 		}
 
-		if($repeat > 0) { 
+		if ($repeat > 0) { 
 			$repeat--;
 		}
 
 	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
+		
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
 			<div class="field">
 				<div class="control">
-					<input name="id[]" type="text" class="input is-size-7-touch" value="<?php echo $vtId[$i]?>" >
+					<input name="id[]" type="input" class="is-size-7-touch" value="<?php echo $vtId[$i]?>" >
+				</div>
+			</div>
+		</td>
+		<td class="field "><!--COLUNA NUMBER-->
+			<div class="field ">
+				<div class="control">
+					<input name="n[]" type="checkbox" class="checkbox is-size-7-touch" value="<?php echo $i?>" >
 				</div>
 			</div>
 		</td>
@@ -246,7 +253,7 @@ if( isset($_POST['query'])){
 			</div>
 		</td>
 	</tr>
-<?php endfor;?>
+<?php } endfor;?>
 	</table>
 	<a href="#topo">		
 		<div class=".scrollWrapper">
@@ -254,30 +261,29 @@ if( isset($_POST['query'])){
 		</div>
 	</a>
 	<br/>
-	<div class="table__wrapper">			
-		<div class="field-body">
-			<div class="field is-grouped">											
-				<div class="control">
-					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
-				</div>
-				<div class="control">
-					<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
-				</div>
-				<div class="control">
-					<input name="alterarDados" type="submit" class="button is-primary" value="Alterar Dados"/>
-				</div>					
-			</div>						
-		</div>
+	<div class="field-body">
+		<div class="field is-grouped">
+			<div class="control">
+				<input name="alterarDados" type="submit" class="button is-primary" value="Alterar Dados"/>
+			</div>												
+			<div class="control">
+				<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
+			</div>
+			<div class="control">
+				<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+			</div>
+		</div>						
 	</div>
 </div>
 </form>
 </section>	
-<?php endif; ?>
+<?php } endif; ?>
 </body>
 </html>
 <?php
 
 if(isset($_POST['alterarDados'])){
+	$n = array_filter($_POST['n']);//Armazena posição do vetor clicada p/ atualizar.
 	$ids = array_filter($_POST['id']);
 	$presencas = array_filter($_POST['presenca']);
 	$atividades = array_filter($_POST['atividade']);
@@ -287,45 +293,33 @@ if(isset($_POST['alterarDados'])){
 	$observacoes = array_filter($_POST['observacao']);
 	$upCount = 0;
 
-	for ( $i = 0; $i < sizeof($atividades); $i++ ) {
-		
-		if ($alcancados[$i] == null) {//A função array_filter setar null quando o dado é zero.
-			$alcancados[$i]=0;
+	for ( $i = 0; $i < sizeof($n); $i++ ) {
+		if ($alcancados[$n[$i]] == null) {//A função array_filter setar null quando o dado é zero.
+			$alcancados[$n[$i]] = 0;
 		}
-		
-		if ($metas[$i] == null ) {//A função array_filter setar null quando o dado é zero.
-			$metas[$i] = 0;
-		}
-
-		if ($observacoes[$i] == "" || $observacoes[$i] == null) {//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
-			$checkUp = "SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."';";
-		} else {
-			$checkUp = "SELECT ID FROM DESEMPENHO WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND PRESENCA_ID=".$presencas[$i]." AND META=".$metas[$i]." AND ALCANCADO=".$alcancados[$i]." AND REGISTRO='".$registros[$i]."' AND OBSERVACAO='".$observacoes[$i]."';";
-		}
-
-		$tx = mysqli_query($phpmyadmin, $checkUp);
-		
-		if (mysqli_num_rows($tx) == 0) {
-			if ($presencas[$i] == 3 || $presencas[$i] == 5) {//CASO SEJA FOLGA/TREINAMENTO SETA 0.
-				$desempenho = 0;
-				$metas[$i] = 0;
-				$alcancados[$i] = 0;
-			} else if ($alcancados[$i] == 0 || $alcancados[$i] == null) {
-				$desempenho = 0;
-				$alcancados[$i] = 0;
-			} else {
-				$desempenho = round(($alcancados[$i] / $metas[$i]) * 100,2);
-			}
-
-			$upDesempenho = "UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"].", ATUALIZADO_DATA='".date('Y-m-d')."' WHERE ID=".$ids[$i].";";		
-			$cnx=mysqli_query($phpmyadmin, $upDesempenho);
 			
-			$upCount = $upCount+1;			
+		if ($metas[$n[$i]] == null ) {//A função array_filter setar null quando o dado é zero.
+			$metas[$n[$i]] = 0;
 		}
+
+		if ($presencas[$n[$i]] == 3 || $presencas[$i] == 5) {//CASO SEJA FOLGA/TREINAMENTO SETA 0.
+			$desempenho = 0;
+			$metas[$n[$i]] = 0;
+			$alcancados[$n[$i]] = 0;
+		} elseif ($alcancados[$n[$i]] == 0 || $alcancados[$n[$i]] == null) {
+			$desempenho = 0;
+			$alcancados[$n[$i]] = 0;
+		} else {
+			$desempenho = round(($alcancados[$n[$i]] / $metas[$n[$i]]) * 100,2);
+		}
+
+		$cnx = mysqli_query($phpmyadmin, "UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$n[$i]].", PRESENCA_ID=".$presencas[$n[$i]].",META=".$metas[$n[$i]].", ALCANCADO=".$alcancados[$n[$i]].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$n[$i]]."', OBSERVACAO='".$observacoes[$n[$i]]."',ATUALIZADO_POR=".$_SESSION["userId"].", ATUALIZADO_DATA='".date('Y-m-d')."' WHERE ID=".$ids[$n[$i]].";");
+			
+		$upCount = $upCount+1;
 	}
 
 	if ($upCount == 0) {	
-		echo "<script>alert('Nenhum registro foi alterado p/ ser atualizado!!'); window.location.href=window.location.href;	</script>";
+		echo "<script>alert('Nenhum registro clicado na coluna * p/ ser atualizado!!'); window.location.href=window.location.href;	</script>";
 	} else {
 		echo "<script>alert('Foi atualizado " . $upCount . " registro(s)!!'); window.location.href=window.location.href; </script>";
 	}
