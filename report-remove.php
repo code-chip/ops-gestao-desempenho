@@ -140,7 +140,7 @@ if (isset($_POST['query']) && $count != 0) : ?>
 <section class="section">
 <form id="form2" action="report-remove.php" method="POST">	
 <div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch is-striped is-narrow is-hoverable">	
 	<tr>
 		<th>N°</th>
 		<th>Apagar</th>
@@ -196,16 +196,16 @@ if (isset($_POST['query']) && $count != 0) : ?>
 	<br/>
 	<div class="table__wrapper">			
 		<div class="field-body">
-			<div class="field is-grouped">											
+			<div class="field is-grouped">
+				<div class="control">
+					<input name="removerDados" type="submit" class="button is-primary" value="Deletar Dados"/>
+				</div>												
 				<div class="control">
 					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 				<div class="control">
 					<a href="report-remove.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
-				<div class="control">
-					<input name="removerDados" type="submit" class="button is-primary" value="Deletar Dados"/>
-				</div>					
 			</div>						
 		</div>
 	</div>
