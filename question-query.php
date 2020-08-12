@@ -13,89 +13,86 @@ if ($_SESSION["permissao"] == 1) {
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Conuslta Pergunta</title>
-	<style type="text/css" scr="css/personal.css"></style>
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>
+	<title>Gestão de Desempenho - Conuslta Pergunta</title>
 </head>
 <body>
 	<section class="section">
 	  	<div class="container">
-	  	<?php if (isset($_POST["consultar"]) == null) :?>
-	   		<form action="question-query.php" method="POST" onsubmit="return check()">
-	    		<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Tipo*</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="tipo" class="w24-2e"><?php
-										$con = mysqli_query($phpmyadmin , "SELECT ID, TIPO FROM AVAL_TIPO WHERE SITUACAO='Ativo' ORDER BY ID"); 
-										while ($destino = $con->fetch_array()) {
-											echo "<option value=" . $destino["ID"] . ">" . $destino["TIPO"] . "</option>";
-										}
-										?>
-									</select>	
-								</div>
-							</div>						
+	  	<?php if (isset($_POST["query"]) == null) :?>
+	   		<form action="question-query-b.php" method="POST" id="form" onsubmit="return check()">
+	   			<div class="field">
+					<label class="label is-size-7-touch">Tipo*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+					  		<select name="type" class="is-fullwidth" autofocus><?php
+								$cnx = mysqli_query($phpmyadmin , "SELECT ID, TIPO FROM AVAL_TIPO WHERE SITUACAO = 'Ativo' ORDER BY ID"); 
+								while($destino = $cnx->fetch_array()) { 
+									echo "<option value=" . $destino["ID"] . ">" . $destino["TIPO"] . "</option>";
+								} 
+								?>
+							</select>
+						</div>
+						<div>
+							<span class="icon is-small is-left" >
+							  	<i class="fas fa-tape"></i>
+							</span>
 						</div>
 					</div>
 				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Cargo*</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="cargo" id="cargo" class="required w24-2e">
-									<option value="">Selecione</option><?php
-										$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo' ORDER BY NOME");
-										while($reCargo = mysqli_fetch_assoc($cnx)) {
-											echo "<option value=" . $reCargo["ID"] . ">" . $reCargo["NOME"] . "</option>";
-										}
-										?>
-									</select>	
-								</div>
-							</div>						
-						</div>
+				<div class="field">
+					<label class="label is-size-7-touch">Cargo*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth" id="cargo">
+							<select name="cargo" class="required is-fullwidth ">
+								<option value="">Selecione</option><?php
+								$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM CARGO WHERE SITUACAO='Ativo' ORDER BY NOME");
+								while($reCargo = mysqli_fetch_assoc($cnx)) {
+									echo "<option value=" . $reCargo["ID"] . ">" . $reCargo["NOME"] . "</option>";
+								}
+								?>
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-suitcase-rolling"></i>
+							</span>
+						</div>						
 					</div>
 				</div>								
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Situação*</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped">							
-							<div class="control">
-								<div class="select">
-									<select name="situacao" id="situacao" class="w24-2e">
-										<option selected="selected" value="AND SITUACAO='Ativo'">Ativo</option>
-										<option value="AND SITUACAO='Inativo'">Inativo</option>
-										<option value="">Todas</option>
-									</select>	
-								</div>
-							</div>
+				<div class="field">
+					<label class="label is-size-7-touch">Situação*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="situacao" id="situacao" class="is-fullwidth">
+								<option selected="selected" value="AND SITUACAO='Ativo'">Ativo</option>
+								<option value="AND SITUACAO='Inativo'">Inativo</option>
+								<option value="">Todas</option>
+							</select>
+							<span class="icon is-left">
+								<i class="fas fa-sort"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>
 				<div class="field-body">
-					<div class="field is-grouped"></div>
+					<div class="field is-grouped">
 						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
+							<button name="query" type="submit" class="button is-primary btn128" value="filter">Consultar</button>
 						</div>
 						<div class="control">
-							<a href="register.php" class="button is-primary btn128">Voltar</a>	
+							<button name="clear" type="reset" class="button is-primary btn128" onclick="clearForm();">Limpar</button>
 						</div>
+						<div class="control">
+							<a href="register.php" class="button is-primary btn128">Cancelar</a>										
+						</div>									
 					</div>
-				</div>	
+				</div>
 	     	</form>
 	    <?php endif;
 	     	
-	     if (isset($_POST["consultar"]) != null) {
-			if ($_POST['tipo'] == 1) {//OS ID REFERÊNCIA P/ TÉCNICO E COMPORTAMENTAL.
+	     if (isset($_POST["query"]) != null) {
+			if ($_POST['type'] == 1) {//OS ID REFERÊNCIA P/ TÉCNICO E COMPORTAMENTAL.
 				$tecnica = 1;
 				$comportamental = 2;
 			} else {
@@ -136,7 +133,7 @@ if ($_SESSION["permissao"] == 1) {
 									<div class='text'>" . $pergunta["PERGUNTA"] . "</div>				
 								</div>								
 							</div>";
-						$y++;
+							$y++;
 						}
 					} //<!--FINAL PERGUNTA COMPORTAMENTAL-->
 					
@@ -162,7 +159,7 @@ if ($_SESSION["permissao"] == 1) {
 				}
 											
 				if (mysqli_num_rows($cnx) == 0 && mysqli_num_rows($cnx2) == 0 && mysqli_num_rows($cnx3) == 0) {					
-					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query.php';</script>";
+					echo "<script>alert('Nenhuma pergunta foi encontrada com o filtro aplicado!'); window.location.href='question-query-b.php';</script>";
 
 				} else if (mysqli_num_rows($cnx) == 0 && mysqli_num_rows($cnx2) == 0 && mysqli_num_rows($cnx3) > 0) {					
 					echo "<script>alert('Nenhuma pergunta Técnica ou Comportamental encontrada com o filtro aplicado!');</script>";
