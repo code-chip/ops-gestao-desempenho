@@ -2,205 +2,151 @@
 $menuAtivo = 'feedback';
 require('menu.php');
 
-$colaborador = trim($_POST['colaborador']);
-$profissional = trim($_POST['profissional']);
-$comportamental = trim($_POST['comportamental']);
-$desempenho = trim($_POST['desempenho']);
-$tipo = trim($_POST['tipo']);
-$feedback = trim($_POST['feedback']);
-$exibicao = trim($_POST['exibicao']);
-
-if (isset($_POST["inserirFeedback"]) != null) {
-	if ($colaborador != "" && $feedback != "") {
-		$inserirFeedback = "INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, REGISTRO) VALUES(".$_SESSION["userId"].",".$colaborador.",'".$feedback."',".$comportamental.",".$profissional.",".$desempenho.",'".$tipo."','Enviado',".$exibicao.",'".date('Y-m-d')."');";			
-		
-		$cnx = mysqli_query($phpmyadmin, $inserirFeedback);
-		
-		$erro = mysqli_error($phpmyadmin);
-		
-		if ($erro == null) {
-			echo "<script>alert('Feedback enviado com sucesso!!')</script>";	
-		} else {
-			?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
-		}
-	} else if ($colaborador == "") {
-		echo "<script>alert('Selecionar o campo Colaborador é obrigatório!!')</script>";
-	} else {
-		echo "<script>alert('Preencher do feedback é obrigatório!!')</script>";
-	}	
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>
 	<title>Gestão de Desempenho - Inserir Feedback</title>
-	<style type="text/css">
-		.carregando{
-		color:#ff0000;
-		display:none;
-		}
-		.button{
-			width: 128px;
-		}
-		.largura{
-			width:273px;
-		}
-	</style>
 </head>
 <body>
 	<section class="section">
-	  	<div class="container">
-	   		<form action="feedback-insert.php" method="POST">
-	   			<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Setor:</label>
+	<div class="container">
+	   	<form action="feedback-insert.php" method="POST" onsubmit="return check()">
+	   		<div class="field">
+				<label class="label is-size-7-touch">Setor*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="sector" class="required" id="sector" autofocus>
+							<option value="">Selecione</option><?php
+							$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME");
+							while($reSetor = mysqli_fetch_assoc($cnx)) {
+								echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
+							}
+							?>
+						</select>	
 					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="setor" id="setor" class="largura">
-									<option value="">Selecione</option>
-									<?php $query = "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME";
-										$cnx = mysqli_query($phpmyadmin, $query);
-										while($reSetor = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
-										}?>
-									</select>	
-								</div>
-							</div>						
-						</div>
-					</div>
-				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Colaborador:</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							<div class="control">
-								<div class="select">
-									<span class="carregando">Aguarde, carregando...</span>
-									<select name="colaborador" id="usuario" class="largura">
-										<option selected="selected" value="Todos">Selecione</option>
-									</select>	
-								</div>
-							</div>
-						</div>
-					</div>					
-				</div>
-	    		<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Profissional:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="profissional" id="profissional" class="largura">
-										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
-										$cnx = mysqli_query($phpmyadmin, $query);
-										while($resquet = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
-										}?>
-									</select>	
-								</div>
-							</div>						
-						</div>
+					<span class="icon is-small is-left">
+						<i class="fas fa-door-open"></i>
+					</span>
+				</div>						
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Colaborador*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="recipient" id="recipient" class="required">
+							<option selected="selected" value="Todos">Selecione</option>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-user-circle"></i>
+						</span>	
 					</div>
 				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Comportamental:</label>
+			</div>					
+	    	<div class="field">
+				<label class="label is-size-7-touch">Profissional*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="professional" id="professional">
+						<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
+							$cnx = mysqli_query($phpmyadmin, $query);
+							while($resquet = mysqli_fetch_assoc($cnx)) {
+								echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+							}?>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-chalkboard-teacher"></i>
+						</span>	
 					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="comportamental" id="comportamental" class="largura">
-										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
-										$cnx = mysqli_query($phpmyadmin, $query);
-										while($resquet = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
-										}?>
-									</select>	
-								</div>
-							</div>						
+				</div>						
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Comportamental*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="behavioral" id="behavioral"><?php 
+							$cnx = mysqli_query($phpmyadmin, "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'");
+							while($resquet = mysqli_fetch_assoc($cnx)) {
+								echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+							}?>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-users"></i>
+						</span>	
+					</div>
+				</div>						
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Desempenho*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="performance" id="performance"><?php
+							$cnx = mysqli_query($phpmyadmin, "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'");
+							while($resquet = mysqli_fetch_assoc($cnx)) {
+								echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
+							}?>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-chart-line"></i>
+						</span>	
+					</div>
+				</div>						
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Tipo*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="type">
+							<option value="Positivo">Positivo</option>
+							<option value="Construtivo">Construtivo</option>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-comment-alt"></i>
+						</span>	
+					</div>
+				</div>						
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Feedback*</label>
+				<div class="control">
+					<textarea name="feedback" class="textarea is-fullwidth required" maxlenght="300"></textarea>
+				</div>
+			</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Exibição*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="exhibition" onchange="change(this.value)">
+							<option value="1">Remetente</option>
+							<option value="0">Anônimo</option>
+						</select>
+						<div id="1" class="loadId">
+							<span class="icon is-small is-left">
+								<i class="fas fa-user"></i>	
+							</span>
 						</div>
+						<div id="0" class="loadId" style="display: none;">
+							<span class="icon is-small is-left">
+								<i class="fas fa-user-secret"></i>
+							</span>
+						</div>	
 					</div>
 				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Desempenho:</label>
+			</div>
+			<div class="field-body">
+				<div class="field is-grouped">
+					<div class="control">
+						<button name="insert" type="submit" class="button is-primary btn128" value="Insert">Enviar</button>
 					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="desempenho" id="desempenho" class="largura">
-										<?php $query = "SELECT ID, RESPOSTA FROM FEEDBACK_RESPOSTA WHERE SITUACAO = 's'";
-										$cnx = mysqli_query($phpmyadmin, $query);
-										while($resquet = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$resquet['ID'].'">'.$resquet['RESPOSTA'].'</option>';
-										}?>
-									</select>	
-								</div>
-							</div>						
-						</div>
+					<div class="control">
+						<button name="inserirFeedback" type="reset" class="button is-primary btn128">Limpar</button>
 					</div>
-				</div>	
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Tipo:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="tipo" class="largura">
-										<option value="Positivo">Positivo</option>
-										<option value="Construtivo">Construtivo</option>
-									</select>	
-								</div>
-							</div>						
-						</div>
-					</div>
-				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Feedback:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" style="max-width:17em;">							
-							<div class="control">
-								<textarea name="feedback" class="textarea" maxlenght="200"></textarea>
-							</div>						
-						</div>
-					</div>
-				</div>
-				
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Exibição:</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped" style="max-width:17em;">							
-							<div class="control">
-								<div class="select is-size-7-touch">
-									<select name="exibicao">
-										<option value="1">Remetente</option>
-										<option value="0">Anônimo</option>
-									</select>	
-								</div>
-							</div>
-							<div class="control">
-								<button name="inserirFeedback" type="submit" class="button is-primary" value="Filtrar">Enviar</button>
-							</div>						
-						</div>
-					</div>					
-				</div>
+				</div>			
 	     	</form>
 	     	<script type="text/javascript" scr="https://www.google.com/jsapi"></script>
 	     	<script type="text/javascript">
@@ -208,20 +154,20 @@ if (isset($_POST["inserirFeedback"]) != null) {
 	     	</script>
 	     	<script type="text/javascript">
 				$(function(){
-					$('#setor').change(function(){
+					$('#sector').change(function(){
 						if( $(this).val() ) {
-							$('#usuario').hide();
+							$('#recipient').hide();
 							$('.carregando').show();
 							$.getJSON('loading-users.php?search=',{setor: $(this).val(), ajax: 'true'}, function(j){
 								var options = '<option value="Todos">Selecione</option>';	
 								for (var i = 0; i < j.length; i++) {
 									options += '<option value="' + j[i].id + '">' + j[i].nome_usuario + '</option>';
 								}	
-								$('#usuario').html(options).show();
+								$('#recipient').html(options).show();
 								$('.carregando').hide();
 							});
 						} else {
-							$('#usuario').html('<option value="">Selecione</option>');
+							$('#recipient').html('<option value="">Selecione</option>');
 						}
 					});
 				});
@@ -230,3 +176,18 @@ if (isset($_POST["inserirFeedback"]) != null) {
 	</section>	 	
 </body>
 </html>
+<?php
+
+if (isset($_POST["insert"]) != null) {
+	$cnx = mysqli_query($phpmyadmin, "INSERT INTO FEEDBACK(REMETENTE_ID, DESTINATARIO_ID, FEEDBACK, COMPORTAMENTAL, PROFISSIONAL, DESEMPENHO, TIPO, SITUACAO, EXIBICAO, ANO_MES, REGISTRO) VALUES(".$_SESSION["userId"].",".$_POST['recipient'].",'".$_POST['feedback']."',".$_POST['behavioral'].",".$_POST['professional'].",".$_POST['performance'].",'".$_POST['type']."','Enviado',".$_POST['exhibition'].",'".date('Y-m')."','".date('Y-m-d')."');");
+		
+	$erro = mysqli_error($phpmyadmin);
+		
+	if ($erro == null) {
+		echo "<script>alert('Feedback enviado com sucesso!!')</script>";	
+	} else {
+		?><script>var erro="<?php echo $erro;?>";  alert('Erro ao enviar: '+erro)</script><?php
+	}
+}
+
+?>
