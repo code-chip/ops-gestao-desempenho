@@ -26,7 +26,7 @@ if ($_SESSION["permissao"] == 1) {
 <section class="section" id="topo">
 <?php if ($situacao == "" && isset($_POST['consultar']) == null ): ?>	
 <div class="container">
-	<form id="form1" action="feedback-approval-n.php" method="POST">
+	<form id="form1" action="feedback-approval.php" method="POST">
 		<div class="field">
 			<label class="label is-size-7-touch">Ano/Mês*</label>
 			<div class="control has-icons-left">
@@ -48,9 +48,10 @@ if ($_SESSION["permissao"] == 1) {
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
 					<select name="situacao">								
-						<option value="'Enviado'">Aguardando</option>
-						<option value="'Reprovado'">Reprovado</option>
-						<option value="'Aprovado'">Aprovado</option>
+						<option value="Enviado">Aguardando</option>
+						<option value="Aprovado">Aprovado</option>
+						<option value="Lido">Lido</option>
+						<option value="Reprovado">Reprovado</option>
 					</select>
 					<span class="icon is-small is-left">
 						<i class="fas fa-sort"></i>
@@ -70,15 +71,16 @@ if ($_SESSION["permissao"] == 1) {
 <?php endif;
 
 if (isset($_POST['consultar'])) {
-
-	$situacao = trim($_POST['situacao']);
+	$_SESSION['situation'] = $_POST['situacao'];
+	$situacao = $_POST['situacao'];
 	$contador = 0;
 
 	if ($situacao == "'Enviado'") {
-		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, FRP.RESPOSTA AS PRO, FRC.RESPOSTA AS COMP, FRD.RESPOSTA AS DES ,F.TIPO, F.FEEDBACK FROM FEEDBACK F INNER JOIN FEEDBACK_RESPOSTA FRP ON FRP.ID=F.PROFISSIONAL INNER JOIN FEEDBACK_RESPOSTA FRC ON FRC.ID=F.COMPORTAMENTAL INNER JOIN FEEDBACK_RESPOSTA FRD ON FRD.ID=F.DESEMPENHO INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE F.SITUACAO=" . $situacao;
+		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, FRP.RESPOSTA AS PRO, FRC.RESPOSTA AS COMP, FRD.RESPOSTA AS DES ,F.TIPO, F.FEEDBACK FROM FEEDBACK F INNER JOIN FEEDBACK_RESPOSTA FRP ON FRP.ID=F.PROFISSIONAL INNER JOIN FEEDBACK_RESPOSTA FRC ON FRC.ID=F.COMPORTAMENTAL INNER JOIN FEEDBACK_RESPOSTA FRD ON FRD.ID=F.DESEMPENHO INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE F.SITUACAO='" . $situacao . "' AND F.ANO_MES= '" . $_POST['yearMonth'] . "';";
 	} else {
-		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, FRP.RESPOSTA AS PRO, FRC.RESPOSTA AS COMP, FRD.RESPOSTA AS DES ,F.TIPO, FEEDBACK, U3.NOME AS ATUALIZADO_POR FROM FEEDBACK F INNER JOIN FEEDBACK_RESPOSTA FRP ON FRP.ID=F.PROFISSIONAL INNER JOIN FEEDBACK_RESPOSTA FRC ON FRC.ID=F.COMPORTAMENTAL INNER JOIN FEEDBACK_RESPOSTA FRD ON FRD.ID=F.DESEMPENHO INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.ATUALIZADO_POR WHERE F.SITUACAO=" . $situacao;
+		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, FRP.RESPOSTA AS PRO, FRC.RESPOSTA AS COMP, FRD.RESPOSTA AS DES ,F.TIPO, FEEDBACK, U3.NOME AS ATUALIZADO_POR FROM FEEDBACK F INNER JOIN FEEDBACK_RESPOSTA FRP ON FRP.ID=F.PROFISSIONAL INNER JOIN FEEDBACK_RESPOSTA FRC ON FRC.ID=F.COMPORTAMENTAL INNER JOIN FEEDBACK_RESPOSTA FRD ON FRD.ID=F.DESEMPENHO INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID INNER JOIN USUARIO U3 ON U3.ID=F.ATUALIZADO_POR WHERE F.SITUACAO='" . $situacao . "' AND F.ANO_MES= '" . $_POST['yearMonth'] . "';";
 	}
+	
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	while ($feed = $cnx->fetch_array()) {
@@ -90,7 +92,7 @@ if (isset($_POST['consultar'])) {
 		$performance[$x] = $feed['DES'];
 		$type[$x] = $feed['TIPO'];
 		$feedback[$x] = $feed['FEEDBACK'];
-		$approval[$x] = $feed['ATUALIZADO_POR'];				
+		list($approval[$x], $approvalFist[$x]) = explode(' ', $feed['ATUALIZADO_POR'],2);
 		$x++;
 		$contador = $x;
 	} if (mysqli_num_rows($cnx) == 0) {
@@ -99,7 +101,7 @@ if (isset($_POST['consultar'])) {
 }
  
 if (isset($_POST['consultar']) && $contador != 0) : ?>	
-<form method="POST" action="feedback-approval-n.php" id="form2">	
+<form method="POST" action="feedback-approval.php" id="form2">	
 	<div class="table__wrapper">
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
@@ -114,18 +116,17 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 		
 		<?php 
 
-		if ($situacao == "'Enviado'") {
-			echo '<th>Aguardando</th>
+		if ($situacao == "Enviado") {
+			echo '<th>Situação</th>
 			<th>Aprovar</th>';
-		} else if ($situacao == "'Aprovado'") {
+		} else if ($situacao == "Aprovado" || $situacao == "Lido") {
 			echo '<th>Aprovação</th>
 		    <th>Aprovar</th>';
-		} else if ($situacao == "'Reprovado'") {
+		} else if ($situacao == "Reprovado") {
 			echo '<th>Reprovação</th>
 			<th>Aprovar</th>';
-		} //else if ($situacao != "'Enviado'") {
-			//echo '<th>Aprovar</th>';   			
-		//}
+		}
+
 	echo '</tr>';
  	for ( $i = 0; $i < sizeof($sender); $i++ ) : ?>
 	<tr>
@@ -146,11 +147,11 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 		<td>" . $type[$i] . "</td>
 		";
 
-  		if ($situacao != "'Enviado'") {
+  		if ($situacao != "Enviado") {
   			echo "<td>" . $approval[$i] . "</td>";
   		}
   		
-  		if ($situacao == "'Enviado'") {
+  		if ($situacao == "Enviado") {
   			echo '<td>Aguardando</td>';
   			echo "<td rowspan='2'>
   			<div class='select is-fullwidth'>
@@ -163,7 +164,7 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
   			</td>";
   		}
 
-  		if ($situacao == "'Aprovado'") {
+  		if ($situacao == "Aprovado") {
   			echo "<td rowspan='2'>
   			<div class='select'>
   				<select name='upSituacao[]'>
@@ -173,8 +174,18 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 			</div>	
   			</td>";
   		}
+
+  		if ($situacao == "Lido") {
+  			echo "<td rowspan='2'>
+  			<div class='select'>
+  				<select name='upSituacao[]' disabled>
+  					<option value='Aprovado'>Sim</option>
+  				</select>					
+			</div>	
+  			</td>";
+  		}
   		
-  		if ($situacao == "'Reprovado'") {
+  		if ($situacao == "Reprovado") {
   			echo "<td rowspan='2'>
   			<div class='select'>
   				<select name='upSituacao[]'>
@@ -190,7 +201,6 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 	endfor; 
 
 	?>
-	
 
 	</table>
 
@@ -201,12 +211,15 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 	</a>
 	<br/>
 	<div class="field-body">
-		<div class="field is-grouped">
+		<div class="field is-grouped"><?php
+			if ($situacao != "Lido") {
+				echo
+				'<div class="control">
+					<input name="update" type="submit" class="button is-primary btn128" value="Atualizar"/>
+				</div>';
+			} ?>
 			<div class="control">
-				<input name="aprovar" type="submit" class="button is-primary btn128" value="Atualizar"/>
-			</div>
-			<div class="control">
-				<a href="feedback-approval-n.php"><input name="Limpar" type="submit" class="button is-primary btn128" value="Voltar"/></a>
+				<a href="feedback-approval.php"><input name="Limpar" type="submit" class="button is-primary btn128" value="Voltar"/></a>
 			</div>
 			<div class="control">
 				<a href="home.php" class="button is-primary btn128">Cancelar</a>
@@ -222,24 +235,27 @@ if (isset($_POST['consultar']) && $contador != 0) : ?>
 </html>
 <?php
 
-if (isset($_POST['aprovar'])) {
+if (isset($_POST['update'])) {
 	$ids = array_filter($_POST['id']);
 	$situacoes = array_filter($_POST['upSituacao']);
 	$x = 0;
+	$count = 0;
+
 	while ($x < sizeof($ids)) {
-		$cnx = mysqli_query($phpmyadmin, "UPDATE FEEDBACK SET ATUALIZADO_POR = " . $_SESSION["userId"] . ", SITUACAO = '" . $situacoes[$x] . "' WHERE ID = " . $ids[$x]);
+		if ($_SESSION['situation'] != $situacoes[$x]) {
+			$cnx = mysqli_query($phpmyadmin, "UPDATE FEEDBACK SET ATUALIZADO_POR = " . $_SESSION["userId"] . ", SITUACAO = '" . $situacoes[$x] . "' WHERE ID = " . $ids[$x]);
+			$count++;
+		}
+
 		$x++;
 	}
 
-	if ($x > 0) {
-		$x = $x + 1;
-		?><script type="text/javascript">			
-			alert('Foi atualizado(s) "<?php echo $x; ?>" feedback(s)!');
-		</script> <?php		
+	unset($_SESSION['situation']);
+	
+	if ($count > 0) {
+		echo "<script>alert('" . $count . " Feedback(s) atualizado(s) com sucesso!');</script>";		
 	} else {
-		?><script type="text/javascript">			
-			alert('Nenhum feedback foi atualizado!');
-		</script> <?php	
+		echo "<script>alert('Nenhum feedback foi atualizado!'); </script>";	
 	}
 }
 ?>
