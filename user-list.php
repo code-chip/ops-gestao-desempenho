@@ -1,4 +1,3 @@
-<style type="text/css"></style>  
 <?php
 $menuAtivo = 'configuracoes';
 require('menu.php');
@@ -7,12 +6,10 @@ if ($_SESSION['permissao'] == 1) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php';</script>";
 }
 
-$contador = 0;
 $x = 0;
 
-$query = "SELECT U.MATRICULA, U.NOME, C.NOME AS CARGO,T.NOME AS TURNO, UG.NOME AS GESTOR, U.EFETIVACAO, P.NOME AS PERMISSAO, U.SITUACAO FROM USUARIO U INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN USUARIO UG ON UG.ID=U.GESTOR_ID INNER JOIN CARGO C ON C.ID=U.CARGO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID WHERE U.SITUACAO<>'Desligado' ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME";
+$cnx = mysqli_query($phpmyadmin, "SELECT U.MATRICULA, U.NOME, C.NOME AS CARGO,T.NOME AS TURNO, UG.NOME AS GESTOR, U.EFETIVACAO, P.NOME AS PERMISSAO, U.SITUACAO FROM USUARIO U INNER JOIN TURNO T ON T.ID=U.TURNO_ID INNER JOIN USUARIO UG ON UG.ID=U.GESTOR_ID INNER JOIN CARGO C ON C.ID=U.CARGO_ID INNER JOIN PERMISSAO P ON P.ID=U.PERMISSAO_ID WHERE U.SITUACAO<>'Desligado' ORDER BY U.SITUACAO, U.TURNO_ID, U.NOME");
 
-$cnx = mysqli_query($phpmyadmin, $query);
 while ($user = $cnx->fetch_array()){
 	$name[$x] = $user['NOME'];
 	$registration[$x] = $user['MATRICULA'];
@@ -23,10 +20,9 @@ while ($user = $cnx->fetch_array()){
 	$permission[$x] = $user['PERMISSAO'];
 	$situation[$x] = $user['SITUACAO'];					
 	$x++;
-	$contador = $x;
 }
 
-if (mysqli_num_rows($cnx) == 0) {
+if ($x == 0) {
 	echo "<script>alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";		
 }
 
@@ -34,15 +30,17 @@ if (mysqli_num_rows($cnx) == 0) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Gestão de Desempenho - Lista de Usuários</title>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<script type="text/javascript" src="/js/lib/dummy.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+	<title>Gestão de Desempenho - Lista de Usuários</title>
 </head>
 <body>	
 <hr/>
 	<section class="section" id="topo">
 	<div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
 		<th>Funcionário</th>
@@ -92,14 +90,13 @@ if (mysqli_num_rows($cnx) == 0) {
 		</div>
 	</a>
 	<br/>
-	<div class="table__wrapper">			
-		<div class="field-body">
-			<div class="field">
-				<div class="control">
-					<a href="register.php"><input name="Limpar" type="submit" class="button is-primary" value="Voltar"/></a>
-				</div>					
-			</div>						
+	<div class="field-body">
+		<div class="field">
+			<div class="control">
+				<a href="register.php"><input name="Limpar" type="submit" class="button is-primary btn128" value="Voltar"/></a>
+			</div>					
 		</div>
+	</div>
 	</div>
 </section>	
 </body>
