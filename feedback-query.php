@@ -19,11 +19,25 @@ require('menu.php');
 	<div class="container">	
 	<form id="form1" action="feedback-query.php" method="POST">
 		<div class="field">
+			<label class="label is-size-7-touch">Tipo*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth">
+					<select name="type" onchange="change(this.value);">								
+						<option value="feedback">Feedback</option>
+						<option value="solicitacao">Solicitação</option>
+					</select>
+					<span class="icon is-small is-left">
+						<i class="fas fa-exchange-alt"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="field loadId" id="feedback">
 			<label class="label is-size-7-touch">Ano/Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
 					<select name="yearMonth"><?php
-						$cnx = mysqli_query($phpmyadmin, "SELECT ANO_MES FROM FEEDBACK WHERE DESTINATARIO_ID= " . $_SESSION['userId'] . " GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+						$cnx = mysqli_query($phpmyadmin, "SELECT ANO_MES FROM FEEDBACK WHERE DESTINATARIO_ID= " . $_SESSION['userId'] . " OR REMETENTE_ID =" . $_SESSION['userId'] . " GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
 						while ( $date = $cnx->fetch_array()) {
 							echo "<option value=" . $date["ANO_MES"] . ">" . $date["ANO_MES"] . "</option>";
 						} ?>
@@ -34,16 +48,18 @@ require('menu.php');
 				</div>
 			</div>
 		</div>
-		<div class="field">
-			<label class="label is-size-7-touch">Tipo*</label>
+		<div class="field loadId" id="solicitacao" style="display: none;">
+			<label class="label is-size-7-touch">Ano/Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-					<select name="type">								
-						<option value="feedback">Feedback</option>
-						<option value="solicitacao">Solicitação</option>
+					<select name="yearMonth"><?php
+						$cnx = mysqli_query($phpmyadmin, "SELECT ANO_MES FROM SOLICITACAO WHERE DESTINATARIO_ID = " . $_SESSION['userId'] . " OR REMETENTE_ID =" . $_SESSION['userId'] . " GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+						while ( $date = $cnx->fetch_array()) {
+							echo "<option value=" . $date["ANO_MES"] . ">" . $date["ANO_MES"] . "</option>";
+						} ?>
 					</select>
 					<span class="icon is-small is-left">
-						<i class="fas fa-exchange-alt"></i>
+						<i class="fas fa-calendar-alt"></i>
 					</span>
 				</div>
 			</div>
@@ -118,12 +134,12 @@ if (isset($_POST['query']) && $_POST["type"] == 'feedback') {
 	}
 
 } else if (isset($_POST['query']) && $_POST["type"] == "solicitacao") {
-	if ($_POST["origin"]== "REMETENTE_ID") {
+	if ($_POST["origin"] == "REMETENTE_ID") {
 		$query = "SELECT S.ID, U.NOME, S.MENSAGEM, S.SITUACAO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.DESTINATARIO_ID WHERE ".$_POST["origin"]."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
 	} else {
 		$query = "SELECT S.ID, U.NOME, S.MENSAGEM, S.SITUACAO FROM SOLICITACAO S INNER JOIN USUARIO U ON U.ID=S.REMETENTE_ID WHERE ".$_POST["origin"]."=".$_SESSION["userId"]." ORDER BY S.REGISTRO DESC";
 	}
-
+	
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	while ($feed = $cnx->fetch_array()) {
