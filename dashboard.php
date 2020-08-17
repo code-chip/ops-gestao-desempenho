@@ -285,14 +285,43 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 48, (SELECT COUNT(ID) FROM U
 UNION ALL
 SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)>1460 AND SITUACAO<>'Desligado') AS QTD FROM DESEMPENHO WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)>1460 AND SITUACAO<>'Desligado');
 ";
-  $x=0;
-  $cnx=mysqli_query($phpmyadmin, $queryTempoCasa);
-  while($tc= $cnx->fetch_array()){
-    $vtTempMed[$x]=$tc["MEDIA"];
-    $vtTempo[$x]=$tc["TEMPO"];
-    $vtTempQtd[$x]=$tc["QTD"];
+  $x = 0;
+  $cnx = mysqli_query($phpmyadmin, $queryTempoCasa);
+  while ($tc = $cnx->fetch_array()) {
+    $vtTempMed[$x] = $tc["MEDIA"];
+    $vtTempo[$x] = $tc["TEMPO"];
+    $vtTempQtd[$x] = $tc["QTD"];
     $x++;
   }
+
+$cnx = mysqli_query($phpmyadmin, $queryNumRegi);
+$x = 0;
+
+while($numRegi= $cnx->fetch_array()){
+  $vtNumRegi[$x]=$numRegi["OCORRENCIAS"];
+  $vtNumUsuarios[$x]=$numRegi["USUARIOS"];
+  $vtNumData[$x]=$numRegi["DIA"];
+  $x++;
+}
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT COUNT(1) AS QTD, (SELECT DATE_FORMAT(MAX(REGISTRO),'%d/%m') FROM DESEMPENHO WHERE CADASTRADO_POR = 58) AS REG, (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID = 58 AND SITUACAO = 'Ativo') AS TIME FROM DESEMPENHO WHERE CADASTRADO_POR = 58 AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO WHERE CADASTRADO_POR = 58) UNION SELECT COUNT(1) AS QTD, (SELECT DATE_FORMAT(MAX(REGISTRO),'%d/%m') FROM DESEMPENHO WHERE CADASTRADO_POR = 57) AS REG, (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID = 57 AND SITUACAO = 'Ativo') AS TIME FROM DESEMPENHO WHERE CADASTRADO_POR = 57 AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO WHERE CADASTRADO_POR = 57) UNION SELECT COUNT(1) AS QTD, (SELECT DATE_FORMAT(MAX(REGISTRO),'%d/%m') FROM DESEMPENHO WHERE CADASTRADO_POR = 3) AS REG, (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID = 3 AND SITUACAO = 'Ativo') AS TIME FROM DESEMPENHO WHERE CADASTRADO_POR = 3 AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO WHERE CADASTRADO_POR = 3) UNION SELECT COUNT(1) AS QTD, (SELECT DATE_FORMAT(MAX(REGISTRO),'%d/%m') FROM DESEMPENHO WHERE CADASTRADO_POR = 99) AS REG, (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID = 99 AND SITUACAO = 'Ativo') AS TIME FROM DESEMPENHO WHERE CADASTRADO_POR = 99 AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO WHERE CADASTRADO_POR = 99)
+");
+
+while ($a5 = $cnx->fetch_array()) {
+  $a5date[$x] = $a5["REG"];
+  $a5count[$x] = $a5["QTD"];
+  $a5time[$x] = $a5["TIME"];
+  $a5status[$x] = "✗";
+  $a5status[$x] = "false";
+  if ($a5["QTD"] >= $a5["TIME"]) {
+    $a5status[$x] = "✔";
+    $a5status[$x] = "true";
+  }
+
+  $x++;
+}
+$test=true;
 ?>
 <!DOCTYPE html>
 <html>
@@ -739,6 +768,28 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
       chart.draw(view, options);
 	  }
 	  </script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Líder');
+        data.addColumn('number', 'Time');
+        data.addColumn('number', 'Registro');
+        data.addColumn('number', 'Data');
+        data.addColumn('boolean', 'Ok?');
+        data.addRows([
+          ['Ataíde', parseFloat('<?php echo $a5time[0]?>'), parseFloat('<?php echo $a5count[0]?>'), {v: parseFloat('<?php echo $a5date[0]?>'), f: '<?php echo $a5date[0]?>'}, <?php echo $a5status[0]?>],
+          ['Marivalda', parseFloat('<?php echo $a5time[1]?>'), parseFloat('<?php echo $a5count[1]?>'), {v: parseFloat('<?php echo $a5date[1]?>'),   f: '<?php echo $a5date[1]?>'},  <?php echo $a5status[1]?>],
+          ['Monara', parseFloat('<?php echo $a5time[2]?>'), parseFloat('<?php echo $a5count[2]?>'), {v: parseFloat('<?php echo $a5date[2]?>'), f: '<?php echo $a5date[2]?>'}, <?php echo $a5status[2]?>],
+          ['Thiago', parseFloat('<?php echo $a5time[3]?>'), parseFloat('<?php echo $a5count[3]?>'),  {v: parseFloat('<?php echo $a5date[3]?>'),  f: '<?php echo $a5date[3]?>'},  <?php echo $a5status[3]?>]
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('a5'));
+
+        table.draw(data, {showRowNumber: true, width: '25%', height: '100%'});
+      }
+    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
@@ -767,8 +818,10 @@ SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 54, (SELECT COUNT(ID) FROM U
 				<div class="column bloco is-mobile hvr-bounce-in" id="d2"></div>
 				<div class="column bloco is-mobile hvr-wobble-to-top-right" id="d3"></div>
 				<div class="column bloco is-mobile hvr-bounce-in" id="d4"></div>
-			</div>	
-	  	</div>	  		  	
+	  	</div>
+      <div class="field is-horizontal columns" id="graficos">
+        <div class="column bloco is-mobile" id="a5"></div>
+      </div>	  		  	
 	</div>	
 </body>
 </html>
