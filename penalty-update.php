@@ -10,20 +10,12 @@ if ($_SESSION["permissao"] == 1){
 <!DOCTYPE html>
 <html>
 <head>
-	<ocorrencia charset="UTF-8">	
-	<ocorrencia name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Inserir Penalidade</title>
-	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones-->
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<script type="text/javascript" src="js/myjs.js"></script>
-	<style type="text/css">
-		.carregando{
-			color:#ff0000;
-			display:none;
-		}
-		.button{ 
-			width: 121px;
-		}
-	</style>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>
+	<title>Gestão de Desempenho - Inserir Penalidade</title>
 	<script type="text/javascript">
 		$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -45,91 +37,67 @@ if ($_SESSION["permissao"] == 1){
 	<?php if (!isset($_POST['pesquisar'])) : ?>	
 	  	<div class="container">
 	  		<form action="penalty-update.php" method="POST" id="form1">
-	  			<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Setor:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control has-icons-left">
-								<div class="select is-size-7-touch">
-									<select name="setor" id="setor" style="width:24.2em;">
-									<option value="">Selecione</option><?php
-										$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME");
-										while ($reSetor = mysqli_fetch_assoc($cnx)) {
-											echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
-										} ?>
-									</select>
-									<span class="icon is-small is-left">
-										<i class="fas fa-door-open"></i>
-									</span>	
-								</div>
-							</div>						
+	  			<div class="field">
+					<label class="label is-size-7-touch">Setor*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="setor" id="setor">
+								<option value="">Selecione</option><?php
+								$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME");
+								while ($reSetor = mysqli_fetch_assoc($cnx)) {
+									echo '<option value="'.$reSetor['ID'].'">'.$reSetor['NOME'].'</option>';
+								} ?>
+								</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-door-open"></i>
+							</span>	
 						</div>
 					</div>
 				</div>
-				
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Colaborador:</label>
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped">							
-							<div class="control has-icons-left">
-								<div class="select">
-									<span class="carregando">Aguarde, carregando...</span>
-									<select name="usuario" id="usuario" class="required" style="width:24.2em;">
-										<option selected="selected" value="Todos">Selecione</option>
-									</select>
-									<span class="icon is-small is-left">
-										<i class="fas fa-user-alt"></i>
-									</span>	
-								</div>
-							</div>
+				<div class="field">
+					<label class="label is-size-7-touch">Colaborador*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="usuario" id="usuario" class="required">
+								<option selected="selected" value="Todos">Selecione</option>
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-user-alt"></i>
+							</span>	
 						</div>
 					</div>					
 				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Ano/Mês*</label>
-					</div>
-					<div class="field-body">
-						<div class="field" style="max-width:24.2em;">							
-							<div class="control has-icons-left has-icons-right" id="anoMes">
-								<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-05" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk1','msgNok1')" id="input1">
-								<span class="icon is-small is-left">
-							   		<i class="fas fa-calendar-alt"></i>
-							   	</span>
-								<div id="msgNok1" style="display:none;">
-						    	<span class="icon is-small is-right">
-						      		<i class="fas fa-fw"></i>
-						    	</span>
-						    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
-							   	</div>
-							   	<div id="msgOk1" style="display:none;">
-							    	<span class="icon is-small is-right">
-							      		<i class="fas fa-check"></i>
-							    	</span>
-							   	</div>
-							</div>
+				<div class="field">
+					<label class="label is-size-7-touch">Ano/Mês*</label>
+					<div class="control has-icons-left has-icons-right is-fullwidth" id="anoMes">
+						<input type="text" class="input required maskAnoMes" name="anoMes" placeholder="2020-05" maxlength="7" onkeypress="addLoadField('anoMes')" onkeyup="rmvLoadField('anoMes')" onblur="checkAdress(form1.anoMes, 'msgOk1','msgNok1')" id="input1">
+						<span class="icon is-small is-left">
+					   		<i class="fas fa-calendar-alt"></i>
+					   	</span>
+						<div id="msgNok1" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-fw"></i>
+					    	</span>
+					    	<p class="help is-danger">Ano/Mês do Peso é obrigatório</p>		    	
+					   	</div>
+					   	<div id="msgOk1" style="display:none;">
+					    	<span class="icon is-small is-right">
+					      		<i class="fas fa-check"></i>
+					    	</span>
 						</div>
 					</div>
 				</div>
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-					</div>
-					<div class="field-body">
-						<div class="field is-grouped">							
-							<div class="control">
-								<button name="pesquisar" type="submit" class="button is-primary" value="pesquisar">Pesquisar</button>
-							</div>
-							<div class="control">
-								<button name="limpar" type="reset" class="button is-primary">Limpar</button>
-							</div>
-							<div class="control">
-								<a href="home.php" class="button is-primary">Cancelar</a>
-							</div>						
+				<div class="field-body">
+					<div class="field is-grouped">							
+						<div class="control">
+							<button name="pesquisar" type="submit" class="button is-primary btn128" value="pesquisar">Pesquisar</button>
 						</div>
+						<div class="control">
+							<button name="limpar" type="reset" class="button is-primary btn128" onclick="clearForm()">Limpar</button>
+						</div>
+						<div class="control">
+							<a href="home.php" class="button is-primary btn128">Cancelar</a>
+						</div>						
 					</div>
 				</div>
 	  		</form>
