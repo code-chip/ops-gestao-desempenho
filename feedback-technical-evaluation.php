@@ -180,7 +180,7 @@ if (isset($_POST['enviar'])) {
 	}
 	mysqli_query($phpmyadmin, "UPDATE AVAL_INDICE SET SITUACAO='Finalizado'");
 
-	mysqli_query($phpmyadmin, "INSERT INTO AVAL_COMENTARIO(AVAL_INDICE_ID, AVAL_PERGUNTA_COM_ID, COMENTARIO) VALUES(" . $index["ID"] . ", (SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=1 AND SITUACAO='Ativo'),'" . $comentario . "')");
+	mysqli_query($phpmyadmin, "INSERT INTO AVAL_COMENTARIO(AVAL_INDICE_ID, AVAL_PERGUNTA_COM_ID, COMENTARIO) VALUES(" . $index["ID"] . ", (SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=2 AND SITUACAO='Ativo'),'" . $comentario . "')");
 
 	echo "<script>alert('Avaliação finalizada com sucesso'); window.location.href='home.php'; </script>";
 }
