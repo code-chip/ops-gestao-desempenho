@@ -50,7 +50,7 @@ require('menu.php');
 			<div class="field">
 				<label class="label is-size-7-touch">Mensagem*</label>
 				<div class="control">
-					<textarea name="mensagem" class="textarea required" maxlenght="200" placeholder="Me envie um feedback!"></textarea>
+					<textarea name="mensagem" type="text" class="textarea required" placeholder="Por favor, me envie um feedback!" maxlength="200"></textarea>
 				</div>
 			</div>
 			<div class="field-body">	
