@@ -16,7 +16,7 @@ require('menu.php');
 <body>
 	<section class="section">
 	<div class="container">
-	   	<form action="feedback-insert.php" method="POST" onsubmit="return check()">
+	   	<form action="feedback-insert.php" method="POST" id="form" onsubmit="return check()">
 	   		<div class="field">
 				<label class="label is-size-7-touch">Setor*</label>
 				<div class="control has-icons-left">
@@ -114,7 +114,7 @@ require('menu.php');
 			<div class="field">
 				<label class="label is-size-7-touch">Feedback*</label>
 				<div class="control">
-					<textarea name="feedback" class="textarea is-fullwidth required" maxlenght="300"></textarea>
+					<textarea name="feedback" type="text" class="textarea is-fullwidth required" maxlength="500"></textarea>
 				</div>
 			</div>
 			<div class="field">
