@@ -8,19 +8,59 @@ AS IDADE, AI.REGISTRO,
 (SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 4 AND USUARIO_ID =U.ID) AS ATESTADO,
 (SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 2 AND USUARIO_ID =U.ID) AS FALTA,
 (SELECT COUNT(1) FROM PENALIDADE WHERE USUARIO_ID =U.ID) AS PENALIDADE,
-(SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MINIMO,
-(SELECT AVG(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MEDIA,
-(SELECT MAX(DESEMPENHO) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MAXIMO
+(SELECT ROUND(MIN(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MINIMO,
+(SELECT ROUND(AVG(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MEDIA,
+(SELECT ROUND(MAX(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MAXIMO,
+(SELECT COUNT(1) FROM FEEDBACK WHERE REMETENTE_ID=AI.USUARIO_ID ) AS F_ENV,
+(SELECT COUNT(1) FROM FEEDBACK WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_REC,
+(SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS S_ENV,
+(SELECT COUNT(1) FROM SOLICITACAO WHERE REMETENTE_ID =AI.USUARIO_ID ) AS S_REC,
+(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=COMPORTAMENTAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_COM,
+(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=PROFISSIONAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_PRO,
+(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=DESEMPENHO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_DES,
+(SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_INDICE AIN ON AIN.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
+WHERE AIN.AVALIACAO_POR=AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =1) AS AUTO_AVAL_TEC,
+(SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_INDICE AIN ON AIN.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
+WHERE AIN.AVALIACAO_POR=AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS AUTO_AVAL_COM,
+(SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
+WHERE AI.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =1) AS LIDER_AVAL_TEC,
+(SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
+WHERE AI.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS LIDER_AVAL_COM,
+(SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
+WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =1) AS AUTO_COMEN,
+(SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
+WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =2) AS LIDER_COMEN
 FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
 INNER JOIN CARGO C ON C.ID = U.CARGO_ID 
-WHERE AI.SITUACAO = 'Finalizado';";
+WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID;";
 
 $cnx = mysqli_query($phpmyadmin, $query);
 $x = 1;
 while ($data = $cnx->fetch_array()) {
-
+	$avgFeed = ($data["F_COM"] + $data["F_PRO"] + $data["F_DES"])/3;
+	
+	if ($avgFeed > 0) {
+		$leaderGeneral = ($data["LIDER_AVAL_TEC"]+$data["LIDER_AVAL_COM"]+$avgFeed)/3;
+		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"]+$avgFeed)/3;
+	} else {
+		$leaderGeneral = ($data["LIDER_AVAL_TEC"]+$data["LIDER_AVAL_COM"])/2;
+		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"])/2;
+	}	
+	
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +75,7 @@ while ($data = $cnx->fetch_array()) {
 <page size="A4">
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="black">
-			<td class="white-td" colspan="2"><h1><b><center>( evino )</center></b></h1></td>
+			<h2><td class="white-td tx" colspan="2"><b><center>( evino )</center></b></td></h2>
 		</tr>
 		<tr class="black">
 			<td class="white-td" colspan="2"><b><center>Avaliação de Desempenho</center></b></td>
@@ -43,7 +83,7 @@ while ($data = $cnx->fetch_array()) {
 		<tr>
 			<td colspan="2"><b>Colaborador:</b><?php echo $data["NOME"]; ?> <b>Líder: </b><?php echo $data["LIDER"]; ?></td>
 		</tr>
-	</table>	
+	</table>
 		<br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="red" >
@@ -53,11 +93,10 @@ while ($data = $cnx->fetch_array()) {
 		<tr>
 			<td><?php echo $data["CARGO"];?></td>
 			<td><?php echo $data["MESES"]; ?> meses</td>
-			<td><?php echo $data["IDADE"]; ?></td>
+			<td><?php echo $data["IDADE"]; ?> anos</td>
 		</tr>
 		
 	</table>
-		<br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr>
 			<td><b>Folga's</b></td>
@@ -88,6 +127,25 @@ while ($data = $cnx->fetch_array()) {
 		
 	</table>
 	<table class="table is-bordered pricing__table is-fullwidth borda">
+		<tr class="grey">
+			<td colspan="2"><b><center>Feedback</center></b></td>
+			<td colspan="2"><b><center>Solicitado</center></b></td>
+		</tr>	
+		<tr>
+			<td><b>Enviados</b></td>
+			<td><b>Recebidos</b></td>
+			<td><b>Enviados</b></td>
+			<td><b>Recebidos</b></td>
+		</tr>
+		<tr>
+			<td><?php echo $data["F_ENV"]; ?></td>
+			<td><?php echo $data["F_REC"]; ?></td>
+			<td><?php echo $data["S_ENV"]; ?></td>
+			<td><?php echo $data["S_REC"]; ?></td>
+		</tr>
+		
+	</table>
+	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="grey"><td colspan="3"><b><center>Pilares Feedback</center></b></td></tr>	
 		<tr>
 			<td><b>Comportamental</b></td>
@@ -95,9 +153,9 @@ while ($data = $cnx->fetch_array()) {
 			<td><b>Desempenho</b></td>
 		</tr>
 		<tr>
-			<td>30</td>
-			<td>97</td>
-			<td>120</td>
+			<td><?php echo $data["F_COM"]; ?></td>
+			<td><?php echo $data["F_PRO"]; ?></td>
+			<td><?php echo $data["F_DES"]; ?></td>
 		</tr>
 		
 	</table>	
@@ -112,45 +170,39 @@ while ($data = $cnx->fetch_array()) {
 		</tr>
 		<tr class="center">
 			<td><b>Líder</b></td>
-			<td>94,44</td>
-			<td>103,12</td>
-			<td rowspan="2">89,79</td>
-			<td>95,78</td>
+			<td><?php echo $data["LIDER_AVAL_TEC"]; ?></td>
+			<td><?php echo $data["LIDER_AVAL_COM"]; ?></td>
+			<td rowspan="2"><?php echo $avgFeed; ?></td>
+			<td><?php echo round($leaderGeneral,2); ?></td>
 		</tr>
 		<tr>
 			<td><b>Auto</b></td>
-			<td>88,88</td>
-			<td>106,25</td>
-			<td>94,97</td>
+			<td><?php echo $data["AUTO_AVAL_TEC"]; ?></td>
+			<td><?php echo $data["AUTO_AVAL_COM"]; ?></td>
+			<td><?php echo round($autoGeneral,2); ?></td>
 		</tr>	
 	</table>
 	<br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="red">
-			<td class="white-td"><b>Comentário do Colaborador</b></td>
+			<td class="white-td"><b><center>Comentário do Colaborador</center></b></td>
 		</tr>
 		<tr>
-			<td>Busco sempre fazer o melhor para o meu desenvolvimento profissional e de meus
-colegas de trabalho.</td>
+			<td><?php echo $data["AUTO_COMEN"]; ?></td>
 		</tr>
 		<tr class="red">
-			<td class="white-td"><b>Comentário do Líder</b></td>
+			<td class="white-td"><b><center>Comentário do Líder</center></b></td>
 		</tr>
 		<tr>
-			<td>PONTOS POSITIVOS: Funcionário executa um bom trabalho nas áreas em que atua, é
-atencioso, tem boa comunicação com todos da equipe, tem mostrado interesse pela
-empresa e motivação, tem mostrado um grande espirito de liderança. Esta batendo as
-metas exigidas pela empresa vem em um processo de evolução e crescimento.</td>
+			<td><?php echo $data["LIDER_COMEN"]; ?></td>
 		</tr>	
 	</table>
-	
-	<?php echo "<iframe src='frame.html' width='100%'' height='1080px;'' allowfullscreen ></iframe>"; ?>
 </page>
 
 </body>	
 </html><?php
 	if($x < sizeof($data)){
-		echo "<div>test</div>";
+		echo "<div></div>";
 	}
 $x++;
 }
