@@ -1,8 +1,7 @@
 <?php
+
 $menuAtivo = 'meta';
 require('menu.php');
-
-
 
 ?>
 <!DOCTYPE html>
@@ -40,15 +39,12 @@ require('menu.php');
 			<label class="label is-size-7-touch">Mês*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="periodo" class="w24-2">
-							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						</select>
+						<select name="periodo"><?php 								
+							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+							while($sector = $con->fetch_array()){
+								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
+							 }
+						?></select>
 						<span class="icon is-small is-left">
 							<i class="fas fa-calendar-alt"></i>
 						</span>	
@@ -59,7 +55,7 @@ require('menu.php');
 				<label class="label is-size-7-touch">Setor*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="setor" class="w24-2"><?php 								
+						<select name="setor"><?php 								
 							$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
 							while($sector = $con->fetch_array()){
 								echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
@@ -85,7 +81,7 @@ require('menu.php');
 			<div class="field-body"></div>
 				<div class="field is-grouped">
 					<div class="control">
-						<button name="consultar" type="submit" class="button is-primary btn128">Pesquisar</button>
+						<button name="query" type="submit" class="button is-primary btn128">Pesquisar</button>
 					</div>
 					<div class="control">
 						<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
@@ -107,15 +103,15 @@ if(isset($_POST['query'])){
 
 	if ( $name != "") {		
 		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=CONCAT('".$periodo."','-01') AND M.EXECUCAO<= CONCAT('".$periodo."', '-31');";
 	}	
 	else {	
 		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
 	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20') ORDER BY 1;";
+	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>=CONCAT('".$periodo."','-01') AND M.EXECUCAO<= CONCAT('".$periodo."', '-31') ORDER BY 1;";
 	}
-
+	
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	if (mysqli_num_rows($cnx) > 0) {
@@ -140,7 +136,7 @@ if(isset($_POST['query'])){
 <hr/>
 	<section class="section">
 	<div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
 		<th>Funcionário</th>
@@ -174,7 +170,7 @@ if(isset($_POST['query'])){
 	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
 	<a href="#topo">		
 		<div class=".scrollWrapper">
-			<button class="button is-primary" style="width: 100%; display: table;">Ir Ao Topo</button>		
+			<button class="button is-primary is-fullwidth">Ir Ao Topo</button>		
 		</div>
 	</a>
 	<br/>
@@ -182,10 +178,10 @@ if(isset($_POST['query'])){
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
+					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
 				</div>
 			<div class="control">
-				<a href="goal-query.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+				<a href="goal-query.php" class="button is-primary">Nova consulta</a>
 			</div>					
 		</div>						
 	</div>
