@@ -37,7 +37,8 @@ page[size="A5"][layout="landscape"] {
 }
 
 td{
-  vertical-align:middle !important
+  vertical-align:middle !important;
+  font-size: 13px;
 }		
 
 @media print {
@@ -68,3 +69,6 @@ td{
     text-align: center;
 }
 
+.tx{
+	font-size: 16px;
+}
