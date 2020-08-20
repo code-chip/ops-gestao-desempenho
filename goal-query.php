@@ -2,25 +2,18 @@
 $menuAtivo = 'meta';
 require('menu.php');
 
-$periodo = trim($_REQUEST['periodo']);
-$sector = trim($_REQUEST['setor']);
-$name = trim($_REQUEST['nome']);
-$count = 0;
-$totalReached = 0;
+
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>
 	<title>Gestão de Desempenho - Consultar Meta</title>
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
-    <link rel="stylesheet" type="text/css" href="/css/personal.css">
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -38,75 +31,64 @@ $totalReached = 0;
     </script>   
 </head>
 <body>
-	<br/>
-	<span id="topo"></span>
-<div>	
-	<?php if($sector =="" && isset($_POST['consultar'])==null ): ?>
+<span id="topo"></span>
+<?php if ($sector == "" && isset($_POST['query']) == null ) { ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="" method="POST">
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				<label class="label">Mês:</label>
-			</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select">
-								<select name="periodo" class="w24-2">
-									<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-									<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-									<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-								</select>	
-							</div>
-						</div>
+		<div class="field">
+			<label class="label is-size-7-touch">Mês*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="periodo" class="w24-2">
+							<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
+							<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
+							<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
+							<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
+						</select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-calendar-alt"></i>
+						</span>	
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Setor:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select">
-								<select name="setor" class="w24-2"><?php 								
-								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
-								while($sector = $con->fetch_array()){
-									echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
-								 }
-								?></select>
-							</div>
-						</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Setor*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="setor" class="w24-2"><?php 								
+							$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
+							while($sector = $con->fetch_array()){
+								echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
+							 }
+						?></select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-door-open"></i>
+						</span>
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Nome:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select w24-2"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
-						</div>
-						</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Nome*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth"><!--SELEÇÃO OU PESQUISA DE NOME-->
+						<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
+						<span class="icon is-small is-left">
+							<i class="fas fa-user-circle"></i>
+						</span>
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary btn128">Consultar</button>
-						</div>
+			<div class="field-body"></div>
+				<div class="field is-grouped">
+					<div class="control">
+						<button name="consultar" type="submit" class="button is-primary btn128">Pesquisar</button>
+					</div>
+					<div class="control">
+						<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
 					</div>
 				</div>
 			</div>
@@ -114,10 +96,15 @@ $totalReached = 0;
 	</form>
 	</div>
 	</section>	
-	<?php endif; ?>		
-</div>
-<?php
-if(isset($_POST['consultar'])){
+<?php }
+
+if(isset($_POST['query'])){
+	$periodo = trim($_REQUEST['periodo']);
+	$sector = trim($_REQUEST['setor']);
+	$name = trim($_REQUEST['nome']);
+	$count = 0;
+	$totalReached = 0;
+
 	if ( $name != "") {		
 		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
@@ -149,7 +136,7 @@ if(isset($_POST['consultar'])){
 }	
 ?>
 <!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['consultar']) && $count != 0) : ?>
+<?php if(isset($_POST['query']) && $count != 0) : ?>
 <hr/>
 	<section class="section">
 	<div class="table__wrapper">
