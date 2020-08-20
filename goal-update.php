@@ -15,15 +15,12 @@ $totalAlcancado=0;
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>
 	<title>Gestão de Desempenho - Atualizar Meta</title>
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
-    <link rel="stylesheet" type="text/css" href="/css/personal.css">
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -41,80 +38,62 @@ $totalAlcancado=0;
     </script>   
 </head>
 <body>
-	<?php
-	/*CONSULTAS PARA CARREGAS AS OPÇÕES DE SELEÇÃO DO CADASTRO.*/
-	$gdSetor="SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'";			
-	?>
-	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if($setor =="" && isset($_POST['consultar'])==null ): ?>
+	<?php if ($setor == "" && isset($_POST['query']) == null ): ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="goal-update.php" method="POST">
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				<label class="label">Mês:</label>
-			</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select">
-								<select name="periodo" class="w24-2">
-									<option value="<?php echo date('Y-m', strtotime("+1 months"))?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-									<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-									<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-									<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-								</select>	
-							</div>
-						</div>
+		<div class="field">
+			<label class="label is-size-7-touch">Mês*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="periodo"><?php 								
+							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+							while($sector = $con->fetch_array()){
+								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
+							 }
+						?></select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-calendar-alt"></i>
+						</span>	
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Setor:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select">
-								<select name="setor" class="w24-2">								
-								<?php $con = mysqli_query($phpmyadmin , $gdSetor);
-								$x=0; 
-								while($setor = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x]=$setor["ID"]; ?>"><?php echo $vtNome[$x] = $setor["NOME"]; ?></option>
-								<?php $x;} endwhile;?>	
-								</select>
-							</div>
-						</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Setor*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="setor"><?php 								
+							$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
+							while($sector = $con->fetch_array()){
+								echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
+							 }
+						?></select>
+						<span class="icon is-small is-left">
+							<i class="fas fa-door-open"></i>
+						</span>
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Nome:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control">
-							<div class="select w24-2"><!--SELEÇÃO OU PESQUISA DE NOME-->
-							<input name="nome" type="text" class="input" placeholder="Ana Clara">
-						</div>
-						</div>
+			<div class="field">
+				<label class="label is-size-7-touch">Nome*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth"><!--SELEÇÃO OU PESQUISA DE NOME-->
+						<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
+						<span class="icon is-small is-left">
+							<i class="fas fa-user-circle"></i>
+						</span>
 					</div>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary btn128">Consultar</button>
-						</div>
+			<div class="field-body"></div>
+				<div class="field is-grouped">
+					<div class="control">
+						<button name="query" type="submit" class="button is-primary btn128">Pesquisar</button>
+					</div>
+					<div class="control">
+						<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
 					</div>
 				</div>
 			</div>
@@ -125,7 +104,7 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if(isset($_POST['consultar'])){
+if(isset($_POST['query'])){
 	if( $nome != ""){	
 	$query="SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
 INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
@@ -164,12 +143,12 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.")
 	}	
 }	
 ?><!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['consultar']) && $contador!=0) : ?>
+<?php if(isset($_POST['query']) && $contador!=0) : ?>
 <hr/>
 <section class="section">
 <form id="form2" action="goal-update.php" method="POST">	
 <div class="table__wrapper">
-	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touc">	
 	<tr>
 		<th>N°</th>
 		<th class="ocultaColunaId">ID</th>
