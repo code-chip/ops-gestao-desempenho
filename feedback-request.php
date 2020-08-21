@@ -21,7 +21,7 @@ require('menu.php');
 				<label class="label is-size-7-touch">Setor*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="setor" id="setor" class="required">
+						<select name="sector" id="sector" class="required">
 							<option value="">Selecione</option><?php
 							$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo' ORDER BY NOME");
 							while($reSetor = mysqli_fetch_assoc($cnx)) {
@@ -38,7 +38,7 @@ require('menu.php');
 				<label class="label is-size-7-touch">Colaborador*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="colaborador" id="usuario" class="required">
+						<select name="user" id="user" class="required">
 							<option selected="selected" value="Todos">Selecione</option>
 						</select>
 						<span class="icon is-small is-left">
@@ -50,12 +50,17 @@ require('menu.php');
 			<div class="field">
 				<label class="label is-size-7-touch">Mensagem*</label>
 				<div class="control">
-					<textarea name="mensagem" type="text" class="textarea required" placeholder="Por favor, me envie um feedback!" maxlength="200"></textarea>
+					<textarea name="message" type="text" class="textarea required" placeholder="Por favor, me envie um feedback!" maxlength="200"></textarea>
 				</div>
 			</div>
-			<div class="field-body">	
-				<div class="control">
-					<button name="inserirSolicitacao" type="submit" class="button is-primary" value="Filtrar">Enviar solicitação</button>
+			<div class="field-body">
+				<div class="field is-grouped">	
+					<div class="control">
+						<button name="insert" type="submit" class="button is-primary btn128" value="Insert">Enviar</button>
+					</div>
+					<div class="control">
+						<button type="reset" class="button is-primary btn128">Limpar</button>
+					</div>
 				</div>							
 			</div>				
 	     </form>
@@ -67,20 +72,20 @@ require('menu.php');
 	</script>
 	<script type="text/javascript">
 		$(function(){
-			$('#setor').change(function(){
+			$('#sector').change(function(){
 				if( $(this).val() ) {
-					$('#usuario').hide();
+					$('#user').hide();
 					$('.carregando').show();
 					$.getJSON('loading-users.php?search=',{setor: $(this).val(), ajax: 'true'}, function(j){
 						var options = '<option value="Todos">Selecione</option>';	
 						for (var i = 0; i < j.length; i++) {
 							options += '<option value="' + j[i].id + '">' + j[i].nome_usuario + '</option>';
 						}	
-						$('#usuario').html(options).show();
+						$('#user').html(options).show();
 						$('.carregando').hide();
 					});
 				} else {
-					$('#usuario').html('<option value="">Selecione</option>');
+					$('#user').html('<option value="">Selecione</option>');
 				}
 			});
 		});
@@ -89,8 +94,8 @@ require('menu.php');
 </html>
 <?php 
 
-if (isset($_POST["inserirSolicitacao"]) != null) {
-	$cnx = mysqli_query($phpmyadmin, "INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, REGISTRO, SITUACAO) VALUES(".$_SESSION["userId"].",".$_POST['colaborador'].",'".$_POST['mensagem']."','".date('Y-m-d')."','Enviado');");
+if (isset($_POST["insert"]) != null) {
+	$cnx = mysqli_query($phpmyadmin, "INSERT INTO SOLICITACAO(REMETENTE_ID, DESTINATARIO_ID, MENSAGEM, ANO_MES, REGISTRO, SITUACAO) VALUES(".$_SESSION["userId"].",".$_POST['user'].",'".$_POST['message']."','".date('Y-m')."','".date('Y-m-d')."','Enviado');");
 		
 	$erro = mysqli_error($phpmyadmin);
 		
