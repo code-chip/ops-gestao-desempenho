@@ -1,16 +1,11 @@
 <?php
-$menuAtivo="meta";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+$menuAtivo = 'meta';
+require('menu.php');
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
-else{
-$periodo= trim($_REQUEST['periodo']);
-$setor= trim($_REQUEST['setor']);
-$nome= trim($_REQUEST['nome']);
-$contador = 0;
-$totalAlcancado=0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,7 +43,7 @@ $totalAlcancado=0;
 			<label class="label is-size-7-touch">Mês*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="periodo"><?php 								
+						<select name="month"><?php 								
 							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
 							while($sector = $con->fetch_array()){
 								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
@@ -64,7 +59,7 @@ $totalAlcancado=0;
 				<label class="label is-size-7-touch">Setor*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="setor"><?php 								
+						<select name="sector"><?php 								
 							$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
 							while($sector = $con->fetch_array()){
 								echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
@@ -77,10 +72,10 @@ $totalAlcancado=0;
 				</div>
 			</div>
 			<div class="field">
-				<label class="label is-size-7-touch">Nome*</label>
+				<label class="label is-size-7-touch">Nome</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth"><!--SELEÇÃO OU PESQUISA DE NOME-->
-						<input name="nome" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
+						<input name="name" type="text" class="input" placeholder="Ana Clara" value="<?php if($_SESSION["permissao"]==1){ echo $_SESSION["nameUser"];}?>">
 						<span class="icon is-small is-left">
 							<i class="fas fa-user-circle"></i>
 						</span>
@@ -104,51 +99,43 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if(isset($_POST['query'])){
-	if( $nome != ""){	
-	$query="SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%' AND SETOR_ID=".$setor.")
-	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
-	}	
-	else{
-	$query="SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.")
-	AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
+
+if (isset($_POST['query'])) {
+	$totalAlcancado = 0;
+
+	if ( $nome != "") {	
+		$query = "SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$_POST['name']."%' AND SETOR_ID=".$_POST['sector'].") AND M.EXECUCAO>=CONCAT('".$_POST['month']."','-01') AND M.EXECUCAO<= CONCAT('".$_POST['month']."', '-31');";
+	} else {
+		$query = "SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$_POST['sector'].") AND M.EXECUCAO>=CONCAT('".$_POST['month']."','-01') AND M.EXECUCAO<= CONCAT('".$_POST['month']."', '-31');";
 	}
-	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
-	if(mysqli_num_rows($cnx)>0){
-		while($meta= $cnx->fetch_array()){
-			$vtId[$x]=$meta["ID"];
-			$vtNome[$x]=$meta["NOME"];
-			$vtAtividade[$x]=$meta["ATIVIDADE"];
-			$vtIdAtividade[$x]=$meta["ATIVIDADE_ID"];
-			$vtMeta[$x]=$meta["META"];
-			$vtExecucao[$x]=$meta["EXECUCAO"];
-			$vtDesempenho[$x]=$meta["DESEMPENHO"];
-			$vtDescricao[$x]=$meta["DESCRICAO"];					
+
+	$x = 0;
+	$cnx = mysqli_query($phpmyadmin, $query);
+	if (mysqli_num_rows($cnx) > 0) {
+		while ($goal = $cnx->fetch_array()) {
+			$vtId[$x] = $goal["ID"];
+			$vtNome[$x] = $goal["NOME"];
+			$vtAtividade[$x] = $goal["ATIVIDADE"];
+			$vtIdAtividade[$x] = $goal["ATIVIDADE_ID"];
+			$vtMeta[$x] = $goal["META"];
+			$vtExecucao[$x] = $goal["EXECUCAO"];
+			$vtDesempenho[$x] = $goal["DESEMPENHO"];
+			$vtDescricao[$x] = $goal["DESCRICAO"];					
 			$x++;
-			$contador=$x;
 		}
 	}
 	else{
-		?><script type="text/javascript">			
-			alert('Nenhum registrado encontrado nesta consulta!');
-			window.location.href=window.location.href;
-		</script> <?php		
+		echo "<script> alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";	
 	}	
-}	
-?><!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['query']) && $contador!=0) : ?>
+}
+
+if (isset($_POST['query']) && $x != 0) : ?>
+
 <hr/>
 <section class="section">
 <form id="form2" action="goal-update.php" method="POST">	
 <div class="table__wrapper">
-	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touc">	
+	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
 		<th class="ocultaColunaId">ID</th>
@@ -241,16 +228,14 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.")
 	<br/>
 	<div class="table__wrapper">			
 		<div class="field-body">
-			<div class="field is-grouped">											
+			<div class="field is-grouped">
 				<div class="control">
-					<input type="submit" class="button is-primary" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
-				</div>
+					<input name="alterarDados" type="submit" class="button is-primary" value="Alterar Dados"/>
+				</div>												
 				<div class="control">
 					<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
-				<div class="control">
-					<input name="alterarDados" type="submit" class="button is-primary" value="Alterar Dados"/>
-				</div>					
+								
 			</div>						
 		</div>
 	</div>
@@ -261,44 +246,43 @@ WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.")
 </body>
 </html>
 <?php
-if(isset($_POST['alterarDados'])){
-	$ids= array_filter($_POST['id']);
+
+if (isset($_POST['alterarDados'])) {
+	$ids = array_filter($_POST['id']);
 	$atividades = array_filter($_POST['atividade']);
-	$metas = array_filter($_POST['meta']);
+	$goals = array_filter($_POST['meta']);
 	$descricoes = array_filter($_POST['descricao']);	
 	$execucoes = array_filter($_POST['execucao']);
 	$feitos = array_filter($_POST['atividade3']);
-	$upCount=0;
-	for( $i = 0; $i < sizeof($atividades); $i++ ){
-		if($feitos[$i]==null){
-			$feitos[$i]=0;
+	$upCount =0;
+
+	for ($i = 0; $i < sizeof($atividades); $i++){
+		if ($feitos[$i] == null) {
+			$feitos[$i] = 0;
 		}
-		if($descricoes[$i]=="" || $descricoes[$i]==null){//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
-			$checkUp="SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$metas[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESEMPENHO=".$feitos[$i].";";
+
+		if ($descricoes[$i] == "" || $descricoes[$i] == null) {//VERIFICA SE ALGUMA DAS INFORMAÇÕES FOI ATUALIZADA.
+			$checkUp = "SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$goals[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESEMPENHO=".$feitos[$i].";";
+		} else {
+			$checkUp = "SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$goals[$i]." AND DESEMPENHO=".$feitos[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESCRICAO='".$descricoes[$i]."';";
 		}
-		else{
-			$checkUp="SELECT ID FROM META WHERE ID=".$ids[$i]." AND ATIVIDADE_ID=".$atividades[$i]." AND META=".$metas[$i]." AND DESEMPENHO=".$feitos[$i]." AND EXECUCAO='".$execucoes[$i]."' AND DESCRICAO='".$descricoes[$i]."';";
+		
+		$tx = mysqli_query($phpmyadmin, $checkUp);		
+		
+		if (mysqli_num_rows($tx) == 0 && mysqli_error($phpmyadmin) == null) {			
+			$upMeta = "UPDATE META SET ATIVIDADE_ID=".$atividades[$i].", META=".$goals[$i].", EXECUCAO='".$execucoes[$i]."', DESEMPENHO=".$feitos[$i].", DESCRICAO='".$descricoes[$i]."' WHERE ID=".$ids[$i].";";		
+			$cnx = mysqli_query($phpmyadmin, $upMeta);
+			$upCount = $upCount + 1;			
 		}
-		$tx= mysqli_query($phpmyadmin, $checkUp);		
-		if(mysqli_num_rows($tx)==0 && mysqli_error($phpmyadmin)==null){			
-			$upMeta="UPDATE META SET ATIVIDADE_ID=".$atividades[$i].", META=".$metas[$i].", EXECUCAO='".$execucoes[$i]."', DESEMPENHO=".$feitos[$i].", DESCRICAO='".$descricoes[$i]."' WHERE ID=".$ids[$i].";";		
-			$cnx=mysqli_query($phpmyadmin, $upMeta);
-			$upCount=$upCount+1;			
-		}
+
 		echo $upMeta."</br>";
 	}
-	if($upCount==0){	
-		?><script type="text/javascript">
-			alert('Nenhum registro foi alterado p/ ser atualizado!!');
-			window.location.href=window.location.href;		
-		</script><?php
-	}
-	else{
-		?><script type="text/javascript">
-			alert('Foi atualizado <?php echo $upCount ?> registro(s)!!');
-			window.location.href=window.location.href;
-		</script><?php
+
+	if ($upCount == 0) {	
+		echo "<script>alert('Nenhum registro foi alterado p/ ser atualizado!!'); window.location.href=window.location.href;	</script>";
+	} else {
+		echo "<script>alert('Foi atualizado <?php echo $upCount ?> registro(s)!!'); window.location.href=window.location.href; </script>";
 	}
 }
-}//ELSE - caso o usuário não tenha permissão.
+
 ?>
