@@ -7,27 +7,21 @@ if ($_SESSION["permissao"] == 1) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
 }
 
-$turno = trim($_POST['turno']);
-$setor = trim($_REQUEST['setor']);
-$dataSetada = trim($_REQUEST['dataSetada']);
-$contador = 0;
+$dataSetada = $_POST['dataSetada'];
 $totalAlcancado = 0;
 $idAtividade = 0;
 $idMeta = 0;
 
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html>
 <head>
-	<title>Gestão de Desempenho - Inserir Desempenho</title>
-	<meta charset="UTF-8">
-	<script type="text/javascript" src="/js/lib/dummy.js"></script>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/personal.css">
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
+	<style type="text/css" src="css/personal.css"></style>
+	<title>Gestão de Desempenho - Inserir Desempenho</title>
     <script type="text/javascript">		
 		function changeFunc() {
 		    var selectBox = document.getElementById("selectBox");
@@ -62,110 +56,92 @@ $idMeta = 0;
     </script>   
 </head>
 <body>
-	<br/>
 	<span id="topo"></span>
 <div>	
-	<?php if ($turno == "" && isset($_POST['salvarDados']) == null): ?>
+<?php if (!isset($_POST['query'])) { ?>
 	<section class="section">
 	<div class="container">		
-	<form id="form1" action="" method="POST" onSubmit="(return(preencheCheckbox())">
-		<div class="field is-horizontal">			
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Turno:</label>
-				</div>
-				<div class="field-body">
-					<div class="field" style="max-width:17em;">							
-						<div class="control has-icons-left">
-							<div class="select">
-								<select name="turno">
-									<option selected="selected" value="">Selecione</option><?php	
-									$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
-									while($turno = $con->fetch_array()){
-										echo "<option value=" . $turno["ID"] . ">" . $turno["NOME"] . "</option>";
-									} ?>	
-								</select>
-								<span class="icon is-small is-left">
-									<i class="fas fa-clock"></i>
-								</span>
-							</div>&nbsp&nbsp&nbsp
-						</div>
-					</div>
+	<form id="form1" action="performance-insert.php" method="POST" onsubmit="return check()">
+		<div class="field">			
+			<label class="label is-size-7-touch">Turno*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth">
+					<select name="turno" class="required">
+						<option selected="selected" value="">Selecione</option><?php	
+						$con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
+						while($turno = $con->fetch_array()){
+							echo "<option value=" . $turno["ID"] . ">" . $turno["NOME"] . "</option>";
+						} ?>	
+					</select>
+					<span class="icon is-small is-left">
+						<i class="fas fa-clock"></i>
+					</span>
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label is-normal">
-					<label class="label">Setor:</label>
-				</div>
-				<div class="field-body">
-					<div class="field">							
-						<div class="control has-icons-left">
-							<div class="select">
-								<select name="setor">
-									<option selected="selected" value="">Selecione</option><?php	
-									$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'");
-									while($setor = $con->fetch_array()){
-										echo "<option value=" . $setor["ID"] . ">" . $setor["NOME"] . "</option>";
-									}?>	
-								</select>
-								<span class="icon is-small is-left">
-									<i class="fas fa-door-open"></i>
-								</span>	
-							</div>
-						</div>						
-					</div>
+		</div>	
+		<div class="field">
+			<label class="label is-size-7-touch">Setor*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth">
+					<select name="setor" class="required">
+						<option selected="selected" value="">Selecione</option><?php	
+						$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO='Ativo'");
+						while($setor = $con->fetch_array()){
+							echo "<option value=" . $setor["ID"] . ">" . $setor["NOME"] . "</option>";
+						}?>	
+					</select>
+					<span class="icon is-small is-left">
+						<i class="fas fa-door-open"></i>
+					</span>	
 				</div>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control has-icons-left">
-							<input type="text" style="max-width:12.0em;" class="input registro" name="dataSetada" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
-							<span class="icon is-small is-left">
-								<i class="fas fa-calendar-alt"></i>
-							</span>
-						</div>
-					</div>
-				</div>
+		</div>	
+		<div class="field">
+			<label class="label is-size-7-touch">Data*</label>
+			<div class="control has-icons-left">
+				<input type="text" class="input registro required" name="dataSetada" value="<?php echo date('Y-m-d',strtotime('-1 day'));?>">
+				<span class="icon is-small is-left">
+					<i class="fas fa-calendar-alt"></i>
+				</span>
 			</div>
-			<div class="field is-horizontal">
-				<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field">
-						<div class="control">
-							<button name="consultar" type="submit" class="button is-primary btn128" onClick=""value="Filtrar">Filtrar</button>
-						</div>
-					</div>
+		</div>	
+		<div class="field-body"></div>
+			<div class="field is-grouped">
+				<div class="control">
+					<button name="query" type="submit" class="button is-primary btn128" value="Filtrar">Filtrar</button>
+				</div>
+				<div class="control">
+					<button name="clear" type="reset" class="button is-primary btn128" onClick="clearForm()">Limpar</button>
 				</div>
 			</div>
 		</div>		
 	</form>
 	</div>
 	</section>	
-	<?php endif; ?>		
-</div><?php
+	<?php } ?>		
+</div>
+<?php
 
-if ( $turno != "" && $setor != "") {	
-	$ajustes = mysqli_query($phpmyadmin, "set global sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';");
+if ( isset($_POST['query'])) {
 	
-	$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$turno." AND SETOR_ID=".$setor." AND SITUACAO='Ativo' ORDER BY NOME");
+
+	$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO WHERE TURNO_ID=".$_POST['turno']." AND SETOR_ID=".$_POST['setor']." AND SITUACAO='Ativo' ORDER BY NOME");
 
 	$x = 0;
-	while ($operadores = $cnx->fetch_array()) {
-		$vtId[$x] = $operadores["ID"];
-		$vtNome[$x] = $operadores["NOME"];					
+	while ($user = $cnx->fetch_array()) {
+		$vtId[$x] = $user["ID"];
+		$vtNome[$x] = $user["NOME"];					
 		$x++;
-		$contador = $x;
 	}
+
 	if (mysqli_num_rows($cnx) == null) {
 		echo "<script>alert('Nenhum usuário cadastrado no turno e setor selecionado!');	window.location.href=window.location.href; </script>";	
 	}			
 }
 
-if ($contador != 0 ) : ?>
+if ($x != 0 ) : ?>
 <hr/>
-	<form id="form2" action="" method="POST">	
+	<form id="form2" action="performance-insert.php" method="POST">	
 	<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">	
 	<tr>
 		<th>N°</th>
@@ -180,20 +156,20 @@ if ($contador != 0 ) : ?>
 		<th>Observação</th>  			
 	</tr><?php
  
- for( $i = 0; $i < sizeof($vtNome); $i++ ) :
-	$result=0; 
-	//VERIFICA SE É SETOR COM METAS VARIADAS.
-	$_SESSION["metaAdd"] = 1;
-	$getMeta = "SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1";
-	$cx = mysqli_query($phpmyadmin, $getMeta);
-	$defMeta = $cx->fetch_array();
-	$result = mysqli_num_rows($cx);
-	
-	if ($result > 0) {			
-		$idAtividade = $defMeta["ATIVIDADE_ID"];
-	}
+	 for ( $i = 0; $i < sizeof($vtNome); $i++ ) {
+		$result = 0; 
+		//VERIFICA SE É SETOR COM METAS VARIADAS.
+		$_SESSION["metaAdd"] = 1;
+		$cx = mysqli_query($phpmyadmin, "SELECT M.META, A.NOME AS ATIVIDADE, M.ATIVIDADE_ID, M.DESCRICAO FROM META M INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID=".$vtId[$i]." AND EXECUCAO='".$dataSetada."' AND DESEMPENHO=0 ORDER BY M.ID LIMIT 1");
+		$defMeta = $cx->fetch_array();
+		$result = mysqli_num_rows($cx);
+		
+		if ($result > 0) {			
+			$idAtividade = $defMeta["ATIVIDADE_ID"];
+		}
 
-	?><tr>
+		?>
+		<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
 			<div class="field">				
@@ -223,10 +199,10 @@ if ($contador != 0 ) : ?>
 						<div class="select is-size-7-touch">
 							<select name="presenca[]"><?php								
 								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM PRESENCA WHERE SITUACAO ='Ativo'");
-								$x=0; 
-								while($presenca = $con->fetch_array()):{?>
-									<option value="<?php echo $vtId[$x] = $presenca["ID"]; ?>"><?php echo $vtNome[$x] = $presenca["NOME"]; ?></option>
-								<?php $x;} endwhile;?>																		
+								while ($presenca = $con->fetch_array()) {
+									echo "<option value=" . $presenca["ID"] . ">" . $presenca["NOME"] . "</option>";
+								}
+								?>																		
 							</select>	
 						</div>
 					</div>					
@@ -239,12 +215,15 @@ if ($contador != 0 ) : ?>
 					<div class="control">
 						<div class="select is-size-7-touch">
 							<select name="atividade[]">
-								<?php if($result>0): ?><option selected="selected" value="<?php echo $defMeta["ATIVIDADE_ID"];?>"><?php echo $defMeta["ATIVIDADE"];?></option><?php endif;?>
-								<?php $gdAtividade="SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID<>".$idAtividade; 
-								echo $gdAtividade; $con = mysqli_query($phpmyadmin , $gdAtividade); $x=0; 
-								while($atividade = $con->fetch_array()):{?>									
-									<option value="<?php echo $vtId[$x] = $atividade["ID"]; ?>"><?php echo $vtNome[$x] = $atividade["NOME"]; ?></option>
-								<?php $x;} endwhile;?>
+								<?php 
+								if ($result > 0) {
+									echo "<option selected='selected' value=" . $defMeta["ATIVIDADE_ID"] . ">" . $defMeta["ATIVIDADE"] . "</option>"; 
+								}	
+								$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM ATIVIDADE WHERE SITUACAO='Ativo' AND ID<>".$idAtividade); 
+								while ($atividade = $con->fetch_array()) {									
+									echo "<option value=" . $atividade["ID"] . ">" . $atividade["NOME"] . "</option>";
+								}
+								?>
 							</select>	
 						</div>
 					</div>					
@@ -279,8 +258,8 @@ if ($contador != 0 ) : ?>
 				</div>				
 			</div>
 		</td>						
-	</tr>
-<?php endfor;?>
+		</tr>
+	<?php } ?>
 	</table>
 	<a href="#topo">
 		<div class="field is-grouped is-grouped-right">
@@ -303,20 +282,22 @@ if ($contador != 0 ) : ?>
 					</div>										
 				</div>
 			<div class="control">
-				<a href="report-insert.php" class="button is-size-7-touch">Voltar</a>
-			</div>					
+				<input name="salvarDados" type="submit" class="button is-primary is-size-7-touch" value="Salvar Dados"/>
+			</div>	
+							
 			<div class="control">
-				<input name="Limpar" type="button" class="button is-primary is-size-7-touch" onClick="preencheCheckbox()" value="Limpar"/>
+				<input name="clear" type="reset" class="button is-primary is-size-7-touch btn128"/ value="Limpar">
 			</div>
 			<div class="control">
-				<input name="salvarDados" type="submit" class="button is-primary is-size-7-touch" id="submitQuery" value="Salvar Dados"/>
-			</div>						
+				<a href="performance-insert.php" class="button is-primary is-size-7-touch btn128">Voltar</a>
+			</div>							
 		</div>
 	</div>
 	</form>	
 <?php endif; ?>
 </body>
-</html><?php
+</html>
+<?php
 
 if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 	$ids = array_filter($_POST['id']);
@@ -350,28 +331,28 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 			$anoMes = new DateTime($registros[$i]);
 			$anoMes = $anoMes->format('Y-m');
 			
-			$inserirDesempenho = "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ";
-			$cnx = mysqli_query($phpmyadmin, $inserirDesempenho);
+			$cnx = mysqli_query($phpmyadmin, "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ");
+			
 			$v++;
 			
 			if ($_SESSION["metaAdd"] == 1) {//VERIFICA E DAR BAIXA NA META CADASTRADA.
-				$checkMeta = "SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1";
-				$cnx2 = mysqli_query($phpmyadmin, $checkMeta);			
+				$cnx2 = mysqli_query($phpmyadmin, "SELECT ID FROM META WHERE USUARIO_ID=".$ids[$i]." AND DESEMPENHO=0 AND EXECUCAO='".$registros[$i]."' ORDER BY ID LIMIT 1");			
 				
 				if (mysqli_num_rows($cnx2)>0) {
 					$dowMeta = $cnx2->fetch_array();
-					$query = "UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"];
-					$cnx3 = mysqli_query($phpmyadmin, $query);
+					$cnx3 = mysqli_query($phpmyadmin, "UPDATE META SET DESEMPENHO=1 WHERE ID=".$dowMeta["ID"]);
 				}
 			}
 		}
-	}	
+	}
+
 	if (mysqli_error($phpmyadmin) == null) {
 		$metaAdd = 0;
 		echo "<script>alert('Desempenho cadastro com sucesso!'); window.location.href=window.location.href; </script>";
 	} else {
 		echo "<script>alert('Erro ao cadastrar Desempenho, campo Meta e/ou Alcançado vazio!!'); window.location.href=window.location.href; </script>";
 	}
+
 } else if (isset($_POST['salvarDados']) != null) {
 	echo "<script>alert('Nenhum Checkbox foi selecionado p/ salvar!!'); window.location.href=window.location.href;</script>";
 }
