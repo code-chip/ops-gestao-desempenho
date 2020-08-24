@@ -37,7 +37,7 @@ if ($_SESSION["permissao"] == 1) {
 	<?php if ($setor == "" && isset($_POST['query']) == null ): ?>
 	<section class="section">
 	<div class="container">	
-	<form id="form1" action="report-update.php" method="POST" onsubmit="return check()">
+	<form id="form1" action="performance-update.php" method="POST" onsubmit="return check()">
 		<div class="field">
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
@@ -133,7 +133,7 @@ if ( isset($_POST['query'])) {
 if (isset($_POST['query']) && $x != 0) : { ?>
 <hr/>
 <section class="section">
-<form id="form2" action="report-update.php" method="POST">	
+<form id="form2" action="performance-update.php" method="POST">	
 <div class="table__wrapper">
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch is-striped is-narrow is-hoverable">	
 	<tr>
@@ -262,7 +262,7 @@ if (isset($_POST['query']) && $x != 0) : { ?>
 				<input name="alterarDados" type="submit" class="button is-primary btn128" value="Atualizar"/>
 			</div>												
 			<div class="control">
-				<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+				<a href="performance-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 			</div>
 		</div>						
 	</div>
