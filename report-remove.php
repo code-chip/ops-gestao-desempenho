@@ -44,15 +44,12 @@ if ($_SESSION["permissao"] == 1) {
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth norequired">
-			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus>
-						<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-						<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-6 months"))?></option>
-					</select>
+			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus><?php 								
+						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%Y-%m') AS ANO_MES, DATE_FORMAT(REGISTRO,'%m/%Y') AS MES_ANO FROM DESEMPENHO GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24;");
+						while($sector = $con->fetch_array()){
+							echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
+						}
+					?></select>
 				</div>
 				<span class="icon is-small is-left" >
 				  	<i class="fas fa-calendar-alt"></i>
@@ -198,11 +195,8 @@ if (isset($_POST['query']) && $count != 0) : ?>
 		<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<input name="removerDados" type="submit" class="button is-primary" value="Deletar Dados"/>
+					<input name="removerDados" type="submit" class="button is-primary btn128" value="Remover"/>
 				</div>												
-				<div class="control">
-					<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
-				</div>
 				<div class="control">
 					<a href="report-remove.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
