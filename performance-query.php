@@ -36,10 +36,10 @@ require('menu.php');
 <body>
 	<span id="top"></span>
 <div>	
-	<?php if ($sector == "" && isset($_POST['query']) == null ){ ?>
+	<?php if ($sector == "" && isset($_POST['query']) == null) { ?>
 	<section class="section">
 	<div class="container">	
-	<form id="form1" action="report-query.php" method="POST">
+	<form id="form1" action="performance-query.php" method="POST">
 		<div class="field">
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
@@ -191,7 +191,7 @@ if (isset($_POST['query']) && $count != 0) : ?>
 		<div class="field-body">
 			<div class="field is-grouped">											
 				<div class="control">
-					<a href="report-query.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+					<a href="performance-query.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
 			</div>						
 		</div>						
