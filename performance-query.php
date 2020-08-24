@@ -44,15 +44,12 @@ require('menu.php');
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth norequired">
-			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus>
-						<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-						<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-6 months"))?></option>
-					</select>
+			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus><?php 								
+						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%Y-%m') AS ANO_MES, DATE_FORMAT(REGISTRO,'%m/%Y') AS MES_ANO FROM DESEMPENHO GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24;");
+						while($sector = $con->fetch_array()){
+							echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
+						}
+					?></select>
 				</div>
 				<span class="icon is-small is-left" >
 				  	<i class="fas fa-calendar-alt"></i>
