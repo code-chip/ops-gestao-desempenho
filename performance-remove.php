@@ -39,7 +39,7 @@ if ($_SESSION["permissao"] == 1) {
 	<?php if ($setor == "" && isset($_POST['query']) == null ): ?>
 	<section class="section">
 	<div class="container">	
-	<form id="form1" action="report-remove.php" method="POST">
+	<form id="form1" action="performance-remove.php" method="POST">
 		<div class="field">
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
@@ -135,7 +135,7 @@ if( isset($_POST['query'])){
 if (isset($_POST['query']) && $count != 0) : ?>
 <hr/>
 <section class="section">
-<form id="form2" action="report-remove.php" method="POST">	
+<form id="form2" action="performance-remove.php" method="POST">	
 <div class="table__wrapper">
 	<table class="table is-bordered pricing__table is-fullwidth is-size-7-touch is-striped is-narrow is-hoverable">	
 	<tr>
@@ -198,7 +198,7 @@ if (isset($_POST['query']) && $count != 0) : ?>
 					<input name="removerDados" type="submit" class="button is-primary btn128" value="Remover"/>
 				</div>												
 				<div class="control">
-					<a href="report-remove.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
+					<a href="performance-remove.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 				</div>
 			</div>						
 		</div>
