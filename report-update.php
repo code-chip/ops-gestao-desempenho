@@ -42,15 +42,12 @@ if ($_SESSION["permissao"] == 1) {
 			<label class="label is-size-7-touch">Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth norequired">
-			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus>
-						<option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y')?></option>
-						<option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
-						<option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-6 months"))?></option>
-					</select>
+			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus><?php 								
+						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%Y-%m') AS ANO_MES, DATE_FORMAT(REGISTRO,'%m/%Y') AS MES_ANO FROM DESEMPENHO GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24;");
+						while($sector = $con->fetch_array()){
+							echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
+						}
+					?></select>
 				</div>
 				<span class="icon is-small is-left" >
 				  	<i class="fas fa-calendar-alt"></i>
@@ -89,7 +86,7 @@ if ($_SESSION["permissao"] == 1) {
 		<div class="field-body is-fullwidth">
 			<div class="field is-grouped is-fullwidth">
 				<div class="control is-fullwidth">
-					<button name="query" type="submit" class="button is-primary btn128" value="filter">Consultar</button>
+					<button name="query" type="submit" class="button is-primary btn128" value="filter">Pesquisar</button>
 				</div>
 				<div class="control">
 					<button name="clear" type="reset" class="button is-primary btn128" onclick="clearForm();">Limpar</button>
@@ -104,9 +101,8 @@ if ($_SESSION["permissao"] == 1) {
 <?php
 
 if ( isset($_POST['query'])) {
+	$totalAlcancado = 0;
 
-	$count = 0;
-	$totalAlcancado = 0;	
 	$query = "SELECT D.ID AS ID, U.NOME AS USUARIO, D.PRESENCA_ID AS PRESENCA_ID,P.NOME AS PRESENCA, D.ATIVIDADE_ID AS ATIVIDADE_ID, A.NOME AS ATIVIDADE, D.META, D.ALCANCADO AS ALCANCADO, D.DESEMPENHO, D.REGISTRO, D.OBSERVACAO FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID
 		INNER JOIN PRESENCA P ON P.ID=D.PRESENCA_ID INNER JOIN ATIVIDADE A ON A.ID=D.ATIVIDADE_ID WHERE SETOR_ID=".$_REQUEST['sector']." AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$_REQUEST['name']."%')
 		AND D.ANO_MES='".$_REQUEST['month']."';";
@@ -114,7 +110,7 @@ if ( isset($_POST['query'])) {
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	
-	while($user= $cnx->fetch_array()){
+	while ($user = $cnx->fetch_array()) {
 		$vtId[$x] = $user["ID"];
 		$name[$x] = $user["USUARIO"];
 		$presenceId[$x] = $user["PRESENCA_ID"];
@@ -127,7 +123,6 @@ if ( isset($_POST['query'])) {
 		$date[$x] = $user["REGISTRO"];
 		$note[$x] = $user["OBSERVACAO"];					
 		$x++;
-		$count = $x;
 	}
 
 	if (mysqli_num_rows($cnx) == 0) {
@@ -135,7 +130,7 @@ if ( isset($_POST['query'])) {
 	}	
 }
 	
-if (isset($_POST['query']) && $count != 0) : { ?>
+if (isset($_POST['query']) && $x != 0) : { ?>
 <hr/>
 <section class="section">
 <form id="form2" action="report-update.php" method="POST">	
@@ -264,11 +259,8 @@ if (isset($_POST['query']) && $count != 0) : { ?>
 	<div class="field-body">
 		<div class="field is-grouped">
 			<div class="control">
-				<input name="alterarDados" type="submit" class="button is-primary" value="Alterar Dados"/>
+				<input name="alterarDados" type="submit" class="button is-primary btn128" value="Atualizar"/>
 			</div>												
-			<div class="control">
-				<input type="submit" class="button is-primary btn128" id="submitQuery" onClick="history.go(0)" value="Atualizar"/>						
-			</div>
 			<div class="control">
 				<a href="report-update.php"><input name="Limpar" type="submit" class="button is-primary" value="Nova consulta"/></a>
 			</div>
