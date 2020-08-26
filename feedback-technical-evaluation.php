@@ -145,7 +145,7 @@ if ($index["SITUACAO"] == "Finalizado") {
 		<div class="field">
 		  	<label class="label"><?php echo $getComentario["PERGUNTA"];?></label>
 		  	<div class="control">
-		    	<textarea name="comentario" id="comment" class="textarea" placeholder="Sua resposta" maxlength="1000"></textarea>
+		    	<textarea name="comentario" id="comment" class="textarea" placeholder="Sua resposta" maxlength="710"></textarea>
 		  	</div>
 		</div>
 		<div class="field is-grouped">
