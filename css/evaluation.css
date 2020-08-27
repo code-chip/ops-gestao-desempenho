@@ -72,3 +72,12 @@ td{
 .tx{
 	font-size: 16px;
 }
+.blue {
+	background: #4169E1;
+}
+.textl {
+	text-align:left;
+}
+.textr {
+	text-align:right;
+}
