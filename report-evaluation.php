@@ -19,10 +19,10 @@ require('menu.php');
 			<label class="label is-size-7-touch">Semestre*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-					<select name="periodo" class="is-fullwidth"><?php 								
-						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%m/%Y' ) AS MES FROM AVAL_INDICE GROUP BY 1 ORDER BY 1 DESC");
+					<select name="yearMonth" class="is-fullwidth"><?php 								
+						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%m/%Y' ) AS MES, ANO_MES FROM AVAL_INDICE GROUP BY 1 ORDER BY 1 DESC");
 						while ($sector = $con->fetch_array()) {
-							echo '<option value=' . $sector['MES'] . '>' . $sector["MES"] . '</option>';
+							echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES"] . '</option>';
 					 	}
 						?>
 					</select>
@@ -81,13 +81,7 @@ require('menu.php');
 		<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<a href="report/index2.php" target="_blank" class="button is-primary btn128">Gerar</a>
-				</div>
-				<div class="control">
-					<a href="report/index3.php" target="_blank" class="button is-primary btn128">Gerar 2</a>
-				</div>
-				<div class="control">
-					<button name="query" type="submit" class="button is-primary btn128">Gerar</button>
+					<button name="query" type="submit" class="button is-primary btn128" value="query">Gerar</button>
 				</div>
 				<div class="control">
 					<button name="clear" type="submit" class="button is-primary btn128">Limpar</button>
@@ -99,4 +93,10 @@ require('menu.php');
 </section>
 </body>
 </html>
+<?php
 
+if (isset($_POST['query'])) {
+	$_SESSION['re-yearMonth'] = $_POST['yearMonth'];
+	echo "<script>window.open('report/index3.php?yearMonth=".$_POST['yearMonth']."', '_blank');</script>";
+	die();
+}
