@@ -177,7 +177,7 @@ if (isset($_POST['query']) && $x != 0) : { ?>
 		<td class="field "><!--COLUNA NUMBER-->
 			<div class="field ">
 				<div class="control">
-					<input name="n[]" type="checkbox" class="checkbox is-size-7-touch" value="<?php echo $i?>" >
+					<input name="n[]" type="checkbox" class="checkbox is-size-7-touch" value="<?php echo $i+1?>" >
 				</div>
 			</div>
 		</td>
@@ -283,37 +283,40 @@ if(isset($_POST['alterarDados'])){
 	$alcancados = array_filter($_POST['alcancado']);	
 	$registros = array_filter($_POST['registro']);
 	$observacoes = array_filter($_POST['observacao']);
-	$upCount = 0;
+	$u = 0;
+	
+	for ( $i = 0; $i < sizeof($presencas); $i++ ) {
+		if ($n[$u]-1 == $i) {
+			if ($alcancados[$i] == null) {//A função array_filter setar null quando o dado é zero.
+				$alcancados[$i] = 0;
+			}
+				
+			if ($metas[$i] == null ) {//A função array_filter setar null quando o dado é zero.
+				$metas[$i] = 0;
+			}
 
-	for ( $i = 0; $i < sizeof($n); $i++ ) {
-		if ($alcancados[$n[$i]] == null) {//A função array_filter setar null quando o dado é zero.
-			$alcancados[$n[$i]] = 0;
-		}
-			
-		if ($metas[$n[$i]] == null ) {//A função array_filter setar null quando o dado é zero.
-			$metas[$n[$i]] = 0;
-		}
+			if ($presencas[$i] == 3 || $presencas[$i] == 5) {//CASO SEJA FOLGA/TREINAMENTO SETA 0.
+				$desempenho = 0;
+				$metas[$i] = 0;
+				$alcancados[$i] = 0;
+			} elseif ($alcancados[$i] == 0 || $alcancados[$i] == null) {
+				$desempenho = 0;
+				$alcancados[$i] = 0;
+			} else {
+				$desempenho = round(($alcancados[$i] / $metas[$i]) * 100,2);
+			}
 
-		if ($presencas[$n[$i]] == 3 || $presencas[$i] == 5) {//CASO SEJA FOLGA/TREINAMENTO SETA 0.
-			$desempenho = 0;
-			$metas[$n[$i]] = 0;
-			$alcancados[$n[$i]] = 0;
-		} elseif ($alcancados[$n[$i]] == 0 || $alcancados[$n[$i]] == null) {
-			$desempenho = 0;
-			$alcancados[$n[$i]] = 0;
-		} else {
-			$desempenho = round(($alcancados[$n[$i]] / $metas[$n[$i]]) * 100,2);
+			$cnx = mysqli_query($phpmyadmin, "UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$i].", PRESENCA_ID=".$presencas[$i].",META=".$metas[$i].", ALCANCADO=".$alcancados[$i].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$i]."', OBSERVACAO='".$observacoes[$i]."',ATUALIZADO_POR=".$_SESSION["userId"].", ATUALIZADO_DATA='".date('Y-m-d')."' WHERE ID=".$ids[$i].";");
+				
+			$upCount = $upCount+1;
+			$u++;
 		}
-
-		$cnx = mysqli_query($phpmyadmin, "UPDATE DESEMPENHO SET ATIVIDADE_ID=".$atividades[$n[$i]].", PRESENCA_ID=".$presencas[$n[$i]].",META=".$metas[$n[$i]].", ALCANCADO=".$alcancados[$n[$i]].", DESEMPENHO=".$desempenho.", REGISTRO='".$registros[$n[$i]]."', OBSERVACAO='".$observacoes[$n[$i]]."',ATUALIZADO_POR=".$_SESSION["userId"].", ATUALIZADO_DATA='".date('Y-m-d')."' WHERE ID=".$ids[$n[$i]].";");
-			
-		$upCount = $upCount+1;
 	}
-
-	if ($upCount == 0) {	
+	
+	if (sizeof($n) == 0) {	
 		echo "<script>alert('Nenhum registro clicado na coluna * p/ ser atualizado!!'); window.location.href=window.location.href;	</script>";
 	} else {
-		echo "<script>alert('Foi atualizado " . $upCount . " registro(s)!!'); window.location.href=window.location.href; </script>";
+		echo "<script>alert('Foi atualizado " . sizeof($n) . " registro(s)!!'); window.location.href=window.location.href; </script>";
 	}
 
 }
