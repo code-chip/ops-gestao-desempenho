@@ -1,5 +1,17 @@
 <?php 
+
 require('../connection.php');
+$yearMonth = $_GET['yearMonth'];
+
+$r = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(D.DESEMPENHO),2) AS MEDIA, D.USUARIO_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.SITUACAO<>'Desligado' GROUP BY 2 ORDER BY 1 DESC;");
+
+$positions = mysqli_num_rows($r);
+
+$i = 0;
+while ($list = $r->fetch_array()) {
+	$ranking[$i] = $list["USUARIO_ID"];
+	$i++;
+}
 
 $query = "SELECT AI.USUARIO_ID, U.NOME, UG.NOME AS LIDER, C.NOME AS CARGO,
 TIMESTAMPDIFF(MONTH,U.EFETIVACAO,AI.REGISTRO ) AS MESES, TIMESTAMPDIFF(YEAR,U.NASCIMENTO,AI.REGISTRO ) 
@@ -8,16 +20,16 @@ AS IDADE, AI.REGISTRO,
 (SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 4 AND USUARIO_ID =U.ID) AS ATESTADO,
 (SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 2 AND USUARIO_ID =U.ID) AS FALTA,
 (SELECT COUNT(1) FROM PENALIDADE WHERE USUARIO_ID =U.ID) AS PENALIDADE,
-(SELECT ROUND(MIN(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MINIMO,
-(SELECT ROUND(AVG(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MEDIA,
-(SELECT ROUND(MAX(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID ) AS MAXIMO,
+(SELECT ROUND(MIN(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND DESEMPENHO>0 ) AS MINIMO,
+(SELECT ROUND(AVG(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND PRESENCA_ID NOT IN(3,5)) AS MEDIA,
+(SELECT ROUND(MAX(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID) AS MAXIMO,
 (SELECT COUNT(1) FROM FEEDBACK WHERE REMETENTE_ID=AI.USUARIO_ID ) AS F_ENV,
 (SELECT COUNT(1) FROM FEEDBACK WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_REC,
 (SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS S_ENV,
 (SELECT COUNT(1) FROM SOLICITACAO WHERE REMETENTE_ID =AI.USUARIO_ID ) AS S_REC,
-(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=COMPORTAMENTAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_COM,
-(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=PROFISSIONAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_PRO,
-(SELECT ROUND(AVG(FR.NOTA),2) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=DESEMPENHO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_DES,
+(SELECT IFNULL(ROUND(AVG(FR.NOTA),2),0) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=COMPORTAMENTAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_COM,
+(SELECT IFNULL(ROUND(AVG(FR.NOTA),2),0) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=PROFISSIONAL WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_PRO,
+(SELECT IFNULL(ROUND(AVG(FR.NOTA),2),0) FROM FEEDBACK INNER JOIN FEEDBACK_RESPOSTA FR ON FR.ID=DESEMPENHO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_DES,
 (SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
 INNER JOIN AVAL_INDICE AIN ON AIN.ID=AR.AVAL_INDICE_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
@@ -29,15 +41,15 @@ INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
 WHERE AIN.AVALIACAO_POR=AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS AUTO_AVAL_COM,
 (SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
-INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_INDICE AII ON AII.ID=AR.AVAL_INDICE_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
-WHERE AI.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =1) AS LIDER_AVAL_TEC,
+WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR<>AI.USUARIO_ID  AND AP.AVAL_TIPO_PERGUNTA_ID =1) AS LIDER_AVAL_TEC,
 (SELECT IFNULL(ROUND(AVG(AR2.NOTA),2),0) FROM AVAL_REALIZADA AR
-INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_INDICE AII ON AII.ID=AR.AVAL_INDICE_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
-WHERE AI.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS LIDER_AVAL_COM,
+WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS LIDER_AVAL_COM,
 (SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
 WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =1) AS AUTO_COMEN,
 (SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
@@ -45,8 +57,8 @@ WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =2) AS LIDER_COMEN
 FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
-INNER JOIN CARGO C ON C.ID = U.CARGO_ID 
-WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID;";
+INNER JOIN CARGO C ON C.ID = U.CARGO_ID  
+WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='".$yearMonth."';";
 
 $cnx = mysqli_query($phpmyadmin, $query);
 $x = 1;
@@ -59,8 +71,65 @@ while ($data = $cnx->fetch_array()) {
 	} else {
 		$leaderGeneral = ($data["LIDER_AVAL_TEC"]+$data["LIDER_AVAL_COM"])/2;
 		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"])/2;
-	}	
+	}
+
+	//Percorrer vetor p/ encontrar a posição entre os demais.
+	$position = $positions;
+	$o = 0;
 	
+	while ($o < $positions) {
+		if ($ranking[$o] == $data["USUARIO_ID"]) {
+			$position = $o+1;
+			break;
+		}
+		$o++;
+	}
+
+
+	$cnx2 = mysqli_query($phpmyadmin,"SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID = D.ATIVIDADE_ID WHERE ANO_MES >= DATE_SUB('".$data["REGISTRO"]."', INTERVAL 6 MONTH) AND ANO_MES <= '".$data["REGISTRO"]."' AND USUARIO_ID = ".$data["USUARIO_ID"]." GROUP BY ATIVIDADE_ID" );
+	$i = 0;
+
+	$occurrence = "t:100";
+	$activity = "Sem registro";
+	
+	while ($dash = $cnx2->fetch_array()) {
+		if ($i == 0 ) { 
+			$occurrence ="t:".$dash["VEZES"];
+			$activity ="".$dash["NOME"];
+		} else {
+			$occurrence .=",".$dash["VEZES"];
+			$activity .="|".$dash["NOME"];
+		}
+		$i++;
+	}
+
+	$b1 = mysqli_query($phpmyadmin,"SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, ANO_MES, DATE_FORMAT(REGISTRO,'%b') AS MES FROM DESEMPENHO WHERE USUARIO_ID = ".$data["USUARIO_ID"]." AND ANO_MES<='".$yearMonth."' GROUP BY 2 ORDER BY 2 DESC LIMIT 6;" );
+	$i = 0;
+
+	$b1_avg = "t:0,0,0,0,0,0";
+	$b1_month = "nul|nul|nul|nul|nul|nul";
+	
+	while ($b1_dash = $b1->fetch_array()) {
+		if ($i == 0 ) { 
+			$b1_avg ="t:".$b1_dash["MEDIA"];
+			$b1_month ="".$b1_dash["MES"];
+		} else {
+			$b1_avg .=",".$b1_dash["MEDIA"];
+			$b1_month .="|".$b1_dash["MES"];
+		}
+		$i++;
+	}
+
+	$a2 = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$data["USUARIO_ID"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC LIMIT 264;");
+  	$i = 0;
+	while ($a2_dash = $a2->fetch_array()) {
+		if ($i == 0 ) { 
+			$a2_avg ="t:".$a2_dash["MEDIA"];
+		} else {
+			$a2_avg .=",".$a2_dash["MEDIA"];
+		}
+		$i++;
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,7 +150,8 @@ while ($data = $cnx->fetch_array()) {
 			<td class="white-td" colspan="2"><b><center>Avaliação de Desempenho</center></b></td>
 		</tr>
 		<tr>
-			<td colspan="2"><b>Colaborador:</b><?php echo $data["NOME"]; ?> <b>Líder: </b><?php echo $data["LIDER"]; ?></td>
+			<td ><b>Colaborador: </b><?php echo $data["NOME"]; ?></td>
+			<td ><b>Líder: </b><?php echo $data["LIDER"]; ?></td>
 		</tr>
 	</table>
 		<br>
@@ -112,17 +182,28 @@ while ($data = $cnx->fetch_array()) {
 		</tr>
 	</table>
 	<br>
+	<?php 
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."' width='30%' height='30%'>";
+	?>
+	<?php 
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a' width='30%' height='30%'>";
+	?>
+	<img src="http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=t:50,80,95,60,41,41&chl=Jan|Feb|Mar|Apr|May|Jun&chds=a" width="30%" height="30%">
+
+
 	<table class="table is-bordered pricing__table is-fullwidth borda">
-		<tr class="grey"><td colspan="3"><b><center>Desempenho</center></b></td></tr>	
+		<tr class="grey"><td colspan="4"><b><center>Desempenho</center></b></td></tr>	
 		<tr>
 			<td><b>Mínimo</b></td>
 			<td><b>Média</b></td>
 			<td><b>Máximo</b></td>
+			<td><b>Ranking</b></td>
 		</tr>
 		<tr>
 			<td><?php echo $data["MINIMO"]; ?></td>
 			<td><?php echo $data["MEDIA"]; ?></td>
 			<td><?php echo $data["MAXIMO"]; ?></td>
+			<td><?php echo $position."/".$positions; ?></td>
 		</tr>
 		
 	</table>
@@ -146,33 +227,34 @@ while ($data = $cnx->fetch_array()) {
 		
 	</table>
 	<table class="table is-bordered pricing__table is-fullwidth borda">
-		<tr class="grey"><td colspan="3"><b><center>Pilares Feedback</center></b></td></tr>	
+		<tr class="grey"><td colspan="4"><b><center>Pilares Feedback</center></b></td></tr>	
 		<tr>
 			<td><b>Comportamental</b></td>
 			<td><b>Profissional</b></td>
 			<td><b>Desempenho</b></td>
+			<td><b>Geral</b></td>
 		</tr>
 		<tr>
 			<td><?php echo $data["F_COM"]; ?></td>
 			<td><?php echo $data["F_PRO"]; ?></td>
 			<td><?php echo $data["F_DES"]; ?></td>
+			<td><?php echo $avgFeed; ?></td>
 		</tr>
 		
 	</table>	
 		<br>
+	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses" width="100%" height="30%">	
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="grey" >
 			<td><b>Avaliação</b></td>
 			<td><b>Avaliação Técnica</b></td>
 			<td><b>Avaliação Comportamental</b></td>
-			<td><b>Feedback</b></td>
 			<td><b>Avaliação Geral</b></td>
 		</tr>
 		<tr class="center">
 			<td><b>Líder</b></td>
 			<td><?php echo $data["LIDER_AVAL_TEC"]; ?></td>
 			<td><?php echo $data["LIDER_AVAL_COM"]; ?></td>
-			<td rowspan="2"><?php echo $avgFeed; ?></td>
 			<td><?php echo round($leaderGeneral,2); ?></td>
 		</tr>
 		<tr>
@@ -182,7 +264,31 @@ while ($data = $cnx->fetch_array()) {
 			<td><?php echo round($autoGeneral,2); ?></td>
 		</tr>	
 	</table>
-	<br>
+	<div>
+	<table class="table is-bordered pricing__table is-fullwidth borda">	
+<?php
+	
+	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, (SELECT AR2.RESPOSTA FROM AVAL_INDICE AII 
+INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA APP ON APP.ID = AR.AVAL_PERGUNTA_ID 
+WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS RESPOSTA_LIDER
+FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $data["USUARIO_ID"].  " AND ANO_MES='".$yearMonth."' AND  AP.AVAL_TIPO_PERGUNTA_ID IN(1,2) ORDER BY AI.USUARIO_ID;");
+	
+	$y = 1;
+	while ($question = $cnx4->fetch_array()) {
+		echo "<tr class='blue'><td class='white-td' colspan='2'><b>" . $y.") ".$question["PERGUNTA"] . "</b></td></tr><br>";
+		echo "<tr><td><b>" . $data["LIDER"] . "</b></td><td>" . $question["RESPOSTA_LIDER"] . "</td></tr><br>";
+		echo "<tr><td><b>" . $data["NOME"] . "</b></td><td>" . $question["RESPOSTA"] . "</td></tr><br>";
+		$y++;
+	}
+
+?>	</table>
+<br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="red">
 			<td class="white-td"><b><center>Comentário do Colaborador</center></b></td>
@@ -197,12 +303,13 @@ while ($data = $cnx->fetch_array()) {
 			<td><?php echo $data["LIDER_COMEN"]; ?></td>
 		</tr>	
 	</table>
-</page>
-
+	</div>
+    </page>
 </body>	
-</html><?php
-	if($x < sizeof($data)){
-		echo "<div></div>";
-	}
-$x++;
+</html>
+<?php
+
+	echo "<div></div>";
+	$x++;
+
 }
