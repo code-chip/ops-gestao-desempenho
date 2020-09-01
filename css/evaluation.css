@@ -45,6 +45,7 @@ td{
 	body, page {
 	margin: 0;
 	box-shadow: 0;
+	width: 100%;
 	}
 	div {page-break-before: always;}
 }
@@ -74,10 +75,4 @@ td{
 }
 .blue {
 	background: #4169E1;
-}
-.textl {
-	text-align:left;
-}
-.textr {
-	text-align:right;
 }
