@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 $menuAtivo = 'dashboard';
 require('menu.php');
 
@@ -29,23 +30,24 @@ $cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_I
 while ($G4 = $cnx->fetch_array()) {
 	$vtG4nome[$x3] = $G4["NOME"];
 	$vtG4vezes[$x3] = $G4["VEZES"];
-  if ($x3 == 0) {
-    $idsAtiv = $idsAtiv."".$G4["ATIVIDADE_ID"];
-  } else {
-    $idsAtiv=$idsAtiv.",".$G4["ATIVIDADE_ID"];
-  }    
-  
-  $x3++;				
+    
+    if ($x3 == 0) {
+        $idsAtiv = $idsAtiv."".$G4["ATIVIDADE_ID"];
+    } else {
+        $idsAtiv=$idsAtiv.",".$G4["ATIVIDADE_ID"];
+    }    
+    
+    $x3++;				
 }
 
 $cnx = mysqli_query($phpmyadmin, "SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");");
 
 if (mysqli_error($phpmyadmin) == null) {
-  while($G41 = $cnx->fetch_array()) {
-    $vtG4nome[$x3] = $G41["NOME"];
-    $vtG4vezes[$x3] = $G41["VEZES"];
-    $x3++;        
-  }
+    while ($G41 = $cnx->fetch_array()) {
+        $vtG4nome[$x3] = $G41["NOME"];
+        $vtG4vezes[$x3] = $G41["VEZES"];
+        $x3++;        
+    }
 }
 
 $cnx = mysqli_query($phpmyadmin, "SELECT SUM(ACESSO) AS ACESSOS, SUBSTRING(ANO_MES,-2, 5) AS MES FROM ACESSO GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 6;");
@@ -53,7 +55,7 @@ $x = 0;
 
 while ($G6 = $cnx->fetch_array()) {
 	$vtG6Acesso[$x] = $G6["ACESSOS"];
-  $vtG6Mes[$x] = $G6["MES"];
+    $vtG6Mes[$x] = $G6["MES"];
 	$x++;
 }
 
@@ -71,16 +73,17 @@ $cnx = mysqli_query($phpmyadmin, $queryFolgasFaltas);
 $x = 0;
 
 while ($folgasFaltas = $cnx->fetch_array()) {
-  $vtFolgasFaltas[$x] = $folgasFaltas["COUNT(*)"];
-  $x++;
+    $vtFolgasFaltas[$x] = $folgasFaltas["COUNT(*)"];
+    $x++;
 }
 
 /*DASH SEXO*/
 $cnx = mysqli_query($phpmyadmin, "SELECT COUNT(*) AS QTD FROM USUARIO WHERE SITUACAO='Ativo' GROUP BY SEXO ORDER BY SEXO DESC;");
 $x = 0;
+
 while ($sexo = $cnx->fetch_array()) {
-  $vtQtd[$x] = $sexo["QTD"];
-  $x++;
+    $vtQtd[$x] = $sexo["QTD"];
+    $x++;
 }
 
 /*DASH SEXO POR TURNO P04*/
@@ -88,37 +91,37 @@ $cnx = mysqli_query($phpmyadmin, "SELECT T.NOME, SEXO, COUNT(*) AS QTD FROM USUA
 $x = 0;
 
 while ($sexoTurno = $cnx->fetch_array()) {
-  $vtTurno[$x] = $sexoTurno["NOME"];
-  $vtTurno[$x] = $vtTurno[$x]." ".$sexoTurno["SEXO"];
-  $vtQtdTurno[$x] = $sexoTurno["QTD"];
-  $x++;
+    $vtTurno[$x] = $sexoTurno["NOME"];
+    $vtTurno[$x] = $vtTurno[$x]." ".$sexoTurno["SEXO"];
+    $vtQtdTurno[$x] = $sexoTurno["QTD"];
+    $x++;
 }
 
 //DASH COMPARATIVO ENTRE TURNOS - dash-turnos. P05
-$cnx= mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d/%m') AS MESDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID LIMIT 44;");
+$cnx = mysqli_query($phpmyadmin, "SELECT AVG(DESEMPENHO) MEDIA, REGISTRO, DATE_FORMAT(REGISTRO, '%d/%m') AS MESDIA FROM DESEMPENHO WHERE USUARIO_TURNO_ID IN(1,2) AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_TURNO_ID, REGISTRO ORDER BY REGISTRO DESC, USUARIO_TURNO_ID LIMIT 44;");
 $x = 0;
 
 while ($compTurno = $cnx->fetch_array()) {
-  $vtcompTurMed[$x] = $compTurno["MEDIA"];
-  $vtcompTurReg[$x] = $compTurno["REGISTRO"];
-  $vtcompTurDia[$x] = $compTurno["MESDIA"];
-  $x++;
+    $vtcompTurMed[$x] = $compTurno["MEDIA"];
+    $vtcompTurReg[$x] = $compTurno["REGISTRO"];
+    $vtcompTurDia[$x] = $compTurno["MESDIA"];
+    $x++;
 }
 
 $x = 0;
 $y = 0;
 $countDay;
+
 while ($x < sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS NO MESMO DIA P/ F.
-  if ($vtcompTurReg[$x] == $vtcompTurReg[$x+1]) {
-    $turMat[$y] = $vtcompTurMed[$x];
-    $turVes[$y] = $vtcompTurMed[$x+1];
-    $turDia[$y] = $vtcompTurDia[$x];
-    $x++; 
-    $y++;
-  }
-  else {
-    $x++;
-  }
+    if ($vtcompTurReg[$x] == $vtcompTurReg[$x+1]) {
+        $turMat[$y] = $vtcompTurMed[$x];
+        $turVes[$y] = $vtcompTurMed[$x+1];
+        $turDia[$y] = $vtcompTurDia[$x];
+        $x++; 
+        $y++;
+    } else {
+        $x++;
+    }
 }
 
 //Média de desempenho por atividade --b2//
@@ -126,78 +129,85 @@ $x = 0;
 $queryB2;
 
 function query($date) {
-  global $queryB2;
-  $queryB2 = "SELECT 'Checkout', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND ANO_MES='".$date."' UNION
-  SELECT 'Separação', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=2 AND ANO_MES='".$date."' UNION
-  SELECT 'Embalagem', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=3 AND ANO_MES='".$date."' UNION
-  SELECT 'PBL', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=4 AND ANO_MES='".$date."' UNION
-  SELECT 'Recebimento', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=5 AND ANO_MES='".$date."' UNION
-  SELECT 'Devolução', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=6 AND ANO_MES='".$date."' UNION
-  SELECT 'Avarias', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=7 AND ANO_MES='".$date."' UNION 
-  SELECT 'Expedição', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=8 AND ANO_MES='".$date."'";
+    global $queryB2;
+    $queryB2 = "SELECT 'Checkout', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND ANO_MES='".$date."' UNION
+      SELECT 'Separação', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=2 AND ANO_MES='".$date."' UNION
+      SELECT 'Embalagem', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=3 AND ANO_MES='".$date."' UNION
+      SELECT 'PBL', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=4 AND ANO_MES='".$date."' UNION
+      SELECT 'Recebimento', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=5 AND ANO_MES='".$date."' UNION
+      SELECT 'Devolução', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=6 AND ANO_MES='".$date."' UNION
+      SELECT 'Avarias', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=7 AND ANO_MES='".$date."' UNION 
+      SELECT 'Expedição', IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=8 AND ANO_MES='".$date."'";
 } 
 
 query($yearMonth);
 
 $cnx = mysqli_query($phpmyadmin, $queryB2);
+
 while ($b2 = $cnx->fetch_array()) {
-  $activityB2[$x] = $b2["Checkout"];
-  $avgB2[$x] = $b2["MEDIA"];
-  $x++;
+    $activityB2[$x] = $b2["Checkout"];
+    $avgB2[$x] = $b2["MEDIA"];
+    $x++;
 }
 
 query(date('Y-m', strtotime('-1 month')));
 
 $cnx = mysqli_query($phpmyadmin, $queryB2);
+
 while ($b2 = $cnx->fetch_array()) {
-  $activityB2[$x] = $b2["Checkout"];
-  $avgB2[$x] = $b2["MEDIA"];
-  $x++;
+    $activityB2[$x] = $b2["Checkout"];
+    $avgB2[$x] = $b2["MEDIA"];
+    $x++;
 }
 
 //DASH RANKING MELHORES DO MÊS - top8//
 $x = 0;
-  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 8;");
-  while ($top8 = $cnx->fetch_array()) {
+$cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 8;");
+
+while ($top8 = $cnx->fetch_array()) {
     $vtNomeTop8[$x] = $top8["NOME"];
     $vtMediaTop8[$x] = $top8["MEDIA"];
     $x++;
   }
   
-  $x = 0;//DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
-  $cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID = USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 10;");
-  while ($top10 = $cnx->fetch_array()) {
+$x = 0;//DASH RANKING BAIXO DESEMPENHO MÊS - top10-piores
+$cnx = mysqli_query($phpmyadmin, "SELECT U.NOME, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID = USUARIO_ID WHERE PRESENCA_ID NOT IN(3,5) AND ANO_MES = '" . $yearMonth . "' GROUP BY USUARIO_ID ORDER BY MEDIA LIMIT 10;");
+while ($top10 = $cnx->fetch_array()) {
     $vtNomeTop10[$x] = $top10["NOME"];
     $vtMediaTop10[$x] = $top10["MEDIA"];
     $x++;
-  }
-  //DASH FAIXA ETÁRIA POR IDADE
-  $queryFaixaEtaria = "SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=18 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=21 AND SITUACAO<>'Desligado' UNION ALL
+}
+
+//DASH FAIXA ETÁRIA POR IDADE
+$queryFaixaEtaria = "SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=18 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=21 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=22 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=22 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=26 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=28 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=29 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=31 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=32 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=35 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=36 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=40 AND SITUACAO<>'Desligado' UNION ALL
 SELECT COUNT(ID) FROM USUARIO WHERE TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())>=41 AND TIMESTAMPDIFF(YEAR,NASCIMENTO,CURDATE())<=44 AND SITUACAO<>'Desligado';";
-  $x = 0;
-  $cnx = mysqli_query($phpmyadmin, $queryFaixaEtaria);
-  while ($faiEta = $cnx->fetch_array()) {
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, $queryFaixaEtaria);
+
+while ($faiEta = $cnx->fetch_array()) {
     $vtFaixaEtaria[$x] = $faiEta["COUNT(ID)"];
     $x++;
-  }
+}
   //DASH META ATINGIDA PERDIDA - meta-pacman
-  $querypacman="SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);";
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $querypacman);
-  if(mysqli_error($phpmyadmin)==null){
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, "SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);");
+
+if (mysqli_error($phpmyadmin) == null) {
     while ($pacman= $cnx->fetch_array()) {
-      $vtPacMan[$x]=$pacman["DESEMPENHO"];
-      $vtPacManData[$x]=$pacman["REGISTRO"];     
-      $x++;
+        $vtPacMan[$x]=$pacman["DESEMPENHO"];
+        $vtPacManData[$x]=$pacman["REGISTRO"];     
+        $x++;
     }
-  }
-  //DASH EXPEDIÇÃO DE CAIXAS E VINHOS.
-  $queryCaixas="SELECT IFNULL(SUM(A.ALCANCADO),0) AS CAIXAS FROM (
+}
+
+//DASH EXPEDIÇÃO DE CAIXAS E VINHOS.
+$queryCaixas = "SELECT IFNULL(SUM(A.ALCANCADO),0) AS CAIXAS FROM (
 SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')='".date('Y-m')."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) A
 UNION ALL
 SELECT SUM(B.ALCANCADO) FROM (
@@ -209,7 +219,8 @@ UNION ALL
 SELECT SUM(D.ALCANCADO) FROM (
 SELECT ALCANCADO, REGISTRO FROM DESEMPENHO WHERE DATE_FORMAT(REGISTRO,'%Y-%m')='".date('Y-m', strtotime('-3 month'))."' AND ATIVIDADE_ID=3 GROUP BY REGISTRO, ALCANCADO) D
 ";
-  $queryVinhosC="SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m')."'
+
+$queryVinhosC = "SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m')."'
 UNION ALL
 SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-1 month'))."'
 UNION ALL
@@ -224,50 +235,59 @@ UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-2 month'))."' GROUP BY REGISTRO) as PBL
 UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."' GROUP BY REGISTRO) as PBL";  
-  $x=0;
-  $cnx= mysqli_query($phpmyadmin, $queryCaixas);
-  while ($caixasVinhos= $cnx->fetch_array()) {
-    $vtCaiVin[0][$x]=$caixasVinhos["CAIXAS"];
+
+$x = 0;
+$cnx = mysqli_query($phpmyadmin, $queryCaixas);
+
+while ($caixasVinhos = $cnx->fetch_array()) {
+    $vtCaiVin[0][$x] = $caixasVinhos["CAIXAS"];
     $x++;    
-  }
-  $x=0;  
-  $cnx= mysqli_query($phpmyadmin, $queryVinhosC);
-  while ($caixasVinhosC= $cnx->fetch_array()) {
-    $vtCaiVin[1][$x]=$caixasVinhosC["CHECKOUT"];
+}
+
+$x = 0;  
+
+$cnx = mysqli_query($phpmyadmin, $queryVinhosC);
+while ($caixasVinhosC = $cnx->fetch_array()) {
+    $vtCaiVin[1][$x] = $caixasVinhosC["CHECKOUT"];
     $x++;
-  }
-  $x=0;  
-  $cnx= mysqli_query($phpmyadmin, $queryVinhosP);
-  while ($caixasVinhosP= $cnx->fetch_array()) {
-    $vtCaiVin[1][$x]=$vtCaiVin[1][$x]+$caixasVinhosP["PBL"];
+}
+
+$x = 0;  
+$cnx = mysqli_query($phpmyadmin, $queryVinhosP);
+while ($caixasVinhosP = $cnx->fetch_array()) {
+    $vtCaiVin[1][$x] = $vtCaiVin[1][$x] + $caixasVinhosP["PBL"];
     $x++;
-  }
-  //DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
-  for($i=0 ;$i <3;$i++){
-    $idAtividade=1+$i;
-    $querypriAtivi="SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID NOT IN (3,5) GROUP BY REGISTRO DESC LIMIT 6;
-";
-    $x=0;
-    $cnx= mysqli_query($phpmyadmin, $querypriAtivi);
+}
+
+//DASH MÉDIA DE DESEMPENHO 3 PRINCIPAIS ATIVIDADES - 3atividades-principais
+for ($i = 0 ;$i < 3; $i++) {
+    $idAtividade = 1 + $i;
+    $x = 0;
+    $cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID NOT IN (3,5) GROUP BY REGISTRO DESC LIMIT 6;
+");
     while ($priAtiv= $cnx->fetch_array()) {
-      $vtMedia3PrincAtiv[$i][$x]=$priAtiv["MEDIA"];
-      $vtData3PrincAtiv[$i][$x]=$priAtiv["REGISTRO"];  
-      $x++;
+        $vtMedia3PrincAtiv[$i][$x]=$priAtiv["MEDIA"];
+        $vtData3PrincAtiv[$i][$x]=$priAtiv["REGISTRO"];  
+        $x++;
     }
+    
     $idAtividade++;
-  }
-  //DASH NÚMERO DE REGISTROS
-  $queryNumRegi="SELECT COUNT(DESEMPENHO) AS OCORRENCIAS, DATE_FORMAT(REGISTRO,'%d-%m')AS DIA, COUNT(DISTINCT USUARIO_ID) AS USUARIOS FROM DESEMPENHO GROUP BY REGISTRO DESC LIMIT 5;";
-  $cnx=mysqli_query($phpmyadmin, $queryNumRegi);
-  $x=0;
-  while($numRegi= $cnx->fetch_array()){
-    $vtNumRegi[$x]=$numRegi["OCORRENCIAS"];
-    $vtNumUsuarios[$x]=$numRegi["USUARIOS"];
-    $vtNumData[$x]=$numRegi["DIA"];
+}
+
+//DASH NÚMERO DE REGISTROS
+$queryNumRegi="SELECT COUNT(DESEMPENHO) AS OCORRENCIAS, DATE_FORMAT(REGISTRO,'%d-%m')AS DIA, COUNT(DISTINCT USUARIO_ID) AS USUARIOS FROM DESEMPENHO GROUP BY REGISTRO DESC LIMIT 5;";
+$cnx = mysqli_query($phpmyadmin, $queryNumRegi);
+$x = 0;
+  
+while ($numRegi = $cnx->fetch_array()) {
+    $vtNumRegi[$x] = $numRegi["OCORRENCIAS"];
+    $vtNumUsuarios[$x] = $numRegi["USUARIOS"];
+    $vtNumData[$x] = $numRegi["DIA"];
     $x++;
-  }
-  //DASH DESEMPENHO POR TEMPO DE CASA dash-tempo-de-casa
-$queryTempoCasa="SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 6 AS TEMPO, (SELECT COUNT(ID) FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)<183 AND SITUACAO<>'Desligado') AS QTD FROM DESEMPENHO WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)<183 AND SITUACAO<>'Desligado')
+}
+
+//DASH DESEMPENHO POR TEMPO DE CASA dash-tempo-de-casa
+$queryTempoCasa = "SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 6 AS TEMPO, (SELECT COUNT(ID) FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)<183 AND SITUACAO<>'Desligado') AS QTD FROM DESEMPENHO WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)<183 AND SITUACAO<>'Desligado')
 UNION ALL
 SELECT IFNULL(ROUND(AVG(DESEMPENHO),2),0) AS MEDIA, 12, (SELECT COUNT(ID) FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)>182 AND DATEDIFF(CURDATE(),EFETIVACAO)<366 AND SITUACAO<>'Desligado') AS QTD FROM DESEMPENHO WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE DATEDIFF(CURDATE(),EFETIVACAO)>182 AND DATEDIFF(CURDATE(),EFETIVACAO)<366 AND SITUACAO<>'Desligado')
 UNION ALL
@@ -294,7 +314,7 @@ while ($tc = $cnx->fetch_array()) {
     $vtTempo[$x] = $tc["TEMPO"];
     $vtTempQtd[$x] = $tc["QTD"];
     $x++;
-  }
+}
 
 $cnx = mysqli_query($phpmyadmin, $queryNumRegi);
 $x = 0;
@@ -752,28 +772,6 @@ while ($numRegi = $cnx->fetch_array()){
       chart.draw(view, options);
 	  }
 	  </script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['table']});
-      google.charts.setOnLoadCallback(drawTable);
-      function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Líder');
-        data.addColumn('number', 'Time');
-        data.addColumn('number', 'Registro');
-        data.addColumn('number', 'Data');
-        data.addColumn('boolean', 'Ok?');
-        data.addRows([
-          ['Ataíde', parseFloat('<?php echo $a5time[0]?>'), parseFloat('<?php echo $a5count[0]?>'), {v: parseFloat('<?php echo $a5date[0]?>'), f: '<?php echo $a5date[0]?>'}, <?php echo $a5status[0]?>],
-          ['Marivalda', parseFloat('<?php echo $a5time[1]?>'), parseFloat('<?php echo $a5count[1]?>'), {v: parseFloat('<?php echo $a5date[1]?>'),   f: '<?php echo $a5date[1]?>'},  <?php echo $a5status[1]?>],
-          ['Monara', parseFloat('<?php echo $a5time[2]?>'), parseFloat('<?php echo $a5count[2]?>'), {v: parseFloat('<?php echo $a5date[2]?>'), f: '<?php echo $a5date[2]?>'}, <?php echo $a5status[2]?>],
-          ['Thiago', parseFloat('<?php echo $a5time[3]?>'), parseFloat('<?php echo $a5count[3]?>'),  {v: parseFloat('<?php echo $a5date[3]?>'),  f: '<?php echo $a5date[3]?>'},  <?php echo $a5status[3]?>]
-        ]);
-
-        var table = new google.visualization.Table(document.getElementById('a5'));
-
-        table.draw(data, {showRowNumber: true, width: '25%', height: '100%'});
-      }
-    </script>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
