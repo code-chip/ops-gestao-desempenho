@@ -3,7 +3,7 @@
 require('../connection.php');
 $yearMonth = $_GET['yearMonth'];
 
-$r = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(D.DESEMPENHO),2) AS MEDIA, D.USUARIO_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.SITUACAO<>'Desligado' GROUP BY 2 ORDER BY 1 DESC;");
+$r = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(D.DESEMPENHO),2) AS MEDIA, D.USUARIO_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.SITUACAO<>'Desligado' AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth' GROUP BY 2 ORDER BY 1 DESC;");
 
 $positions = mysqli_num_rows($r);
 
@@ -16,13 +16,13 @@ while ($list = $r->fetch_array()) {
 $query = "SELECT AI.USUARIO_ID, U.NOME, UG.NOME AS LIDER, C.NOME AS CARGO,
 TIMESTAMPDIFF(MONTH,U.EFETIVACAO,AI.REGISTRO ) AS MESES, TIMESTAMPDIFF(YEAR,U.NASCIMENTO,AI.REGISTRO ) 
 AS IDADE, AI.REGISTRO, 
-(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 3 AND USUARIO_ID =U.ID) AS FOLGA,
-(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 4 AND USUARIO_ID =U.ID) AS ATESTADO,
-(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 2 AND USUARIO_ID =U.ID) AS FALTA,
-(SELECT COUNT(1) FROM PENALIDADE WHERE USUARIO_ID =U.ID) AS PENALIDADE,
-(SELECT ROUND(MIN(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND DESEMPENHO>0 ) AS MINIMO,
-(SELECT ROUND(AVG(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND PRESENCA_ID NOT IN(3,5)) AS MEDIA,
-(SELECT ROUND(MAX(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID) AS MAXIMO,
+(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 3 AND USUARIO_ID =U.ID AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS FOLGA,
+(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 4 AND USUARIO_ID =U.ID AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS ATESTADO,
+(SELECT COUNT(1) FROM DESEMPENHO WHERE PRESENCA_ID = 2 AND USUARIO_ID =U.ID AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS FALTA,
+(SELECT COUNT(1) FROM PENALIDADE WHERE USUARIO_ID =U.ID AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS PENALIDADE,
+(SELECT ROUND(MIN(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND DESEMPENHO>0 AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS MINIMO,
+(SELECT ROUND(AVG(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND PRESENCA_ID NOT IN(3,5) AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS MEDIA,
+(SELECT ROUND(MAX(DESEMPENHO),2) FROM DESEMPENHO WHERE USUARIO_ID=AI.USUARIO_ID AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth') AS MAXIMO,
 (SELECT COUNT(1) FROM FEEDBACK WHERE REMETENTE_ID=AI.USUARIO_ID ) AS F_ENV,
 (SELECT COUNT(1) FROM FEEDBACK WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_REC,
 (SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS S_ENV,
@@ -58,10 +58,11 @@ FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
 INNER JOIN CARGO C ON C.ID = U.CARGO_ID  
-WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='".$yearMonth."';";
+WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='$yearMonth';";
 
 $cnx = mysqli_query($phpmyadmin, $query);
 $x = 1;
+
 while ($data = $cnx->fetch_array()) {
 	$avgFeed = ($data["F_COM"] + $data["F_PRO"] + $data["F_DES"])/3;
 	
@@ -88,7 +89,7 @@ while ($data = $cnx->fetch_array()) {
 
 	$cnx2 = mysqli_query($phpmyadmin,"SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID = D.ATIVIDADE_ID WHERE ANO_MES >= DATE_SUB('".$data["REGISTRO"]."', INTERVAL 6 MONTH) AND ANO_MES <= '".$data["REGISTRO"]."' AND USUARIO_ID = ".$data["USUARIO_ID"]." GROUP BY ATIVIDADE_ID" );
 	$i = 0;
-
+	
 	$occurrence = "t:100";
 	$activity = "Sem registro";
 	
@@ -103,7 +104,7 @@ while ($data = $cnx->fetch_array()) {
 		$i++;
 	}
 
-	$b1 = mysqli_query($phpmyadmin,"SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, ANO_MES, DATE_FORMAT(REGISTRO,'%b') AS MES FROM DESEMPENHO WHERE USUARIO_ID = ".$data["USUARIO_ID"]." AND ANO_MES<='".$yearMonth."' GROUP BY 2 ORDER BY 2 DESC LIMIT 6;" );
+	$b1 = mysqli_query($phpmyadmin,"SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, ANO_MES, DATE_FORMAT(REGISTRO,'%b') AS MES FROM DESEMPENHO WHERE USUARIO_ID = ".$data["USUARIO_ID"]." AND ANO_MES>=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES<='$yearMonth' GROUP BY 2 ORDER BY 2 LIMIT 6;" );
 	$i = 0;
 
 	$b1_avg = "t:0,0,0,0,0,0";
@@ -120,7 +121,26 @@ while ($data = $cnx->fetch_array()) {
 		$i++;
 	}
 
-	$a2 = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$data["USUARIO_ID"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC LIMIT 264;");
+	$c1 = mysqli_query($phpmyadmin, "SELECT A.ACESSOS, A.MES, A.ANO_MES FROM (SELECT SUM(ACESSO) AS ACESSOS, DATE_FORMAT(ULTIMO_LOGIN , '%b') AS MES, DATE_FORMAT(ULTIMO_LOGIN , '%Y-%m') AS ANO_MES FROM ACESSO 
+WHERE USUARIO_ID = ".$data["USUARIO_ID"]." AND DATE_FORMAT(ULTIMO_LOGIN , '%Y-%m')<='".$yearMonth."'
+GROUP BY ANO_MES ORDER BY ANO_MES DESC LIMIT 6) AS A ORDER BY 3;");
+	
+  	$i = 0;
+	while ($c1_dash = $c1->fetch_array()) {
+		if ($i == 0 ) { 
+			$c1_access ="t:".$c1_dash["ACESSOS"];
+			$c1_month ="".$c1_dash["MES"];
+		} else {
+			$c1_access .=",".$c1_dash["ACESSOS"];
+			$c1_month .="|".$c1_dash["MES"];
+		}
+		$i++;
+	}
+
+	$a2 = mysqli_query($phpmyadmin, "SELECT A.MEDIA, A.REGISTRO FROM (SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO WHERE USUARIO_ID=".$data["USUARIO_ID"]." AND PRESENCA_ID NOT IN(3,5) GROUP BY REGISTRO ORDER BY REGISTRO DESC LIMIT 264) AS A
+ORDER BY A.REGISTRO;");
+	$a2_activitys = mysqli_num_rows($a2);
+	
   	$i = 0;
 	while ($a2_dash = $a2->fetch_array()) {
 		if ($i == 0 ) { 
@@ -130,6 +150,8 @@ while ($data = $cnx->fetch_array()) {
 		}
 		$i++;
 	}
+
+	
 ?>
 <!DOCTYPE html>
 <html>
@@ -144,14 +166,15 @@ while ($data = $cnx->fetch_array()) {
 <page size="A4">
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="black">
-			<h2><td class="white-td tx" colspan="2"><b><center>( evino )</center></b></td></h2>
+			<h2><td class="white-td tx" colspan="3"><b><center>( evino )</center></b></td></h2>
 		</tr>
 		<tr class="black">
-			<td class="white-td" colspan="2"><b><center>Avaliação de Desempenho</center></b></td>
+			<td class="white-td" colspan="3"><b><center>Avaliação de Desempenho Semestral</center></b></td>
 		</tr>
 		<tr>
 			<td ><b>Colaborador: </b><?php echo $data["NOME"]; ?></td>
 			<td ><b>Líder: </b><?php echo $data["LIDER"]; ?></td>
+			<td ><b>Data: </b><?php echo $data["REGISTRO"]; ?></td>
 		</tr>
 	</table>
 		<br>
@@ -181,15 +204,13 @@ while ($data = $cnx->fetch_array()) {
 			<td><?php echo $data["PENALIDADE"]; ?></td>
 		</tr>
 	</table>
-	<br>
 	<?php 
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."' width='30%' height='30%'>";
-	?>
-	<?php 
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a' width='30%' height='30%'>";
-	?>
-	<img src="http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=t:50,80,95,60,41,41&chl=Jan|Feb|Mar|Apr|May|Jun&chds=a" width="30%" height="30%">
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."&chtt=Distribuição+das+atividades' width='33%' height='30%'>";
+	
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='33%' height='30%'>";
 
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+no+sistema' width='33%' height='30%'>"; 
+	?>
 
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="grey"><td colspan="4"><b><center>Desempenho</center></b></td></tr>	
@@ -243,7 +264,7 @@ while ($data = $cnx->fetch_array()) {
 		
 	</table>	
 		<br>
-	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses" width="100%" height="30%">	
+	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">	
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="grey" >
 			<td><b>Avaliação</b></td>
@@ -265,7 +286,8 @@ while ($data = $cnx->fetch_array()) {
 		</tr>	
 	</table>
 	<div>
-	<table class="table is-bordered pricing__table is-fullwidth borda">	
+	<table class="table is-bordered pricing__table is-fullwidth borda">
+
 <?php
 	
 	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, (SELECT AR2.RESPOSTA FROM AVAL_INDICE AII 
