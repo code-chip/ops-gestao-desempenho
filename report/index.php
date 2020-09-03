@@ -12,7 +12,7 @@ $yearMonth = $_GET['yearMonth'];
 $mpdf->setFooter('{PAGENO}');
 
 //$html = file_get_contents ('http://www.localizecargas.com.br/');
-$html = file_get_contents ('http://evino-gd.tk/report/layout-evaluation.php?yearMonth='.$yearMonth);
+$html = file_get_contents ('http://evino-gd.tk/report/evaluation-subordinate.php?yearMonth='.$yearMonth);
 $mpdf->WriteHTML($bulma,\Mpdf\HTMLParserMode::HEADER_CSS);
 $mpdf->WriteHTML($evaluation,\Mpdf\HTMLParserMode::HEADER_CSS);
 $mpdf->WriteHTML($html,\Mpdf\HTMLParserMode::HTML_BODY);
