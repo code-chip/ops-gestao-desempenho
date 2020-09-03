@@ -61,6 +61,7 @@ INNER JOIN CARGO C ON C.ID = U.CARGO_ID
 WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='$yearMonth';";
 
 $cnx = mysqli_query($phpmyadmin, $query);
+$reports = mysqli_num_rows($cnx);
 $x = 1;
 
 while ($data = $cnx->fetch_array()) {
@@ -74,8 +75,7 @@ while ($data = $cnx->fetch_array()) {
 		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"])/2;
 	}
 
-	//Percorrer vetor p/ encontrar a posição entre os demais.
-	$position = $positions;
+	$position = $positions;//Percorrer vetor p/ encontrar a posição entre os demais.
 	$o = 0;
 	
 	while ($o < $positions) {
@@ -85,7 +85,6 @@ while ($data = $cnx->fetch_array()) {
 		}
 		$o++;
 	}
-
 
 	$cnx2 = mysqli_query($phpmyadmin,"SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID = D.ATIVIDADE_ID WHERE ANO_MES >= DATE_SUB('".$data["REGISTRO"]."', INTERVAL 6 MONTH) AND ANO_MES <= '".$data["REGISTRO"]."' AND USUARIO_ID = ".$data["USUARIO_ID"]." GROUP BY ATIVIDADE_ID" );
 	$i = 0;
@@ -150,7 +149,6 @@ ORDER BY A.REGISTRO;");
 		}
 		$i++;
 	}
-
 	
 ?>
 <!DOCTYPE html>
@@ -172,7 +170,7 @@ ORDER BY A.REGISTRO;");
 			<td class="white-td" colspan="3"><b><center>Avaliação de Desempenho Semestral</center></b></td>
 		</tr>
 		<tr>
-			<td ><b>Colaborador: </b><?php echo $data["NOME"]; ?></td>
+			<td ><b>Nome: </b><?php echo $data["NOME"]; ?></td>
 			<td ><b>Líder: </b><?php echo $data["LIDER"]; ?></td>
 			<td ><b>Data: </b><?php echo $data["REGISTRO"]; ?></td>
 		</tr>
@@ -190,6 +188,13 @@ ORDER BY A.REGISTRO;");
 		</tr>
 		
 	</table>
+			<?php 
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."&chtt=Distribuição+das+atividades' width='33%' height='30%'>";
+	
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='33%' height='30%'>";
+
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+no+sistema' width='33%' height='30%'>"; 
+	?>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr>
 			<td><b>Folga's</b></td>
@@ -204,14 +209,6 @@ ORDER BY A.REGISTRO;");
 			<td><?php echo $data["PENALIDADE"]; ?></td>
 		</tr>
 	</table>
-	<?php 
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."&chtt=Distribuição+das+atividades' width='33%' height='30%'>";
-	
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='33%' height='30%'>";
-
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+no+sistema' width='33%' height='30%'>"; 
-	?>
-
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="grey"><td colspan="4"><b><center>Desempenho</center></b></td></tr>	
 		<tr>
@@ -228,6 +225,7 @@ ORDER BY A.REGISTRO;");
 		</tr>
 		
 	</table>
+	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="grey">
 			<td colspan="2"><b><center>Feedback</center></b></td>
@@ -261,10 +259,8 @@ ORDER BY A.REGISTRO;");
 			<td><?php echo $data["F_DES"]; ?></td>
 			<td><?php echo $avgFeed; ?></td>
 		</tr>
-		
 	</table>	
-		<br>
-	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">	
+	<br>	
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="grey" >
 			<td><b>Avaliação</b></td>
@@ -285,31 +281,64 @@ ORDER BY A.REGISTRO;");
 			<td><?php echo round($autoGeneral,2); ?></td>
 		</tr>	
 	</table>
-	<div>
-	<table class="table is-bordered pricing__table is-fullwidth borda">
-
-<?php
-	
-	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, (SELECT AR2.RESPOSTA FROM AVAL_INDICE AII 
+	<?php 
+	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, AR2.NOTA, (SELECT AR2.RESPOSTA FROM AVAL_INDICE AII 
 INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA APP ON APP.ID = AR.AVAL_PERGUNTA_ID 
-WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS RESPOSTA_LIDER
+WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS RESPOSTA_LIDER,
+(SELECT AR2.NOTA FROM AVAL_INDICE AII 
+INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
+INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
+INNER JOIN AVAL_PERGUNTA APP ON APP.ID = AR.AVAL_PERGUNTA_ID 
+WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS NOTA_LIDER
 FROM AVAL_REALIZADA AR
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
 WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $data["USUARIO_ID"].  " AND ANO_MES='".$yearMonth."' AND  AP.AVAL_TIPO_PERGUNTA_ID IN(1,2) ORDER BY AI.USUARIO_ID;");
 	
-	$y = 1;
+	$p = 0;
+	$count = 1;
 	while ($question = $cnx4->fetch_array()) {
-		echo "<tr class='blue'><td class='white-td' colspan='2'><b>" . $y.") ".$question["PERGUNTA"] . "</b></td></tr><br>";
-		echo "<tr><td><b>" . $data["LIDER"] . "</b></td><td>" . $question["RESPOSTA_LIDER"] . "</td></tr><br>";
-		echo "<tr><td><b>" . $data["NOME"] . "</b></td><td>" . $question["RESPOSTA"] . "</td></tr><br>";
-		$y++;
+		$a3_question[$p] = $question["PERGUNTA"];
+		$a3_answer[$p] = $question["RESPOSTA"];
+		$a3_answer_leader[$p] = $question["RESPOSTA_LIDER"];
+		
+		if ($p == 0 ) { 
+			$a3_note_leader = "t:".$question["NOTA_LIDER"];
+			$a3_note = "|".$question["NOTA"];
+			$a3_num = "1"; 
+		} else {
+			$a3_note_leader .= ",".$question["NOTA_LIDER"];
+			$a3_note .= ",".$question["NOTA"];
+			$a3_num .= "|".$count; 
+		}
+		$p++;
+		$count++;
 	}
 
-?>	</table>
+	if ($a3_answer_leader[0] == "" || $a3_answer_leader[0] == null) {
+		$a3_note_leader = "t:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+	}
+
+	echo "<img src='http://chart.apis.google.com/chart?chs=700x127&cht=ls&chxt=x,x,y,y&chd=".$a3_note_leader.$a3_note."&chco=0000FF,00FF00&chl=$a3_num&chxl=1:|Primeira+Pergunta|Última+Pergunta|3:|Desenvolver|Excelente&chdl=Líder|Auto&chds=a&chtt=Visão+geral+da+avaliação' width='100%' height='25%'>
+	<div>
+	<table class='table is-bordered pricing__table is-fullwidth borda'>";
+	
+		$y = 0;
+		$count = 1;
+		while ($y < sizeof($a3_question)) {
+			echo "<tr class='blue'><td class='white-td' colspan='2'><b>" .$count.") ".$a3_question[$y]."</b></td></tr><br>";
+			echo "<tr><td><b>" . $data["LIDER"] . "</b></td><td>" . $a3_answer_leader[$y] . "</td></tr><br>";
+			echo "<tr><td><b>" . $data["NOME"] . "</b></td><td>" . $a3_answer[$y] . "</td></tr><br>";
+			$y++;
+			$count++;
+		}
+	
+	echo "</table>";	
+
+?>	
 <br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="red">
@@ -330,8 +359,10 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 </body>	
 </html>
 <?php
+	
+	if ($x < $reports) {
+		echo "<div></div>";
+	}
 
-	echo "<div></div>";
 	$x++;
-
 }
