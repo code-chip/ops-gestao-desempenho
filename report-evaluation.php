@@ -40,10 +40,10 @@ require('menu.php');
 			<label class="label is-size-7-touch">Avaliação*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-					<select name="atividade" onchange="change(this.value)">
-						<option selected="selected" value="">Colaboradores</option>
-						<option value="lider">Líderes</option>
-						<option value="individual">Individual</option>								
+					<select name="report" onchange="change(this.value)">
+						<option selected="selected" value="subordinate">Colaboradores</option>
+						<option value="leader">Líderes</option>
+						<option value="private">Individual</option>								
 					</select>
 					<span class="icon is-small is-left">
 						<i class="fas fa-diagnoses"></i>
@@ -126,6 +126,13 @@ require('menu.php');
 <?php
 
 if (isset($_POST['query'])) {
-	echo "<script>window.open('report/index.php?yearMonth=".$_POST['yearMonth']."', '_blank');</script>";
+	$_SESSION['file'] = $_POST['report'];
+	$_SESSION['filter'] = $_POST['yearMonth'];
+
+	if ($_SESSION['permissao'] == 1) {
+		$_SESSION['filter'] .= "_".$_SESSION["userId"];
+	}
+
+	echo "<script>window.open('report/index.php', '_blank');</script>";
 	die();
 }
