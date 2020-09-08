@@ -215,7 +215,7 @@ ORDER BY A.REGISTRO;");
 		</tr>
 		
 	</table>
-	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">
+	<img src="http://chart.apis.google.com/chart?chs=700x250&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">
 	<br>	
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="grey" >
@@ -278,7 +278,7 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 		$a3_note_leader = "t:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
 	}
 
-	echo "<img src='http://chart.apis.google.com/chart?chs=700x127&cht=ls&chxt=x,x,y,y&chd=".$a3_note_leader.$a3_note."&chco=0000FF,00FF00&chl=$a3_num&chxl=1:|Primeira+Pergunta|Última+Pergunta|3:|Desenvolver|Excelente&chdl=Líder|Auto&chds=a&chtt=Visão+geral+da+avaliação' width='100%' height='25%'>
+	echo "<img src='http://chart.apis.google.com/chart?chs=700x217&cht=ls&chxt=x,x,y,y&chd=".$a3_note_leader.$a3_note."&chco=0000FF,00FF00&chl=$a3_num&chxl=1:|Primeira+Pergunta|Última+Pergunta|3:|Desenvolver|Excelente&chdl=Líder|Auto&chds=a&chtt=Visão+geral+da+avaliação' width='100%' height='25%'>
 	<div>
 	<table class='table is-bordered pricing__table is-fullwidth borda'>";
 	
