@@ -1,7 +1,7 @@
 <?php 
 
 require('../connection.php');
-$yearMonth = $_GET['yearMonth'];
+$yearMonth = $_GET['filter'];
 
 $r = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(D.DESEMPENHO),2) AS MEDIA, D.USUARIO_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.SITUACAO<>'Desligado' AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth' GROUP BY 2 ORDER BY 1 DESC;");
 
