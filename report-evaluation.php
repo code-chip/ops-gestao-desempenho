@@ -140,6 +140,6 @@ if (isset($_POST['query'])) {
 		$_SESSION['filter'] .= "_".$_POST['user'];
 	}
 
-	echo "<script>window.open('report/index.php', '_blank');</script>";
+	echo "<script>window.open('report/evaluation.php', '_blank');</script>";
 	die();
 }

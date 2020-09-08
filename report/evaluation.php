@@ -11,7 +11,7 @@ $evaluation = file_get_contents('../css/evaluation.css');
 $mpdf->setFooter('{PAGENO}');
 $mpdf->setTitle('Relatório Avaliação de Desempenho');
 $mpdf->SetAuthor($_SESSION['nameUser']);
-$html = file_get_contents("http://localhost/ops-gestao-desempenho/report/evaluation-".$_SESSION['file'].".php?filter=".$_SESSION['filter']);
+$html = file_get_contents("http://evino-gd.tk/report/evaluation-".$_SESSION['file'].".php?filter=".$_SESSION['filter']);
 $mpdf->WriteHTML($bulma,\Mpdf\HTMLParserMode::HEADER_CSS);
 $mpdf->WriteHTML($evaluation,\Mpdf\HTMLParserMode::HEADER_CSS);
 $mpdf->WriteHTML($html,\Mpdf\HTMLParserMode::HTML_BODY);
