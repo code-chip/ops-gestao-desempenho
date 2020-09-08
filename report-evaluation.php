@@ -40,10 +40,15 @@ require('menu.php');
 			<label class="label is-size-7-touch">Avaliação*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-					<select name="report" onchange="change(this.value)">
-						<option selected="selected" value="subordinate">Colaboradores</option>
-						<option value="leader">Líderes</option>
-						<option value="private">Individual</option>								
+					<select name="report" onchange="change(this.value)"><?php 
+						if ($_SESSION["permissao"] > 1) {
+							echo "
+							<option selected='selected' value='subordinate'>Colaboradores</option>
+							<option value='leader'>Líderes</option>";
+						}
+						echo "				
+						<option value='private'>Individual</option>";
+					?>									
 					</select>
 					<span class="icon is-small is-left">
 						<i class="fas fa-diagnoses"></i>
@@ -51,7 +56,7 @@ require('menu.php');
 				</div>						
 			</div>
 		</div>
-		<div class="field loadId" id="individual" style="display: none;">
+		<div class="field loadId" id="private" style="display: none;">
 			<div class="field">
 				<label class="label is-size-7-touch">Setor*</label>
 				<div class="control has-icons-left">
@@ -131,6 +136,8 @@ if (isset($_POST['query'])) {
 
 	if ($_SESSION['permissao'] == 1) {
 		$_SESSION['filter'] .= "_".$_SESSION["userId"];
+	} else if ($_POST['report'] == 'private') {
+		$_SESSION['filter'] .= "_".$_POST['user'];
 	}
 
 	echo "<script>window.open('report/index.php', '_blank');</script>";
