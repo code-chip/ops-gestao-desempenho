@@ -216,25 +216,6 @@ ORDER BY A.REGISTRO;");
 		
 	</table>
 	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+nos+últimos+12+meses+-+<?php echo $a2_activitys?>+atividades+registradas" width="100%" height="30%">
-	<table class="table is-bordered pricing__table is-fullwidth borda">
-		<tr class="grey">
-			<td colspan="2"><b><center>Feedback</center></b></td>
-			<td colspan="2"><b><center>Solicitado</center></b></td>
-		</tr>	
-		<tr>
-			<td><b>Enviados</b></td>
-			<td><b>Recebidos</b></td>
-			<td><b>Enviados</b></td>
-			<td><b>Recebidos</b></td>
-		</tr>
-		<tr>
-			<td><?php echo $data["F_ENV"]; ?></td>
-			<td><?php echo $data["F_REC"]; ?></td>
-			<td><?php echo $data["S_ENV"]; ?></td>
-			<td><?php echo $data["S_REC"]; ?></td>
-		</tr>
-		
-	</table>	
 	<br>	
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="grey" >
