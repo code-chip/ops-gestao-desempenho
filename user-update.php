@@ -52,7 +52,7 @@ $redirect = "<script> alert('Funcionário atualizado com sucesso!!!'); window.lo
 		<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<button name="search" type="submit" class="button is-primary btn128">Pesquisaar</button>
+					<button name="search" type="submit" class="button is-primary btn128">Pesquisar</button>
 				</div>
 				<div class="control">
 					<button name="search" type="reset" class="button is-primary btn128">Limpar</button>
