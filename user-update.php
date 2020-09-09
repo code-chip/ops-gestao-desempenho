@@ -22,50 +22,43 @@ $redirect = "<script> alert('Funcionário atualizado com sucesso!!!'); window.lo
 <section class="section">
   	<div class="container">  		
 	<form id="form1" action="user-update.php" method="POST">
-		<div class="field is-horizontal">				
-			<div class="field-label is-normal">
-				<label class="label">Filtro:</label>
-			</div>
-			<div class="field-body">
-				<div class="field" style="max-width:17em;">							
-					<div class="control">
-						<div class="select">
-							<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo" style="width:16.7em;">
-								<option value="MATRICULA=">Matricula</option>
-								<option value="LOGIN=">Login</option>
-								<option value="NOME LIKE">Nome</option>
-								<option value="EMAIL=">E-mail</option>
-							</select>
-						</div>
-					</div>
+		<div class="field">				
+			<label class="label is-size-7-touch">Filtro*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth">
+					<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
+						<option value="MATRICULA=">Matricula</option>
+						<option value="LOGIN=">Login</option>
+						<option value="NOME LIKE">Nome</option>
+						<option value="EMAIL=">E-mail</option>
+					</select>
+					<span class="icon is-small is-left">
+						<i class="fas fa-filter"></i>
+					</span>
 				</div>
 			</div>
 		</div>			
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				<label class="label">Buscar:</label>
-			</div>
-			<div class="field-body">
-				<div class="field">							
-					<div class="control">
-						<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-						<input name="busca" type="text" class="input" id="filtro" placeholder="629">
-						</div>
-					</div>
+		<div class="field">
+			<label class="label is-size-7-touch">Buscar*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth"><!--SELEÇÃO OU PESQUISA DE NOME-->
+					<input name="busca" type="text" class="input" id="filtro" placeholder="629">
+					<span class="icon is-small is-left">
+						<i class="fas fa-search"></i>
+					</span>
 				</div>
 			</div>
 		</div>
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field is-grouped">
-						<div class="control">
-							<button name="search" type="submit" class="button is-primary btn128">Consultar</button>
-						</div>
-						<div class="control">
-							<a href="register.php" class="button is-primary btn128">Cancelar</a>	
-						</div>
-					</div>
+		<div class="field-body">
+			<div class="field is-grouped">
+				<div class="control">
+					<button name="search" type="submit" class="button is-primary btn128">Pesquisaar</button>
+				</div>
+				<div class="control">
+					<button name="search" type="reset" class="button is-primary btn128">Limpar</button>
+				</div>
+				<div class="control">
+					<a href="register.php" class="button is-primary btn128">Cancelar</a>	
 				</div>
 			</div>
 		</div>						
@@ -110,7 +103,7 @@ else if (isset($_POST['search']) != null) {
 if(isset($_POST['search']) && $row != 0 || $_SESSION['permissao'] == 1 && $row!=0) : ?>
 	<section class="section">
 		<div class="container">
-			<h3 class="title"><i class="fas fa-calendar-plus"></i> Atualizar Usuário</h3>
+			<h3 class="title"><i class="fas fa-pen-square"></i> Atualizar Usuário</h3>
 		<hr>
 	<main>
 	<form id="form" action="user-update.php" method="POST" onsubmit="return check()">

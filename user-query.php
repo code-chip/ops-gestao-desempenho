@@ -9,11 +9,13 @@ $redirect = "<script> alert('Funcionário removido com sucesso!!!'); window.loca
 ?>
 <!DOCTYPE html>
 <html>
-<head>	
-	<title>Gestão de Desempenho - Consultar Usuário</title>
-	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script><!--biblioteca de icones -->
+<head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
 	<script type="text/javascript" src="js/myjs.js"></script>
-	<link rel="stylesheet" href="css/personal.css" />
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>	
+	<title>Gestão de Desempenho - Consultar Usuário</title>
 </head>
 <body>
 </br>
@@ -22,50 +24,43 @@ $redirect = "<script> alert('Funcionário removido com sucesso!!!'); window.loca
 <section class="section">
   	<div class="container">  		
 	<form id="form1" action="user-query.php" method="POST">
-		<div class="field is-horizontal">				
-			<div class="field-label is-normal">
-				<label class="label">Filtro:</label>
-			</div>
-			<div class="field-body">
-				<div class="field" style="max-width:17em;">							
-					<div class="control">
-						<div class="select">
-							<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo" style="width:16.7em;">
-								<option value="MATRICULA=">Matricula</option>
-								<option value="LOGIN=">Login</option>
-								<option value="NOME LIKE">Nome</option>
-								<option value="EMAIL=">E-mail</option>
-							</select>
-						</div>
-					</div>
+		<div class="field">				
+			<label class="label is-size-7-touch">Filtro*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth">
+					<select onchange="upPlaceholder(this.value)" name="filtro" id="tipoCampo">
+						<option value="MATRICULA=">Matricula</option>
+						<option value="LOGIN=">Login</option>
+						<option value="NOME LIKE">Nome</option>
+						<option value="EMAIL=">E-mail</option>
+					</select>
+					<span class="icon is-small is-left">
+						<i class="fas fa-filter"></i>
+					</span>
 				</div>
 			</div>
 		</div>			
-		<div class="field is-horizontal">
-			<div class="field-label is-normal">
-				<label class="label">Buscar:</label>
-			</div>
-			<div class="field-body">
-				<div class="field">							
-					<div class="control">
-						<div class="select"><!--SELEÇÃO OU PESQUISA DE NOME-->
-						<input name="busca" type="text" class="input" id="filtro" placeholder="629">
-						</div>
-					</div>
+		<div class="field">
+			<label class="label is-size-7-touch">Buscar*</label>
+			<div class="control has-icons-left">
+				<div class="select is-fullwidth"><!--SELEÇÃO OU PESQUISA DE NOME-->
+					<input name="busca" type="text" class="input" id="filtro" placeholder="629">
+					<span class="icon is-small is-left">
+						<i class="fas fa-search"></i>
+					</span>
 				</div>
 			</div>
 		</div>
-		<div class="field is-horizontal">
-			<div class="field-label"></div>
-				<div class="field-body">
-					<div class="field is-grouped">
-						<div class="control">
-							<button name="search" type="submit" class="button is-primary btn128">Consultar</button>
-						</div>
-						<div class="control">
-							<a href="register.php" class="button is-primary btn128">Cancelar</a>	
-						</div>
-					</div>
+		<div class="field-body">
+			<div class="field is-grouped">
+				<div class="control">
+					<button name="search" type="submit" class="button is-primary btn128">Pesquisar</button>
+				</div>
+				<div class="control">
+					<button name="search" type="reset" class="button is-primary btn128">Limpar</button>
+				</div>
+				<div class="control">
+					<a href="register.php" class="button is-primary btn128">Cancelar</a>	
 				</div>
 			</div>
 		</div>						
