@@ -25,7 +25,7 @@ array_push($_SESSION['filter'], trim($_GET['descricao']), trim($_GET['link']));
 		}
 		.hero.has-background {
 			position: relative;
-			overflow: hidden;
+			/*overflow: hidden;*/
 		}
 		.hero-background {
 			position: absolute;
@@ -40,6 +40,21 @@ array_push($_SESSION['filter'], trim($_GET['descricao']), trim($_GET['link']));
 		}
 		.spc{
 			margin-right: 10px;
+		}
+		@media (max-width: 880px){
+			.mw12{
+				min-width:24em;
+			}
+		}
+		@media (max-width: 860px){
+			.mw12{
+				min-width:20em;
+			}
+		}
+		@media (max-width: 720px){
+			.mw12{
+				min-width:19em;
+			}
 		}
 		@media (max-width: 660px){
 			.mw12{
@@ -61,7 +76,6 @@ array_push($_SESSION['filter'], trim($_GET['descricao']), trim($_GET['link']));
 				min-width: 100%;
 			}
 		}
-		
 	</style>
 </head>
 <body>
