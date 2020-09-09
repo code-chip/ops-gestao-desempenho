@@ -79,10 +79,9 @@ array_push($_SESSION['filter'], trim($_GET['descricao']), trim($_GET['link']));
 	</style>
 </head>
 <body>
-<div class="hero is-fullheight is-primary has-background field has-addons">
-<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/data-science8-min-black.jpg" />
-<div class="hero-background">
-	<section class="section">
+<div class="hero is-fullheight is-primary has-background">
+	<img alt="Fill Murray" class="hero-background is-transparent animated bounceInDown" src="img/wallpaper/data-science8-min-black.jpg" />
+	<div class="section has-addons is-centered" style="margin-left: 10px;">
 	<div class="field has-addons has-addons-centered">
 		<div class="buttons">
 			<?php if ($_SESSION["permissao"] != 1) { ?>
