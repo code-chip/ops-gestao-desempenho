@@ -17,11 +17,13 @@ else{
 ?>
 <!DOCTYPE html>
 <html>
-<head>	
+<head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>	
 	<title>Gestão de Desempenho - Consultar Endereço</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script type="text/javascript" src="js/myjs.js"></script>
     <style type="text/css">
     	.layout{
     		display: block;
@@ -317,14 +319,14 @@ else{
 	<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<input name="remover" type="submit" class="button is-primary" value="Remover"/>
+					<input name="remover" type="submit" class="button is-primary btn128" value="Remover"/>
 				</div>
 				<div class="control">
-					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary">Voltar</a>										
+					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary btn128">Voltar</a>										
 				</div>
 				<?php if($_SESSION["permissao"]>1):{?>
 				<div class="control">
-					<a href="register.php" class="button is-primary">Cancelar</a>										
+					<a href="register.php" class="button is-primary btn128">Cancelar</a>										
 				</div><?php }endif;?>									
 			</div>
 		</div>								

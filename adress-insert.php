@@ -4,11 +4,13 @@ require('menu.php');
 ?>
 <!DOCTYPE html>
 <html>
-<head>	
+<head>
+	<meta charset="UTF-8">	
+	<meta name="viewport" content="width=device-widht, initial-scale=1">
+	<script type="text/javascript" src="js/myjs.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<style type="text/css" src="css/personal.css"></style>		
 	<title>Gestão de Desempenho - Inserir Endereço</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script type="text/javascript" src="js/myjs.js"></script>
     <style type="text/css">
     	.layout{
     		display: block;
@@ -336,17 +338,17 @@ require('menu.php');
 	<div class="field-body">
 			<div class="field is-grouped">
 				<div class="control">
-					<input name="cadastrar" type="submit" class="button is-primary" value="Inserir"/>
+					<input name="cadastrar" type="submit" class="button is-primary btn128" value="Inserir"/>
 				</div>
 				<div class="control">
-					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary" value="Limpar"></a>
+					<a href="adress-insert.php"><input name="limpar" type="submit" class="button is-primary btn128" value="Limpar"></a>
 				</div>
 				<div class="control">
-					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary">Voltar</a>										
+					<a href="<?php if($_SESSION["permissao"]==1){ echo 'register.php';} else{ echo 'user-query-filter.php';} ?>" class="button is-primary btn128">Voltar</a>										
 				</div>
 				<?php if($_SESSION["permissao"]>1):{?>
 				<div class="control">
-					<a href="register.php" class="button is-primary">Cancelar</a>										
+					<a href="register.php" class="button is-primary btn128">Cancelar</a>										
 				</div><?php }endif;?>									
 			</div>
 		</div>								
