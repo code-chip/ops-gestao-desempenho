@@ -13,86 +13,67 @@ if ($_SESSION['permissao'] == 1) {
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Inserir Opção</title>
-	<link rel="stylesheet" href="css/login.css" />
-	<link rel="stylesheet" href="css/bulma.min.css"/>
-	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script type="text/javascript" src="js/myjs.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/personal.css">
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<title>Gestão de Desempenho - Inserir Opção</title>
 </head>
 <body>
 	<section class="section">
 	  	<div class="container">
 	   		<form action="option-insert.php" method="POST" onsubmit="return check()">
-	    		<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
-					</div>
-					<div class="field-body">
-						<div class="field">							
-							<div class="control w24-2">
-								<input type="text" class="input required" name="nome" autofocus>
-							</div>
-						</div>
+	    		<div class="field">
+					<label class="label is-size-7-touch">Nome*</label>
+					<div class="control has-icons-left">
+						<input type="text" class="input required" name="nome" autofocus>
+						<span class="icon is-small is-left">
+						  	<i class="fas fa-search"></i>
+						</span>
 					</div>
 				</div>	
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select">
-									<select name="opcao" class="w24-2 required">
-										<option selected="selected" value="">Selecione</option>
-										<option value="ATIVIDADE">Atividade</option>
-										<option value="CARGO">Cargo</option>
-										<option value="PERMISSAO">Permissao</option>
-										<option value="PRESENCA">Presença</option>
-										<option value="SETOR">Setor</option>
-										<option value="TURNO">Turno</option>
-									</select>	
-								</div>
-							</div>						
+				<div class="field">
+					<label class="label is-size-7-touch">Opção*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="opcao" class="required">
+								<option selected="selected" value="">Selecione</option>
+								<option value="ATIVIDADE">Atividade</option>
+								<option value="CARGO">Cargo</option>
+								<option value="PERMISSAO">Permissao</option>
+								<option value="PRESENCA">Presença</option>
+								<option value="SETOR">Setor</option>
+								<option value="TURNO">Turno</option>
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-align-center"></i>
+							</span>	
 						</div>
 					</div>
 				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Status:</label>
-					</div>
-					<div class="field-body">
-						<div class="field">							
-							<div class="control">
-								<div class="select">
-									<select name="situacao" class="w24-2">
-										<option selected="selected" value="Ativo">Ativo</option>
-										<option value="Inativo">Inativo</option>																			
-									</select>	
-								</div>
-							</div>						
+				<div class="field">
+					<label class="label is-size-7-touch">Status*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="situacao">
+								<option selected="selected" value="Ativo">Ativo</option>
+								<option value="Inativo">Inativo</option>																			
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-sort"></i>
+							</span>	
 						</div>
 					</div>
 				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label"></div>
-						<div class="field-body">
-							<div class="field is-grouped">
-								<div class="control">
-									<button name="insertOption" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
-								</div>
-								<div class="control">
-									<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
-								</div>
-								<div class="control">
-									<a href="register.php" class="button is-primary btn128">Cancelar</a>
-								</div>
+				<div class="field">
+					<div class="field-body">
+						<div class="field is-grouped">
+							<div class="control">
+								<button name="insertOption" type="submit" class="button is-primary btn128" value="Filtrar">Inserir</button>
+							</div>
+							<div class="control">
+								<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
+							</div>
+							<div class="control">
+								<a href="register.php" class="button is-primary btn128">Cancelar</a>
 							</div>
 						</div>
 					</div>
