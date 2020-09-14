@@ -42,16 +42,15 @@ if ($_SESSION["permissao"] == 1) {
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background field has-addons">
-		 <img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/data-science19-min.jpg" />
-		 <div class="hero-background capas capas2">
+	<img alt="Fill Murray" class="hero-background is-transparent" src="img/wallpaper/data-science19-min.jpg" />
+	<div class="hero-background">
 	<section class="section">
 	<div class="field has-addons has-addons-centered">
 		<div class="buttons">								
 			<button class="button is-white is-primary is-outlined mw12" value="goal-company-insert.php" onclick="loadPage(this.value)">Inserir Meta</button>
 			<button class="button is-white is-primary is-outlined mw12" value="goal-company-query.php" onclick="loadPage(this.value)">Consultar Meta</button>
 			<button class="button is-white is-primary is-outlined mw12" value="goal-company-update.php" onclick="loadPage(this.value)">Atualizar Meta</button>
-			<?php if($_SESSION["permissao"]!=1):?>
-			<button class="button is-white is-primary is-outlined mw12" value="goal-company-remove.php" onclick="loadPage(this.value)">Remover Meta</button><?php endif;?>			
+			<button class="button is-white is-primary is-outlined mw12" value="goal-company-remove.php" onclick="loadPage(this.value)">Remover Meta</button>	
 		</div>
 	</div>
 	<br/>
@@ -60,20 +59,21 @@ if ($_SESSION["permissao"] == 1) {
 			<button class="button is-white is-primary is-outlined mw12" value="goal-weight-insert.php" onclick="loadPage(this.value)">Inserir Peso</button>
 			<button class="button is-white is-primary is-outlined mw12" value="goal-weight-query.php" onclick="loadPage(this.value)">Consultar Peso</button>
 			<button class="button is-white is-primary is-outlined mw12" value="goal-weight-update.php" onclick="loadPage(this.value)">Atualizar Peso</button>
-			<?php if($_SESSION["permissao"]!=1):?>
-			<button class="button is-white is-primary is-outlined mw12" value="goal-weight-remove.php" onclick="loadPage(this.value)">Remover Peso</button><?php endif;?>			
+			<button class="button is-white is-primary is-outlined mw12" value="goal-weight-remove.php" onclick="loadPage(this.value)">Remover Peso</button>
 		</div>
-	</div><br/>
+	</div>
+	<br/>
 	<div class="field has-addons has-addons-centered">
 		<div class="buttons">								
 			<button class="button is-white is-primary is-outlined mw12" value="penalty-type-insert.php" onclick="loadPage(this.value)">Inserir Penalidade</button>
 			<button class="button is-white is-primary is-outlined mw12" value="penalty-type-query.php" onclick="loadPage(this.value)">Consultar Penalidade</button>
 			<button class="button is-white is-primary is-outlined mw12" value="penalty-type-update.php" onclick="loadPage(this.value)">Atualizar Penalidade</button>
-			<?php if($_SESSION["permissao"]!=1):?>
-			<button class="button is-white is-primary is-outlined mw12" value="penalty-type-remove.php" onclick="loadPage(this.value)">Remover Penalidade</button><?php endif;?>			
+			<button class="button is-white is-primary is-outlined mw12" value="penalty-type-remove.php" onclick="loadPage(this.value)">Remover Penalidade</button>	
 		</div>
-	</div><br/>
+	</div>
+	<br/>
 	</section>
+	</div>
 	</div>
 	<script type="text/javascript">
 		function loadPage(page){
