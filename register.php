@@ -38,9 +38,6 @@ array_push($_SESSION['filter'], trim($_GET['descricao']), trim($_GET['link']));
 		    opacity: 0.7;
 		    height: 100%;
 		}
-		.spc{
-			margin-right: 10px;
-		}
 		@media (max-width: 880px){
 			.mw12{
 				min-width:24em;
