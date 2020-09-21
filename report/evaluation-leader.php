@@ -299,28 +299,23 @@ ORDER BY A.REGISTRO;");
 		</tr>	
 	</table>
 	<?php 
-	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, AR2.NOTA, (SELECT AR2.RESPOSTA FROM AVAL_INDICE AII 
+	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, AR2.NOTA,
+(SELECT AVG(AR2.NOTA) FROM AVAL_INDICE AII 
 INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA APP ON APP.ID = AR.AVAL_PERGUNTA_ID 
-WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS RESPOSTA_LIDER,
-(SELECT AR2.NOTA FROM AVAL_INDICE AII 
-INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
-INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
-INNER JOIN AVAL_PERGUNTA APP ON APP.ID = AR.AVAL_PERGUNTA_ID 
-WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.ID= AP.ID) AS NOTA_LIDER
+WHERE AII.USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID= AI.USUARIO_ID) AND AII.AVALIACAO_POR <>AI.USUARIO_ID AND APP.PERGUNTA= AP.PERGUNTA) AS NOTA_LIDER
 FROM AVAL_REALIZADA AR
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
 WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $data["USUARIO_ID"].  " AND ANO_MES='".$yearMonth."' AND  AP.AVAL_TIPO_PERGUNTA_ID IN(1,2) ORDER BY AI.USUARIO_ID;");
-	
 	$p = 0;
 	$count = 1;
 	while ($question = $cnx4->fetch_array()) {
 		$a3_question[$p] = $question["PERGUNTA"];
 		$a3_answer[$p] = $question["RESPOSTA"];
-		$a3_answer_leader[$p] = $question["RESPOSTA_LIDER"];
+		//$a3_answer_leader[$p] = $question["RESPOSTA_LIDER"];
 		
 		if ($p == 0 ) { 
 			$a3_note_leader = "t:".$question["NOTA_LIDER"];
@@ -335,7 +330,7 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 		$count++;
 	}
 
-	if ($a3_answer_leader[0] == "" || $a3_answer_leader[0] == null) {
+	if ($a3_note_leader[0] == "" || $a3_note_leader[0] == null) {
 		$a3_note_leader = "t:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
 	}
 
@@ -345,9 +340,22 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 	
 		$y = 0;
 		$count = 1;
+
 		while ($y < sizeof($a3_question)) {
+			$cnx5 = mysqli_query($phpmyadmin, "SELECT ARR.RESPOSTA, ARR.NOTA, COUNT(ARR.NOTA) AS PEOPLE  FROM AVAL_REALIZADA AR
+INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
+INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
+INNER JOIN AVAL_TIPO_PERGUNTA ATP ON ATP.ID=AP.AVAL_TIPO_PERGUNTA_ID
+INNER JOIN AVAL_RESPOSTA ARR ON ARR.ID=AR.AVAL_RESPOSTA_ID 
+WHERE AP.PERGUNTA='" . $a3_question[$y] . "' AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"].  ")
+GROUP BY 2 ORDER BY 1;");
+
 			echo "<tr class='blue'><td class='white-td' colspan='2'><b>" .$count.") ".$a3_question[$y]."</b></td></tr><br>";
-			echo "<tr><td><b>" . $data["LIDER"] . "</b></td><td>" . $a3_answer_leader[$y] . "</td></tr><br>";
+			
+			while ($answer = $cnx5->fetch_array()) {
+				echo "<tr><td><b>" . $answer["PEOPLE"] . " responderam</b></td><td>" . $answer["RESPOSTA"] . "</td></tr><br>";
+			}
+			
 			echo "<tr><td><b>" . $data["NOME"] . "</b></td><td>" . $a3_answer[$y] . "</td></tr><br>";
 			$y++;
 			$count++;
