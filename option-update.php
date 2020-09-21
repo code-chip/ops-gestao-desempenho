@@ -13,78 +13,60 @@ if ($_SESSION["permissao"] == 1) {
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Atualizar Opção</title>
-	<link rel="stylesheet" href="css/login.css" />
-	<link rel="stylesheet" href="css/bulma.min.css"/>
-	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script type="text/javascript" src="js/myjs.js"></script>
-	<link rel="stylesheet" type="text/css" href="/css/personal.css">
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	<title>Gestão de Desempenho - Atualizar Opção</title>
 </head>
 <body>
 	<section class="section">
-	  	<div class="container">
-	  	<?php if (isset($_POST["queryOption"]) == null) :{?>
+	<div class="container">
+	<?php if (isset($_POST["queryOption"]) == null) { ?>
 	   		<form id="form1" action="option-update.php" method="POST" onsubmit="return check()">
-	    		<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Nome*</label>
-					</div>
-					<div class="field-body">
-						<div class="field">							
-							<div class="control w24-2">
-								<input type="text" class="input required" name="name">
-							</div>
-						</div>
+	    		<div class="field">
+					<label class="label is-size-7-touch">Nome*</label>
+					<div class="control has-icons-left">
+						<input type="text" class="input required" name="name" autofocus>
+						<span class="icon is-small is-left">
+						  	<i class="fas fa-search"></i>
+						</span>
 					</div>
 				</div>	
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Opção*</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select">
-									<select name="option" class="w24-2 required">
-										<option selected="selected" value="">Selecione</option>
-										<option value="ATIVIDADE">Atividade</option>
-										<option value="CARGO">Cargo</option>
-										<option value="GESTOR">Gestor</option>
-										<option value="PERMISSAO">Permissao</option>
-										<option value="PRESENCA">Presença</option>
-										<option value="SETOR">Setor</option>
-										<option value="TURNO">Turno</option>										
-									</select>	
-								</div>
-							</div>						
+				<div class="field">
+					<label class="label is-size-7-touch">Opção*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="option" class="required">
+								<option selected="selected" value="">Selecione</option>
+								<option value="ATIVIDADE">Atividade</option>
+								<option value="CARGO">Cargo</option>
+								<option value="PERMISSAO">Permissao</option>
+								<option value="PRESENCA">Presença</option>
+								<option value="SETOR">Setor</option>
+								<option value="TURNO">Turno</option>
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-align-center"></i>
+							</span>	
 						</div>
 					</div>
 				</div>		
-				<div class="field is-horizontal">
-					<div class="field-label"></div>
-						<div class="field-body">
-							<div class="field is-grouped">
-								<div class="control">
-									<button name="queryOption" type="submit" class="button is-primary btn128" value="Filtrar">Consultar</button>
-								</div>
-								<div class="control">
-									<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
-								</div>
-								<div class="control">
-									<a href="register.php" class="button is-primary btn128">Cancelar</a>
-								</div>
+				<div class="field"></div>
+					<div class="field-body">
+						<div class="field is-grouped">
+							<div class="control">
+								<button name="queryOption" type="submit" class="button is-primary btn128" value="Filtrar">Pesquisar</button>
+							</div>
+							<div class="control">
+								<button name="clear" type="reset" class="button is-primary btn128">Limpar</button>
+							</div>
+							<div class="control">
+								<a href="register.php" class="button is-primary btn128">Cancelar</a>
 							</div>
 						</div>
 					</div>
 				</div>		
 	     	</form>
-	    <?php 
-	 	} endif;
+	<?php } 
 
 	if (isset($_POST["queryOption"]) != null) {
 		$cnx = mysqli_query($phpmyadmin, "SELECT * FROM " . $_POST['option'] . " WHERE NOME LIKE '" . $_POST['name'] . "%' LIMIT 1;");
@@ -95,69 +77,55 @@ if ($_SESSION["permissao"] == 1) {
 			
 			?>
 			<form id="form2" action="option-update.php" method="POST" onsubmit="return check()">
-	    		<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Nome:</label>
-					</div>
-					<div class="field-body">
-						<div class="field">							
-							<div class="control w24-2">
-								<input type="text" class="input" name="upName" value="<?php echo $dado["NOME"]?>">
-							</div>
-						</div>
+	    		<div class="field">
+					<label class="label is-size-7-touch">Nome*</label>
+					<div class="control">
+						<input type="text" class="input" name="upName" value="<?php echo $dado["NOME"]?>">
 					</div>
 				</div>	
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Opção:</label>
-					</div>
-					<div class="field-body">
-						<div class="field" >							
-							<div class="control">
-								<div class="select">
-									<select name="upOption" class="w24-2">
-										<option selected="selected" value="<?php echo $_POST['option']?>"><?php echo mb_convert_case($_POST['option'], MB_CASE_TITLE, 'UTF-8');?></option>
-									</select>	
-								</div>
-							</div>						
+				<div class="field">
+					<label class="label is-size-7-touch">Opção*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="upOption" class="w24-2">
+								<option selected="selected" value="<?php echo $_POST['option']?>"><?php echo mb_convert_case($_POST['option'], MB_CASE_TITLE, 'UTF-8');?></option>
+								<span class="icon is-small is-left">
+									<i class="fas fa-align-center"></i>
+								</span>
+							</select>	
 						</div>
 					</div>
 				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label is-normal">
-						<label class="label">Status:</label>
-					</div>
-					<div class="field-body">
-						<div class="field">							
-							<div class="control">
-								<div class="select">
-									<select name="upSituation" class="w24-2"><?php 
-										echo "<option selected='selected' value=" . $dado["SITUACAO"] . ">" . $dado["SITUACAO"] . "</option>";
-										if ($dado["SITUACAO"] == "Ativo") {
-											echo "<option value='Inativo'>Inativo</option>";	
-										} else { 
-											echo "<option value='Ativo'>Ativo</option>";
-										}
-										?>																			
-									</select>	
-								</div>
-							</div>						
+				<div class="field">
+					<label class="label is-size-7-touch">Status*</label>
+					<div class="control has-icons-left">
+						<div class="select is-fullwidth">
+							<select name="upSituation"><?php 
+								echo "<option selected='selected' value=" . $dado["SITUACAO"] . ">" . $dado["SITUACAO"] . "</option>";
+								if ($dado["SITUACAO"] == "Ativo") {
+									echo "<option value='Inativo'>Inativo</option>";	
+								} else { 
+									echo "<option value='Ativo'>Ativo</option>";
+								}
+								?>																			
+							</select>
+							<span class="icon is-small is-left">
+								<i class="fas fa-sort"></i>
+							</span>	
 						</div>
 					</div>
 				</div>				
-				<div class="field is-horizontal">
-					<div class="field-label"></div>
-						<div class="field-body">
-							<div class="field is-grouped">
-								<div class="control">	
-									<button name="updateOption" type="submit" class="button is-primary btn128" value="Update">Atualizar</button>
-								</div>
-								<div class="control">
-									<a href="register.php" class="button is-primary btn128">Voltar</a>
-								</div>
-								<div class="control">	
-									<button name="updateOption" type="submit" class="button is-primary btn128">Cancelar</button>
-								</div>
+				<div class="field">
+					<div class="field-body">
+						<div class="field is-grouped">
+							<div class="control">	
+								<button name="updateOption" type="submit" class="button is-primary btn128" value="Update">Atualizar</button>
+							</div>
+							<div class="control">
+								<a href="register.php" class="button is-primary btn128">Voltar</a>
+							</div>
+							<div class="control">	
+								<button name="updateOption" type="submit" class="button is-primary btn128">Cancelar</button>
 							</div>
 						</div>
 					</div>
