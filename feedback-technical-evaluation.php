@@ -181,7 +181,7 @@ if (isset($_POST['enviar'])) {
 	for ($i = 0 ;$i < sizeof($resposta) - 1; $i++) {//PERCORRE PELAS QUESTÕES.			
 		mysqli_query($phpmyadmin, "INSERT INTO AVAL_REALIZADA(AVAL_INDICE_ID, AVAL_PERGUNTA_ID, AVAL_RESPOSTA_ID) VALUES(" . $index["ID"] . ", " . $idPergunta[$i] . ", " . $resposta[$i] . ");");
 	}
-	mysqli_query($phpmyadmin, "UPDATE AVAL_INDICE SET SITUACAO='Finalizado'");
+	mysqli_query($phpmyadmin, "UPDATE AVAL_INDICE SET SITUACAO='Finalizado' WHERE ID=" . $index["ID"]);
 
 	mysqli_query($phpmyadmin, "INSERT INTO AVAL_COMENTARIO(AVAL_INDICE_ID, AVAL_PERGUNTA_COM_ID, COMENTARIO) VALUES(" . $index["ID"] . ", (SELECT ID FROM AVAL_PERGUNTA_COM WHERE AVAL_TIPO_ID=2 AND SITUACAO='Ativo'),'" . $comentario . "')");
 
