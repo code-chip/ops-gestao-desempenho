@@ -6,6 +6,15 @@ $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 $yearMonther = date('Y-m');
 
+if($_SESSION["permissao"] == 4) {
+	$c = mysqli_query($phpmyadmin, "SELECT TIMESTAMPDIFF(MONTH,EFETIVACAO,NOW() ) AS MESES FROM USUARIO WHERE ID=".$_SESSION['userId']);
+	$houseTime = $c->fetch_array();
+
+	if ($houseTime["MESES"] < 4){
+		echo "<script>alert('Pouco tempo de casa, aguarde o próximo ciclo de avaliação!'); window.location.href='home.php';</script>";
+	}
+
+}
 
 $query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' ORDER BY NOME";
 
