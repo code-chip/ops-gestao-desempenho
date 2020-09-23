@@ -333,6 +333,7 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 			
 			$cnx = mysqli_query($phpmyadmin, "INSERT INTO DESEMPENHO(USUARIO_TURNO_ID, USUARIO_ID, ATIVIDADE_ID, PRESENCA_ID,META, ALCANCADO, DESEMPENHO, REGISTRO, ANO_MES, OBSERVACAO, CADASTRADO_POR, CADASTRADO_DATA) VALUES(".$turnoResult["TURNO_ID"].",".$ids[$i].",".$atividades[$i].",".$presencas[$i].",".$metas[$i].",".$alcancados[$i].",".$desempenho.",'".$registros[$i]."', '" . $anoMes . "', '".$observacoes[$i]."',".$_SESSION["userId"].",'".date('Y-m-d')."'); ");
 			
+			$erro = mysqli_error($phpmyadmin);
 			$v++;
 			
 			if ($_SESSION["metaAdd"] == 1) {//VERIFICA E DAR BAIXA NA META CADASTRADA.
@@ -346,7 +347,7 @@ if (isset($_POST['salvarDados']) && $_POST['id'] != null) {
 		}
 	}
 
-	if (mysqli_error($phpmyadmin) == null) {
+	if ($erro == null) {
 		$metaAdd = 0;
 		echo "<script>alert('Desempenho cadastro com sucesso!'); window.location.href=window.location.href; </script>";
 	} else {
