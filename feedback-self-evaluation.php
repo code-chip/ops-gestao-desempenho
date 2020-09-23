@@ -219,6 +219,8 @@ if (isset($_POST['proxima'])) {
 	$z = 1; 
 	$respostaNula = 0;
 	
+	$comentario = str_replace(array('\'', '"'), '', $comentario);
+	
 	while ($z <= $y) {//ARMAZENA AS RESPOSTAS NO VETOR.
 		$resposta[$z-1] = $_POST["questao".$z];
 		$z++;			
