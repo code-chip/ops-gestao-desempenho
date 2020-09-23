@@ -167,6 +167,9 @@ if ($index["SITUACAO"] == "Finalizado") {
 
 if (isset($_POST['enviar'])) {
 	$comentario = $_POST["comentario"];
+
+	$comentario = str_replace(array('\'', '"'), '', $comentario);
+	
 	$z = 1; 
 	$respostaNula = 0;
 	
