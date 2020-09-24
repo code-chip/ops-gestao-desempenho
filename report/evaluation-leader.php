@@ -51,14 +51,12 @@ INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID 
 WHERE AII.USUARIO_ID IN (SELECT ID FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID) AND AII.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =4) AS TIME_AVAL_COM,
 (SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
-WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =1) AS AUTO_COMEN,
-(SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
-WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =2) AS LIDER_COMEN
+WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =1) AS LIDER_COMEN
 FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
 INNER JOIN CARGO C ON C.ID = U.CARGO_ID  
-WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND U.CARGO_ID=6 AND AI.ANO_MES='$yearMonth';";
+WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND U.CARGO_ID IN (6,8) AND AI.ANO_MES='$yearMonth';";
 
 $cnx = mysqli_query($phpmyadmin, $query);
 $reports = mysqli_num_rows($cnx);
@@ -313,7 +311,7 @@ FROM AVAL_REALIZADA AR
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID=AR.AVAL_RESPOSTA_ID
 INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
-WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $data["USUARIO_ID"].  " AND ANO_MES='".$yearMonth."' AND  AP.AVAL_TIPO_PERGUNTA_ID IN(1,2) ORDER BY AI.USUARIO_ID;");
+WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $data["USUARIO_ID"].  " AND ANO_MES='".$yearMonth."' AND  AP.AVAL_TIPO_PERGUNTA_ID IN(1,2) ORDER BY AI.USUARIO_ID;"); 
 	$p = 0;
 	$count = 1;
 	while ($question = $cnx4->fetch_array()) {
@@ -339,7 +337,6 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 	}
 
 	echo "<img src='http://chart.apis.google.com/chart?chs=700x127&cht=ls&chxt=x,x,y,y&chd=".$a3_note_leader.$a3_note."&chco=0000FF,00FF00&chl=$a3_num&chxl=1:|Primeira+Pergunta|Última+Pergunta|3:|Desenvolver|Excelente&chdl=Time|Líder&chds=a&chtt=Visão+geral+da+avaliação' width='100%' height='25%'>
-	<div>
 	<table class='table is-bordered pricing__table is-fullwidth borda'>";
 	
 		$y = 0;
@@ -351,7 +348,7 @@ INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 INNER JOIN AVAL_TIPO_PERGUNTA ATP ON ATP.ID=AP.AVAL_TIPO_PERGUNTA_ID
 INNER JOIN AVAL_RESPOSTA ARR ON ARR.ID=AR.AVAL_RESPOSTA_ID 
-WHERE AP.PERGUNTA='" . $a3_question[$y] . "' AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"].  ")
+WHERE AP.PERGUNTA='" . $a3_question[$y] . "' AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"]. ")
 GROUP BY 2 ORDER BY 1;");
 
 			echo "<tr class='blue'><td class='white-td' colspan='2'><b>" .$count.") ".$a3_question[$y]."</b></td></tr><br>";
@@ -371,11 +368,15 @@ GROUP BY 2 ORDER BY 1;");
 <br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
 		<tr class="red">
-			<td class="white-td"><b><center>Comentário do Colaborador</center></b></td>
+			<td class="white-td"><b><center>Comentário do Time</center></b></td>
 		</tr>
-		<tr>
-			<td><?php echo $data["AUTO_COMEN"]; ?></td>
-		</tr>
+		
+		<?php 
+			$cnx6 = mysqli_query($phpmyadmin, "SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID WHERE AC.AVAL_INDICE_ID IN(SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"]. ")) AND APC.AVAL_TIPO_ID =2");
+			while ( $msg = $cnx6->fetch_array()) {
+				echo "<tr><td>" . $msg["COMENTARIO"] . "</td></tr>";
+			}
+		?>	
 		<tr class="red">
 			<td class="white-td"><b><center>Comentário do Líder</center></b></td>
 		</tr>
@@ -383,7 +384,6 @@ GROUP BY 2 ORDER BY 1;");
 			<td><?php echo $data["LIDER_COMEN"]; ?></td>
 		</tr>	
 	</table>
-	</div>
     </page>
 </body>	
 </html>
