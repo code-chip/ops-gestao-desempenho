@@ -114,7 +114,7 @@ require('menu.php');
 			<div class="field">
 				<label class="label is-size-7-touch">Feedback*</label>
 				<div class="control">
-					<textarea name="feedback" type="text" class="textarea is-fullwidth required" maxlength="500"></textarea>
+					<textarea name="feedback" type="text" class="textarea is-fullwidth required" maxlength="1000"></textarea>
 				</div>
 			</div>
 			<div class="field">
