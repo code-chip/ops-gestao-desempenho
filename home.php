@@ -6,7 +6,7 @@ require('menu.php');
 $n = rand(1,25);
 $img = "img/wallpaper/data-science".$n."-min.jpg";
 
-$acesso=mysqli_query($phpmyadmin, "SELECT MAX(DATE_FORMAT(ULTIMO_LOGIN,'%Y-%m-%d')) ULTIMO_LOGIN, MAX(ACESSO_TOTAL) TOTAL FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"].";");
+$acesso = mysqli_query($phpmyadmin, "SELECT MAX(DATE_FORMAT(ULTIMO_LOGIN,'%Y-%m-%d')) ULTIMO_LOGIN, MAX(ACESSO_TOTAL) TOTAL FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"].";");
 
 $cnx = $acesso->fetch_array();
 $acesso = $cnx["TOTAL"];
@@ -17,8 +17,12 @@ $dias = date_interval_format($resultado, '%a');
 list($nome, $sobrenome)=explode(' ', $_SESSION["nameUser"],2);
 
 
-$cnx2 = mysqli_query($phpmyadmin, "SELECT COUNT(1) AS FEEDBACK,(SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Enviado') AS SOLICITACAO FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado';");
+$cnx2 = mysqli_query($phpmyadmin, "SELECT COUNT(1) AS FEEDBACK,(SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Enviado') AS SOLICITACAO, (SELECT COUNT(1) FROM FEEDBACK WHERE SITUACAO='Enviado') AS WAIT FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado';");
 $feed = $cnx2->fetch_array();
+
+if ($_SESSION['permissao'] > 1 && $feed['WAIT'] > 0) {
+	echo "<script>alert('".$nome." existe Feedback aguardando a sua análise.')</script>";
+}
 
 ?>
 <!DOCTYPE html>
