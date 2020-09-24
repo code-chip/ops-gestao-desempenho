@@ -6,7 +6,7 @@ $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 $yearMonther = date('Y-m');
 
-if($_SESSION["permissao"] == 4) {
+if($_SESSION["permissao"] == 1) {
 	$c = mysqli_query($phpmyadmin, "SELECT TIMESTAMPDIFF(MONTH,EFETIVACAO,NOW() ) AS MESES FROM USUARIO WHERE ID=".$_SESSION['userId']);
 	$houseTime = $c->fetch_array();
 
