@@ -269,14 +269,14 @@ ORDER BY A.REGISTRO;");
 			<td><?php echo $data["FL_COM"]; ?></td>
 			<td><?php echo $data["FL_PRO"]; ?></td>
 			<td><?php echo $data["FL_DES"]; ?></td>
-			<td><?php echo $avgFeedL; ?></td>
+			<td><?php echo round($avgFeedL,2); ?></td>
 		</tr>
 		<tr>
 			<td><b>Time</b></td>
 			<td><?php echo $data["FT_COM"]; ?></td>
 			<td><?php echo $data["FT_PRO"]; ?></td>
 			<td><?php echo $data["FT_DES"]; ?></td>
-			<td><?php echo $avgFeedT; ?></td>
+			<td><?php echo round($avgFeedT,2); ?></td>
 		</tr>
 	</table>	
 	<br>	
@@ -301,7 +301,7 @@ ORDER BY A.REGISTRO;");
 		</tr>	
 	</table>
 	<?php 
-	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AR2.RESPOSTA, AR2.NOTA,
+	$cnx4 = mysqli_query($phpmyadmin, "SELECT AP.PERGUNTA, AP.ORDEM, AR2.RESPOSTA, AR2.NOTA,
 (SELECT AVG(AR2.NOTA) FROM AVAL_INDICE AII 
 INNER JOIN AVAL_REALIZADA AR ON AR.AVAL_INDICE_ID = AII.ID
 INNER JOIN AVAL_RESPOSTA AR2 ON AR2.ID = AR.AVAL_RESPOSTA_ID
@@ -317,6 +317,7 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 	while ($question = $cnx4->fetch_array()) {
 		$a3_question[$p] = $question["PERGUNTA"];
 		$a3_answer[$p] = $question["RESPOSTA"];
+		$a3_order[$p] = $question["ORDEM"];
 		//$a3_answer_leader[$p] = $question["RESPOSTA_LIDER"];
 		
 		if ($p == 0 ) { 
@@ -347,8 +348,9 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 INNER JOIN AVAL_INDICE AI ON AI.ID=AR.AVAL_INDICE_ID
 INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 INNER JOIN AVAL_TIPO_PERGUNTA ATP ON ATP.ID=AP.AVAL_TIPO_PERGUNTA_ID
+INNER JOIN AVAL_TIPO AT ON AT.ID=ATP.AVAL_TIPO_ID
 INNER JOIN AVAL_RESPOSTA ARR ON ARR.ID=AR.AVAL_RESPOSTA_ID 
-WHERE AP.PERGUNTA='" . $a3_question[$y] . "' AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"]. ")
+WHERE AP.ORDEM='" . $a3_order[$y] . "' AND AT.ID=2 AND USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=" . $data["USUARIO_ID"]. ")
 GROUP BY 2 ORDER BY 1;");
 
 			echo "<tr class='blue'><td class='white-td' colspan='2'><b>" .$count.") ".$a3_question[$y]."</b></td></tr><br>";
