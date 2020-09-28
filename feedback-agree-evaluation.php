@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 $menuAtivo = 'feedback';
 require('menu.php');
 
@@ -6,7 +7,7 @@ $n = rand(1,13);
 $img = "img/wallpaper/evaluation" . $n . "-min.jpg";
 $yearMonther = date('Y-m');
 
-if($_SESSION["permissao"] == 1) {
+if ($_SESSION['permissao'] == 1) {
 	$c = mysqli_query($phpmyadmin, "SELECT TIMESTAMPDIFF(MONTH,EFETIVACAO,NOW() ) AS MESES FROM USUARIO WHERE ID=".$_SESSION['userId']);
 	$houseTime = $c->fetch_array();
 
@@ -16,7 +17,7 @@ if($_SESSION["permissao"] == 1) {
 
 }
 
-$query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' ORDER BY NOME";
+$query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId'] . " AND ID NOT IN(SELECT USUARIO_ID FROM AVAL_INDICE WHERE AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $yearMonther . "') AND SITUACAO<>'Desligado' AND TIMESTAMPDIFF(MONTH,EFETIVACAO, NOW()) >=4 ORDER BY NOME";
 
 ?>
 <!DOCTYPE html>
@@ -24,13 +25,13 @@ $query = "SELECT ID, NOME FROM USUARIO WHERE GESTOR_ID = " . $_SESSION['userId']
 <head>
 	<meta charset="UTF-8">	
 	<meta name="viewport" content="width=device-widht, initial-scale=1">
-	<title>Gestão de Desempenho - Orientações da Avaliação</title>
 	<link rel="shortcut icon" href="img\favicon_codechip.ico"/>
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/personal.css"/>
 	<link rel="stylesheet" href="css/bulma.min.css"/>
 	<script defer scr="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<script type="text/javascript" src="js/myjs.js"></script>
+	<title>Gestão de Desempenho - Orientações da Avaliação</title>
 </head>
 <body>
 	<div class="hero is-fullheight is-primary has-background">
