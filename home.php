@@ -8,7 +8,9 @@ $img = "img/wallpaper/data-science".$n."-min.jpg";
 
 list($nome, $sobrenome) = explode(' ', $_SESSION["nameUser"], 2);
 
-$cnx = mysqli_query($phpmyadmin, "SELECT COUNT(1) AS FEEDBACK,(SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Enviado') AS SOLICITACAO, (SELECT COUNT(1) FROM FEEDBACK WHERE SITUACAO='Enviado') AS WAIT, (SELECT TIMESTAMPDIFF(DAY,ULTIMO_LOGIN,'".date('Y-m-d')."' ) AS DAYS FROM ACESSO WHERE USUARIO_ID =".$_SESSION["userId"]." ORDER BY 1 DESC LIMIT 1,1) AS DAYS, (SELECT MAX(ACESSO_TOTAL) FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ACESSOS FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado';");
+$cnx = mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(DATA_HORA, '%Y-%m-%d %H:%i'), TIMESTAMPDIFF(DAY,DATA_HORA,'".date('Y-m-d')."') AS DAYS, (SELECT COUNT(1) FROM FEEDBACK WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Aprovado') AS FEEDBACK, (SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID=".$_SESSION["userId"]." AND SITUACAO='Enviado') AS SOLICITACAO, 
+(SELECT COUNT(1) FROM FEEDBACK WHERE SITUACAO='Enviado') AS WAIT, (SELECT MAX(ACESSO_TOTAL) FROM ACESSO WHERE USUARIO_ID=".$_SESSION["userId"].") AS ACESSOS
+FROM ACESSO_HISTORICO WHERE USUARIO_ID =".$_SESSION["userId"]." GROUP BY 1 ORDER BY 1 DESC LIMIT 1,1;");
 
 $feed = $cnx->fetch_array();
 
@@ -50,9 +52,9 @@ if ($feed["ACESSOS"] == 1) {
 } else if ($feed["DAYS"] > 2 && $feed["DAYS"] < 6) {
 	$msg = "Seu último acesso foi há mais de ".$feed["DAYS"]." dias, sentimos sua falta ".$nome."!!";
 } else if ($feed["DAYS"] > 5 && $feed["DAYS"] < 8) { 
-	$msg = $nome.", notamos sua ausência de uma semana, nos alegramos com o seu retorno ;).";
+	$msg = $nome.", notamos sua ausência de uma semana, acompanhe o lançamento diário de suas metas.";
 } else if ($feed["DAYS"] > 8) { 
-	$msg = $nome.", há " . $feed["DAYS"] . " dias não fez login no sistema, fique atento ao lançamento das novas informações.";
+	$msg = $nome.", há " . $feed["DAYS"] . " dias não fez login no sistema, fique atento ao lançamento das metas.";
 } else {
 	$msg = $nome;
 }		     
