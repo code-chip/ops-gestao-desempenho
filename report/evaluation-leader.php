@@ -65,6 +65,7 @@ $x = 1;
 while ($data = $cnx->fetch_array()) {
 	$avgFeedL = ($data["FL_COM"] + $data["FL_PRO"] + $data["FL_DES"])/3;
 	$avgFeedT = ($data["FT_COM"] + $data["FT_PRO"] + $data["FT_DES"])/3;
+	
 	if ($avgFeed > 0) {
 		$leaderGeneral = ($data["TIME_AVAL_TEC"]+$data["TIME_AVAL_COM"]+$avgFeed)/3;
 		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"]+$avgFeed)/3;
@@ -72,40 +73,25 @@ while ($data = $cnx->fetch_array()) {
 		$leaderGeneral = ($data["TIME_AVAL_TEC"]+$data["TIME_AVAL_COM"])/2;
 		$autoGeneral = ($data["AUTO_AVAL_TEC"]+$data["AUTO_AVAL_COM"])/2;
 	}
-
-	$cnx2 = mysqli_query($phpmyadmin,"SELECT ATIVIDADE_ID, A.NOME, COUNT(ATIVIDADE_ID) AS VEZES FROM DESEMPENHO D INNER JOIN ATIVIDADE A ON A.ID = D.ATIVIDADE_ID WHERE ANO_MES >= DATE_SUB('".$data["REGISTRO"]."', INTERVAL 6 MONTH) AND ANO_MES <= '".$data["REGISTRO"]."' AND USUARIO_ID = ".$data["USUARIO_ID"]." GROUP BY ATIVIDADE_ID" );
-	$i = 0;
 	
-	$occurrence = "t:100";
-	$activity = "Sem registro";
-	
-	while ($dash = $cnx2->fetch_array()) {
-		if ($i == 0 ) { 
-			$occurrence ="t:".$dash["VEZES"];
-			$activity ="".$dash["NOME"];
-		} else {
-			$occurrence .=",".$dash["VEZES"];
-			$activity .="|".$dash["NOME"];
-		}
-		$i++;
-	}
-
-	$b1 = mysqli_query($phpmyadmin,"SELECT ROUND(AVG(DESEMPENHO),0) AS MEDIA, ANO_MES, DATE_FORMAT(REGISTRO,'%b') AS MES FROM DESEMPENHO WHERE USUARIO_ID = ".$data["USUARIO_ID"]." AND ANO_MES>=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES<='$yearMonth' GROUP BY 2 ORDER BY 2 LIMIT 6;" );
+	$b1 = mysqli_query($phpmyadmin,"SELECT ROUND(AVG(DESEMPENHO),1) AS MEDIA, DATE_FORMAT(REGISTRO, '%b') AS MES, DATE_FORMAT(REGISTRO, '%Y-%m') FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.GESTOR_ID=".$data["USUARIO_ID"]." AND D.ANO_MES <='$yearMonth' GROUP BY 3 ORDER BY 3 DESC LIMIT 12;" );
 	$i = 0;
 
-	$b1_avg = "t:0,0,0,0,0,0";
-	$b1_month = "nul|nul|nul|nul|nul|nul";
-	
+	$b1_avg = "0,0,0,0,0,0";
+	$b1_month = "nul|nul|nul|nul|nul|nul";	
+
 	while ($b1_dash = $b1->fetch_array()) {
-		if ($i == 0 ) { 
-			$b1_avg ="t:".$b1_dash["MEDIA"];
-			$b1_month ="".$b1_dash["MES"];
+		if ($i == 0 ) {
+			$b1_avg = $b1_dash["MEDIA"]."";
+			$b1_month = $b1_dash["MES"]."";
 		} else {
-			$b1_avg .=",".$b1_dash["MEDIA"];
-			$b1_month .="|".$b1_dash["MES"];
+			$b1_avg = $b1_dash["MEDIA"].",".$b1_avg;
+			$b1_month = $b1_dash["MES"]."|".$b1_month;
 		}
 		$i++;
 	}
+
+	$b1_avg = "t:".$b1_avg;
 
 	$c1 = mysqli_query($phpmyadmin, "SELECT A.ACESSOS, A.MES, A.ANO_MES FROM (SELECT SUM(ACESSO) AS ACESSOS, DATE_FORMAT(ULTIMO_LOGIN , '%b') AS MES, DATE_FORMAT(ULTIMO_LOGIN , '%Y-%m') AS ANO_MES FROM ACESSO 
 WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE GESTOR_ID=".$data["USUARIO_ID"].") AND DATE_FORMAT(ULTIMO_LOGIN , '%Y-%m')<='".$yearMonth."'
@@ -178,9 +164,9 @@ ORDER BY A.REGISTRO;");
 		
 	</table>
 	<?php 
-		echo "<img src='http://chart.apis.google.com/chart?chs=400x100&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='50%' height='20%'>";
+		echo "<img src='http://chart.apis.google.com/chart?chs=400x100&cht=bvg&chds=a&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Média de desempenho+do+time+no+mês' width='60%' height='20%'>";
 
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+do+time' width='33%' height='30%'>"; 
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+do+time' width='39%' height='30%'>"; 
 	?>
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr><td colspan="7"><b><center>Assiduidade do Time</center></b></td></tr>	
@@ -226,7 +212,7 @@ ORDER BY A.REGISTRO;");
 		</tr>
 		
 	</table>
-	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Performance+do+time+liderado+nos+últimos+12+meses+-+média+diaria+de+<?php echo $a2_activitys?>+dias" width="100%" height="30%">
+	<img src="http://chart.apis.google.com/chart?chs=700x150&cht=ls&chxt=x,y&chd=<?php echo $a2_avg?>&chl=&chds=a&chtt=Variação+performática+do+time+liderado+nos+últimos+12+meses+-+média+diaria+de+<?php echo $a2_activitys?>+dias" width="100%" height="30%">
 	<table class="table is-bordered pricing__table is-fullwidth borda">
 		<tr class="grey">
 			<td rowspan="2"><b><center>Amostra</center></b></td>
