@@ -111,6 +111,7 @@ if (isset($_POST['query'])) {
 
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
+
 	if (mysqli_num_rows($cnx) > 0) {
 		while ($goal = $cnx->fetch_array()) {
 			$vtId[$x] = $goal["ID"];
@@ -123,8 +124,7 @@ if (isset($_POST['query'])) {
 			$vtDescricao[$x] = $goal["DESCRICAO"];					
 			$x++;
 		}
-	}
-	else{
+	} else {
 		echo "<script> alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";	
 	}	
 }
@@ -146,7 +146,7 @@ if (isset($_POST['query']) && $x != 0) : ?>
 		<th>Execução</th>			
 		<th>Feita</th> 			
 	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
+<?php for ( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td class="field ocultaColunaId"><!--COLUNA ID-->
@@ -254,9 +254,9 @@ if (isset($_POST['alterarDados'])) {
 	$descricoes = array_filter($_POST['descricao']);	
 	$execucoes = array_filter($_POST['execucao']);
 	$feitos = array_filter($_POST['atividade3']);
-	$upCount =0;
+	$upCount = 0;
 
-	for ($i = 0; $i < sizeof($atividades); $i++){
+	for ($i = 0; $i < sizeof($atividades); $i++) {
 		if ($feitos[$i] == null) {
 			$feitos[$i] = 0;
 		}
@@ -270,18 +270,16 @@ if (isset($_POST['alterarDados'])) {
 		$tx = mysqli_query($phpmyadmin, $checkUp);		
 		
 		if (mysqli_num_rows($tx) == 0 && mysqli_error($phpmyadmin) == null) {			
-			$upMeta = "UPDATE META SET ATIVIDADE_ID=".$atividades[$i].", META=".$goals[$i].", EXECUCAO='".$execucoes[$i]."', DESEMPENHO=".$feitos[$i].", DESCRICAO='".$descricoes[$i]."' WHERE ID=".$ids[$i].";";		
-			$cnx = mysqli_query($phpmyadmin, $upMeta);
+			$cnx = mysqli_query($phpmyadmin, "UPDATE META SET ATIVIDADE_ID=".$atividades[$i].", META=".$goals[$i].", EXECUCAO='".$execucoes[$i]."', DESEMPENHO=".$feitos[$i].", DESCRICAO='".$descricoes[$i]."' WHERE ID=".$ids[$i].";");
 			$upCount = $upCount + 1;			
 		}
 
-		echo $upMeta."</br>";
 	}
 
 	if ($upCount == 0) {	
 		echo "<script>alert('Nenhum registro foi alterado p/ ser atualizado!!'); window.location.href=window.location.href;	</script>";
 	} else {
-		echo "<script>alert('Foi atualizado <?php echo $upCount ?> registro(s)!!'); window.location.href=window.location.href; </script>";
+		echo "<script>alert('Foi atualizado $upCount registro(s)!!'); window.location.href=window.location.href; </script>";
 	}
 }
 
