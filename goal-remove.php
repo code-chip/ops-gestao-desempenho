@@ -11,7 +11,7 @@ $period = trim($_REQUEST['periodo']);
 $sector = trim($_REQUEST['setor']);
 $name = trim($_REQUEST['nome']);
 $count = 0;
-$totalAlcancado = 0;
+$totalReached = 0;
 
 ?>
 <!DOCTYPE html>
@@ -52,7 +52,7 @@ $totalAlcancado = 0;
 					<div class="select is-fullwidth">
 						<select name="periodo"><?php 								
 							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
-							while($sector = $con->fetch_array()){
+							while ($sector = $con->fetch_array()) {
 								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
 							 }
 						?></select>
@@ -68,7 +68,7 @@ $totalAlcancado = 0;
 					<div class="select is-fullwidth">
 						<select name="setor"><?php 								
 							$con = mysqli_query($phpmyadmin , "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
-							while($sector = $con->fetch_array()){
+							while ($sector = $con->fetch_array()) {
 								echo '<option value=' . $sector['ID'] . '>' . $sector["NOME"] . '</option>';
 							 }
 						?></select>
@@ -108,24 +108,24 @@ $totalAlcancado = 0;
 <?php
 
 if (isset($_POST['query'])) {	
-	if( $name != ""){		
-		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$period."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$period."', '-20');";
+	if ( $name != "") {		
+		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>='".$period."-21' AND M.EXECUCAO<= '".$period."-20';";
 	} else {	
-		$query = "SELECT M.ID AS ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$period."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$period."', '-20') ORDER BY 1;";
+		$query = "SELECT M.ID AS ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>='".$period."-01' AND M.EXECUCAO<='".$period."-31' ORDER BY 1;";
 	}
 
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	
 	if (mysqli_num_rows($cnx) > 0) {
-		while($meta = $cnx->fetch_array()) {
-			$vtId[$x] = $meta["ID"];
-			$vtNome[$x] = $meta["NOME"];
-			$vtAtividade[$x] = $meta["ATIVIDADE"];
-			$vtMeta[$x] = $meta["META"];
-			$vtExecucao[$x] = $meta["EXECUCAO"];
-			$vtDesempenho[$x] = $meta["CADASTRO_EM"];
-			$vtDescricao[$x] = $meta["DESCRICAO"];					
+		while($goal = $cnx->fetch_array()) {
+			$vtId[$x] = $goal["ID"];
+			$vtNome[$x] = $goal["NOME"];
+			$vtAtividade[$x] = $goal["ATIVIDADE"];
+			$vtMeta[$x] = $goal["META"];
+			$vtExecucao[$x] = $goal["EXECUCAO"];
+			$vtDesempenho[$x] = $goal["DESEMPENHO"];
+			$vtDescricao[$x] = $goal["DESCRICAO"];					
 			$x++;
 			$count = $x;
 		}
@@ -152,11 +152,11 @@ if (isset($_POST['query']) && $count != 0) { ?>
 	</tr>
 <?php
 
-for( $i = 0; $i < sizeof($vtNome); $i++ ) {
+for ( $i = 0; $i < sizeof($vtNome); $i++ ) {
 	$done; 
 	
 	if ($vtDesempenho[$i] == 0) { 
-			$done = "Não";
+		$done = "Não";
 	} else { 
 		$done = "Sim";
 	}
@@ -165,8 +165,7 @@ for( $i = 0; $i < sizeof($vtNome); $i++ ) {
 		<td><?php echo $i+1;?></td>
 		<td>
 			<label class="checkbox">
-  				<input name="id[]" type="checkbox" value="<?php echo $vtId[$i]?>">
-  				Sim
+  				<input name="id[]" type="checkbox" value="<?php echo $vtId[$i]?>">Sim
   			</label>  			
 		</td>	
 		<td><?php echo $vtNome[$i]?></td>
@@ -174,7 +173,7 @@ for( $i = 0; $i < sizeof($vtNome); $i++ ) {
 		<td><?php echo $vtMeta[$i]?></td>
 		<td><?php echo $vtDescricao[$i]?></td>
 		<td><?php echo $vtExecucao[$i]?></td>
-		<td><?php echo $done; ?></td>
+		<td><?php echo $done ?></td>
 	</tr>
 <?php } ?>
 	</table>
