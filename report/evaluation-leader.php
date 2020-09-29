@@ -16,6 +16,9 @@ AS IDADE, AI.REGISTRO,
 (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID) AS EQUIPE,
 (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID AND SEXO='m') AS M,
 (SELECT COUNT(1) FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID AND SEXO='f') AS F,
+(SELECT MAX(TIMESTAMPDIFF(YEAR,NASCIMENTO, NOW())) AS IDADE FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID) AS MAX_AGE,
+(SELECT ROUND(AVG(TIMESTAMPDIFF(YEAR,NASCIMENTO, NOW())),1) AS IDADE FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID) AS AVG_AGE,
+(SELECT MIN(TIMESTAMPDIFF(YEAR,NASCIMENTO, NOW())) AS IDADE FROM USUARIO WHERE GESTOR_ID=AI.USUARIO_ID) AS MIN_AGE,
 (SELECT COUNT(1) FROM FEEDBACK WHERE REMETENTE_ID=AI.USUARIO_ID ) AS F_ENV,
 (SELECT COUNT(1) FROM FEEDBACK WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS F_REC,
 (SELECT COUNT(1) FROM SOLICITACAO WHERE DESTINATARIO_ID =AI.USUARIO_ID ) AS S_ENV,
@@ -198,17 +201,17 @@ ORDER BY A.REGISTRO;");
 			<td><b>Mínimo</b></td>
 			<td><b>Média</b></td>
 			<td><b>Máximo</b></td>
-			<td><b>Mínimo</b></td>
+			<td><b>Mínima</b></td>
 			<td><b>Média</b></td>
-			<td><b>Máximo</b></td>
+			<td><b>Máxima</b></td>
 		</tr>
 		<tr>
 			<td><?php echo $data["MINIMO"]; ?></td>
 			<td><?php echo $data["MEDIA"]; ?></td>
 			<td><?php echo $data["MAXIMO"]; ?></td>
-			<td><?php echo $data["MINIMO"]; ?></td>
-			<td><?php echo $data["MEDIA"]; ?></td>
-			<td><?php echo $data["MAXIMO"]; ?></td>
+			<td><?php echo $data["MIN_AGE"]; ?></td>
+			<td><?php echo $data["AVG_AGE"]; ?></td>
+			<td><?php echo $data["MAX_AGE"]; ?></td>
 		</tr>
 		
 	</table>
