@@ -257,7 +257,7 @@ ORDER BY A.REGISTRO;");
 			<td><?php echo $data["F_COM"]; ?></td>
 			<td><?php echo $data["F_PRO"]; ?></td>
 			<td><?php echo $data["F_DES"]; ?></td>
-			<td><?php echo $avgFeed; ?></td>
+			<td><?php echo round($avgFeed, 2); ?></td>
 		</tr>
 	</table>	
 	<br>	
