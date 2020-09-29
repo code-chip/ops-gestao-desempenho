@@ -1,16 +1,18 @@
 <?php
-$menuAtivo="meta";
-include('menu.php');
-if($_SESSION["permissao"]==1){
-	echo "<script>alert('Usuário sem permissão')</script>";
-	header("Refresh:1;url=home.php");
+
+$menuAtivo = 'meta';
+require('menu.php');
+
+if ($_SESSION["permissao"] == 1) {
+	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php';</script>";
 }
-else{
-$periodo= trim($_REQUEST['periodo']);
-$setor= trim($_REQUEST['setor']);
-$nome= trim($_REQUEST['nome']);
-$contador = 0;
-$totalAlcancado=0;
+
+$period = trim($_REQUEST['periodo']);
+$sector = trim($_REQUEST['setor']);
+$name = trim($_REQUEST['nome']);
+$count = 0;
+$totalAlcancado = 0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,11 +23,6 @@ $totalAlcancado=0;
 	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<style type="text/css" src="css/personal.css"></style>
 	<title>Gestão de Desempenho - Remover Meta</title>
-    <style type="text/css">
-    	.w24-2{
-    		width:24.2em;
-    	}
-    </style>
     <script type="text/javascript">
     	$(document).ready(function(){
 	    	$(window).scroll(function(){
@@ -45,7 +42,7 @@ $totalAlcancado=0;
 <body>
 	<span id="topo"></span>
 <div>	
-	<?php if($setor =="" && isset($_POST['query'])==null ): ?>
+	<?php if ($sector == "" && isset($_POST['query']) == null): ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="goal-remove.php" method="POST">
@@ -109,44 +106,35 @@ $totalAlcancado=0;
 	<?php endif; ?>		
 </div>
 <?php
-if(isset($_POST['query'])){	
-	if( $nome != ""){		
-		$query="SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$nome."%' AND SETOR_ID=".$setor.")
-		AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20');";
-	}	
-	else{	
-		$query="SELECT M.ID AS ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M
-	INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID
-	INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID
-	WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$setor.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$periodo."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$periodo."', '-20') ORDER BY 1;";
+
+if (isset($_POST['query'])) {	
+	if( $name != ""){		
+		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$period."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$period."', '-20');";
+	} else {	
+		$query = "SELECT M.ID AS ID, U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$sector.") AND M.EXECUCAO>=DATE_SUB(CONCAT('".$period."','-21'), interval 1 month) AND M.EXECUCAO<= CONCAT('".$period."', '-20') ORDER BY 1;";
 	}
-	$x=0;
-	$cnx=mysqli_query($phpmyadmin, $query);
-	if(mysqli_num_rows($cnx)>0){
-		while($meta= $cnx->fetch_array()){
-			$vtId[$x]=$meta["ID"];
-			$vtNome[$x]=$meta["NOME"];
-			$vtAtividade[$x]=$meta["ATIVIDADE"];
-			$vtMeta[$x]=$meta["META"];
-			$vtExecucao[$x]=$meta["EXECUCAO"];
-			$vtDesempenho[$x]=$meta["CADASTRO_EM"];
-			$vtDescricao[$x]=$meta["DESCRICAO"];					
+
+	$x = 0;
+	$cnx = mysqli_query($phpmyadmin, $query);
+	
+	if (mysqli_num_rows($cnx) > 0) {
+		while($meta = $cnx->fetch_array()) {
+			$vtId[$x] = $meta["ID"];
+			$vtNome[$x] = $meta["NOME"];
+			$vtAtividade[$x] = $meta["ATIVIDADE"];
+			$vtMeta[$x] = $meta["META"];
+			$vtExecucao[$x] = $meta["EXECUCAO"];
+			$vtDesempenho[$x] = $meta["CADASTRO_EM"];
+			$vtDescricao[$x] = $meta["DESCRICAO"];					
 			$x++;
-			$contador=$x;
+			$count = $x;
 		}
-	}
-	else{
-		?><script type="text/javascript">			
-			alert('Nenhum registrado encontrado nesta consulta!');
-			window.location.href=window.location.href;
-		</script> <?php		
+	} else {
+		echo "<script>alert('Nenhum registrado encontrado nesta consulta!'); window.location.href=window.location.href; </script>";		
 	}
 }	
-?><!--FINAL DO FORMULÁRIO DE FILTRAGEM-->
-<?php if(isset($_POST['query']) && $contador!=0) : ?>
+
+if (isset($_POST['query']) && $count != 0) { ?>
 <hr/>
 <section class="section">
 <form id="form2" action="goal-remove.php" method="POST">	
@@ -162,7 +150,17 @@ if(isset($_POST['query'])){
 		<th>Execução</th>			
 		<th>Feita</th>		
 	</tr>
-<?php for( $i = 0; $i < sizeof($vtNome); $i++ ) : ?>
+<?php
+
+for( $i = 0; $i < sizeof($vtNome); $i++ ) {
+	$done; 
+	
+	if ($vtDesempenho[$i] == 0) { 
+			$done = "Não";
+	} else { 
+		$done = "Sim";
+	}
+	?>
 	<tr>
 		<td><?php echo $i+1;?></td>
 		<td>
@@ -176,9 +174,9 @@ if(isset($_POST['query'])){
 		<td><?php echo $vtMeta[$i]?></td>
 		<td><?php echo $vtDescricao[$i]?></td>
 		<td><?php echo $vtExecucao[$i]?></td>
-		<td><?php if($vtDesempenho[$i]==0){ echo "Não";}else{ echo "Sim";}?></td>
+		<td><?php echo $done; ?></td>
 	</tr>
-<?php endfor;?>
+<?php } ?>
 	</table>
 	<a href="#top" class="glyphicon glyphicon-chevron-up"></a>
 	<a href="#topo">		
@@ -202,35 +200,27 @@ if(isset($_POST['query'])){
 </div>
 </form>
 </section>	
-<?php endif; ?>
+<?php } ?>
 </body>
 </html>
 <?php
-if(isset($_POST['removerDados'])){
-	$ids= array_filter($_POST['id']);
-	$upCount=0;
-	for( $i = 0; $i < sizeof($ids); $i++ ){
-		$delete="DELETE FROM META WHERE ID=".$ids[$i].";";
-		$cnx=mysqli_query($phpmyadmin, $delete);
-		$upCount=$upCount+1;			 
-	}	
-	if(mysqli_error($phpmyadmin)==null && $upCount>0){	
-		?><script type="text/javascript">
-			alert('<?php echo $upCount;?> Meta(s) deletada(s)');
-			window.location.href=window.location.href;		
-		</script><?php
+
+if (isset($_POST['removerDados'])) {
+	$ids = array_filter($_POST['id']);
+	$upCount = 0;
+	
+	for ( $i = 0; $i < sizeof($ids); $i++ ) {
+		$cnx = mysqli_query($phpmyadmin, "DELETE FROM META WHERE ID=".$ids[$i].";");
+		$upCount = $upCount+1;			 
 	}
-	else if($upCount==0){
-		?><script type="text/javascript">
-			alert('Nenhuma Informação foi marcada p/ ser deletada!!');
-		</script><?php
-	}
-	else{
-		?><script type="text/javascript">
-			alert('Erro ao deletar registro de Meta!!');
-			window.location.href=window.location.href;
-		</script><?php
+
+	if (mysqli_error($phpmyadmin) == null && $upCount > 0) {	
+		echo "<script>alert('<?php echo $upCount;?> Meta(s) deletada(s)'); window.location.href=window.location.href; </script>";
+	} else if ($upCount == 0) {
+		echo "<script>alert('Nenhuma Informação foi marcada p/ ser deletada!!'); </script>";
+	} else {
+		echo "<script>alert('Erro ao deletar registro de Meta!!'); window.location.href=window.location.href; </script>";
 	}
 }
-}//ELSE - caso o usuário não tenha permissão.
+
 ?>
