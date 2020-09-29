@@ -50,7 +50,7 @@ if ($_SESSION["$visualizou"] == 0) {
 if ($feed["ACESSOS"] == 1) {
 	$msg = $nome.", notamos que este é o seu primeiro acesso, espero que goste das novidades.";
 } else if ($feed["DAYS"] > 2 && $feed["DAYS"] < 6) {
-	$msg = "Seu último acesso foi há mais de ".$feed["DAYS"]." dias, sentimos sua falta ".$nome."!!";
+	$msg = "Seu último acesso foi há mais de ".$feed["DAYS"]." dias, verifique as novas informações lançadas ".$nome."!!";
 } else if ($feed["DAYS"] > 5 && $feed["DAYS"] < 8) { 
 	$msg = $nome.", notamos sua ausência de uma semana, acompanhe o lançamento diário de suas metas.";
 } else if ($feed["DAYS"] > 8) { 
