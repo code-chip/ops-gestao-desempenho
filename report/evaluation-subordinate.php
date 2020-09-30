@@ -52,8 +52,8 @@ INNER JOIN AVAL_PERGUNTA AP ON AP.ID=AR.AVAL_PERGUNTA_ID
 WHERE AII.USUARIO_ID =AI.USUARIO_ID AND AII.AVALIACAO_POR<>AI.USUARIO_ID AND AP.AVAL_TIPO_PERGUNTA_ID =2) AS LIDER_AVAL_COM,
 (SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
 WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =1) AS AUTO_COMEN,
-(SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_PERGUNTA_COM APC ON APC.ID=AC.AVAL_PERGUNTA_COM_ID 
-WHERE AC.AVAL_INDICE_ID =AI.ID AND APC.AVAL_TIPO_ID =2) AS LIDER_COMEN
+(SELECT COMENTARIO FROM AVAL_COMENTARIO AC INNER JOIN AVAL_INDICE AII ON AII.ID=AC.AVAL_INDICE_ID 
+WHERE AII.USUARIO_ID=AI.USUARIO_ID AND AII.AVALIACAO_POR=U.GESTOR_ID) AS LIDER_COMEN
 FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
@@ -191,7 +191,6 @@ ORDER BY A.REGISTRO;");
 			<?php 
 		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."&chtt=Distribuição+das+atividades' width='33%' height='30%'>";
 	
-		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='33%' height='30%'>";
 
 		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+no+sistema' width='33%' height='30%'>"; 
 	?>
