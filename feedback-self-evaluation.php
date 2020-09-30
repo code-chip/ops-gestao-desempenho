@@ -16,17 +16,9 @@ if ($index["SITUACAO"] == 'Finalizado') {
 	echo "<script>alert('Avaliação realizada, aguarde o próximo período'); window.location.href='home.php';</script>";
 
 } else if ($_SESSION['userId'] == $_SESSION['user']) {
-	if ($_SESSION['permissao'] == 2) {
-		$button = 'Enviar';
-		$situation = 'Finalizado';
-		$redirect = "<script>alert('Avaliação realizada com sucesso!'); window.location.href='feedback-agree-evaluation.php'; </script>";
-	} else {
-		$button = 'Próxima';
-		$situation = 'Iniciado';
-		$redirect = "<script> window.location.href='feedback-technical-evaluation.php'; </script>";
-	}
-	
-
+	$button = 'Próxima';
+	$situation = 'Iniciado';
+	$redirect = "<script> window.location.href='feedback-technical-evaluation.php'; </script>";
 } else {
 	$button = 'Enviar';
 	$situation = 'Finalizado';
