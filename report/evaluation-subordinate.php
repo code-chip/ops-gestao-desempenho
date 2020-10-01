@@ -1,7 +1,8 @@
 <?php 
 
 require('../connection.php');
-$yearMonth = $_GET['filter'];
+
+list($yearMonth, $leaderId) = explode('_', $_GET['filter'],2);
 
 $r = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(D.DESEMPENHO),2) AS MEDIA, D.USUARIO_ID FROM DESEMPENHO D INNER JOIN USUARIO U ON U.ID=D.USUARIO_ID WHERE U.SITUACAO<>'Desligado' AND ANO_MES >=DATE_SUB('$yearMonth-01', INTERVAL 6 MONTH) AND ANO_MES <='$yearMonth' GROUP BY 2 ORDER BY 1 DESC;");
 
@@ -58,7 +59,7 @@ FROM AVAL_INDICE AI
 INNER JOIN USUARIO U ON U.ID = AI.USUARIO_ID
 INNER JOIN USUARIO UG ON UG.ID = U.GESTOR_ID
 INNER JOIN CARGO C ON C.ID = U.CARGO_ID  
-WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='$yearMonth';";
+WHERE AI.SITUACAO = 'Finalizado' AND AI.AVALIACAO_POR = U.ID AND AI.ANO_MES='$yearMonth' AND AI.GESTOR_ID =".$leaderId." ORDER BY NOME;";
 
 $cnx = mysqli_query($phpmyadmin, $query);
 $reports = mysqli_num_rows($cnx);
@@ -191,6 +192,7 @@ ORDER BY A.REGISTRO;");
 			<?php 
 		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=p&chd=".$occurrence."&chl=".$activity."&chtt=Distribuição+das+atividades' width='33%' height='30%'>";
 	
+		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=bvg&chxt=x,y&chm=N,000000,0,-1,11&chd=".$b1_avg."&chl=".$b1_month."&chds=a&chtt=Desempenho+no+mês' width='33%' height='30%'>";
 
 		echo "<img src='http://chart.apis.google.com/chart?chs=300x150&cht=lc&chxt=x,y&chm=N,000000,0,-1,11&chd=".$c1_access."&chl=".$c1_month."&chds=a&chtt=Acessos+no+sistema' width='33%' height='30%'>"; 
 	?>
