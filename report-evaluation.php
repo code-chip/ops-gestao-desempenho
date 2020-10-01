@@ -71,7 +71,7 @@ require('menu.php');
 						</select>	
 					</div>
 					<span class="icon is-small is-left">
-						<i class="fas fa-door-open"></i>
+						<i class="fas fa-user-tie"></i>
 					</span>
 				</div>						
 			</div>
