@@ -20,7 +20,7 @@ require('menu.php');
 <div class="container">
 	<form id="form1" action="report-evaluation.php" method="POST" >
 		<div class="field">
-			<label class="label is-size-7-touch">Semestre*</label>
+			<label class="label is-size-7-touch">Ciclo*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
 					<select name="yearMonth" class="is-fullwidth"><?php 								
@@ -56,6 +56,26 @@ require('menu.php');
 				</div>						
 			</div>
 		</div>
+		<div class="field loadId" id="subordinate">
+			<div class="field">
+				<label class="label is-size-7-touch">Líder colaboradores*</label>
+				<div class="control has-icons-left">
+					<div class="select is-fullwidth">
+						<select name="leader" class="required" id="sector" autofocus>
+							<option value="">Selecione</option><?php
+							$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO WHERE ID IN(SELECT GESTOR_ID FROM AVAL_INDICE AI GROUP BY 1) ORDER BY NOME");
+							while($leader = mysqli_fetch_assoc($cnx)) {
+								echo '<option value="'.$leader['ID'].'">'.$leader['NOME'].'</option>';
+							}
+							?>
+						</select>	
+					</div>
+					<span class="icon is-small is-left">
+						<i class="fas fa-door-open"></i>
+					</span>
+				</div>						
+			</div>
+		</div>	
 		<div class="field loadId" id="private" style="display: none;">
 			<div class="field">
 				<label class="label is-size-7-touch">Setor*</label>
@@ -138,6 +158,8 @@ if (isset($_POST['query'])) {
 		$_SESSION['filter'] .= "_".$_SESSION["userId"];
 	} else if ($_POST['report'] == 'private') {
 		$_SESSION['filter'] .= "_".$_POST['user'];
+	} else if ($_POST['report'] == 'subordinate') {
+		$_SESSION['filter'] .= "_".$_POST['leader'];
 	}
 
 	echo "<script>window.open('report/evaluation.php', '_blank');</script>";
