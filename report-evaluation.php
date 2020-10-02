@@ -61,7 +61,7 @@ require('menu.php');
 				<label class="label is-size-7-touch">Líder colaboradores*</label>
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
-						<select name="leader" class="required" id="sector" autofocus>
+						<select name="leader" class="required" id="leader" autofocus>
 							<option value="">Selecione</option><?php
 							$cnx = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM USUARIO WHERE ID IN(SELECT GESTOR_ID FROM AVAL_INDICE AI GROUP BY 1) ORDER BY NOME");
 							while($leader = mysqli_fetch_assoc($cnx)) {
