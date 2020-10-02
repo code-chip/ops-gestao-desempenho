@@ -56,6 +56,7 @@ require('menu.php');
 				</div>						
 			</div>
 		</div>
+		<?php if ($_SESSION["permissao"] > 1) { ?>
 		<div class="field loadId" id="subordinate">
 			<div class="field">
 				<label class="label is-size-7-touch">Líder colaboradores*</label>
@@ -75,7 +76,8 @@ require('menu.php');
 					</span>
 				</div>						
 			</div>
-		</div>	
+		</div>
+		<?php } ?>	
 		<div class="field loadId" id="private" style="display: none;">
 			<div class="field">
 				<label class="label is-size-7-touch">Setor*</label>
