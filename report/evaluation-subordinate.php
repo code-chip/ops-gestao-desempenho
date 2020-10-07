@@ -339,6 +339,10 @@ WHERE AI.USUARIO_ID = " . $data["USUARIO_ID"].  " AND AI.AVALIACAO_POR = " . $da
 	
 	echo "</table>";	
 
+	$a3_question = array(); 
+	$a3_answer_leader = array();
+	$a3_answer = array();
+
 ?>	
 <br>
 	<table class="table is-bordered pricing__table is-fullwidth borda">	
