@@ -52,7 +52,7 @@ require('menu.php');
 			<label class="label is-size-7-touch">Ano/Mês*</label>
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth">
-					<select name="yearMonth"><?php
+					<select name="yearMonthRequest"><?php
 						$cnx = mysqli_query($phpmyadmin, "SELECT ANO_MES FROM SOLICITACAO WHERE DESTINATARIO_ID = " . $_SESSION['userId'] . " OR REMETENTE_ID =" . $_SESSION['userId'] . " GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
 						while ( $date = $cnx->fetch_array()) {
 							echo "<option value=" . $date["ANO_MES"] . ">" . $date["ANO_MES"] . "</option>";
@@ -110,7 +110,7 @@ if (isset($_POST['query']) && $_POST["type"] == 'feedback') {
 	} else {
 		$query = "SELECT F.ID, U.NOME AS REMETENTE, U2.NOME AS DESTINATARIO, FRP.RESPOSTA AS PRO, FRC.RESPOSTA AS COMP, FRD.RESPOSTA AS DES ,F.TIPO, F.FEEDBACK, F.EXIBICAO, F.SITUACAO FROM FEEDBACK F INNER JOIN FEEDBACK_RESPOSTA FRP ON FRP.ID=F.PROFISSIONAL INNER JOIN FEEDBACK_RESPOSTA FRC ON FRC.ID=F.COMPORTAMENTAL INNER JOIN FEEDBACK_RESPOSTA FRD ON FRD.ID=F.DESEMPENHO INNER JOIN USUARIO U ON U.ID=F.REMETENTE_ID INNER JOIN USUARIO U2 ON U2.ID=F.DESTINATARIO_ID WHERE ".$_POST["origin"]."=".$_SESSION["userId"]." AND ANO_MES = '" . $_POST['yearMonth'] . "' " . $_POST['situation'] . " ORDER BY F.REGISTRO DESC";
 	}
-	
+
 	$x = 0;
 	$cnx = mysqli_query($phpmyadmin, $query);
 	
