@@ -214,6 +214,7 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
                 $vtIdUsuario[$x] = $dado["ID"];
                 $vtNome[$x] = $dado["NOME"];
                 $vtDesempenho[$x] = $dado["DESEMPENHO"];
+                $a2[$x] = $dado["DESEMPENHO"];
                 $vtAtividade[$x] = $dado["ATIVIDADE"];
                 $vtFalta[$x] = $dado["FALTA"];
                 $vtFolga[$x] = $dado["FOLGA"];
@@ -359,8 +360,6 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
-    var t = '<?php echo $teste; ?>';
-    var p = parseFloat('<?php echo $fava?>');
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Mês', 'avg', 'min'],
@@ -382,42 +381,41 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
     google.charts.load('current', {packages: ['corechart', 'line']});
     google.charts.setOnLoadCallback(drawBasic);
     function drawBasic() {
-        var data = new google.visualization.DataTable();''
-        var o;
+        var data = new google.visualization.DataTable();
         data.addColumn('number', 'X');
         data.addColumn('number', 'Desempenho');
         data.addRows([
-            [0, parseFloat('<?php echo $vtDesempenho[0]?>')],   [1, parseFloat('<?php echo $vtDesempenho[1]?>')],  [2, parseFloat('<?php echo $vtDesempenho[2]?>')],
-            [3, parseFloat('<?php echo $vtDesempenho[3]?>')],  [4, parseFloat('<?php echo $vtDesempenho[4]?>')],  [5, parseFloat('<?php echo $vtDesempenho[5]?>')],
-            [6, parseFloat('<?php echo $vtDesempenho[6]?>')],  [7, parseFloat('<?php echo $vtDesempenho[7]?>')],  [8, parseFloat('<?php echo $vtDesempenho[8]?>')],
-            [9, parseFloat('<?php echo $vtDesempenho[9]?>')],  [10, parseFloat('<?php echo $vtDesempenho[10]?>')], [11, parseFloat('<?php echo $vtDesempenho[11]?>')],
-            [12, parseFloat('<?php echo $vtDesempenho[12]?>')], [13, parseFloat('<?php echo $vtDesempenho[13]?>')], [14, parseFloat('<?php echo $vtDesempenho[14]?>')],
-            [15, parseFloat('<?php echo $vtDesempenho[15]?>')], [16, parseFloat('<?php echo $vtDesempenho[16]?>')], [17, parseFloat('<?php echo $vtDesempenho[17]?>')],
-            [18, parseFloat('<?php echo $vtDesempenho[18]?>')], [19, parseFloat('<?php echo $vtDesempenho[19]?>')], [20, parseFloat('<?php echo $vtDesempenho[19]?>')],
-            [21, parseFloat('<?php echo $vtDesempenho[21]?>')], [22, parseFloat('<?php echo $vtDesempenho[22]?>')], [23, parseFloat('<?php echo $vtDesempenho[23]?>')],
-            [24, parseFloat('<?php echo $vtDesempenho[24]?>')], [25, parseFloat('<?php echo $vtDesempenho[25]?>')], [26, parseFloat('<?php echo $vtDesempenho[26]?>')],
-            [27, parseFloat('<?php echo $vtDesempenho[27]?>')], [28, parseFloat('<?php echo $vtDesempenho[28]?>')], [29, parseFloat('<?php echo $vtDesempenho[29]?>')],
-            [30, parseFloat('<?php echo $vtDesempenho[30]?>')], [31, parseFloat('<?php echo $vtDesempenho[31]?>')], [32, parseFloat('<?php echo $vtDesempenho[32]?>')],
-            [33, parseFloat('<?php echo $vtDesempenho[33]?>')], [34, parseFloat('<?php echo $vtDesempenho[34]?>')], [35, parseFloat('<?php echo $vtDesempenho[35]?>')],
-            [36, parseFloat('<?php echo $vtDesempenho[36]?>')], [37, parseFloat('<?php echo $vtDesempenho[37]?>')], [38, parseFloat('<?php echo $vtDesempenho[38]?>')],
-            [39, parseFloat('<?php echo $vtDesempenho[39]?>')], [40, parseFloat('<?php echo $vtDesempenho[40]?>')], [41, parseFloat('<?php echo $vtDesempenho[41]?>')],
-            [42, parseFloat('<?php echo $vtDesempenho[42]?>')], [43, parseFloat('<?php echo $vtDesempenho[43]?>')], [44, parseFloat('<?php echo $vtDesempenho[44]?>')],
-            [45, parseFloat('<?php echo $vtDesempenho[45]?>')], [46, parseFloat('<?php echo $vtDesempenho[46]?>')], [47, parseFloat('<?php echo $vtDesempenho[47]?>')],
-            [48, parseFloat('<?php echo $vtDesempenho[48]?>')], [49, parseFloat('<?php echo $vtDesempenho[49]?>')], [50, parseFloat('<?php echo $vtDesempenho[50]?>')],
-            [51, parseFloat('<?php echo $vtDesempenho[51]?>')], [52, parseFloat('<?php echo $vtDesempenho[52]?>')], [53, parseFloat('<?php echo $vtDesempenho[53]?>')],
-            [54, parseFloat('<?php echo $vtDesempenho[54]?>')], [55, parseFloat('<?php echo $vtDesempenho[55]?>')], [56, parseFloat('<?php echo $vtDesempenho[56]?>')],
-            [57, parseFloat('<?php echo $vtDesempenho[57]?>')], [58, parseFloat('<?php echo $vtDesempenho[58]?>')], [59, parseFloat('<?php echo $vtDesempenho[59]?>')],
-            [60, parseFloat('<?php echo $vtDesempenho[60]?>')], [61, parseFloat('<?php echo $vtDesempenho[61]?>')], [62, parseFloat('<?php echo $vtDesempenho[62]?>')],
-            [63, parseFloat('<?php echo $vtDesempenho[63]?>')], [64, parseFloat('<?php echo $vtDesempenho[64]?>')], [65, parseFloat('<?php echo $vtDesempenho[65]?>')],
-            [66, parseFloat('<?php echo $vtDesempenho[66]?>')], [67, parseFloat('<?php echo $vtDesempenho[67]?>')], [68, parseFloat('<?php echo $vtDesempenho[68]?>')],
-            [69, parseFloat('<?php echo $vtDesempenho[69]?>')], [70, parseFloat('<?php echo $vtDesempenho[70]?>')], [71, parseFloat('<?php echo $vtDesempenho[71]?>')],
-            [72, parseFloat('<?php echo $vtDesempenho[72]?>')], [73, parseFloat('<?php echo $vtDesempenho[73]?>')], [74, parseFloat('<?php echo $vtDesempenho[74]?>')],
-            [75, parseFloat('<?php echo $vtDesempenho[75]?>')], [76, parseFloat('<?php echo $vtDesempenho[76]?>')], [77, parseFloat('<?php echo $vtDesempenho[77]?>')],
-            [78, parseFloat('<?php echo $vtDesempenho[78]?>')], [79, parseFloat('<?php echo $vtDesempenho[79]?>')], [80, parseFloat('<?php echo $vtDesempenho[80]?>')],
-            [81, parseFloat('<?php echo $vtDesempenho[81]?>')], [82, parseFloat('<?php echo $vtDesempenho[82]?>')], [83, parseFloat('<?php echo $vtDesempenho[83]?>')],
-            [84, parseFloat('<?php echo $vtDesempenho[84]?>')], [85, parseFloat('<?php echo $vtDesempenho[85]?>')], [86, parseFloat('<?php echo $vtDesempenho[86]?>')],
-            [87, parseFloat('<?php echo $vtDesempenho[87]?>')], [88, parseFloat('<?php echo $vtDesempenho[88]?>')], [89, parseFloat('<?php echo $vtDesempenho[89]?>')],
-            [90, parseFloat('<?php echo $vtDesempenho[90]?>')], [91, parseFloat('<?php echo $vtDesempenho[91]?>')], [92, parseFloat('<?php echo $vtDesempenho[92]?>')]
+            [0, parseFloat('<?php echo $a2[0]?>')],   [1, parseFloat('<?php echo $a2[1]?>')],  [2, parseFloat('<?php echo $a2[2]?>')],
+            [3, parseFloat('<?php echo $a2[3]?>')],  [4, parseFloat('<?php echo $a2[4]?>')],  [5, parseFloat('<?php echo $a2[5]?>')],
+            [6, parseFloat('<?php echo $a2[6]?>')],  [7, parseFloat('<?php echo $a2[7]?>')],  [8, parseFloat('<?php echo $a2[8]?>')],
+            [9, parseFloat('<?php echo $a2[9]?>')],  [10, parseFloat('<?php echo $a2[10]?>')], [11, parseFloat('<?php echo $a2[11]?>')],
+            [12, parseFloat('<?php echo $a2[12]?>')], [13, parseFloat('<?php echo $a2[13]?>')], [14, parseFloat('<?php echo $a2[14]?>')],
+            [15, parseFloat('<?php echo $a2[15]?>')], [16, parseFloat('<?php echo $a2[16]?>')], [17, parseFloat('<?php echo $a2[17]?>')],
+            [18, parseFloat('<?php echo $a2[18]?>')], [19, parseFloat('<?php echo $a2[19]?>')], [20, parseFloat('<?php echo $a2[19]?>')],
+            [21, parseFloat('<?php echo $a2[21]?>')], [22, parseFloat('<?php echo $a2[22]?>')], [23, parseFloat('<?php echo $a2[23]?>')],
+            [24, parseFloat('<?php echo $a2[24]?>')], [25, parseFloat('<?php echo $a2[25]?>')], [26, parseFloat('<?php echo $a2[26]?>')],
+            [27, parseFloat('<?php echo $a2[27]?>')], [28, parseFloat('<?php echo $a2[28]?>')], [29, parseFloat('<?php echo $a2[29]?>')],
+            [30, parseFloat('<?php echo $a2[30]?>')], [31, parseFloat('<?php echo $a2[31]?>')], [32, parseFloat('<?php echo $a2[32]?>')],
+            [33, parseFloat('<?php echo $a2[33]?>')], [34, parseFloat('<?php echo $a2[34]?>')], [35, parseFloat('<?php echo $a2[35]?>')],
+            [36, parseFloat('<?php echo $a2[36]?>')], [37, parseFloat('<?php echo $a2[37]?>')], [38, parseFloat('<?php echo $a2[38]?>')],
+            [39, parseFloat('<?php echo $a2[39]?>')], [40, parseFloat('<?php echo $a2[40]?>')], [41, parseFloat('<?php echo $a2[41]?>')],
+            [42, parseFloat('<?php echo $a2[42]?>')], [43, parseFloat('<?php echo $a2[43]?>')], [44, parseFloat('<?php echo $a2[44]?>')],
+            [45, parseFloat('<?php echo $a2[45]?>')], [46, parseFloat('<?php echo $a2[46]?>')], [47, parseFloat('<?php echo $a2[47]?>')],
+            [48, parseFloat('<?php echo $a2[48]?>')], [49, parseFloat('<?php echo $a2[49]?>')], [50, parseFloat('<?php echo $a2[50]?>')],
+            [51, parseFloat('<?php echo $a2[51]?>')], [52, parseFloat('<?php echo $a2[52]?>')], [53, parseFloat('<?php echo $a2[53]?>')],
+            [54, parseFloat('<?php echo $a2[54]?>')], [55, parseFloat('<?php echo $a2[55]?>')], [56, parseFloat('<?php echo $a2[56]?>')],
+            [57, parseFloat('<?php echo $a2[57]?>')], [58, parseFloat('<?php echo $a2[58]?>')], [59, parseFloat('<?php echo $a2[59]?>')],
+            [60, parseFloat('<?php echo $a2[60]?>')], [61, parseFloat('<?php echo $a2[61]?>')], [62, parseFloat('<?php echo $a2[62]?>')],
+            [63, parseFloat('<?php echo $a2[63]?>')], [64, parseFloat('<?php echo $a2[64]?>')], [65, parseFloat('<?php echo $a2[65]?>')],
+            [66, parseFloat('<?php echo $a2[66]?>')], [67, parseFloat('<?php echo $a2[67]?>')], [68, parseFloat('<?php echo $a2[68]?>')],
+            [69, parseFloat('<?php echo $a2[69]?>')], [70, parseFloat('<?php echo $a2[70]?>')], [71, parseFloat('<?php echo $a2[71]?>')],
+            [72, parseFloat('<?php echo $a2[72]?>')], [73, parseFloat('<?php echo $a2[73]?>')], [74, parseFloat('<?php echo $a2[74]?>')],
+            [75, parseFloat('<?php echo $a2[75]?>')], [76, parseFloat('<?php echo $a2[76]?>')], [77, parseFloat('<?php echo $a2[77]?>')],
+            [78, parseFloat('<?php echo $a2[78]?>')], [79, parseFloat('<?php echo $a2[79]?>')], [80, parseFloat('<?php echo $a2[80]?>')],
+            [81, parseFloat('<?php echo $a2[81]?>')], [82, parseFloat('<?php echo $a2[82]?>')], [83, parseFloat('<?php echo $a2[83]?>')],
+            [84, parseFloat('<?php echo $a2[84]?>')], [85, parseFloat('<?php echo $a2[85]?>')], [86, parseFloat('<?php echo $a2[86]?>')],
+            [87, parseFloat('<?php echo $a2[87]?>')], [88, parseFloat('<?php echo $a2[88]?>')], [89, parseFloat('<?php echo $a2[89]?>')],
+            [90, parseFloat('<?php echo $a2[90]?>')], [91, parseFloat('<?php echo $a2[91]?>')], [92, parseFloat('<?php echo $a2[92]?>')]
         ]);
         var options = {
             hAxis: {
