@@ -236,18 +236,6 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
                 $x++;
             }
 
-            $g1 = "SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND ANO_MES= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m')),2)MENOR FROM DESEMPENHO 
-		WHERE ANO_MES = DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH),'%Y-%m') AND PRESENCA_ID NOT IN(3,5)
-		UNION ALL
-		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND ANO_MES= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m')),2)MENOR FROM DESEMPENHO 
-		WHERE ANO_MES = DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH),'%Y-%m') AND PRESENCA_ID NOT IN(3,5)
-		UNION ALL
-		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND ANO_MES= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m')),2)MENOR FROM DESEMPENHO 
-		WHERE ANO_MES = DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') AND PRESENCA_ID NOT IN(3,5)
-		UNION ALL
-		SELECT TRUNCATE(AVG(DESEMPENHO),2)MEDIA, TRUNCATE((SELECT MIN(DESEMPENHO) FROM DESEMPENHO WHERE DESEMPENHO>0 AND ANO_MES= DATE_FORMAT(CURDATE(),'%Y-%m')),2)MENOR FROM DESEMPENHO 
-		WHERE ANO_MES = DATE_FORMAT(CURDATE(), '%Y-%m') AND PRESENCA_ID NOT IN(3,5);";
-
             /*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
             $x = 0;
             $cnxG4 = mysqli_query($phpmyadmin, "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID	WHERE PRESENCA_ID NOT IN (3,5) AND ANO_MES ='".$periodo."' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 5;");
@@ -256,17 +244,12 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
                 $vtG4media[$x] = $G4["MEDIA"];
                 $x++;
             }
-
-            $xg = 0;
-            $cnx2 = mysqli_query($phpmyadmin, $g1);
-            while ($graf1 = $cnx2->fetch_array()) {
-                $vtMedia[$xg] = $graf1["MEDIA"];
-                $vtMenor[$xg] = $graf1["MENOR"];
-                $xg++;
-            }
         }
 
         $charts = new ReportData();
+        $charts->defineQuery('chart-a1');
+        $a1 = $charts->result();
+
         $charts->defineQuery('chart-a4');
         $a4 = $charts->result();
 
@@ -386,10 +369,10 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Mês', 'avg', 'min'],
-            ['<?php echo strftime('%h', strtotime("-3 months"))?>',  parseFloat('<?php echo $vtMedia[0]?>'), parseFloat('<?php echo $vtMenor[0]?>')],
-            ['<?php echo strftime('%h', strtotime("-2 months"))?>',  parseFloat('<?php echo $vtMedia[1]?>'), parseFloat('<?php echo $vtMenor[1]?>')],
-            ['<?php echo strftime('%h', strtotime("-1 months"))?>',  parseFloat('<?php echo $vtMedia[2]?>'), parseFloat('<?php echo $vtMenor[2]?>')],
-            ['<?php echo strftime('%h')?>',  parseFloat('<?php echo $vtMedia[3]?>'), parseFloat('<?php echo $vtMenor[3]?>')]
+            ['<?php echo strftime('%h', strtotime("-3 months"))?>',  parseFloat('<?php echo $a1[0][0]?>'), parseFloat('<?php echo $a1[0][1]?>')],
+            ['<?php echo strftime('%h', strtotime("-2 months"))?>',  parseFloat('<?php echo $a1[1][0]?>'), parseFloat('<?php echo $a1[1][1]?>')],
+            ['<?php echo strftime('%h', strtotime("-1 months"))?>',  parseFloat('<?php echo $a1[2][0]?>'), parseFloat('<?php echo $a1[2][1]?>')],
+            ['<?php echo strftime('%h')?>',  parseFloat('<?php echo $a1[3][0]?>'), parseFloat('<?php echo $a1[3][1]?>')]
         ]);
         var options = {
             title: 'Desempenho da Empresa',
