@@ -236,21 +236,16 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
                 $x++;
             }
 
-            /*DASHABOARD TOP 5 RANKGING MENSAL OPERADORES*/
-            $x = 0;
-            $cnxG4 = mysqli_query($phpmyadmin, "SELECT U.NOME, AVG(DESEMPENHO) MEDIA FROM DESEMPENHO INNER JOIN USUARIO U ON U.ID=USUARIO_ID	WHERE PRESENCA_ID NOT IN (3,5) AND ANO_MES ='".$periodo."' GROUP BY USUARIO_ID ORDER BY MEDIA DESC LIMIT 5;");
-            while ($G4 = $cnxG4->fetch_array()) {
-                $vtG4nome[$x] = $G4["NOME"];
-                $vtG4media[$x] = $G4["MEDIA"];
-                $x++;
-            }
         }
 
         $charts = new ReportData();
-        $charts->defineQuery('chart-a1');
+        $charts->defineQuery('chart-a1', null);
         $a1 = $charts->result();
 
-        $charts->defineQuery('chart-a4');
+        $charts->defineQuery('chart-a3', $periodo);
+        $a3 = $charts->result();
+
+        $charts->defineQuery('chart-a4', null);
         $a4 = $charts->result();
 
         foreach ($a4 as $key => $a4s) {
@@ -442,11 +437,11 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ["Element", "Density", { role: "style" } ],
-            ['<?php echo $vtG4nome[0]?>', parseFloat('<?php echo $vtG4media[0]?>'), "gold"],
-            ['<?php echo $vtG4nome[1]?>', parseFloat('<?php echo $vtG4media[1]?>'), "silver"],
-            ['<?php echo $vtG4nome[2]?>', parseFloat('<?php echo $vtG4media[2]?>'), "#b87333"],
-            ['<?php echo $vtG4nome[3]?>', parseFloat('<?php echo $vtG4media[3]?>'), "#b87333"],
-            ['<?php echo $vtG4nome[4]?>', parseFloat('<?php echo $vtG4media[4]?>'), "color: #e5e4e2"]
+            ['<?php echo $a3[0][0]?>', parseFloat('<?php echo $a3[0][1]?>'), "gold"],
+            ['<?php echo $a3[1][0]?>', parseFloat('<?php echo $a3[1][1]?>'), "silver"],
+            ['<?php echo $a3[2][0]?>', parseFloat('<?php echo $a3[2][1]?>'), "#b87333"],
+            ['<?php echo $a3[3][0]?>', parseFloat('<?php echo $a3[3][1]?>'), "#b87333"],
+            ['<?php echo $a3[4][0]?>', parseFloat('<?php echo $a3[4][1]?>'), "color: #e5e4e2"]
         ]);
         var view = new google.visualization.DataView(data);
         view.setColumns([0, 1,
