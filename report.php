@@ -11,11 +11,14 @@ $meta = trim($_REQUEST['meta']);
 $contador = 0;
 $totalAlcancado = 0;
 
+$charts = new ReportData();
+
 if ($_SESSION["permissao"] == 1) {
     echo "<script>alert('Usuário sem permissão'); window.location.href='report-private.php'; </script>";
 }
 
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Gestão de Desempenho - Relatório Gestão</title>
@@ -60,13 +63,7 @@ if ($_SESSION["permissao"] == 1) {
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
                             <select name="periodo" id="saveDate" style="width: 12em">
-                                <option selected="selected" value="<?php echo date('Y-m')?>"><?php echo date('m/Y', strtotime("+1 months"))?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-1 months"))?>"><?php echo date('m/Y')?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-2 months"))?>"><?php echo date('m/Y', strtotime("-1 months"))?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-3 months"))?>"><?php echo date('m/Y', strtotime("-2 months"))?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-4 months"))?>"><?php echo date('m/Y', strtotime("-3 months"))?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-5 months"))?>"><?php echo date('m/Y', strtotime("-4 months"))?></option>
-                                <option value="<?php echo date('Y-m', strtotime("-6 months"))?>"><?php echo date('m/Y', strtotime("-5 months"))?></option>
+                                <?php echo $charts->mountSelect( 'month'); ?>
                             </select>
                             <span class="icon is-small is-left">
 							<i class="fas fa-calendar-alt"></i>
@@ -121,11 +118,8 @@ if ($_SESSION["permissao"] == 1) {
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
                             <select name="setor" style="width: 12em">
-                                <option selected="selected" value="">Todos</option><?php
-                                $con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
-                                while($setor = $con->fetch_array()){
-                                    echo "<option value='AND SETOR_ID=" . $setor["ID"] . "'>" . $setor["NOME"] . "</option>";
-                                }?>
+                                <option selected="selected" value="">Todos</option>
+                                <?php echo $charts->mountSelect( 'sector'); ?>
                             </select>
                             <span class="icon is-small is-left">
 								<i class="fas fa-door-open"></i>
@@ -142,11 +136,8 @@ if ($_SESSION["permissao"] == 1) {
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
                             <select name="turno" id="salvaTurno" style="width: 12em">
-                                <option selected="selected"value="">Todos</option><?php
-                                $con = mysqli_query($phpmyadmin, "SELECT ID, NOME FROM TURNO WHERE SITUACAO='Ativo'");
-                                while($turno = $con->fetch_array()){
-                                    echo "<option value='AND TURNO_ID=" . $turno["ID"] ."'>" . $turno["NOME"] . "</option>";
-                                }?>
+                                <option selected="selected"value="">Todos</option>
+                                <?php echo $charts->mountSelect( 'turn'); ?>
                             </select>
                             <span class="icon is-small is-left">
 								<i class="fas fa-clock"></i>
@@ -192,6 +183,21 @@ if ($_SESSION["permissao"] == 1) {
 
         if ($atividade == "agrupado") {
             $consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO, CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." ".$turno." ".$setor." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
+
+            $filter = array(
+                'month' => $periodo,
+                'date' => $date,
+                'goal' => $meta,
+                'turn' => $turno,
+                'sector' => $setor,
+                'order' => $ordenacao
+            );
+
+            $charts->defineQuery('grouped', $filter);
+            $table = $charts->result_array();
+
+            echo $table[0]['NOME'];
+
         } else {
             $consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, 
 (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
@@ -199,6 +205,8 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
         }
 
         $cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT ROUND(DESEMPENHO, 2) FROM META_EMPRESA WHERE ANO_MES='" . $periodo . "') AS ALCANCADO FROM META_PESO WHERE ANO_MES='" . $periodo . "';");
+
+        echo $filter['month'];
 
         $peso = $cx->fetch_array();
         $con = mysqli_query($phpmyadmin, $consulta);
@@ -239,7 +247,6 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 
         }
 
-        $charts = new ReportData();
         $charts->defineQuery('chart-a1', null);
         $a1 = $charts->result();
 
@@ -248,6 +255,11 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 
         $charts->defineQuery('chart-a4', null);
         $a4 = $charts->result();
+
+        //$a1 = $charts->converterMatrixToArray($a1);
+
+        //$a1 = $charts->converterArrayToString('|', $a1);
+        $a2 = $charts->converterArrayToString('|', $a2);
 
         foreach ($a4 as $key => $a4s) {
             $a4[$key][0] = $a4s[4] >= $a4s[2] ? 'true' : 'false';
@@ -381,42 +393,27 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
     google.charts.load('current', {packages: ['corechart', 'line']});
     google.charts.setOnLoadCallback(drawBasic);
     function drawBasic() {
+        var a2 = '<?php echo $a2; ?>'.split('|').map(Number)
         var data = new google.visualization.DataTable();
         data.addColumn('number', 'X');
         data.addColumn('number', 'Desempenho');
         data.addRows([
-            [0, parseFloat('<?php echo $a2[0]?>')],   [1, parseFloat('<?php echo $a2[1]?>')],  [2, parseFloat('<?php echo $a2[2]?>')],
-            [3, parseFloat('<?php echo $a2[3]?>')],  [4, parseFloat('<?php echo $a2[4]?>')],  [5, parseFloat('<?php echo $a2[5]?>')],
-            [6, parseFloat('<?php echo $a2[6]?>')],  [7, parseFloat('<?php echo $a2[7]?>')],  [8, parseFloat('<?php echo $a2[8]?>')],
-            [9, parseFloat('<?php echo $a2[9]?>')],  [10, parseFloat('<?php echo $a2[10]?>')], [11, parseFloat('<?php echo $a2[11]?>')],
-            [12, parseFloat('<?php echo $a2[12]?>')], [13, parseFloat('<?php echo $a2[13]?>')], [14, parseFloat('<?php echo $a2[14]?>')],
-            [15, parseFloat('<?php echo $a2[15]?>')], [16, parseFloat('<?php echo $a2[16]?>')], [17, parseFloat('<?php echo $a2[17]?>')],
-            [18, parseFloat('<?php echo $a2[18]?>')], [19, parseFloat('<?php echo $a2[19]?>')], [20, parseFloat('<?php echo $a2[19]?>')],
-            [21, parseFloat('<?php echo $a2[21]?>')], [22, parseFloat('<?php echo $a2[22]?>')], [23, parseFloat('<?php echo $a2[23]?>')],
-            [24, parseFloat('<?php echo $a2[24]?>')], [25, parseFloat('<?php echo $a2[25]?>')], [26, parseFloat('<?php echo $a2[26]?>')],
-            [27, parseFloat('<?php echo $a2[27]?>')], [28, parseFloat('<?php echo $a2[28]?>')], [29, parseFloat('<?php echo $a2[29]?>')],
-            [30, parseFloat('<?php echo $a2[30]?>')], [31, parseFloat('<?php echo $a2[31]?>')], [32, parseFloat('<?php echo $a2[32]?>')],
-            [33, parseFloat('<?php echo $a2[33]?>')], [34, parseFloat('<?php echo $a2[34]?>')], [35, parseFloat('<?php echo $a2[35]?>')],
-            [36, parseFloat('<?php echo $a2[36]?>')], [37, parseFloat('<?php echo $a2[37]?>')], [38, parseFloat('<?php echo $a2[38]?>')],
-            [39, parseFloat('<?php echo $a2[39]?>')], [40, parseFloat('<?php echo $a2[40]?>')], [41, parseFloat('<?php echo $a2[41]?>')],
-            [42, parseFloat('<?php echo $a2[42]?>')], [43, parseFloat('<?php echo $a2[43]?>')], [44, parseFloat('<?php echo $a2[44]?>')],
-            [45, parseFloat('<?php echo $a2[45]?>')], [46, parseFloat('<?php echo $a2[46]?>')], [47, parseFloat('<?php echo $a2[47]?>')],
-            [48, parseFloat('<?php echo $a2[48]?>')], [49, parseFloat('<?php echo $a2[49]?>')], [50, parseFloat('<?php echo $a2[50]?>')],
-            [51, parseFloat('<?php echo $a2[51]?>')], [52, parseFloat('<?php echo $a2[52]?>')], [53, parseFloat('<?php echo $a2[53]?>')],
-            [54, parseFloat('<?php echo $a2[54]?>')], [55, parseFloat('<?php echo $a2[55]?>')], [56, parseFloat('<?php echo $a2[56]?>')],
-            [57, parseFloat('<?php echo $a2[57]?>')], [58, parseFloat('<?php echo $a2[58]?>')], [59, parseFloat('<?php echo $a2[59]?>')],
-            [60, parseFloat('<?php echo $a2[60]?>')], [61, parseFloat('<?php echo $a2[61]?>')], [62, parseFloat('<?php echo $a2[62]?>')],
-            [63, parseFloat('<?php echo $a2[63]?>')], [64, parseFloat('<?php echo $a2[64]?>')], [65, parseFloat('<?php echo $a2[65]?>')],
-            [66, parseFloat('<?php echo $a2[66]?>')], [67, parseFloat('<?php echo $a2[67]?>')], [68, parseFloat('<?php echo $a2[68]?>')],
-            [69, parseFloat('<?php echo $a2[69]?>')], [70, parseFloat('<?php echo $a2[70]?>')], [71, parseFloat('<?php echo $a2[71]?>')],
-            [72, parseFloat('<?php echo $a2[72]?>')], [73, parseFloat('<?php echo $a2[73]?>')], [74, parseFloat('<?php echo $a2[74]?>')],
-            [75, parseFloat('<?php echo $a2[75]?>')], [76, parseFloat('<?php echo $a2[76]?>')], [77, parseFloat('<?php echo $a2[77]?>')],
-            [78, parseFloat('<?php echo $a2[78]?>')], [79, parseFloat('<?php echo $a2[79]?>')], [80, parseFloat('<?php echo $a2[80]?>')],
-            [81, parseFloat('<?php echo $a2[81]?>')], [82, parseFloat('<?php echo $a2[82]?>')], [83, parseFloat('<?php echo $a2[83]?>')],
-            [84, parseFloat('<?php echo $a2[84]?>')], [85, parseFloat('<?php echo $a2[85]?>')], [86, parseFloat('<?php echo $a2[86]?>')],
-            [87, parseFloat('<?php echo $a2[87]?>')], [88, parseFloat('<?php echo $a2[88]?>')], [89, parseFloat('<?php echo $a2[89]?>')],
-            [90, parseFloat('<?php echo $a2[90]?>')], [91, parseFloat('<?php echo $a2[91]?>')], [92, parseFloat('<?php echo $a2[92]?>')]
+            [0, a2[0]],   [1, a2[1]],   [2, a2[2]],   [3, a2[3]],   [4, a2[4]],   [5, a2[5]],   [6, a2[6]],
+            [7, a2[7]],   [8, a2[8]],   [9, a2[9]],   [10, a2[10]], [11, a2[11]], [12, a2[12]], [13, a2[13]],
+            [14, a2[14]], [15, a2[15]], [16, a2[16]], [17, a2[17]], [18, a2[18]], [19, a2[19]], [20, a2[19]],
+            [21, a2[21]], [22, a2[22]], [23, a2[23]], [24, a2[24]], [25, a2[25]], [26, a2[26]], [27, a2[27]],
+            [28, a2[28]], [29, a2[29]], [30, a2[30]], [31, a2[31]], [32, a2[32]], [33, a2[33]], [34, a2[34]],
+            [35, a2[35]], [36, a2[36]], [37, a2[37]], [38, a2[38]], [39, a2[39]], [40, a2[40]], [41, a2[41]],
+            [42, a2[42]], [43, a2[43]], [44, a2[44]], [45, a2[45]], [46, a2[46]], [47, a2[47]], [48, a2[48]],
+            [49, a2[49]], [50, a2[50]], [51, a2[51]], [52, a2[52]], [53, a2[53]], [54, a2[54]], [55, a2[55]],
+            [56, a2[56]], [57, a2[57]], [58, a2[58]], [59, a2[59]], [60, a2[60]], [61, a2[61]], [62, a2[62]],
+            [63, a2[63]], [64, a2[64]], [65, a2[65]], [66, a2[66]], [67, a2[67]], [68, a2[68]], [69, a2[69]],
+            [70, a2[70]], [71, a2[71]], [72, a2[72]], [73, a2[73]], [74, a2[74]], [75, a2[75]], [76, a2[76]],
+            [77, a2[77]], [78, a2[78]], [79, a2[79]], [80, a2[80]], [81, a2[81]], [82, a2[82]], [83, a2[83]],
+            [84, a2[84]], [85, a2[85]], [86, a2[86]], [87, a2[87]], [88, a2[88]], [89, a2[89]], [90, a2[90]],
+            [91, a2[91]], [92, a2[92]]
         ]);
+
         var options = {
             hAxis: {
                 title: 'Operadores'
@@ -488,5 +485,6 @@ if ($contador == 0 && isset($_GET["filtro"]) != null) {
     echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";
 }
 
-?></body>
+?>
+</body>
 </html>

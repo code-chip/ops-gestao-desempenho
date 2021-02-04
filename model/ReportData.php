@@ -15,7 +15,17 @@ class ReportData
 
     public function result(){
         $cnx = mysqli_query($this->db, $this->getQuery());
+
         return $cnx->fetch_all();
+    }
+
+    public function result_array(){
+        $cnx = mysqli_query($this->db, $this->getQuery());
+        $array = [];
+        while ($dado = $cnx->fetch_array()) {
+            $array[] = $dado;
+        }
+        return $array;
     }
 
     public function setQuery($query)
@@ -57,7 +67,71 @@ class ReportData
                     FROM USUARIO U WHERE GESTOR_ID IN(31,58,99,149) AND SITUACAO = 'Ativo' GROUP BY 1;");
                 break;
 
+            case 'select-sector':
+                $this->setQuery("SELECT ID, NOME FROM SETOR WHERE SITUACAO = 'Ativo'");
+                break;
+
+            case 'select-turn':
+                $this->setQuery("SELECT ID, NOME FROM TURNO WHERE SITUACAO = 'Ativo'");
+                break;
+
+            case 'grouped':
+                $this->setQuery(
+                    "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS FALTA, (SELECT COUNT(*) 
+                    FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID
+                     AND ANO_MES='".$value['month']."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS TOTAL, 
+                     TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO, CONCAT(DATE_FORMAT('".$value['month']."-01','%d/%m'),' a ".$value['date']."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) 
+                     DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$value['month']."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE 
+                     D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$value['month']."'".$value['goal']." ".$value['turn']." ".$value['sector']." GROUP BY D.USUARIO_ID ORDER BY ".$value['order'].";"
+                );
         }
+    }
+
+    public function converterArrayToString($separator, $array)
+    {
+        return implode($separator, $array);
+    }
+
+    public function converterMatrixToArray($matrix)
+    {
+        $array = [];
+        for($i = 0; $i < count($matrix);$i++){
+            for($j = 0; $j < count($matrix);$j++){
+                if($matrix[$i][$j] != null || $matrix[$i][$j] != ''){
+                    $array[$x] = $matrix[$i][$j];
+                    $x++;
+                }
+            }
+        }
+        return $array;
+    }
+
+    public function mountSelect($selectName)
+    {
+        switch($selectName){
+            case 'sector':
+                $this->defineQuery('select-sector', null);
+                foreach ($this->result_array() as $values){
+                    $select .= "<option value='AND SETOR_ID=" . $values["ID"] . "'>" . $values["NOME"] . "</option>";
+                }
+                break;
+            case 'turn':
+                $this->defineQuery('select-turn', null);
+                foreach ($this->result_array() as $values){
+                    $select .= "<option value='AND TURNO_ID=" . $values["ID"] ."'>" . $values["NOME"] . "</option>";
+                }
+                break;
+            case 'month':
+                $select =
+                    "<option selected='selected' value='" . date('Y-m') . "'>". date('m/Y', strtotime('+1 months')) . "</option>
+                    <option value='" . date('Y-m', strtotime('-1 months')) . "'>" . date('m/Y') ."</option>
+                    <option value='" . date('Y-m', strtotime('-2 months')) . "'>" . date('m/Y', strtotime('-1 months')) . "</option>
+                    <option value='" . date('Y-m', strtotime('-3 months')) . "'>" . date('m/Y', strtotime('-2 months')) . "</option>
+                    <option value='" . date('Y-m', strtotime('-4 months')) . "'>" . date('m/Y', strtotime('-3 months')) . "</option>
+                    <option value='" . date('Y-m', strtotime('-5 months')) . "'>" . date('m/Y', strtotime('-4 months')) . "</option>
+                    <option value='" . date('Y-m', strtotime('-6 months')) . "'>" . date('m/Y', strtotime('-5 months')) . "</option>";
+        }
+        return $select;
     }
 }
 
