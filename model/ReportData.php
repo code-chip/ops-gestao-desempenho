@@ -13,13 +13,15 @@ class ReportData
         $this->db->set_charset('utf8');
     }
 
-    public function result(){
+    public function result()
+    {
         $cnx = mysqli_query($this->db, $this->getQuery());
 
         return $cnx->fetch_all();
     }
 
-    public function result_array(){
+    public function result_array()
+    {
         $cnx = mysqli_query($this->db, $this->getQuery());
         $array = [];
         while ($dado = $cnx->fetch_array()) {
@@ -84,6 +86,20 @@ class ReportData
                      DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$value['month']."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE 
                      D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$value['month']."'".$value['goal']." ".$value['turn']." ".$value['sector']." GROUP BY D.USUARIO_ID ORDER BY ".$value['order'].";"
                 );
+                break;
+            case 'separate':
+                $this->setQuery("SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS FALTA, 
+                    (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=
+                    USUARIO_ID AND ANO_MES='".$value['month']."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$value['month']."') AS TOTAL, 
+                    TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO, CONCAT(DATE_FORMAT('".$value['month']."-01','%d/%m'),' a ".$value['date']."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID
+                     FROM DESEMPENHO WHERE ANO_MES='".$value['month']."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON 
+                     A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$value['month']."'".$value['goal']." " .$value['turn']." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$value['sector']." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID 
+                     ORDER BY ".$value['order'].";"
+                );
+                break;
+            case 'weight':
+                $this->setQuery("SELECT OPERADOR, EMPRESA, (SELECT ROUND(DESEMPENHO, 2) FROM META_EMPRESA WHERE ANO_MES='" . $value . "') AS ALCANCADO FROM META_PESO WHERE ANO_MES='" . $value . "';");
+                break;
         }
     }
 
@@ -92,23 +108,9 @@ class ReportData
         return implode($separator, $array);
     }
 
-    public function converterMatrixToArray($matrix)
-    {
-        $array = [];
-        for($i = 0; $i < count($matrix);$i++){
-            for($j = 0; $j < count($matrix);$j++){
-                if($matrix[$i][$j] != null || $matrix[$i][$j] != ''){
-                    $array[$x] = $matrix[$i][$j];
-                    $x++;
-                }
-            }
-        }
-        return $array;
-    }
-
     public function mountSelect($selectName)
     {
-        switch($selectName){
+        switch ($selectName) {
             case 'sector':
                 $this->defineQuery('select-sector', null);
                 foreach ($this->result_array() as $values){

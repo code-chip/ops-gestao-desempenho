@@ -4,18 +4,11 @@ $menuAtivo = 'relatorios';
 require_once('menu.php');
 require_once('model/ReportData.php');
 
-$periodo = trim($_REQUEST['periodo']);
-$atividade = trim($_REQUEST['atividade']);
-$ordenacao = trim($_REQUEST['ordenacao']);
-$meta = trim($_REQUEST['meta']);
-$contador = 0;
-$totalAlcancado = 0;
-
-$charts = new ReportData();
-
 if ($_SESSION["permissao"] == 1) {
     echo "<script>alert('Usuário sem permissão'); window.location.href='report-private.php'; </script>";
 }
+
+$charts = new ReportData();
 
 ?>
 <!DOCTYPE html>
@@ -56,13 +49,13 @@ if ($_SESSION["permissao"] == 1) {
     <form id="form1" action="report.php" method="POST" >
         <div class="field is-horizontal">
             <div class="field-label is-normal">
-                <label class="label is-size-7-touch" for="periodo">Período:</label>
+                <label class="label is-size-7-touch" for="month">Período:</label>
             </div>
             <div class="field-body">
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name="periodo" id="saveDate" style="width: 12em">
+                            <select name="month" id="saveDate" style="width: 12em">
                                 <?php echo $charts->mountSelect( 'month'); ?>
                             </select>
                             <span class="icon is-small is-left">
@@ -79,9 +72,9 @@ if ($_SESSION["permissao"] == 1) {
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name="atividade" style="width: 11.7em">
-                                <option selected="selected" value="agrupado">Agrupado</option>
-                                <option value="separado">Separado</option>
+                            <select name="activity" style="width: 11.7em">
+                                <option selected="selected" value="grouped">Agrupado</option>
+                                <option value="separate">Separado</option>
                             </select>
                             <span class="icon is-small is-left">
 								<i class="fas fa-diagnoses"></i>
@@ -97,7 +90,7 @@ if ($_SESSION["permissao"] == 1) {
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name="ordenacao" style="width: 11.8em">
+                            <select name="order" style="width: 11.8em">
                                 <option value="NOME">Nome</option>
                                 <option value="DESEMPENHO DESC, NOME">Desempenho</option>
                             </select>
@@ -117,7 +110,7 @@ if ($_SESSION["permissao"] == 1) {
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name="setor" style="width: 12em">
+                            <select name="sector" style="width: 12em">
                                 <option selected="selected" value="">Todos</option>
                                 <?php echo $charts->mountSelect( 'sector'); ?>
                             </select>
@@ -129,13 +122,13 @@ if ($_SESSION["permissao"] == 1) {
                 </div>
             </div>
             <div class="field-label is-normal"><!--SELEÇÃO TURNO-->
-                <label for="turno" class="label is-size-7-touch">Turno:</label>
+                <label for="turn" class="label is-size-7-touch">Turno:</label>
             </div>
             <div class="field-body">
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name="turno" id="salvaTurno" style="width: 12em">
+                            <select name="turn" id="salvaTurno" style="width: 12em">
                                 <option selected="selected"value="">Todos</option>
                                 <?php echo $charts->mountSelect( 'turn'); ?>
                             </select>
@@ -147,13 +140,13 @@ if ($_SESSION["permissao"] == 1) {
                 </div>
             </div>
             <div class="field-label is-normal"><!--SELEÇÃO META-->
-                <label class="label is-size-7-touch" for="meta">Meta:</label>
+                <label class="label is-size-7-touch" for="goal">Meta:</label>
             </div>
             <div class="field-body">
                 <div class="field is-grouped">
                     <div class="control has-icons-left">
                         <div class="select is-size-7-touch">
-                            <select name='meta' style="width: 12em">
+                            <select name='goal' style="width: 12em">
                                 <option selected="selected"value="">Ambos</option>
                                 <option value="AND B.DESEMPENHO>=100">Atingida :D</option>
                                 <option value="AND B.DESEMPENHO<100">Perdida ;(</option>
@@ -173,102 +166,63 @@ if ($_SESSION["permissao"] == 1) {
     </form><!--FINAL DO FORMULÁRIO-->
     <?php
 
-    $turno = trim($_REQUEST['turno']);
-    $setor = trim($_REQUEST['setor']);
+    $filter = array(
+        'month' => $_REQUEST['month'],
+        'date' => date_format(date_create($_REQUEST['month']), 't/m'),
+        'activity' => $_REQUEST['activity'],
+        'goal' => $_REQUEST['goal'],
+        'turn' => $_REQUEST['turn'],
+        'sector' => $_REQUEST['sector'],
+        'order' => $_REQUEST['order']
+    );
+    
+    if ( $filter['month'] != "") {
+        $charts->defineQuery($filter['activity'], $filter);
 
-    if ( $periodo != "") {
+        $table = $charts->result_array();
+        $count = count($table);
 
-        $date = date_create($periodo);
-        $date = date_format($date, 't/m');
+        $weigth = $charts->result_array($charts->defineQuery('weight', $filter['month']));
+        $totalReached = 0;
+        $bigger = 0;
+        $smaller = 1000;
+        $totalAbsences = 0;
+        $totalClearances = 0;
 
-        if ($atividade == "agrupado") {
-            $consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO, CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." ".$turno." ".$setor." GROUP BY D.USUARIO_ID ORDER BY ".$ordenacao.";";
+        foreach ($table as $key => $item) {
+            $totalReached = $totalReached + $item['DESEMPENHO'];
+            $a2[$key] = $item['DESEMPENHO'];
 
-            $filter = array(
-                'month' => $periodo,
-                'date' => $date,
-                'goal' => $meta,
-                'turn' => $turno,
-                'sector' => $setor,
-                'order' => $ordenacao
-            );
-
-            $charts->defineQuery('grouped', $filter);
-            $table = $charts->result_array();
-
-            echo $table[0]['NOME'];
-
-        } else {
-            $consulta = "SELECT U.NOME, D.USUARIO_ID AS ID, A.NOME AS ATIVIDADE, (SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=2 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FALTA, 
-(SELECT COUNT(*) FROM DESEMPENHO WHERE PRESENCA_ID=3 AND D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS FOLGA, (SELECT IFNULL(SUM(OCORRENCIA),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS OCORRENCIA, (SELECT IFNULL(SUM(PENALIDADE_TOTAL),0) FROM PENALIDADE WHERE D.USUARIO_ID=USUARIO_ID AND ANO_MES='".$periodo."') AS TOTAL, TRUNCATE(B.DESEMPENHO,2) AS DESEMPENHO,  
-CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM DESEMPENHO AS D, (SELECT USUARIO_ID, AVG(DESEMPENHO) DESEMPENHO,ATIVIDADE_ID FROM DESEMPENHO WHERE ANO_MES='".$periodo."' AND PRESENCA_ID NOT IN (3,5) GROUP BY USUARIO_ID, ATIVIDADE_ID) AS B INNER JOIN USUARIO U ON U.ID=B.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=B.ATIVIDADE_ID WHERE D.USUARIO_ID=B.USUARIO_ID AND ANO_MES='".$periodo."'".$meta." " .$turno." AND D.ATIVIDADE_ID=B.ATIVIDADE_ID ".$setor." GROUP BY D.USUARIO_ID, D.ATIVIDADE_ID ORDER BY ".$ordenacao.";";
-        }
-
-        $cx = mysqli_query($phpmyadmin, "SELECT OPERADOR, EMPRESA, (SELECT ROUND(DESEMPENHO, 2) FROM META_EMPRESA WHERE ANO_MES='" . $periodo . "') AS ALCANCADO FROM META_PESO WHERE ANO_MES='" . $periodo . "';");
-
-        echo $filter['month'];
-
-        $peso = $cx->fetch_array();
-        $con = mysqli_query($phpmyadmin, $consulta);
-
-        if (mysqli_num_rows($con) != 0) {
-            $x = 0;
-            $maior = 0;
-            $menor = 1000;
-            $totalFaltas = 0;
-            $totalFolgas = 0;
-
-            while ($dado = $con->fetch_array()) {
-                $vtIdUsuario[$x] = $dado["ID"];
-                $vtNome[$x] = $dado["NOME"];
-                $vtDesempenho[$x] = $dado["DESEMPENHO"];
-                $a2[$x] = $dado["DESEMPENHO"];
-                $vtAtividade[$x] = $dado["ATIVIDADE"];
-                $vtFalta[$x] = $dado["FALTA"];
-                $vtFolga[$x] = $dado["FOLGA"];
-                $ocurrence[$x] = $dado["OCORRENCIA"];
-                $penaltyTotal[$x] = $dado["TOTAL"];
-                $totalAlcancado = $totalAlcancado + $dado["DESEMPENHO"];
-                $vtRegistro[$x] = $dado["REGISTRO"];
-                $totalFaltas = $totalFaltas + $vtFalta[$x];
-                $totalFolgas = $totalFolgas + $vtFolga[$x];
-
-                if ($maior < $vtDesempenho[$x]) {
-                    $maior = $vtDesempenho[$x];
-                }
-
-                if ($menor > $vtDesempenho[$x] && $vtDesempenho[$x] != 0) {
-                    $menor = $vtDesempenho[$x];
-                }
-
-                $contador++;
-                $x++;
+            if ($table[$key]['ID'] != $table[$key-1]['ID']) {
+                $totalAbsences = $totalAbsences + $item['FALTA'];
+                $totalClearances = $totalClearances + $item['FOLGA'];
             }
 
+            $bigger = $bigger < $item['DESEMPENHO'] ? $item['DESEMPENHO'] : $bigger;
+            $smaller = $smaller > $item['DESEMPENHO'] && $item['DESEMPENHO'] != 0 ? $item['DESEMPENHO'] : $smaller;
         }
 
         $charts->defineQuery('chart-a1', null);
         $a1 = $charts->result();
 
-        $charts->defineQuery('chart-a3', $periodo);
+        $charts->defineQuery('chart-a3', $filter['month']);
         $a3 = $charts->result();
 
         $charts->defineQuery('chart-a4', null);
         $a4 = $charts->result();
 
-        //$a1 = $charts->converterMatrixToArray($a1);
-
-        //$a1 = $charts->converterArrayToString('|', $a1);
         $a2 = $charts->converterArrayToString('|', $a2);
 
         foreach ($a4 as $key => $a4s) {
             $a4[$key][0] = $a4s[4] >= $a4s[2] ? 'true' : 'false';
+            $a4[$key][3] = date_format(date_create($a4s[3]), 't/m');
 
             list($a4[$key][1], $lastName) = explode(' ', $a4s[1],2);
         }
 
     }
-    if ($contador != 0): ?>
+
+    if ($count != 0): ?>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <div class="field is-horizontal" id="graficos">
         <div class="column is-mobile" id="dash-desempenho"></div>
@@ -279,13 +233,13 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
     <hr/>
     <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
         <tr class='is-selected'><?php
-            echo "<td>Resultado: " . sizeof($vtNome) . "</td>	
-			<td>Falta's: " . $totalFaltas . "</td>
-			<td>Folga's: " . $totalFolgas . "</td>
-			<td>Menor: " . $menor."%" . "</td>
-			<td>Media: " . round($totalAlcancado / $contador, 2)."%" . "</td>
-			<td>Maior: " . $maior."%" . "</td>
-			<td>Empresa: " . $peso["ALCANCADO"]."%" . "</td>";	?>
+            echo "<td>Resultado: " . sizeof($table) . "</td>	
+			<td>Falta's: " . $totalAbsences . "</td>
+			<td>Folga's: " . $totalClearances . "</td>
+			<td>Menor: " . $smaller."%" . "</td>
+			<td>Media: " . round($totalReached / $count, 2)."%" . "</td>
+			<td>Maior: " . $bigger."%" . "</td>
+			<td>Empresa: " . $weigth[0]["ALCANCADO"]."%" . "</td>";	?>
         </tr>
     </table>
     <table class="table__wrapper table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch scrollWrapper"style="$table-row-active-background-color:hsl(171, 100%, 41%);">
@@ -296,19 +250,19 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
             <th width="4">Falta's</th>
             <th width="4">Folga's</th>
             <th width="4">Pena</th>
-            <?php if ($atividade == "separado") { echo "<th width='14'>Atividade</th>"; } ?>
+            <?php if ($filter['activity'] == 'separate') { echo "<th width='14'>Atividade</th>"; } ?>
             <th width="14">Desempenho</th>
             <th width="4">Final</th>
             <th width="40">Período</th>
         </tr><?php
 
-        for ( $i = 0; $i < sizeof($vtNome); $i++ ) {
+        for ( $i = 0; $i < sizeof($table); $i++ ) {
             $z = $i;
             $registro = 1;
 
-            while ($vtNome[$z] == $vtNome[$z+1]) {
+            while ($table[$z]['NOME'] == $table[$z+1]['NOME']) {
                 $registro++;
-                $repeat=$registro;
+                $repeat = $registro;
                 $z++;
             }
 
@@ -316,44 +270,44 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
                 $repeat--;
             }
 
-            $y = $i+1;
+            $y = $i + 1;
             echo "<tr>";
             echo "<td>" . $y . "</td>";
-            echo "<td>" . $vtNome[$i] . "</td>";
+            echo "<td>" . $table[$i]['NOME'] . "</td>";
 
             if ($registro > 1 && $repeat != 0 && $mesclaa == false) {
-                echo "<td rowspan='" . $registro . "'><a href='report-detailed.php?periodo=" . $periodo . "&idUsuario=" . $vtIdUsuario[$i] . "' target='_blank'><button class='button is-primary is-size-7-touch is-fullwidth'>Consultar</button></a></td>";
+                echo "<td rowspan='" . $registro . "'><a href='report-detailed.php?periodo=" . $filter['month'] . "&idUsuario=" . $table[$i]['ID'] . "' target='_blank'><button class='button is-primary is-size-7-touch is-fullwidth'>Consultar</button></a></td>";
                 $mesclaa = true;
             }
 
-            if ($repeat == 0 && $vtNome[$i-1] != $vtNome[$i]) {
-                echo "<td width='1'><a href='report-detailed.php?periodo=" . $periodo . "&idUsuario=" . $vtIdUsuario[$i] . "' target='_blank'><button class='button is-primary is-size-7-touch is-fullwidth'>Consultar</button></a></td>";
+            if ($repeat == 0 && $table[$i-1]['NOME'] != $table[$i]['NOME']) {
+                echo "<td width='1'><a href='report-detailed.php?periodo=" . $filter['month'] . "&idUsuario=" . $table[$i]['ID'] . "' target='_blank'><button class='button is-primary is-size-7-touch is-fullwidth'>Consultar</button></a></td>";
                 $mesclaa = false;
             }
 
             if ($registro > 1 && $repeat != 0 && $mescla == false) {
-                echo "<td class='joinLines' rowspan=" . $registro . ">" . $vtFalta[$i] . "</td>";
-                echo "<td class='joinLines' rowspan=" . $registro . ">" . $vtFolga[$i] . "</td>";
-                echo "<td class='joinLines' rowspan=" . $registro . ">" . $ocurrence[$i] . "</td>";
+                echo "<td class='joinLines' rowspan=" . $registro . ">" . $table[$i]['FALTA'] . "</td>";
+                echo "<td class='joinLines' rowspan=" . $registro . ">" . $table[$i]['FOLGA'] . "</td>";
+                echo "<td class='joinLines' rowspan=" . $registro . ">" . $table[$i]['OCORRENCIA'] . "</td>";
                 $mescla = true;
             }
 
-            if ( $repeat == 0 && $vtNome[$i-1] != $vtNome[$i]) {
-                echo "<td>" . $vtFalta[$i] . "</td>";
+            if ( $repeat == 0 && $table[$i-1]['NOME'] != $table[$i]['NOME']) {
+                echo "<td>" . $table[$i]['FALTA'] . "</td>";
                 $mescla = false;
-                echo "<td width='4'>" . $vtFolga[$i] . "</td>";
-                echo "<td>" . $ocurrence[$i] . "</td>";
+                echo "<td width='4'>" . $table[$i]['FOLGA'] . "</td>";
+                echo "<td>" . $table[$i]['OCORRENCIA'] . "</td>";
             }
 
-            if ($atividade == "separado"){
-                echo "<td>" . $vtAtividade[$i] . "</td>";
+            if ($filter['activity'] == "separate") {
+                echo "<td>" . $table[$i]['ATIVIDADE'] . "</td>";
             }
 
-            echo "<td>" . $vtDesempenho[$i] . "%" . "</td>";
-            echo "<td>" . round((($vtDesempenho[$i] / 100) * $peso["OPERADOR"]) + (($peso["ALCANCADO"] / 100) * $peso["EMPRESA"])-$penaltyTotal[$i], 2)."%" . "</td>";
-            echo "<td style='max-width:800px;'>" . $vtRegistro[$i] . "</td>";
+            echo "<td>" . $table[$i]['DESEMPENHO'] . "%" . "</td>";
+            echo "<td>" . round((($table[$i]['DESEMPENHO'] / 100) * $weigth[0]["OPERADOR"]) + (($weigth[0]["ALCANCADO"] / 100) * $weigth[0]["EMPRESA"])-$table[$i]['TOTAL'], 2)."%" . "</td>";
+            echo "<td style='max-width:800px;'>" . $table[$i]['REGISTRO'] . "</td>";
 
-            if ($vtNome[$i] != $vtNome[$i+1] && $repeat == 0 && $mescla == true) {
+            if ($table[$i]['NOME'] != $table[$i+1]['NOME'] && $repeat == 0 && $mescla == true) {
                 $mescla = false;
                 $mesclaf = false;
                 $mesclaa = false;
@@ -473,7 +427,6 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 
         var table = new google.visualization.Table(document.getElementById('a5'));
 
-
         table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
     }
 </script>
@@ -481,7 +434,7 @@ CONCAT(DATE_FORMAT('".$periodo."-01','%d/%m'),' a ".$date."') AS REGISTRO FROM D
 
 endif;
 
-if ($contador == 0 && isset($_GET["filtro"]) != null) {
+if ($count == 0 && isset($_GET["filtro"]) != null) {
     echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";
 }
 
