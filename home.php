@@ -1,7 +1,7 @@
 <?php 
 
 $menuAtivo = 'inicio';
-require('menu.php');
+require_once('menu.php');
 
 $n = rand(1,25);
 $img = "img/wallpaper/data-science".$n."-min.jpg";
@@ -28,21 +28,21 @@ if ($feed["SOLICITACAO"] > 0) {
 	echo "alert('".$feed["SOLICITACAO"]." Solicitações de Feedback recebida. Leia clicando no item Consultar do menu Feedback.'); </script>";
 }
 
-if ($_SESSION["$visualizou"] == 0) {
+if ($_SESSION['$messageRead'] == 0) {
 	$salute = "Bem vindo";
-	$_SESSION["$visualizou"] = 1;		        	
-} else if ($_SESSION["$visualizou"] == 1 && date('H', time()) >= "6" && date('H', time()) <= "11") {		        		
+	$_SESSION['$messageRead'] = 1;		        	
+} else if ($_SESSION['$messageRead'] == 1 && date('H', time()) >= "6" && date('H', time()) <= "11") {		        		
 	$salute = "Bom dia";
-	$_SESSION["$visualizou"] = 2;
-} else if ($_SESSION["$visualizou"] == 1 && date('H', time()) >= "12" && date('H', time()) <= "17") {		        		
+	$_SESSION['$messageRead'] = 2;
+} else if ($_SESSION['$messageRead'] == 1 && date('H', time()) >= "12" && date('H', time()) <= "17") {		        		
 	$salute = "Boa tarde";
-	$_SESSION["$visualizou"] = 2;
-} else if ($_SESSION["$visualizou"] == 1 && date('H', time()) >= "18" && date('H', time()) <= "23") {		        		
+	$_SESSION['$messageRead'] = 2;
+} else if ($_SESSION['$messageRead'] == 1 && date('H', time()) >= "18" && date('H', time()) <= "23") {		        		
 	$salute = "Boa noite";
-	$_SESSION["$visualizou"] = 2;
-} else if ($_SESSION["$visualizou"] == 1 && date('H', time()) >= "00" && date('H', time()) <= "05") {		        		
+	$_SESSION['$messageRead'] = 2;
+} else if ($_SESSION['$messageRead'] == 1 && date('H', time()) >= "00" && date('H', time()) <= "05") {		        		
 	$salute = "Boa madrugada";
-	$_SESSION["$visualizou"] = 2;
+	$_SESSION['$messageRead'] = 2;
 } else {
 	$salute = "Olá";
 }

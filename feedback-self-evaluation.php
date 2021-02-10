@@ -219,7 +219,7 @@ if (isset($_POST['proxima'])) {
 	}//CONSULTA SE HÁ REGISTRO DE AVALIAÇÃO NESTE DIA.
 	
 	if ( $answer == 0) {//Criar o indice do registro
-		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID, AVALIACAO_POR, ANO_MES, REGISTRO, SITUACAO) VALUES(" . $_SESSION['user'] . ", " . $_SESSION['userId'] . ",'" . date('Y-m') . "','" . date('Y-m-d') . "','" . $situation . "')");
+		mysqli_query($phpmyadmin, "INSERT INTO AVAL_INDICE(USUARIO_ID, AVALIACAO_POR, CARGO_ID, GESTOR_ID, ANO_MES, REGISTRO, SITUACAO) VALUES(" . $_SESSION['user'] . ", " . $_SESSION['userId'] . ", " . $_SESSION['cargo'] . "," .$_SESSION['leaderId']. ",'" . date('Y-m') . "','" . date('Y-m-d') . "','" . $situation . "')");
 		
 		$cnx5 = mysqli_query($phpmyadmin, "SELECT ID FROM AVAL_INDICE WHERE USUARIO_ID = " . $_SESSION['user'] . " AND AVALIACAO_POR = " . $_SESSION['userId'] . " AND DATE_FORMAT(REGISTRO, '%Y-%m')='" . $data . "';");//SALVA CHAVE DO INDICE.
 		$index = $cnx5->fetch_array();
