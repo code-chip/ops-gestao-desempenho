@@ -1,5 +1,5 @@
 <?php 
-session_start();
+phpinfo(); exit;session_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,14 +21,14 @@ session_start();
         opacity: 0.73;
     }
     </style>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-156503826-3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'UA-156503826-3');
-    </script>
+    </script>-->
 </head>
 <body>
     <div class="hero is-fullheight is-primary has-background">

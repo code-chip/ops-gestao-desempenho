@@ -1,0 +1,13 @@
+{
+    "name": "will/ops-gestao-desempenho",
+    "description": "Performance Management project",
+    "authors": [
+        {
+            "name": "Code Chip",
+            "email": "willvix@outlook.com"
+        }
+    ],
+    "require": {
+        "symfony/security": "^3.2"
+    }
+}

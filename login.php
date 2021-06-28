@@ -19,7 +19,7 @@ if (mysqli_num_rows($result) == 1) {//ADICIONAR INFORMAÇÕES DE ACESSO NA TABEL
 	$_SESSION['cargo'] = $cnx['CARGO_ID'];
     $_SESSION['leaderId'] = $cnx['GESTOR_ID'];
 	$_SESSION['permissao'] = $cnx['PERMISSAO_ID'];
-	$_SESSION['matriclaLogada'] = $cnx['MATRICULA'];
+	$_SESSION['matriculaLogada'] = $cnx['MATRICULA'];
 
 	$totalAccess = mysqli_query($phpmyadmin, "SELECT MAX(ACESSO_TOTAL) AS ACESSO_TOTAL FROM ACESSO WHERE USUARIO_ID=".$cnx["ID"].";")->fetch_array();
     $access = mysqli_query($phpmyadmin, "SELECT ANO_MES, ACESSO FROM ACESSO WHERE USUARIO_ID=".$cnx["ID"]." AND ANO_MES='".date('Y-m')."';");

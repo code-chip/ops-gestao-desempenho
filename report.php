@@ -165,75 +165,77 @@ $charts = new ReportData();
         </div>
     </form><!--FINAL DO FORMULÁRIO-->
     <?php
+    if (isset($_POST['filtro']) && $_POST['month'] != "") {
+        $filter = array(
+            'month' => $_REQUEST['month'],
+            'date' => date_format(date_create($_REQUEST['month']), 't/m'),
+            'activity' => $_REQUEST['activity'],
+            'goal' => $_REQUEST['goal'],
+            'turn' => $_REQUEST['turn'],
+            'sector' => $_REQUEST['sector'],
+            'order' => $_REQUEST['order']
+        );
 
-    $filter = array(
-        'month' => $_REQUEST['month'],
-        'date' => date_format(date_create($_REQUEST['month']), 't/m'),
-        'activity' => $_REQUEST['activity'],
-        'goal' => $_REQUEST['goal'],
-        'turn' => $_REQUEST['turn'],
-        'sector' => $_REQUEST['sector'],
-        'order' => $_REQUEST['order']
-    );
-    
-    if ( $filter['month'] != "") {
         $charts->defineQuery($filter['activity'], $filter);
-
         $table = $charts->result_array();
         $count = count($table);
 
-        $weigth = $charts->result_array($charts->defineQuery('weight', $filter['month']));
-        $totalReached = 0;
-        $bigger = 0;
-        $smaller = 1000;
-        $totalAbsences = 0;
-        $totalClearances = 0;
+        if ($count != 0) {
+            $weigth = $charts->result_array($charts->defineQuery('weight', $filter['month']));
+            $totalReached = 0;
+            $bigger = 0;
+            $smaller = 1000;
+            $totalAbsences = 0;
+            $totalClearances = 0;
 
-        foreach ($table as $key => $item) {
-            $totalReached = $totalReached + $item['DESEMPENHO'];
-            $a2[$key] = $item['DESEMPENHO'];
+            foreach ($table as $key => $item) {
+                $totalReached = $totalReached + $item['DESEMPENHO'];
+                $a2[$key] = $item['DESEMPENHO'];
 
-            if ($table[$key]['ID'] != $table[$key-1]['ID']) {
-                $totalAbsences = $totalAbsences + $item['FALTA'];
-                $totalClearances = $totalClearances + $item['FOLGA'];
+                if ($table[$key]['ID'] != $table[$key-1]['ID']) {
+                    $totalAbsences = $totalAbsences + $item['FALTA'];
+                    $totalClearances = $totalClearances + $item['FOLGA'];
+                }
+
+                $bigger = $bigger < $item['DESEMPENHO'] ? $item['DESEMPENHO'] : $bigger;
+                $smaller = $smaller > $item['DESEMPENHO'] && $item['DESEMPENHO'] != 0 ? $item['DESEMPENHO'] : $smaller;
             }
 
-            $bigger = $bigger < $item['DESEMPENHO'] ? $item['DESEMPENHO'] : $bigger;
-            $smaller = $smaller > $item['DESEMPENHO'] && $item['DESEMPENHO'] != 0 ? $item['DESEMPENHO'] : $smaller;
+            $charts->defineQuery('chart-a1', null);
+            $a1 = $charts->result();
+
+            $charts->defineQuery('chart-a3', $filter['month']);
+            $a3 = $charts->result();
+
+            $charts->defineQuery('chart-a4', null);
+            $a4 = $charts->result();
+
+            $a2 = $charts->converterArrayToString('|', $a2);
+
+            foreach ($a4 as $key => $a4s) {
+                $a4[$key][0] = $a4s[4] >= $a4s[2] ? 'true' : 'false';
+                $a4[$key][3] = date_format(date_create($a4s[3]), 'd/m');
+
+                list($a4[$key][1], $lastName) = explode(' ', $a4s[1],2);
+            }
         }
-
-        $charts->defineQuery('chart-a1', null);
-        $a1 = $charts->result();
-
-        $charts->defineQuery('chart-a3', $filter['month']);
-        $a3 = $charts->result();
-
-        $charts->defineQuery('chart-a4', null);
-        $a4 = $charts->result();
-
-        $a2 = $charts->converterArrayToString('|', $a2);
-
-        foreach ($a4 as $key => $a4s) {
-            $a4[$key][0] = $a4s[4] >= $a4s[2] ? 'true' : 'false';
-            $a4[$key][3] = date_format(date_create($a4s[3]), 't/m');
-
-            list($a4[$key][1], $lastName) = explode(' ', $a4s[1],2);
+        else{
+            echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";
         }
-
     }
 
     if ($count != 0): ?>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <div class="field is-horizontal" id="graficos">
-        <div class="column is-mobile" id="dash-desempenho"></div>
-        <div class="column is-mobile" id="dash-variacao"></div>
-        <div class="column is-mobile" id="dash-top5"></div>
-        <div class="column is-mobile" id="a5"></div>
+        <div class="column is-mobile" id="chart-a1"></div>
+        <div class="column is-mobile" id="chart-a2"></div>
+        <div class="column is-mobile" id="chart-a3"></div>
+        <div class="column is-mobile" id="chart-a4"></div>
     </div>
     <hr/>
     <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth is-size-7-touch">
         <tr class='is-selected'><?php
-            echo "<td>Resultado: " . sizeof($table) . "</td>	
+            echo "<td>Resultado: " . $count . "</td>	
 			<td>Falta's: " . $totalAbsences . "</td>
 			<td>Folga's: " . $totalClearances . "</td>
 			<td>Menor: " . $smaller."%" . "</td>
@@ -256,7 +258,7 @@ $charts = new ReportData();
             <th width="40">Período</th>
         </tr><?php
 
-        for ( $i = 0; $i < sizeof($table); $i++ ) {
+        for ( $i = 0; $i < $count; $i++ ) {
             $z = $i;
             $registro = 1;
 
@@ -325,8 +327,8 @@ $charts = new ReportData();
 </section>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
+    google.charts.setOnLoadCallback(drawChartA1);
+    function drawChartA1() {
         var data = google.visualization.arrayToDataTable([
             ['Mês', 'avg', 'min'],
             ['<?php echo strftime('%h', strtotime("-3 months"))?>',  parseFloat('<?php echo $a1[0][0]?>'), parseFloat('<?php echo $a1[0][1]?>')],
@@ -339,11 +341,10 @@ $charts = new ReportData();
             hAxis: {title: 'Mês',  titleTextStyle: {color: '#333'}},
             vAxis: {minValue: 0}
         };
-        var chart = new google.visualization.AreaChart(document.getElementById('dash-desempenho'));
-        chart.draw(data, options);
+        var chartA1 = new google.visualization.AreaChart(document.getElementById('chart-a1'));
+        chartA1.draw(data, options);
     }
-</script>
-<script type="text/javascript">
+
     google.charts.load('current', {packages: ['corechart', 'line']});
     google.charts.setOnLoadCallback(drawBasic);
     function drawBasic() {
@@ -352,20 +353,18 @@ $charts = new ReportData();
         data.addColumn('number', 'X');
         data.addColumn('number', 'Desempenho');
         data.addRows([
-            [0, a2[0]],   [1, a2[1]],   [2, a2[2]],   [3, a2[3]],   [4, a2[4]],   [5, a2[5]],   [6, a2[6]],
-            [7, a2[7]],   [8, a2[8]],   [9, a2[9]],   [10, a2[10]], [11, a2[11]], [12, a2[12]], [13, a2[13]],
-            [14, a2[14]], [15, a2[15]], [16, a2[16]], [17, a2[17]], [18, a2[18]], [19, a2[19]], [20, a2[19]],
-            [21, a2[21]], [22, a2[22]], [23, a2[23]], [24, a2[24]], [25, a2[25]], [26, a2[26]], [27, a2[27]],
-            [28, a2[28]], [29, a2[29]], [30, a2[30]], [31, a2[31]], [32, a2[32]], [33, a2[33]], [34, a2[34]],
-            [35, a2[35]], [36, a2[36]], [37, a2[37]], [38, a2[38]], [39, a2[39]], [40, a2[40]], [41, a2[41]],
-            [42, a2[42]], [43, a2[43]], [44, a2[44]], [45, a2[45]], [46, a2[46]], [47, a2[47]], [48, a2[48]],
-            [49, a2[49]], [50, a2[50]], [51, a2[51]], [52, a2[52]], [53, a2[53]], [54, a2[54]], [55, a2[55]],
-            [56, a2[56]], [57, a2[57]], [58, a2[58]], [59, a2[59]], [60, a2[60]], [61, a2[61]], [62, a2[62]],
-            [63, a2[63]], [64, a2[64]], [65, a2[65]], [66, a2[66]], [67, a2[67]], [68, a2[68]], [69, a2[69]],
-            [70, a2[70]], [71, a2[71]], [72, a2[72]], [73, a2[73]], [74, a2[74]], [75, a2[75]], [76, a2[76]],
-            [77, a2[77]], [78, a2[78]], [79, a2[79]], [80, a2[80]], [81, a2[81]], [82, a2[82]], [83, a2[83]],
-            [84, a2[84]], [85, a2[85]], [86, a2[86]], [87, a2[87]], [88, a2[88]], [89, a2[89]], [90, a2[90]],
-            [91, a2[91]], [92, a2[92]]
+            [0, a2[0]],   [1, a2[1]],   [2, a2[2]],   [3, a2[3]],   [4, a2[4]],   [5, a2[5]],   [6, a2[6]], [7, a2[7]],
+            [8, a2[8]],   [9, a2[9]],   [10, a2[10]], [11, a2[11]], [12, a2[12]], [13, a2[13]], [14, a2[14]], [15, a2[15]],
+            [16, a2[16]], [17, a2[17]], [18, a2[18]], [19, a2[19]], [20, a2[19]], [21, a2[21]], [22, a2[22]], [23, a2[23]],
+            [24, a2[24]], [25, a2[25]], [26, a2[26]], [27, a2[27]], [28, a2[28]], [29, a2[29]], [30, a2[30]], [31, a2[31]],
+            [32, a2[32]], [33, a2[33]], [34, a2[34]], [35, a2[35]], [36, a2[36]], [37, a2[37]], [38, a2[38]], [39, a2[39]],
+            [40, a2[40]], [41, a2[41]], [42, a2[42]], [43, a2[43]], [44, a2[44]], [45, a2[45]], [46, a2[46]], [47, a2[47]],
+            [48, a2[48]], [49, a2[49]], [50, a2[50]], [51, a2[51]], [52, a2[52]], [53, a2[53]], [54, a2[54]], [55, a2[55]],
+            [56, a2[56]], [57, a2[57]], [58, a2[58]], [59, a2[59]], [60, a2[60]], [61, a2[61]], [62, a2[62]], [63, a2[63]],
+            [64, a2[64]], [65, a2[65]], [66, a2[66]], [67, a2[67]], [68, a2[68]], [69, a2[69]], [70, a2[70]], [71, a2[71]],
+            [72, a2[72]], [73, a2[73]], [74, a2[74]], [75, a2[75]], [76, a2[76]], [77, a2[77]], [78, a2[78]], [79, a2[79]],
+            [80, a2[80]], [81, a2[81]], [82, a2[82]], [83, a2[83]], [84, a2[84]], [85, a2[85]], [86, a2[86]], [87, a2[87]],
+            [88, a2[88]], [89, a2[89]], [90, a2[90]], [91, a2[91]], [92, a2[92]]
         ]);
 
         var options = {
@@ -376,11 +375,10 @@ $charts = new ReportData();
                 title: 'Variação do desempenho'
             }
         };
-        var chart = new google.visualization.LineChart(document.getElementById('dash-variacao'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart-a2'));
         chart.draw(data, options);
     }
-</script>
-<script type="text/javascript">
+
     google.charts.load("current", {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
@@ -404,11 +402,10 @@ $charts = new ReportData();
             bar: {groupWidth: "95%"},
             legend: { position: "none" },
         };
-        var chart = new google.visualization.ColumnChart(document.getElementById("dash-top5"));
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart-a3"));
         chart.draw(view, options);
     }
-</script>
-<script type="text/javascript">
+
     google.charts.load('current', {'packages':['table']});
     google.charts.setOnLoadCallback(drawTable);
     function drawTable() {
@@ -424,20 +421,10 @@ $charts = new ReportData();
             ['<?php echo $a4[2][1]?>', parseFloat('<?php echo $a4[2][2]?>'), parseFloat('<?php echo $a4[2][4]?>'), {v: parseFloat('<?php echo $a4[2][3]?>'), f: '<?php echo $a4[2][3]?>'}, <?php echo $a4[2][0]?>],
             ['<?php echo $a4[3][1]?>', parseFloat('<?php echo $a4[3][2]?>'), parseFloat('<?php echo $a4[3][4]?>'),  {v: parseFloat('<?php echo $a4[3][3]?>'),  f: '<?php echo $a4[3][3]?>'},  <?php echo $a4[3][0]?>]
         ]);
-
-        var table = new google.visualization.Table(document.getElementById('a5'));
-
+        var table = new google.visualization.Table(document.getElementById('chart-a4'));
         table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
     }
 </script>
-<?php
-
-endif;
-
-if ($count == 0 && isset($_GET["filtro"]) != null) {
-    echo "<script>alert('Nenhum resultado encontrao com o filtro aplicado!')</script>";
-}
-
-?>
+<?php endif; ?>
 </body>
 </html>
