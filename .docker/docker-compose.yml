@@ -1,0 +1,54 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DOCKER_HOST_IP: ${DOCKER_HOST_IP}
+        UID: ${MY_UID}
+        GID: ${GID}
+    container_name: ${PROJECT_NAME}_php
+    volumes:
+      - ../:/var/www/html
+    user: "${MY_UID}:${GID}"  
+    ports:
+      - ${LOCALHOST_PORT}
+    working_dir: /var/www/html
+    command: php -S 0.0.0.0:80 -t .  
+    networks:
+      - app_network
+  mysql:
+    image: mysql:8.0
+    container_name: ${PROJECT_NAME}_database
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - ${DB_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app_network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${PROJECT_NAME}_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      UPLOAD_LIMIT: 500M
+      MAX_EXECUTION_TIME: 360000
+    ports:
+      - 8080:80
+    networks:
+      - app_network  
+    depends_on:
+      - mysql      
+networks:
+  app_network:
+    name: ${PROJECT_NAME}_network
+    driver: bridge
+volumes:
+  mysql_data:    
