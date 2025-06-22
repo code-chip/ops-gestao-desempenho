@@ -1,5 +1,5 @@
 <?php 
-phpinfo(); exit;session_start();
+session_start();
 ?>
 <!DOCTYPE html>
 <html>
