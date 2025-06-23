@@ -7,11 +7,9 @@ if ($_SESSION["permissao"] == 1) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php';</script>";
 }
 
-$period = trim($_REQUEST['periodo']);
-$sector = trim($_REQUEST['setor']);
-$name = trim($_REQUEST['nome']);
 $count = 0;
 $totalReached = 0;
+$sector = '';
 
 ?>
 <!DOCTYPE html>
@@ -42,7 +40,7 @@ $totalReached = 0;
 <body>
 	<span id="topo"></span>
 <div>	
-	<?php if ($sector == "" && isset($_POST['query']) == null): ?>
+	<?php if (empty($sector) && isset($_POST['query']) == null): ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="goal-remove.php" method="POST">
@@ -51,7 +49,7 @@ $totalReached = 0;
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
 						<select name="periodo"><?php 								
-							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1, 2 ORDER BY ANO_MES DESC LIMIT 24");
 							while ($sector = $con->fetch_array()) {
 								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
 							 }
@@ -107,7 +105,11 @@ $totalReached = 0;
 </div>
 <?php
 
-if (isset($_POST['query'])) {	
+if (isset($_POST['query'])) {
+	$period = trim($_REQUEST['periodo']);
+	$sector = trim($_REQUEST['setor']);
+	$name = trim($_REQUEST['nome']);
+
 	if ( $name != "") {		
 		$query = "SELECT U.NOME, A.NOME AS ATIVIDADE, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$name."%' AND SETOR_ID=".$sector.") AND M.EXECUCAO>='".$period."-21' AND M.EXECUCAO<= '".$period."-20';";
 	} else {	

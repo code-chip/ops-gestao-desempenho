@@ -1,6 +1,7 @@
 <?php
 $menuAtivo = 'meta';
 require('menu.php');
+$setor = '';
 
 if ($_SESSION["permissao"] == 1) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
@@ -35,7 +36,7 @@ if ($_SESSION["permissao"] == 1) {
 <body>
 	<span id="topo"></span>
 <div>	
-	<?php if ($setor == "" && isset($_POST['query']) == null ): ?>
+	<?php if (empty($setor) && isset($_POST['query']) == null ): ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="goal-update.php" method="POST">
@@ -44,7 +45,7 @@ if ($_SESSION["permissao"] == 1) {
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
 						<select name="month"><?php 								
-							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1, 2 ORDER BY ANO_MES DESC LIMIT 24");
 							while($sector = $con->fetch_array()){
 								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
 							 }
@@ -103,7 +104,7 @@ if ($_SESSION["permissao"] == 1) {
 if (isset($_POST['query'])) {
 	$totalAlcancado = 0;
 
-	if ( $nome != "") {	
+	if (!empty($_POST['name'])) {	
 		$query = "SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE NOME LIKE '%".$_POST['name']."%' AND SETOR_ID=".$_POST['sector'].") AND M.EXECUCAO>=CONCAT('".$_POST['month']."','-01') AND M.EXECUCAO<= CONCAT('".$_POST['month']."', '-31');";
 	} else {
 		$query = "SELECT M.ID , U.NOME, A.NOME AS ATIVIDADE, ATIVIDADE_ID, M.META, M.DESCRICAO, M.EXECUCAO, M.CADASTRO_EM, M.DESEMPENHO FROM META M INNER JOIN USUARIO U ON U.ID=M.USUARIO_ID INNER JOIN ATIVIDADE A ON A.ID=M.ATIVIDADE_ID WHERE USUARIO_ID IN(SELECT ID FROM USUARIO WHERE SETOR_ID=".$_POST['sector'].") AND M.EXECUCAO>=CONCAT('".$_POST['month']."','-01') AND M.EXECUCAO<= CONCAT('".$_POST['month']."', '-31');";
@@ -256,7 +257,7 @@ if (isset($_POST['alterarDados'])) {
 	$feitos = array_filter($_POST['atividade3']);
 	$upCount = 0;
 
-	for ($i = 0; $i < sizeof($atividades); $i++) {
+	for ($i = 0; $i < sizeof($atividades) -1; $i++) {
 		if ($feitos[$i] == null) {
 			$feitos[$i] = 0;
 		}
