@@ -2,6 +2,7 @@
 
 $menuAtivo = 'meta';
 require('menu.php');
+$sector = null;
 
 ?>
 <!DOCTYPE html>
@@ -31,7 +32,7 @@ require('menu.php');
 </head>
 <body>
 <span id="topo"></span>
-<?php if ($sector == "" && isset($_POST['query']) == null ) { ?>
+<?php if (empty($sector) && isset($_POST['query']) == null ) { ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="" method="POST">
@@ -40,7 +41,7 @@ require('menu.php');
 				<div class="control has-icons-left">
 					<div class="select is-fullwidth">
 						<select name="periodo"><?php 								
-							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24");
+							$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(CADASTRO_EM,'%Y-%m') AS ANO_MES, DATE_FORMAT(CADASTRO_EM,'%m/%Y') AS MES_ANO FROM META GROUP BY 1,2 ORDER BY ANO_MES DESC LIMIT 24");
 							while($sector = $con->fetch_array()){
 								echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
 							 }

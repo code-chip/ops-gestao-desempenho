@@ -2,6 +2,7 @@
 
 $menuAtivo = 'desempenho';
 require('menu.php');
+$sector = '';
 
  if ($_SESSION["permissao"] == 1 ) {
 	echo "<script>alert('Usuário sem permissão'); window.location.href='home.php'; </script>";
@@ -36,7 +37,7 @@ require('menu.php');
 <body>
 	<span id="top"></span>
 <div>	
-	<?php if ($sector == "" && isset($_POST['query']) == null) { ?>
+	<?php if (empty($sector) && isset($_POST['query']) == null) { ?>
 	<section class="section">
 	<div class="container">	
 	<form id="form1" action="performance-query.php" method="POST">
@@ -45,7 +46,7 @@ require('menu.php');
 			<div class="control has-icons-left">
 				<div class="select is-fullwidth norequired">
 			  		<select name="month" id="month" class="is-fullwidth norequired " autofocus><?php 								
-						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%Y-%m') AS ANO_MES, DATE_FORMAT(REGISTRO,'%m/%Y') AS MES_ANO FROM DESEMPENHO GROUP BY 1 ORDER BY ANO_MES DESC LIMIT 24;");
+						$con = mysqli_query($phpmyadmin , "SELECT DATE_FORMAT(REGISTRO,'%Y-%m') AS ANO_MES, DATE_FORMAT(REGISTRO,'%m/%Y') AS MES_ANO FROM DESEMPENHO GROUP BY 1, 2 ORDER BY ANO_MES DESC LIMIT 24;");
 						while($sector = $con->fetch_array()){
 							echo '<option value=' . $sector['ANO_MES'] . '>' . $sector["MES_ANO"] . '</option>';
 						}
@@ -150,16 +151,19 @@ if (isset($_POST['query']) && $count != 0) : ?>
 		<th>Observação</th> 			
 	</tr>
 	<?php 
-
+	$repeat = 0;
 	for( $i = 0; $i < sizeof($name); $i++ ) :
 		$z = $i; 
 		$registro = 1; 
 
-		while ($name[$z] == $name[$z+1]) {
-			$registro++;
-			$repeat=$registro;
-			$z++;
+		if ($z < sizeof($name) -1) {
+			while ($name[$z] == $name[$z+1]) {
+				$registro++;
+				$repeat=$registro;
+				$z++;
+			}
 		}
+		
 
 		if($repeat > 0) { 
 			$repeat--;
