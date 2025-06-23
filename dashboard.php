@@ -114,7 +114,7 @@ $x = 0;
 $y = 0;
 $countDay;
 
-while ($x < sizeof($vtcompTurMed)) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS NO MESMO DIA P/ F.
+while ($x < sizeof($vtcompTurMed) -1) {//VERIFICA SE HÁ REGISTROS NOS DOIS TURNOS NO MESMO DIA P/ F.
     if ($vtcompTurReg[$x] == $vtcompTurReg[$x+1]) {
         $turMat[$y] = $vtcompTurMed[$x];
         $turVes[$y] = $vtcompTurMed[$x+1];
