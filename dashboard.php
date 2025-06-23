@@ -11,8 +11,10 @@ if ($_SESSION["permissao"] == 1) {
 $cnx = mysqli_query($phpmyadmin, "SELECT DATE_FORMAT(MAX(REGISTRO),'%d') AS REGISTRO FROM DESEMPENHO;");
 $ultimoRegistro=$cnx->fetch_array();
   
-$yearMonth = date('Y-m');
-$mes = date('m');
+//$yearMonth = date('Y-m');
+$yearMonth = mysqli_query($phpmyadmin, "SELECT MAX(ANO_MES) FROM DESEMPENHO d;")->fetch_array()[0];
+//$mes = date('m');
+$mes = $yearMonth[5] . $yearMonth[6];
 
 //DASH MEDIA GERAL	
 $cnx = mysqli_query($phpmyadmin, "SELECT ROUND(AVG(DESEMPENHO),2) AS MEDIA, REGISTRO FROM DESEMPENHO GROUP BY REGISTRO ORDER BY REGISTRO DESC;");
@@ -40,7 +42,7 @@ while ($G4 = $cnx->fetch_array()) {
     $x3++;				
 }
 
-$cnx = mysqli_query($phpmyadmin, "SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN(".$idsAtiv.");");
+$cnx = mysqli_query($phpmyadmin, "SELECT NOME, 0 AS VEZES FROM ATIVIDADE WHERE ID NOT IN($idsAtiv);");
 
 if (mysqli_error($phpmyadmin) == null) {
     while ($G41 = $cnx->fetch_array()) {
@@ -196,7 +198,21 @@ while ($faiEta = $cnx->fetch_array()) {
 }
   //DASH META ATINGIDA PERDIDA - meta-pacman
 $x = 0;
-$cnx = mysqli_query($phpmyadmin, "SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO>=100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO) UNION ALL SELECT COUNT(*) DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO FROM DESEMPENHO WHERE DESEMPENHO<100 AND REGISTRO=(SELECT MAX(REGISTRO) FROM DESEMPENHO);");
+$cnx = mysqli_query($phpmyadmin, "
+    SELECT COUNT(*) AS DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO
+    FROM DESEMPENHO
+    WHERE DESEMPENHO >= 100
+      AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO)
+    GROUP BY DATE_FORMAT(REGISTRO, '%d/%m')
+
+    UNION ALL
+
+    SELECT COUNT(*) AS DESEMPENHO, DATE_FORMAT(REGISTRO, '%d/%m') AS REGISTRO
+    FROM DESEMPENHO
+    WHERE DESEMPENHO < 100
+      AND REGISTRO = (SELECT MAX(REGISTRO) FROM DESEMPENHO)
+    GROUP BY DATE_FORMAT(REGISTRO, '%d/%m')
+");
 
 if (mysqli_error($phpmyadmin) == null) {
     while ($pacman= $cnx->fetch_array()) {
@@ -228,13 +244,34 @@ SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATI
 UNION ALL
 SELECT IFNULL(ROUND(SUM(ALCANCADO)/3,0),0) AS CHECKOUT FROM DESEMPENHO WHERE ATIVIDADE_ID=1 AND DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."'
 ";
-  $queryVinhosP="SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m')."' GROUP BY REGISTRO) as PBL
+
+$queryVinhosP = "
+  SELECT IFNULL(SUM(PBL.PBL),0) AS PBL 
+  FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='$yearMonth' GROUP BY REGISTRO) as PBL
 UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-1 month'))."' GROUP BY REGISTRO) as PBL
 UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-2 month'))."' GROUP BY REGISTRO) as PBL
 UNION ALL
 SELECT IFNULL(SUM(PBL.PBL),0) AS PBL FROM (SELECT ALCANCADO AS PBL FROM DESEMPENHO WHERE ATIVIDADE_ID=4 and DATE_FORMAT(REGISTRO, '%Y-%m')='".date('Y-m', strtotime('-3 month'))."' GROUP BY REGISTRO) as PBL";  
+
+$queryVinhosP = "
+SELECT IFNULL(SUM(ALCANCADO), 0) AS PBL 
+FROM DESEMPENHO 
+WHERE ATIVIDADE_ID = 4 AND DATE_FORMAT(REGISTRO, '%Y-%m') = '$yearMonth'
+UNION ALL
+SELECT IFNULL(SUM(ALCANCADO), 0) AS PBL 
+FROM DESEMPENHO 
+WHERE ATIVIDADE_ID = 4 AND DATE_FORMAT(REGISTRO, '%Y-%m') = '" . date($yearMonth, strtotime('-1 month')) . "'
+UNION ALL
+SELECT IFNULL(SUM(ALCANCADO), 0) AS PBL 
+FROM DESEMPENHO 
+WHERE ATIVIDADE_ID = 4 AND DATE_FORMAT(REGISTRO, '%Y-%m') = '" . date($yearMonth, strtotime('-2 month')) . "'
+UNION ALL
+SELECT IFNULL(SUM(ALCANCADO), 0) AS PBL 
+FROM DESEMPENHO 
+WHERE ATIVIDADE_ID = 4 AND DATE_FORMAT(REGISTRO, '%Y-%m') = '" . date($yearMonth, strtotime('-3 month')) . "'";
+
 
 $x = 0;
 $cnx = mysqli_query($phpmyadmin, $queryCaixas);
@@ -263,8 +300,17 @@ while ($caixasVinhosP = $cnx->fetch_array()) {
 for ($i = 0 ;$i < 3; $i++) {
     $idAtividade = 1 + $i;
     $x = 0;
-    $cnx = mysqli_query($phpmyadmin, "SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') REGISTRO, ROUND(AVG(DESEMPENHO),2) MEDIA FROM DESEMPENHO WHERE ATIVIDADE_ID=".$idAtividade." AND REGISTRO<=(SELECT MAX(REGISTRO) FROM DESEMPENHO) AND PRESENCA_ID NOT IN (3,5) GROUP BY REGISTRO DESC LIMIT 6;
-");
+    $cnx = mysqli_query($phpmyadmin, "
+      SELECT ATIVIDADE_ID, DATE_FORMAT(REGISTRO,'%d/%m') AS REGISTRO, ROUND(AVG(DESEMPENHO),2) AS MEDIA 
+      FROM DESEMPENHO 
+      WHERE ATIVIDADE_ID = $idAtividade 
+        AND REGISTRO <= (SELECT MAX(REGISTRO) FROM DESEMPENHO)
+        AND PRESENCA_ID NOT IN (3,5) 
+      GROUP BY REGISTRO 
+      ORDER BY REGISTRO DESC 
+      LIMIT 6
+    ");
+
     while ($priAtiv= $cnx->fetch_array()) {
         $vtMedia3PrincAtiv[$i][$x]=$priAtiv["MEDIA"];
         $vtData3PrincAtiv[$i][$x]=$priAtiv["REGISTRO"];  
@@ -275,7 +321,11 @@ for ($i = 0 ;$i < 3; $i++) {
 }
 
 //DASH NÚMERO DE REGISTROS
-$queryNumRegi="SELECT COUNT(DESEMPENHO) AS OCORRENCIAS, DATE_FORMAT(REGISTRO,'%d-%m')AS DIA, COUNT(DISTINCT USUARIO_ID) AS USUARIOS FROM DESEMPENHO GROUP BY REGISTRO DESC LIMIT 5;";
+$queryNumRegi="
+  SELECT COUNT(DESEMPENHO) AS OCORRENCIAS, DATE_FORMAT(REGISTRO,'%d-%m')AS DIA, COUNT(DISTINCT USUARIO_ID) AS USUARIOS 
+  FROM DESEMPENHO 
+  GROUP BY REGISTRO ORDER BY REGISTRO DESC
+  LIMIT 5;";
 $cnx = mysqli_query($phpmyadmin, $queryNumRegi);
 $x = 0;
   
