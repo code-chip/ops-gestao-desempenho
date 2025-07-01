@@ -1,5 +1,5 @@
 {
-    "name": "will/ops-gestao-desempenho",
+    "name": "code-chip/ops-gestao-desempenho",
     "description": "Performance Management project",
     "authors": [
         {
@@ -14,7 +14,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "config": {
