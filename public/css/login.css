@@ -1,0 +1,74 @@
+html,body {
+  font-family: 'Open Sans', serif;
+  font-size: 14px;
+  font-weight: 300;
+}
+.hero.is-success {
+  /*background: #f2f7fa;*/
+}
+.hero .nav, .hero.is-success .nav {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+input {
+  font-weight: 300;
+}
+p {
+  font-weight: 700;
+}/*COFIGURAÇÃO DE ESTILO DE IMAGEM*/
+.hero.has-background {
+		  position: relative;
+		  /*overflow: hidden;*/
+}
+.hero-background {
+	position: absolute;
+	object-fit: cover;
+	object-position: center center;
+	width: 100%;
+	height: 100%;
+}
+.hero-background.is-transparent {
+    opacity: 0.6;
+}
+/*ADIÇÃO DO ESTILO DO VIDEO*/
+.hero-video{
+    bottom:0;
+    left:0;
+    position:absolute;
+    right:0;
+    top:0;
+    overflow: hidden;
+}
+.hero-video video{
+    left: 50%;
+    min-height: 100%;
+    min-width: 100%;
+    position: absolute;
+    top:50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+}
+.hero-video.is-transparent{
+    opacity: 0.7;
+}/*CONFIGURAÇÃO DE ESTILO CODE CHIP*/
+.copyright{              
+    width: 100%;
+    padding: 10px 0;        
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+.copyright p{
+    color:#1E90FF;
+    margin:0;
+}
+.copyright a:hover {
+    text-decoration: underline;
+    color:#008B00;
+}           
+.copyright img{          
+    margin: -1px 1px;
+}
+img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"]{
+			display:none;
+} 

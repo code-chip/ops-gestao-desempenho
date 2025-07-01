@@ -1,0 +1,222 @@
+img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"]{
+	display:none;
+}
+td{
+  vertical-align:middle !important
+}
+.table__wrapper {
+  	overflow-x: auto;
+}
+.scrollWrapper {
+	display:table;
+	width: 100%;
+	overflow-x: auto;  		
+}
+.mw12{
+	min-width:12em;
+}
+.ocultaColunaId{
+	position: absolute; 
+	visibility: hidden; 
+	margin-left: -25px;  
+	max-width:0em;
+}
+.coluna{
+		max-width:7em;
+	}
+.minhaTabela{
+	position: relative;
+}
+.minhaTabela.th{
+	max-width:7em;
+}
+.transparencia {
+    filter:alpha(opacity=80);
+    opacity: 0.8;
+    -moz-opacity:0.8;
+    -webkit-opacity:0.8;
+}
+.bloco{ 
+    -webkit-box-shadow: 20px -14px 5px rgba(50, 50, 50, 0.77);
+    -moz-box-shadow:    20px -14px 5px rgba(50, 50, 50, 0.77);
+    box-shadow:         20px -14px 5px rgba(50, 50, 50, 0.77);
+}
+/* Estilo iOS reference willianjusten.com.br/criando-um-switch-button-com-css*/
+.switch__container {
+  margin: 30px auto;
+  width: 120px;
+}
+
+.switch {/*esconder o checkbox feio e jogá-lo para fora da tela.*/
+  visibility: hidden;
+  position: absolute;
+  margin-left: -9999px;
+}
+
+.switch + label {/*deixar o elemento ali "clicável" usando a propriedade cursor: pointer, também remove a opção de selecionar a label com o user-select: none e deixa ele como um elemento de bloco, para que possamos botar tamanho e estilo.*/
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.switch--shadow + label {/*criação do desenho*/
+  padding: 2px;
+  width: 60px;
+  height: 30px;
+  background-color: #dddddd;
+  border-radius: 60px;
+}
+.switch--shadow + label:before,
+.switch--shadow + label:after {/*seletor :before, que vai ser responsável por fazer a transição entre o cinza e o fundo verde. E vamos usar o seletor :after para criar a bolinha, que irá de um lado para o outro.*/
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  content: "";
+}
+.switch--shadow + label:before {/**/
+  right: 1px;
+  background-color: #f1f1f1;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--shadow + label:after {/**/
+  width: 31px;/*Largura da bolinha*/
+  background-color: #fff;
+  border-radius: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s;
+}
+.switch--shadow:checked + label:before {/**/
+  background-color: #8ce196;
+}
+.switch--shadow:checked + label:after {/**/
+  transform: translateX(30px);/*Distância da transição*/
+}
+
+/* Estilo Flat */
+.switch--flat + label {
+  padding: 2px;
+  width: 60px;
+  height: 30px;
+  background-color: #dddddd;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:before,
+.switch--flat + label:after {
+  display: block;
+  position: absolute;
+  content: "";
+}
+.switch--flat + label:before {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:after {
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 28px;/*Largura da bolinha*/
+  background-color: #dddddd;
+  border-radius: 52px;
+  transition: margin 0.4s, background 0.4s;
+}
+.switch--flat:checked + label {
+  background-color: #8ce196;
+}
+.switch--flat:checked + label:after {
+  margin-left: 30px;
+  background-color: #8ce196;
+}
+.w24-2e{
+  width:24.2em;
+}
+/*CCS FOR USER*/
+.btn128{/*Button*/
+  width: 128px;
+}
+.srf20{/*Space right field*/
+  margin-right: 20px;
+}
+.sf17{/*Space field*/
+  width:17em;
+}
+.sf23-15{/*Space field*/
+  width:23.15em;
+}
+@media (max-width: 1440px){
+  .srf20{
+    margin-right: 10px;
+  }
+  .sf17{/*Space field*/
+    width:15em;
+  }
+  .sf23-15{/*Space field*/
+    width:20.1em;
+  }
+  p{
+    margin-bottom: -10px;
+  }
+  .btn128{
+    width: 122px;
+  }
+}
+@media (max-width: 770px){
+  .srf20{
+    margin-right: 0px;
+  }
+  .sf17, .sf23-15{/*Space field*/
+    width:55.85em;
+  }
+  p{
+    margin-bottom: -10px;
+  }
+  .btn128{
+    width: 122px;
+  }
+}
+/*File register.php and metric.php*/
+@media (max-width: 880px){
+  .mw12{
+    min-width:24em;
+  }
+}
+@media (max-width: 860px){
+  .mw12{
+    min-width:20em;
+  }
+}
+@media (max-width: 720px){
+  .mw12{
+    min-width:19em;
+  }
+}
+@media (max-width: 660px){
+  .mw12{
+    min-width:18.1em;
+  }
+}
+@media (max-width: 650px){
+  .mw12{
+    min-width:17em;
+  }
+}
+@media (max-width: 640px){
+  .mw12{
+    min-width:14em;
+  }
+}
+@media (max-width: 550px){
+  .mw12{
+    min-width: 100%;
+  }
+}
