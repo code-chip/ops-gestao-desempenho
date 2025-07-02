@@ -34,9 +34,7 @@ class AuthController
         }
 
         $_SESSION['authenticated'] = false;
-        $_SESSION['not_authenticated'] = true;
-        header('Location: /');
-        http_response_code(401);
+        header('Location: /?error=1');
         exit;
     }
 }
