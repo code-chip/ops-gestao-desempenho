@@ -22,5 +22,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.2",
+        "phpstan/phpstan": "^2.1"
     }
 }
