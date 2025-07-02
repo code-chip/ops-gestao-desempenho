@@ -16,8 +16,8 @@ class AuthController
 {
     private AuthService $service;
 
-    public function __construct() {
-        $this->service = new AuthService;;
+    public function __construct(AuthService $service) {
+        $this->service = $service;
     }
 
     public function showLogin()
@@ -27,13 +27,6 @@ class AuthController
 
     public function handleLogin(array $input)
     {
-        // $input = [
-        //     'user' => $_POST['user'],
-        //     'password' => $_POST['password']
-        // ];
-
-        $this->service->checkLogin($input);
-
         if ($this->service->checkLogin($input)) {
             $_SESSION['authenticated'] = true;
             header('Location: /home');
