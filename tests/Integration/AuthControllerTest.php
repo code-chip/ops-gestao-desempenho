@@ -50,8 +50,8 @@ class AuthControllerTest extends TestCase
     public function testAuthenticationWithValidCredentials()
     {
         $form = [
-            'user' => 'lwcyano.will',
-            'password' => '814172050'
+            'user' => 'integration.test',
+            'password' => 'test@2025'
         ];
 
         $response = $this->httpRequest('POST', '/login', $form);
