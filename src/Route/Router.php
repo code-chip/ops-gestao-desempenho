@@ -26,11 +26,11 @@ class Router
     {
         //header('Content-Type: application/json');
         $this->method = strtoupper($method);
-        $this->body = json_decode(file_get_contents('php://input'), true) ?? [];
+        //$this->body = json_decode(file_get_contents('php://input'), true) ?? [];
+        $this->body = $this->method === 'POST' ? $_POST : [];
 
         $parsedUrl = parse_url($uri);
-        $this->path = $parsedUrl['path'] ?? '/';
-        $this->path = rtrim($this->path, '/');
+        $this->path = rtrim($parsedUrl['path'] ?? '/', '/');
         if ($this->path === '') {
             $this->path = '/';
         }
