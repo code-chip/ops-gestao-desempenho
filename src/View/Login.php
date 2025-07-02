@@ -6,12 +6,19 @@
  * @Link       https://github.com/code-chip
  */
 
+$loginError = false;
+
+if (isset($_SESSION['not_authenticated'])) {
+    $loginError = true;
+    unset($_SESSION['not_authenticated']);
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Gestão de Desempenho</title>
+    <title>Gestão de Desempenho - Login</title>
     <link rel="shortcut icon" href="/images/favicon_codechip.ico"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="/css/personal.css" />
@@ -31,27 +38,25 @@
             <div class="column is-4 is-offset-4">
                 <h3 class="title has-text-blue">Gestão de Desempenho</h3>
 
-                <?php if (isset($_SESSION['nao_autenticado'])): ?>
+                <?php if ($loginError): ?>
                     <div class="notification is-danger">
                         <p>ERRO: Usuário ou senha inválidos.</p>
                     </div>
-                    <?php unset($_SESSION['nao_autenticado']); ?>
                 <?php endif; ?>
 
                 <div class="box">
                     <form action="/login" method="POST">
                         <div class="field">
                             <div class="control has-icons-left is-large" id="usuario">
-                                <input name="usuario" type="text" class="input is-large" placeholder="Seu usuário" autofocus>
+                                <input name="user" type="text" class="input is-large" placeholder="Seu usuário" autofocus>
                                 <span class="icon is-medium is-left">
                                     <i class="fas fa-user"></i>
                                 </span>                                    
                             </div>
                         </div>
-
                         <div class="field">
                             <div class="control has-icons-left is-large" id="senha">
-                                <input name="senha" class="input is-large" type="password" placeholder="Sua senha">
+                                <input name="password" class="input is-large" type="password" placeholder="Sua senha">
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-key"></i>
                                 </span>
