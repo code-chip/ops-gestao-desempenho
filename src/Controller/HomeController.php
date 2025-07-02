@@ -14,6 +14,6 @@ class HomeController
 {
     public function showHome()
     {
-        require '../src/View/Home.php';
+        isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true ? require '../src/View/Home.php' : header('Location: /');
     }
 }
