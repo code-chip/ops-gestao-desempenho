@@ -25,9 +25,12 @@ class AuthService
     {
         $user = $this->repo->checkLogin($input);
 
-        $_SESSION["nameUser"] = $user['NOME'];
-        $_SESSION['userId'] = $user['ID'];        
+        if ($user) {
+            $_SESSION["nameUser"] = $user['NOME'];
+            $_SESSION['userId'] = $user['ID'];
+            return true; 
+        }              
 
-        return true;
+        return false;
     }
 }

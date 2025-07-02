@@ -28,19 +28,21 @@ class AuthController
     public function handleLogin()
     {
         $input = [
-            'user' => $_POST['usuario'],
-            'password' => $_POST['senha']
+            'user' => $_POST['user'],
+            'password' => $_POST['password']
         ];
 
         $this->service->checkLogin($input);
 
         if ($this->service->checkLogin($input)) {
-            $_SESSION['autenticado'] = true;
+            $_SESSION['authenticated'] = true;
             header('Location: /home');
-        } else {
-            $_SESSION['nao_autenticado'] = true;
-            header('Location: /');
             exit;
         }
+        
+        $_SESSION['authenticated'] = false;
+        $_SESSION['not_authenticated'] = true;
+        header('Location: /');
+        exit;
     }
 }
