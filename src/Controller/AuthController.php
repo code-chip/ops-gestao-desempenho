@@ -25,12 +25,12 @@ class AuthController
         require '../src/View/Login.php';
     }
 
-    public function handleLogin()
+    public function handleLogin(array $input)
     {
-        $input = [
-            'user' => $_POST['user'],
-            'password' => $_POST['password']
-        ];
+        // $input = [
+        //     'user' => $_POST['user'],
+        //     'password' => $_POST['password']
+        // ];
 
         $this->service->checkLogin($input);
 
@@ -39,10 +39,11 @@ class AuthController
             header('Location: /home');
             exit;
         }
-        
+
         $_SESSION['authenticated'] = false;
         $_SESSION['not_authenticated'] = true;
         header('Location: /');
+        http_response_code(401);
         exit;
     }
 }
