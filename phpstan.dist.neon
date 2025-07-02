@@ -1,0 +1,24 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 5  # Você pode ajustar de 0 (mais permissivo) até 9 (mais rigoroso)
+    paths:
+        - src
+        - tests
+
+    autoload_directories:
+        - src
+        - tests
+
+    # Ignorar diretórios públicos e de terceiros
+    excludePaths:
+        - %rootDir%/../public
+        - %rootDir%/../vendor
+        - %rootDir%/../node_modules
+    analyseAndScan:
+        - vendor/phpstan/phpstan/../public (?)
+        - vendor/phpstan/phpstan/../vendor (?)
+        - vendor/phpstan/phpstan/../node_modules (?)
+
+    checkMissingIterableValueType: false
