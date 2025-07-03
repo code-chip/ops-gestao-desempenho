@@ -25,7 +25,7 @@
 </div>
 
 <details>
-  <summary><h3>Índice</h3></summary>
+  <summary><h2>Índice</h2></summary>
   <ol>
     <li>
       <a href="#about-the-project">Sobre o Projeto</a>
@@ -50,7 +50,6 @@
         <li><a href="#getting-started-complementary-command">Comandos Complementares</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Uso</a></li>
     <li><a href="#roadmap">Planejamento</a></li>
     <li><a href="#contact">Contato</a></li>
   </ol>
@@ -116,7 +115,7 @@ Hover CSS
 Etapa 1: Clonar o repositório
 
 ```
-git clone git@github.com:code-chip/ops-gestao-desempenho.git && cd gamay-front
+git clone git@github.com:code-chip/ops-gestao-desempenho.git opsgd && cd opsgd
 ```
 
 Etapa 2: Construir a imagem docker
@@ -151,19 +150,12 @@ http://localhost
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
-<a name="usage"></a>
-## Uso
-
-<a>pendente... <img src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Carregando" width="2%"><a>
-
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
-
 <a name="roadmap"></a>
 ## Planejamento
 
 - [x] Adicionar Changelog
 - [x] Adicionar links de volta ao topo
-- [ ] Adicionar Templates Adicionais com Exemplos
+- [ ] Adicionar passo a passo de configuração de base de dados
 - [ ] Adicionar documento "componentes" para copiar e colar seções do readme
 - [ ] Refatoração das funcionalidades
     - [x] Login
@@ -175,8 +167,6 @@ http://localhost
     - [ ] Relatório
     - [ ] RH
     - [ ] Configurações
-
-Veja os [issues abertos](https://github.com/othneildrew/Best-README-Template/issues) para a lista completa de funcionalidades propostas (e problemas conhecidos).
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
