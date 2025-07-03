@@ -8,9 +8,9 @@
 
 $loginError = false;
 
-if (isset($_SESSION['not_authenticated'])) {
+if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === false) {
     $loginError = true;
-    unset($_SESSION['not_authenticated']);
+    unset($_SESSION['authenticated']);
 }
 
 ?>
